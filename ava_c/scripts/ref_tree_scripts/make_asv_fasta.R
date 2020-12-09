@@ -10,7 +10,7 @@ setwd(file.path( output_dir, "tree_process_blast"))
 
 for (i in 1:ncol(seqtab)){
   seq = colnames(seqtab)[i]
-  cat(paste0(">", i, "\n", seq, "\n"), 
+  cat(paste0(">", seq, "\n", seq, "\n"), 
     file = "dada2seqs.fasta", 
     append=TRUE)
 }
