@@ -23,14 +23,14 @@ if (!requireNamespace("BiocManager", quietly = TRUE)){
   install.packages("BiocManager")
   BiocManager::install("dada2",type = "source", checkBuilt = TRUE)
 }
-
 library("dada2")
+library("DECIPHER")
 
-home_dir = file.path('~','git','balance_tree_exploration')
+home_dir <- file.path('~','git','balance_tree_exploration')
 #home_dir = file.path('cloud','project')
-output_dir = file.path(home_dir, "ava_c", 'output')
-project = "ava_c balance tree"
-f_path <- file.path(home_dir, "ava_c", "downloaded_seqs") # CHANGE ME to the directory containing the fastq files after unzipping.
+project <- "ava_c"
+output_dir <- file.path(home_dir, project, 'output')
+f_path <- file.path(home_dir, project, "downloaded_seqs") # CHANGE ME to the directory containing the fastq files after unzipping.
 # list.files(f_path)
 
 # Forward and reverse fastq filenames have format: SAMPLENAME_1.fastq and SAMPLENAME_2.fastq
@@ -41,7 +41,7 @@ filt_path <- file.path(f_path, "filtered") # Place filtered files in filtered/ s
 filtFs <- file.path(filt_path, paste0(sampleNames, "_R1_filt.fastq"))
 
 #Filter
-out <- filterAndTrim(fnFs, filtFs,truncLen=240,
+out <- dada2::filterAndTrim(fnFs, filtFs,truncLen=240,
                      maxN=0, maxEE=c(2), truncQ=2, rm.phix=TRUE,
                      compress=FALSE, multithread=TRUE) 
 
@@ -51,17 +51,17 @@ names(dds) <- sampleNames
 index <-1 
 
 for (f in filtFs){
-  errF <- learnErrors(f, multithread = FALSE)
-  derepFs <- derepFastq(f, verbose=TRUE)
-  dadaFs <- dada(derepFs, err=errF, multithread=FALSE)
+  errF <- dada2::learnErrors(f, multithread = FALSE)
+  derepFs <- dada2::derepFastq(f, verbose=TRUE)
+  dadaFs <- dada2::dada(derepFs, err=errF, multithread=FALSE)
   dds[[index]]<-dadaFs
   index<-index+1
 }
 
-seqtab <- makeSequenceTable(dds)
+seqtab <- dada2::makeSequenceTable(dds)
 
 #Removing chimeras
-seqtab <- removeBimeraDenovo(seqtab, method="consensus", multithread=FALSE)
+seqtab <- dada2::removeBimeraDenovo(seqtab, method="consensus", multithread=FALSE)
 
 # seqtabPath  <-file.path(output_dir,"dada2","ForwardReads_DADA2.rds")
 # print(seqtabPath)
@@ -70,15 +70,15 @@ setwd(file.path(output_dir, "tables"))
 saveRDS(seqtab, file.path(output_dir, "r_objects","ForwardReads_DADA2.rds"))
 write.table(seqtab,file.path(output_dir,"tables","ForwardReads_DADA2.txt"),sep="\t")
 
-fastaRef <- file.path(home_dir, "taxonomy", "./rdp_train_set_16.fa.gz")
-taxTab <- assignTaxonomy(seqtab, refFasta = fastaRef, multithread=TRUE)
+fastaRef <- file.path(home_dir, "taxonomy", "rdp_train_set_16.fa.gz")
+taxTab <- dada2::assignTaxonomy(seqtab, refFasta = fastaRef, multithread=TRUE)
 unname(head(taxTab))
 
-seqs <- getSequences(seqtab)
+seqs <- dada2::getSequences(seqtab)
 
 names(seqs) <- seqs # This propagates to the tip labels of the tree
 
-alignment <- AlignSeqs(DNAStringSet(seqs), anchor=NA,verbose=FALSE)
+alignment <- DECIPHER::AlignSeqs(DNAStringSet(seqs), anchor=NA,verbose=FALSE)
 
 saveRDS(taxTab, file.path(output_dir, "r_objects", "ForwardReads_DADA2_taxonomy.rds"))
 saveRDS(alignment, file.path(output_dir, "r_objects","ForwardReads_DADA2_alignment.rds"))
