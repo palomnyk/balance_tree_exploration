@@ -49,12 +49,12 @@ close(con)
 print("Imported R objects")
 
 ##------------------------Build tree--------------------------------##
-phangAlign <- phyDat(as(alignment, "matrix"), type="DNA")
-dm <- dist.ml(phangAlign)#create distance matrix
-treeNJ <- upgma(dm) #make tree
-fit = pml(treeNJ, data=phangAlign)#fit model
+phangAlign <- phangorn::phyDat(as(alignment, "matrix"), type="DNA")
+dm <- phangorn::dist.ml(phangAlign)#create distance matrix
+treeNJ <- phangorn::upgma(dm) #make tree
+fit <- phangorn::pml(treeNJ, data=phangAlign)#fit model
 # fitGTR <- update(fit, k=4, inv=0.2)#fit model with updated parameters
-# fitGTR <- optim.pml(fitGTR, model="GTR", optInv=TRUE, optGamma=TRUE,
+# fitGTR <- phangorn::optim.pml(fitGTR, model="GTR", optInv=TRUE, optGamma=TRUE,
 #                     rearrangement = "stochastic", control = pml.control(trace = 0))
 # print("phangorn completed")
 
@@ -65,7 +65,7 @@ myMeta = read.table(file.path(home_dir, "ava_c", "metadata_SRA.tsv"),
                     check.names = FALSE,
                     stringsAsFactors=FALSE)
 
-ps <- phyloseq(otu_table(seqtab, taxa_are_rows=FALSE),
+ps <- phyloseq::phyloseq(otu_table(seqtab, taxa_are_rows=FALSE),
                sample_data(myMeta),
                tax_table(taxTab),
                phy_tree(treeNJ))
