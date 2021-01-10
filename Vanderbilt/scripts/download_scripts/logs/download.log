@@ -1,0 +1,1543 @@
+./download.sh: fork: Resoin /Users/aaronyerke/git/balance_tree_exploration/Vanderbilt/scripts/download_scripts directory
+./download.sh: line 7: module: command not found
+Table ../../SraAccList.txt has      239 rows including the hearder.
+Taking SRA accession id's from column: 1.
+1 of      239
+Getting SRR5928157...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928157.
+2 of      239
+Getting SRR5928158...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928158.
+3 of      239
+Getting SRR5928159...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928159.
+4 of      239
+Getting SRR5928160...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928160.
+5 of      239
+Getting SRR5928161...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928161.
+6 of      239
+Getting SRR5928162...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928162.
+7 of      239
+Getting SRR5928163...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928163.
+8 of      239
+Getting SRR5928164...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928164.
+9 of      239
+Getting SRR5928165...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928165.
+10 of      239
+Getting SRR5928166...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928166.
+11 of      239
+Getting SRR5928167...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928167.
+12 of      239
+Getting SRR5928168...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928168.
+13 of      239
+Getting SRR5928169...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928169.
+14 of      239
+Getting SRR5928170...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928170.
+15 of      239
+Getting SRR5928172...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928172.
+16 of      239
+Getting SRR5928173...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928173.
+17 of      239
+Getting SRR5928174...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928174.
+18 of      239
+Getting SRR5928175...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928175.
+19 of      239
+Getting SRR5928176...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928176.
+20 of      239
+Getting SRR5928177...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928177.
+21 of      239
+Getting SRR5928179...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928179.
+22 of      239
+Getting SRR5928180...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928180.
+23 of      239
+Getting SRR5928181...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928181.
+24 of      239
+Getting SRR5928182...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928182.
+25 of      239
+Getting SRR5928183...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928183.
+26 of      239
+Getting SRR5928184...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928184.
+27 of      239
+Getting SRR5928185...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928185.
+28 of      239
+Getting SRR5928186...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928186.
+29 of      239
+Getting SRR5928187...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928187.
+30 of      239
+Getting SRR5928188...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928188.
+31 of      239
+Getting SRR5928189...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928189.
+32 of      239
+Getting SRR5928190...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928190.
+33 of      239
+Getting SRR5928191...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928191.
+34 of      239
+Getting SRR5928192...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928192.
+35 of      239
+Getting SRR5928193...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928193.
+36 of      239
+Getting SRR5928194...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928194.
+37 of      239
+Getting SRR5928195...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928195.
+38 of      239
+Getting SRR5928196...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928196.
+39 of      239
+Getting SRR5928197...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928197.
+40 of      239
+Getting SRR5928198...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928198.
+41 of      239
+Getting SRR5928199...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928199.
+42 of      239
+Getting SRR5928200...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928200.
+43 of      239
+Getting SRR5928201...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928201.
+44 of      239
+Getting SRR5928202...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928202.
+45 of      239
+Getting SRR5928203...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928203.
+46 of      239
+Getting SRR5928205...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928205.
+47 of      239
+Getting SRR5928206...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928206.
+48 of      239
+Getting SRR5928207...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928207.
+49 of      239
+Getting SRR5928208...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928208.
+50 of      239
+Getting SRR5928209...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928209.
+51 of      239
+Getting SRR5928210...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928210.
+52 of      239
+Getting SRR5928211...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928211.
+53 of      239
+Getting SRR5928212...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928212.
+54 of      239
+Getting SRR5928213...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928213.
+55 of      239
+Getting SRR5928214...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928214.
+56 of      239
+Getting SRR5928215...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928215.
+57 of      239
+Getting SRR5928216...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928216.
+58 of      239
+Getting SRR5928217...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928217.
+59 of      239
+Getting SRR5928218...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928218.
+60 of      239
+Getting SRR5928219...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928219.
+61 of      239
+Getting SRR5928220...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928220.
+62 of      239
+Getting SRR5928221...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928221.
+63 of      239
+Getting SRR5928222...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928222.
+64 of      239
+Getting SRR5928225...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928225.
+65 of      239
+Getting SRR5928227...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928227.
+66 of      239
+Getting SRR5928228...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928228.
+67 of      239
+Getting SRR5928229...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928229.
+68 of      239
+Getting SRR5928230...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928230.
+69 of      239
+Getting SRR5928231...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928231.
+70 of      239
+Getting SRR5928232...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928232.
+71 of      239
+Getting SRR5928233...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928233.
+72 of      239
+Getting SRR5928234...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928234.
+73 of      239
+Getting SRR5928235...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928235.
+74 of      239
+Getting SRR5928236...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928236.
+75 of      239
+Getting SRR5928237...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928237.
+76 of      239
+Getting SRR5928238...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928238.
+77 of      239
+Getting SRR5928239...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928239.
+78 of      239
+Getting SRR5928240...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928240.
+79 of      239
+Getting SRR5928241...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928241.
+80 of      239
+Getting SRR5928242...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928242.
+81 of      239
+Getting SRR5928243...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928243.
+82 of      239
+Getting SRR5928244...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928244.
+83 of      239
+Getting SRR5928245...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928245.
+84 of      239
+Getting SRR5928246...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928246.
+85 of      239
+Getting SRR5928247...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928247.
+86 of      239
+Getting SRR5928248...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928248.
+87 of      239
+Getting SRR5928249...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928249.
+88 of      239
+Getting SRR5928250...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928250.
+89 of      239
+Getting SRR5928251...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928251.
+90 of      239
+Getting SRR5928252...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928252.
+91 of      239
+Getting SRR5928253...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928253.
+92 of      239
+Getting SRR5928254...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928254.
+93 of      239
+Getting SRR5928255...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928255.
+94 of      239
+Getting SRR5928256...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928256.
+95 of      239
+Getting SRR5928257...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928257.
+96 of      239
+Getting SRR5928258...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928258.
+97 of      239
+Getting SRR5928259...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928259.
+98 of      239
+Getting SRR5928260...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928260.
+99 of      239
+Getting SRR5928261...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928261.
+100 of      239
+Getting SRR5928262...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928262.
+101 of      239
+Getting SRR5928263...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928263.
+102 of      239
+Getting SRR5928264...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928264.
+103 of      239
+Getting SRR5928266...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928266.
+104 of      239
+Getting SRR5928267...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928267.
+105 of      239
+Getting SRR5928268...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928268.
+106 of      239
+Getting SRR5928269...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928269.
+107 of      239
+Getting SRR5928270...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928270.
+108 of      239
+Getting SRR5928271...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928271.
+109 of      239
+Getting SRR5928272...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928272.
+110 of      239
+Getting SRR5928273...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928273.
+111 of      239
+Getting SRR5928274...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928274.
+112 of      239
+Getting SRR5928275...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928275.
+113 of      239
+Getting SRR5928276...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928276.
+114 of      239
+Getting SRR5928362...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928362.
+115 of      239
+Getting SRR5928363...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928363.
+116 of      239
+Getting SRR5928364...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928364.
+117 of      239
+Getting SRR5928365...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928365.
+118 of      239
+Getting SRR5928366...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928366.
+119 of      239
+Getting SRR5928367...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928367.
+120 of      239
+Getting SRR5928368...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928368.
+121 of      239
+Getting SRR5928369...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928369.
+122 of      239
+Getting SRR5928370...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928370.
+123 of      239
+Getting SRR5928371...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928371.
+124 of      239
+Getting SRR5928373...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928373.
+125 of      239
+Getting SRR5928374...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928374.
+126 of      239
+Getting SRR5928375...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928375.
+127 of      239
+Getting SRR5928376...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928376.
+128 of      239
+Getting SRR5928377...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928377.
+129 of      239
+Getting SRR5928378...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928378.
+130 of      239
+Getting SRR5928379...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928379.
+131 of      239
+Getting SRR5928380...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928380.
+132 of      239
+Getting SRR5928381...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928381.
+133 of      239
+Getting SRR5928382...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928382.
+134 of      239
+Getting SRR5928383...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928383.
+135 of      239
+Getting SRR5928385...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928385.
+136 of      239
+Getting SRR5928386...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928386.
+137 of      239
+Getting SRR5928387...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928387.
+138 of      239
+Getting SRR5928388...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928388.
+139 of      239
+Getting SRR5928389...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928389.
+140 of      239
+Getting SRR5928390...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928390.
+141 of      239
+Getting SRR5928391...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928391.
+142 of      239
+Getting SRR5928392...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928392.
+143 of      239
+Getting SRR5928393...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928393.
+144 of      239
+Getting SRR5928394...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928394.
+145 of      239
+Getting SRR5928396...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928396.
+146 of      239
+Getting SRR5928397...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928397.
+147 of      239
+Getting SRR5928398...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928398.
+148 of      239
+Getting SRR5928399...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928399.
+149 of      239
+Getting SRR5928400...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928400.
+150 of      239
+Getting SRR5928401...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928401.
+151 of      239
+Getting SRR5928402...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928402.
+152 of      239
+Getting SRR5928403...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928403.
+153 of      239
+Getting SRR5928404...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928404.
+154 of      239
+Getting SRR5928406...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928406.
+155 of      239
+Getting SRR5928407...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928407.
+156 of      239
+Getting SRR5928408...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928408.
+157 of      239
+Getting SRR5928409...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928409.
+158 of      239
+Getting SRR5928410...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928410.
+159 of      239
+Getting SRR5928411...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928411.
+160 of      239
+Getting SRR5928413...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928413.
+161 of      239
+Getting SRR5928414...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928414.
+162 of      239
+Getting SRR5928415...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928415.
+163 of      239
+Getting SRR5928416...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928416.
+164 of      239
+Getting SRR5928417...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928417.
+165 of      239
+Getting SRR5928418...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928418.
+166 of      239
+Getting SRR5928419...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928419.
+167 of      239
+Getting SRR5928420...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928420.
+168 of      239
+Getting SRR5928421...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928421.
+169 of      239
+Getting SRR5928422...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928422.
+170 of      239
+Getting SRR5928423...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928423.
+171 of      239
+Getting SRR5928424...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928424.
+172 of      239
+Getting SRR5928425...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928425.
+173 of      239
+Getting SRR5928426...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928426.
+174 of      239
+Getting SRR5928427...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928427.
+175 of      239
+Getting SRR5928428...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928428.
+176 of      239
+Getting SRR5928429...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928429.
+177 of      239
+Getting SRR5928430...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928430.
+178 of      239
+Getting SRR5928431...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928431.
+179 of      239
+Getting SRR5928432...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928432.
+180 of      239
+Getting SRR5928433...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928433.
+181 of      239
+Getting SRR5928434...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928434.
+182 of      239
+Getting SRR5928435...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928435.
+183 of      239
+Getting SRR5928436...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928436.
+184 of      239
+Getting SRR5928438...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928438.
+185 of      239
+Getting SRR5928439...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928439.
+186 of      239
+Getting SRR5928440...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928440.
+187 of      239
+Getting SRR5928441...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928441.
+188 of      239
+Getting SRR5928442...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928442.
+189 of      239
+Getting SRR5928444...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928444.
+190 of      239
+Getting SRR5928445...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928445.
+191 of      239
+Getting SRR5928446...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928446.
+192 of      239
+Getting SRR5928447...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928447.
+193 of      239
+Getting SRR5928448...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928448.
+194 of      239
+Getting SRR5928449...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928449.
+195 of      239
+Getting SRR5928451...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928451.
+196 of      239
+Getting SRR5928452...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928452.
+197 of      239
+Getting SRR5928453...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928453.
+198 of      239
+Getting SRR5928454...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928454.
+199 of      239
+Getting SRR5928455...
+nohup: fasterq-dump: No such file or directory
+Done with SRR5928455.
+200 of      239
+ailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+117 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+118 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+119 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+120 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+121 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+122 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+123 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+124 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+125 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+126 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+127 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+128 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+129 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+130 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+131 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+132 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+133 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+134 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+135 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+136 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+137 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+138 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+139 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+140 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+141 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+142 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+143 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+144 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+145 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+146 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+147 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+148 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+149 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+150 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+151 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+152 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+153 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+154 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+155 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+156 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+157 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+158 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+159 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+160 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+161 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+162 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+163 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+164 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+165 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+166 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+167 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+168 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+169 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+170 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+171 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+172 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+173 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+174 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+175 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+176 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+177 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+178 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+179 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+180 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+181 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+182 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+183 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+184 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+185 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+186 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+187 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+188 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+189 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+190 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+191 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+192 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+193 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+194 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+195 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+196 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+197 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+198 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+199 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+200 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+201 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+202 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+203 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+204 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+205 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+206 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+207 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+208 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+209 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+210 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+211 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+212 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+213 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+214 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+215 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+216 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+217 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+218 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+219 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+220 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+221 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+222 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+223 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+224 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+225 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+226 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+227 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+228 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+229 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+230 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+231 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+232 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+233 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+234 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+235 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+236 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+237 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+238 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
+239 of      239
+./download.sh: fork: Resource temporarily unavailable
+./download.sh: fork: Resource temporarily unavailable
+Getting ...
+nohup: fasterq-dump: No such file or directory
+Done with .
