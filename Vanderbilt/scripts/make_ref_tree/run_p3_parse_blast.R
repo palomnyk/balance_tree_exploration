@@ -7,7 +7,7 @@ rm(list = ls()) #clear workspace
 home_dir <- file.path('~','git','balance_tree_exploration')
 project <- "Vanderbilt"
 cml_scripts <- file.path(home_dir, "r_libraries", "cml_scripts")
-r_script <- file.path(cml_scripts, "ref_tree_scripts", "p3_parse_blast.R")
+r_script <- file.path(cml_scripts, "make_ref_tree", "p3_parse_blast.R")
 
 ##-Make args for cml script-----------------------------------------##
 my_args <- paste(
