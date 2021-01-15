@@ -35,7 +35,7 @@ file.create(o_file_name)
 
 for (i in 1:ncol(seqtab)){
   seq <- colnames(seqtab)[i]
-  write(paste0(">", seq, "\n", seq, "\n",), 
+  write(paste0(">", seq, "\n", seq, "\n"), 
     file=o_file_name, 
     append=TRUE)
 }
