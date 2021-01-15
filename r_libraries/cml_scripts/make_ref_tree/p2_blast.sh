@@ -3,7 +3,7 @@ module load blast/2.9.0+
 home_dir=$1 #first comandline argument is the project name
 project=$2 
 
-db_path=${home_dir}/ref_tree_objs/db
+db_path=${home_dir}/ref_tree_objs/db/tree
 cd ~/git/balance_tree_exploration/${project}/output/tree_process_blast
 
 blastn -query dada2seqs.fasta \
