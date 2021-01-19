@@ -1,3 +1,4 @@
+#!/usr/bin/env Rscript
 # Author: Aaron Yerke
 # This is a pipeline that was created to build denovo trees.
 # Many resources were used to create this pipeline:
@@ -7,7 +8,31 @@
 #     or (in article format)
 #     https://f1000research.com/articles/5-1492/v2
 
-rm(list = ls()) #clear workspace
+##-cml argument processing------------------------------------------##
+if (!requireNamespace("optparse", quietly = TRUE)){
+  install.packages("optparse")
+}
+library("optparse")
+
+option_list <- list(
+  optparse::make_option(c("-d", "--homedir"), type="character", 
+              default=file.path('~','git','balance_tree_exploration'), 
+              help="dataset dir path", metavar="character"),
+  optparse::make_option(c("-p", "--project"), type="character", default=NULL, 
+              help="project folder", metavar="character"),
+  optparse::make_option(c("-m", "--metadata"), type="character", default=NULL,
+              help="metadata file path with filename", metavar="character"),
+  optparse::make_option(c("-l", "--metadata_delim"), type="character", default=NULL,
+              help="metadata file deliminator", metavar="character"),
+  optparse::make_option(c("-r", "--metadata_rowname"), type="character", default=NULL,
+              help="metadata file row to use for row names", metavar="character")
+  ); 
+
+opt_parser <- optparse::OptionParser(option_list=option_list);
+
+opt <- optparse::parse_args(opt_parser);
+
+print(opt)
 
 # ‘ape’, ‘dplyr’, ‘reshape2’, ‘plyr’
 # .cran_packages <- c("ggplot2", "gridExtra")
@@ -24,9 +49,8 @@ library("phangorn")
 library("phyloseq")
 
 ##----------------Establish directory layout------------------------##
-home_dir = file.path('~','git','balance_tree_exploration')
-project = "ava_c"
-#home_dir = file.path('cloud','project')
+home_dir <- opt$homedir
+project <- opt$project
 output_dir = file.path(home_dir, project, 'output')
 
 # setwd(file.path(home_dir))
@@ -58,10 +82,10 @@ fit <- phangorn::pml(treeNJ, data=phangAlign)#fit model
 #                     rearrangement = "stochastic", control = pml.control(trace = 0))
 # print("phangorn completed")
 
-myMeta = read.table(file.path(home_dir, "ava_c", "metadata_SRA.tsv"), 
-                    sep="\t", 
-                    header=TRUE, 
-                    row.names = "sample_name", 
+myMeta = read.table(opt$metadata,
+                    sep=opt$metadata_delim,
+                    header=TRUE,
+                    row.names = opt$metadata_rowname,
                     check.names = FALSE,
                     stringsAsFactors=FALSE)
 
