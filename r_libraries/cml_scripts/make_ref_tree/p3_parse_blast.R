@@ -36,11 +36,11 @@ print(opt)
 ##-Establish directory layout---------------------------------------##
 home_dir <- opt$homedir
 project <- opt$project
-output_dir = file.path(home_dir, project, 'output')
+output_dir <- file.path(home_dir, project, 'output')
 
 setwd(file.path(output_dir, "tree_process_blast"))
 
-input_file = "output.txt"
+input_file <- "output.txt"
 
 df <- data.frame(#qseqid=character(),
                  sseqid=character(),
@@ -48,7 +48,7 @@ df <- data.frame(#qseqid=character(),
                  count_matched=integer(),
                  stringsAsFactors=FALSE)
 
-con = file(input_file, "r")
+con <- file(input_file, "r")
 while ( TRUE ) {
   line = readLines(con, n = 1)
   if ( length(line) == 0 ) {
@@ -86,7 +86,7 @@ print(paste("original nrow:", nrow(df)))
 
 print(paste("number of unique rows:", length(unique(rownames(df)))))
 
-myT = table(df[,"sseqid"])
+myT <- table(df[,"sseqid"])
 
 print(paste("ave seq/node:", mean(myT), "\nmax seq/node:", max(myT)))
 
