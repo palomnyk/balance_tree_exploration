@@ -18,7 +18,7 @@ my_args <- paste(
   "-p", project,
   "-m", metad,
   "-l", ",",
-  "-r", "run"
+  "-r", "Run"
 )
 
 ##-Make and run command---------------------------------------------##
