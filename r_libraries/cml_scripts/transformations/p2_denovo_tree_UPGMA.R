@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
-# Author: Aaron Yerke
-# This is a pipeline that was created to build denovo trees.
+# Author: Aaron Yerke (aaronyerke@gmail.com)
+# This is a pipeline that was created to build denovo UPGMA trees.
 # Many resources were used to create this pipeline:
 #   Processing the sequences through DADA2, making trees with phangorn, and putting them into phyloseq objects:
 #     This is by far the biggest source:
@@ -34,6 +34,7 @@ opt <- optparse::parse_args(opt_parser);
 
 print(opt)
 
+##-load other dependencies------------------------------------------##
 # ‘ape’, ‘dplyr’, ‘reshape2’, ‘plyr’
 # .cran_packages <- c("ggplot2", "gridExtra")
 if (!requireNamespace("BiocManager", quietly = TRUE)){
@@ -48,16 +49,18 @@ library("DECIPHER")
 library("phangorn")
 library("phyloseq")
 
-##----------------Establish directory layout------------------------##
+print("external libraries loaded")
+
+##-Establish directory layout---------------------------------------##
 home_dir <- opt$homedir
 project <- opt$project
-output_dir = file.path(home_dir, project, 'output')
+output_dir <- file.path(home_dir, project, 'output')
 
 # setwd(file.path(home_dir))
 
 print("Established directory layout")
 
-##---------------------Import R objects-----------------------------##
+##-Import R objects and data preprocessing--------------------------##
 con <- gzfile(file.path( output_dir, "r_objects", "ForwardReads_DADA2.rds"))
 seqtab = readRDS(con)
 close(con)
@@ -82,7 +85,7 @@ myMeta = read.table(opt$metadata,
 
 print("Imported tables")
 
-##------------------------Build tree--------------------------------##
+##-Build tree------------------------------------------------------##
 phangAlign <- phangorn::phyDat(as(alignment, "matrix"), type="DNA")
 dm <- phangorn::dist.ml(phangAlign)#create distance matrix
 treeNJ <- phangorn::upgma(dm) #make tree
@@ -105,8 +108,6 @@ library("ape")
 pdf(file.path(output_dir, "graphics", paste0("upgma_denovo","_2", ".pdf")))
 
 plot_tree(ps, "treeonly", nodeplotblank, ladderize="left")
-
-plot_tree(ps, ladderize="left", color="host_phenotype")
 
 dev.off()
 
