@@ -47,6 +47,7 @@ philr_tutorial_normalization <- function(df) {
   df <- df + 1
   return(df)
 }
+
 simplifiy_meta_western_gut <- function(meta_df) {
   drop = c("SampleID","Sample.Date", "Subject.ID","Old.Participant.ID","sample_accession",
            "secondary_sample_accession","experiment_accession",             
@@ -141,3 +142,22 @@ simple_ratio_transform <- function(otu_df) {
   }
   return(otuRatios)
 }
+
+lognorm <- function(table){
+  # This is Fodor's custom lognormal method.
+  # table<-table[rowSums(table)>1000,]
+  average<-sum(rowSums(table))/nrow(table)
+  table<-sweep(table,1,rowSums(table),"/")
+  table<-log10(table*average + 1)
+  return(table)
+}
+
+getTaxaTable <- function(svTable,taxaTable,taxa){
+  colnames(svTable)<-taxaTable[,taxa]
+  svTable<-t(svTable)
+  tab<-rowsum(svTable,group=rownames(svTable))
+  tab<-t(tab)
+  colnames(tab)[ncol(tab)]<-"others"
+  return(tab)
+}
+
