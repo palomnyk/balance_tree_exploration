@@ -233,7 +233,7 @@ kendall_corr_plots <- function(df1, #i.e. philr_transform
   return(dFrame)
 }#end kendall Corr Plot
 
-roc_axes = function(test_data, 
+roc_axes <- function(test_data, 
                     true_resp = resp_var_test,
                     ml_model = rf,
                     error_range = 0.10){
@@ -298,3 +298,11 @@ roc_axes = function(test_data,
   }
   return(data.frame(true_pos, false_pos))
 }#end roc_data
+
+filt_seq_dpth <- function(min_seq_depth, df) {
+  df <- df[rowSums(df) > min_seq_depth, ]
+}
+
+
+
+
