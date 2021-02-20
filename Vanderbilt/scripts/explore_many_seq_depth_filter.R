@@ -70,7 +70,7 @@ metadata <- read.table(file.path(home_dir, project, "patient_metadata.tsv"),
 #Plot shannon diversity against log10(total_seqs)
 #Plot other normalization methods: otu log 100 and alr and clr 
 # min_seq_depths <- c(0,100,500,1000,2000,5000,10000,50000)
-my_ds_names <- c( "raw seqs", "clr raw seqs", "lognorm raw seqs", "philr ref")
+my_ds_names <- c( "raw seqs", "clr(raw seqs)", "lognorm raw seqs", "philr ref", "DESeq2")
 min_seq_depths <- c(0, 500, 1000, 5000, 10000)
 mds_depth <- 5
 
@@ -97,15 +97,15 @@ for(s in 1:length(min_seq_depths)){
   new_tree <- phyloseq::prune_taxa(colnames(sd_filt_asv), ref_ps@phy_tree)#update tree for new phyloseq obj
   new_ref_ps <- prune_samples(safe_rns, ref_ps)
   new_ref_ps <- munge_ref_ps(new_ref_ps)
+  new_DESeq2 <- phyloseq::phyloseq_to_deseq2(new_ref_ps, design= ~ 1)#dataset 5
+  new_DESeq2 <- estimateSizeFactors(new_DESeq2)
+  new_DESeq2 <- t(counts(new_DESeq2, normalized=T))
+  print(paste("new DSeq:", paste(dim(new_DESeq2))))
   
   print(paste("new dim ref ps:", dim(data.frame(new_ref_ps@otu_table))))
   print("made new ps")
   ln_ps <- lognorm(new_ref_ps@otu_table)#dataset 7
-  # new_DESeq2 <- phyloseq::phyloseq_to_deseq2(new_ref_ps, design= ~ 1)#dataset 5
-  # new_DESeq2 <- estimateSizeFactors(new_DESeq2)
-  # new_DESeq2 <- t(counts(new_DESeq2, normalized=T))
-  # print(paste("new DSeq:", paste(dim(new_DESeq2))))
-  # new_ref_ps <- prune_taxa(taxa_names(new_ref_ps) == NA, new_ref_ps)
+
   ref_philr <- philr::philr(new_ref_ps@otu_table, new_ref_ps@phy_tree,
                             part.weights='enorm.x.gm.counts',
                             ilr.weights='blw.sqrt')#dataset 4
@@ -113,7 +113,7 @@ for(s in 1:length(min_seq_depths)){
   # print(any(is.na(data.frame(ref_philr))))
 
   ln_asv <- lognorm(sd_filt_asv)#dataset 6
-  my_datasets <- list(sd_filt_asv, my_clr,  ln_asv, ref_philr)
+  my_datasets <- list(sd_filt_asv, my_clr,  ln_asv, ref_philr, new_DESeq2)
   
   for( ds in 1:length(my_datasets)){
     print(my_ds_names[ds])
@@ -155,8 +155,8 @@ g <- ggplot2::ggplot(pca1_only,
                      aes(x=as.factor(seq_depth), y=perma_r2, fill=ds_nam)) +
   geom_bar(width = 0.8, position=position_dodge(width = 1), stat="identity",) +
   ggtitle(paste0(project, ": PCA1 vs total sequences per sample")) +
-  # xlab("Transformations") +
-  theme_classic()
+  xlab("Min sequence depth per sample") +
+  labs(fill = "Transformations")
   # ylab(y_lab)
 g
 
