@@ -56,13 +56,10 @@ source(file.path(home_dir, "r_libraries", "statistical_functions.R"))
 source(file.path(home_dir, "r_libraries", "table_manipulations.R"))
 
 ##-Import tables and data preprocessing-----------------------------##
-# asv_table <- read.table(file.path(output_dir, "tables", "ForwardReads_DADA2.txt"),
-#                         sep = "\t",
-#                         header = TRUE)
+asv_table <- readRDS(file.path(output_dir, "r_objects", "ForwardReads_DADA2.rds"))
 
 ref_ps <- readRDS(file.path(output_dir, "r_objects", "ref_tree_phyloseq_obj.rds"))
 asv_tax <- readRDS(file.path(output_dir, "r_objects", "ForwardReads_DADA2_taxonomy.rds"))
-
 
 metadata <- read.table(file.path(home_dir, project, "patient_metadata.tsv"), 
                        sep="\t", 
