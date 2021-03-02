@@ -85,8 +85,9 @@ for(s in 1:length(min_seq_depths)){
   print(paste("new dim ref ps:", dim(data.frame(new_ref_ps@otu_table))))
   #create DESeq2 dtaset from new ref ps
   new_DESeq2 <- phyloseq::phyloseq_to_deseq2(new_ref_ps, design= ~ 1)#dataset 5
-  new_DESeq2_est<- DESeq2::estimateSizeFactors(new_DESeq2)
+  new_DESeq2 <- DESeq2::estimateSizeFactors(new_DESeq2)
   new_DESeq2 <- t(counts(new_DESeq2, normalized=T))
+  
   print(paste("new DSeq:", paste(dim(new_DESeq2))))
   
   ref_philr <- philr::philr(new_ref_ps@otu_table, new_ref_ps@phy_tree,
