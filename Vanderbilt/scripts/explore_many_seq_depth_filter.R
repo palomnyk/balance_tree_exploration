@@ -80,12 +80,12 @@ for(s in 1:length(min_seq_depths)){
   safe_rns <- intersect(row.names(ref_ps@otu_table), row.names(sd_filt_asv)) #rows for this iterate
   my_clr <- compositions::clr(sd_filt_asv)#dataset 2
   new_tree <- phyloseq::prune_taxa(colnames(sd_filt_asv), ref_ps@phy_tree)#update tree for new phyloseq obj
-  new_ref_ps <- prune_samples(safe_rns, ref_ps) #remove non-safe rows from ps
+  new_ref_ps <- phyloseq::prune_samples(safe_rns, ref_ps) #remove non-safe rows from ps
   new_ref_ps <- munge_ref_ps(new_ref_ps)
   print(paste("new dim ref ps:", dim(data.frame(new_ref_ps@otu_table))))
   #create DESeq2 dtaset from new ref ps
   new_DESeq2 <- phyloseq::phyloseq_to_deseq2(new_ref_ps, design= ~ 1)#dataset 5
-  new_DESeq2 <- estimateSizeFactors(new_DESeq2)
+  new_DESeq2_est<- DESeq2::estimateDispersions(new_DESeq2)
   new_DESeq2 <- t(counts(new_DESeq2, normalized=T))
   print(paste("new DSeq:", paste(dim(new_DESeq2))))
   
@@ -97,9 +97,9 @@ for(s in 1:length(min_seq_depths)){
   ln_asv <- lognorm(sd_filt_asv)#dataset 6
   # ald <- aldex.clr(sd_filt_asv, mc.samples=150, denom="all", verbose=F)
   
-  ald <- aldex.clr(t(sd_filt_asv), conds = metadata$Genotype[safe_rns], mc.samples=150, denom="all", verbose=F)
-  
-  my_datasets <- list(sd_filt_asv, my_clr,  ln_asv, ref_philr, new_DESeq2, ald)
+  ald <- ALDEx2::aldex.clr(t(sd_filt_asv), conds = metadata$Genotype[safe_rns], mc.samples=150, denom="all", verbose=F)
+  ald.ad <-  data.frame(ald@analysisData)
+  my_datasets <- list(sd_filt_asv, my_clr,  ln_asv, ref_philr, new_DESeq2, ald.ad)
   
   for( ds in 1:length(my_datasets)){
     print(my_ds_names[ds])
@@ -128,25 +128,24 @@ for(s in 1:length(min_seq_depths)){
 
 result_df <- data.frame(ds_num, ds_nam, perma_r2, mds_lev, seq_depth, var_exp, spear_cor)
 
+write.table(result_df, 
+            file = file.path(output_dir, "tables", paste0(project, "_PCA_seqdep_filt_results.csv")),
+            sep = ",")
+
+pdf(file = file.path(output_dir, "graphics", "seq_depth_artifact_PCA12345_bar.pdf"))
 for (i in 1:max(result_df$mds_lev)){
   pca_only <- result_df[mds_lev == i, ]
-  g <- ggplot2::ggplot(pca_only, 
+  g <- ggplot2::ggplot(pca_only,
                        aes(x=as.factor(seq_depth), y=spear_cor^2, fill=ds_nam)) +
     geom_bar(width = 0.8, position=position_dodge(width = 1), stat="identity",) +
     ggtitle(paste0(project, ": PCA",  i, " vs total sequences per sample")) +
     xlab("Min sequence depth per sample") +
-    ylab("Spearman Rsq") 
-    # geom_text(aes(x=as.factor(seq_depth), y=spear_cor^2, 
-    #               label = round(var_exp*100, digits = 0)),
-    #           position = position_dodge(width = 1))
-  ggsave(
-    filename = file.path(output_dir, "graphics", paste0(project, "_PCA",  i, "bar_5ds_var_exp.pdf")),
-    plot = g,
-    device = "pdf"
-  )
+    ylab("Spearman Rsq")
+  print(g)
 }
+dev.off()
 
-pdf(file = file.path(output_dir, "graphics", "seq_depth_artifact_PCA12345_lines.pdf"))
+pdf(file = file.path(output_dir, "graphics", "seq_depth_artifact_PCA12345_line.pdf"))
 for (i in 1:max(result_df$mds_lev)){
   pca_only <- result_df[mds_lev == i, ]
   g <- ggplot2::ggplot(pca_only, 
@@ -162,10 +161,4 @@ for (i in 1:max(result_df$mds_lev)){
   print(g)
 }
 dev.off()
-
-
-
-g <- aldex.clr(t(asv_table), conds = metadata$Genotype[row.names(asv_table)], mc.samples=150, denom="all", verbose=F)
-
-# conda create --name R35 R=3.5 
 
