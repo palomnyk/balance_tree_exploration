@@ -102,6 +102,8 @@ for(s in 1:length(min_seq_depths)){
   ald.ad <-  data.frame(ald@analysisData)
   my_datasets <- list(sd_filt_asv, my_clr,  ln_asv, ref_philr, new_DESeq2, ald.ad)
   
+  print(paste("finished seq depth filter:", s))
+  
   for( ds in 1:length(my_datasets)){
     print(my_ds_names[ds])
     my_table <- as.data.frame(my_datasets[ds])
@@ -113,6 +115,7 @@ for(s in 1:length(min_seq_depths)){
     myPCA <- data.frame(my_prcmp$x)
     my_var_exp <- my_prcmp$sdev^2/sum(my_prcmp$sdev^2)
     
+    print(paste("finished ds:", ds))
     for (md in 1:mds_depth){
       # kend[counter] <- cor.test(log10(total_seqs[total_seqs > seq_d]), myPCA[,md], method = "kendall")$estimate
       # perma_r2[counter] <- adonis2(log10(total_seqs[total_seqs > seq_d]) ~ myPCA[,md])$R2[1]
@@ -128,6 +131,8 @@ for(s in 1:length(min_seq_depths)){
 }
 
 result_df <- data.frame(ds_num, ds_nam, perma_r2, mds_lev, seq_depth, var_exp, spear_cor)
+print("created resulting DF")
+
 
 write.table(result_df, 
             file = file.path(output_dir, "tables", paste0(project, "_PCA_seqdep_filt_results.csv")),
@@ -145,6 +150,7 @@ for (i in 1:max(result_df$mds_lev)){
   print(g)
 }
 dev.off()
+print("made bar charts")
 
 pdf(file = file.path(output_dir, "graphics", "seq_depth_artifact_PCA12345_line.pdf"))
 for (i in 1:max(result_df$mds_lev)){
@@ -162,4 +168,5 @@ for (i in 1:max(result_df$mds_lev)){
   print(g)
 }
 dev.off()
+print("made line chart")
 
