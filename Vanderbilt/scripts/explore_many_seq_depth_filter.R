@@ -95,10 +95,14 @@ for(s in 1:length(min_seq_depths)){
   print(paste("made new philr", dim(as.data.frame(ref_philr))))
 
   ln_asv <- lognorm(sd_filt_asv)#dataset 6
-  # ald <- aldex.clr(sd_filt_asv, mc.samples=60, denom="all", verbose=F)
 
-  ald <- ALDEx2::aldex.clr(t(sd_filt_asv), conds = metadata$Genotype[safe_rns], mc.samples=40, denom="all", verbose=F)
-  ald <-  data.frame(ald@analysisData)
+  # ald <- ALDEx2::aldex.clr(t(sd_filt_asv), conds = metadata$Genotype[safe_rns], mc.samples=6, denom="all", verbose=F)
+  # ald <-  t(data.frame(ald@analysisData))
+  # print(paste("ald dim:", paste(dim(ald))))
+  
+  ald <- ALDEx2::aldex.clr(t(sd_filt_asv), conds = metadata$Genotype[safe_rns], mc.samples=6, denom="all", verbose=F)
+  ald <-  t(data.frame(ald@analysisData))
+  print(paste("ald dim:", paste(dim(ald))))
   
   my_datasets <- list(sd_filt_asv, my_clr,  ln_asv, ref_philr, new_DESeq2, ald)
   
@@ -110,7 +114,7 @@ for(s in 1:length(min_seq_depths)){
     print(dim(my_table))
     my_prcmp <- prcomp(my_table, 
                        center = TRUE,
-                       rank = 5)#,
+                       rank = mds_depth)#,
     # scale = TRUE)
     ##-Extract PCA matrix and convert to dataframe----------------------##
     myPCA <- data.frame(my_prcmp$x)
