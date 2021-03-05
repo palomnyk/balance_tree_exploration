@@ -55,9 +55,8 @@ metadata <- read.table(file.path(home_dir, project, "patient_metadata.tsv"),
 
 #Plot shannon diversity against log10(total_seqs)
 #Plot other normalization methods: otu log 100 and alr and clr 
-# min_seq_depths <- c(0,100,500,1000,2000,5000,10000,50000)
 my_ds_names <- c( "raw seqs", "clr(raw seqs)", "lognorm raw seqs", "philr ref", "DESeq2", "ALDEx2.clr")
-min_seq_depths <- c(0, 500, 1000, 5000, 10000, 50000)
+min_seq_depths <- c(0, 500, 1000, 5000, 10000, 20000, 40000)
 mds_depth <- 5
 
 total_seqs <- rowSums(asv_table)
@@ -96,11 +95,12 @@ for(s in 1:length(min_seq_depths)){
   print(paste("made new philr", dim(as.data.frame(ref_philr))))
 
   ln_asv <- lognorm(sd_filt_asv)#dataset 6
-  # ald <- aldex.clr(sd_filt_asv, mc.samples=150, denom="all", verbose=F)
+  # ald <- aldex.clr(sd_filt_asv, mc.samples=60, denom="all", verbose=F)
+
+  ald <- ALDEx2::aldex.clr(t(sd_filt_asv), conds = metadata$Genotype[safe_rns], mc.samples=40, denom="all", verbose=F)
+  ald <-  data.frame(ald@analysisData)
   
-  ald <- ALDEx2::aldex.clr(t(sd_filt_asv), conds = metadata$Genotype[safe_rns], mc.samples=150, denom="all", verbose=F)
-  ald.ad <-  data.frame(ald@analysisData)
-  my_datasets <- list(sd_filt_asv, my_clr,  ln_asv, ref_philr, new_DESeq2, ald.ad)
+  my_datasets <- list(sd_filt_asv, my_clr,  ln_asv, ref_philr, new_DESeq2, ald)
   
   print(paste("finished seq depth filter:", s))
   
@@ -109,7 +109,8 @@ for(s in 1:length(min_seq_depths)){
     my_table <- as.data.frame(my_datasets[ds])
     print(dim(my_table))
     my_prcmp <- prcomp(my_table, 
-                       center = TRUE)#,
+                       center = TRUE,
+                       rank = 5)#,
     # scale = TRUE)
     ##-Extract PCA matrix and convert to dataframe----------------------##
     myPCA <- data.frame(my_prcmp$x)
@@ -157,13 +158,16 @@ for (i in 1:max(result_df$mds_lev)){
   pca_only <- result_df[mds_lev == i, ]
   g <- ggplot2::ggplot(pca_only, 
                        aes(x=seq_depth, y=spear_cor^2, group = ds_nam)) +
-    geom_point(aes(color = factor(ds_nam))) +
-    geom_line(aes(color = factor(ds_nam))) +
-    ggtitle(paste0(project, ": PCA",  i, " vs total sequences per sample")) +
-    xlab("Min sequence depth per sample") +
-    ylab("Spearman Rsq") + 
-    theme(legend.title =  "Transformations") +
-    theme_minimal()
+    ggplot2::geom_point(aes(color = factor(ds_nam))) +
+    ggplot2::geom_line(aes(color = factor(ds_nam))) +
+    ggplot2::annotate("text", x = pca_only$seq_depth[1:5] + 10000, y = c(pca_only$spear_cor^2)[1:5], 
+                      label = pca_only$ds_nam[1:5]) +
+    ggplot2::ggtitle(paste0(project, ": PCA",  i, " vs total sequences per sample")) +
+    ggplot2::xlab("Min sequence depth per sample") +
+    ggplot2::ylab("Spearman italic(R) ^ 2") + 
+    ggplot2::labs(fill = "Transformations") +
+    theme(axis.text.x = element_text(angle = 90)) +
+    ggplot2::theme_minimal()
   g
   print(g)
 }
