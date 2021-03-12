@@ -70,6 +70,11 @@ mds_lev <- vector(mode = "integer", length = length(my_ds_names) * length(min_se
 seq_depth <- vector(mode = "integer", length = length(my_ds_names) * length(min_seq_depths) * mds_depth)
 var_exp <- vector(mode = "integer", length = length(my_ds_names) * length(min_seq_depths) * mds_depth)
 spear_cor <- vector(mode = "integer", length = length(my_ds_names) * length(min_seq_depths) * mds_depth)
+samples_left <- vector(mode = "integer", length = length(my_ds_names) * length(min_seq_depths) * mds_depth)
+taxa_left <- vector(mode = "integer", length = length(my_ds_names) * length(min_seq_depths) * mds_depth)
+zero_count <- vector(mode = "integer", length = length(my_ds_names) * length(min_seq_depths) * mds_depth)
+
+
 
 counter <- 1
 for(s in 1:length(min_seq_depths)){
@@ -95,13 +100,10 @@ for(s in 1:length(min_seq_depths)){
   print(paste("made new philr", dim(as.data.frame(ref_philr))))
 
   ln_asv <- lognorm(sd_filt_asv)#dataset 6
-
-  # ald <- ALDEx2::aldex.clr(t(sd_filt_asv), conds = metadata$Genotype[safe_rns], mc.samples=6, denom="all", verbose=F)
-  # ald <-  t(data.frame(ald@analysisData))
-  # print(paste("ald dim:", paste(dim(ald))))
   
-  ald <- ALDEx2::aldex.clr(t(sd_filt_asv), conds = metadata$Genotype[safe_rns], mc.samples=6, denom="all", verbose=F)
-  ald <-  t(data.frame(ald@analysisData))
+  ald <- ALDEx2::aldex.clr(sd_filt_asv, mc.samples=12, denom="all", verbose=F)
+  ald <-  data.frame(ald@analysisData)
+  print(paste("size of ald:", object.size(ald)))
   print(paste("ald dim:", paste(dim(ald))))
   
   my_datasets <- list(sd_filt_asv, my_clr,  ln_asv, ref_philr, new_DESeq2, ald)
@@ -111,6 +113,7 @@ for(s in 1:length(min_seq_depths)){
   for( ds in 1:length(my_datasets)){
     print(my_ds_names[ds])
     my_table <- as.data.frame(my_datasets[ds])
+    zeros <- sum(my_table == 0)
     print(dim(my_table))
     my_prcmp <- prcomp(my_table, 
                        center = TRUE,
@@ -130,12 +133,15 @@ for(s in 1:length(min_seq_depths)){
       seq_depth[counter] <- seq_d
       var_exp[counter] <- my_var_exp[md]
       spear_cor[counter] <- cor(total_seqs[total_seqs >= seq_d], myPCA[,md], method = "spearman")
+      samples_left[counter] <- nrow(my_table)
+      taxa_left[counter] <- ncol(my_table)
+      zero_count[counter] <- zeros
       counter <- counter + 1
     }
   }
 }
 
-result_df <- data.frame(ds_num, ds_nam, perma_r2, mds_lev, seq_depth, var_exp, spear_cor)
+result_df <- data.frame(ds_num, ds_nam, perma_r2, mds_lev, seq_depth, var_exp, spear_cor, samples_left, zero_count, taxa_left)
 print("created resulting DF")
 
 
@@ -164,11 +170,54 @@ for (i in 1:max(result_df$mds_lev)){
                        aes(x=seq_depth, y=spear_cor^2, group = ds_nam)) +
     ggplot2::geom_point(aes(color = factor(ds_nam))) +
     ggplot2::geom_line(aes(color = factor(ds_nam))) +
-    ggplot2::annotate("text", x = pca_only$seq_depth[1:5] + 10000, y = c(pca_only$spear_cor^2)[1:5], 
-                      label = pca_only$ds_nam[1:5]) +
+    ggplot2::annotate("text", x = head(pca_only$seq_depth, n = length(my_ds_names)), 
+                      y = head(c(pca_only$spear_cor^2), n = length(my_ds_names)), 
+                      label = head(pca_only$ds_nam, n = length(my_ds_names)),
+                      hjust = -0.1) +
     ggplot2::ggtitle(paste0(project, ": PCA",  i, " vs total sequences per sample")) +
     ggplot2::xlab("Min sequence depth per sample") +
-    ggplot2::ylab("Spearman italic(R) ^ 2") + 
+    ggplot2::ylab("paste(italic(R) ^ 2, \" = .75\")") + 
+    ggplot2::labs(fill = "Transformations") +
+    theme(axis.text.x = element_text(angle = 90)) +
+    ggplot2::theme_minimal()
+  print(g)
+  
+  #plot remaining taxa
+  g <- ggplot2::ggplot(pca_only, 
+                       aes(x=seq_depth, y=taxa_left, group = ds_nam)) +
+    ggplot2::geom_point(aes(color = factor(ds_nam))) +
+    ggplot2::geom_line(aes(color = factor(ds_nam))) +
+    ggplot2::ggtitle(paste0(project, ": PCA",  i, " vs total sequences per sample")) +
+    ggplot2::xlab("Min sequence depth per sample") +
+    ggplot2::ylab("Taxa") + 
+    ggplot2::labs(fill = "Transformations") +
+    theme(axis.text.x = element_text(angle = 90)) +
+    ggplot2::theme_minimal()
+  g
+  print(g)
+  
+  #plot remaining samples
+  g <- ggplot2::ggplot(pca_only, 
+                       aes(x=seq_depth, y=samples_left, group = ds_nam)) +
+    ggplot2::geom_point(aes(color = factor(ds_nam))) +
+    ggplot2::geom_line(aes(color = factor(ds_nam))) +
+    ggplot2::ggtitle(paste0(project, ": PCA",  i, " vs total sequences per sample")) +
+    ggplot2::xlab("Min sequence depth per sample") +
+    ggplot2::ylab("Samples") + 
+    ggplot2::labs(fill = "Transformations") +
+    theme(axis.text.x = element_text(angle = 90)) +
+    ggplot2::theme_minimal()
+  g
+  print(g)
+  
+  #plot percentage of zeros
+  g <- ggplot2::ggplot(pca_only,
+                       aes(x=seq_depth, y=zero_count/samples_left*taxa_left, group = ds_nam)) +
+    ggplot2::geom_point(aes(color = factor(ds_nam))) +
+    ggplot2::geom_line(aes(color = factor(ds_nam))) +
+    ggplot2::ggtitle(paste0(project, ": PCA",  i, " vs total sequences per sample")) +
+    ggplot2::xlab("Min sequence depth per sample") +
+    ggplot2::ylab("Percentage of Zeros") +
     ggplot2::labs(fill = "Transformations") +
     theme(axis.text.x = element_text(angle = 90)) +
     ggplot2::theme_minimal()

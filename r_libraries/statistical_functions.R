@@ -278,7 +278,7 @@ roc_axes <- function(test_data,
         true_pos = c(true_pos, tail(true_pos))
         false_pos = c(false_pos, tail(false_pos))
       }
-      else{
+      else if (decision =! truth & truth == T){
         true_neg = c(true_neg, tail(true_neg))
         true_pos = c(true_pos, tail(true_pos))
         false_pos = c(false_pos, tail(false_pos)+1)
