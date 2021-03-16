@@ -36,7 +36,6 @@ vignettes/*.pdf
 rsconnect/
 
 #my customizations to git ignore
-*/output/
 */downloaded_seqs/
 .DS_Store
 .idea

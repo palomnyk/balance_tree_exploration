@@ -76,6 +76,8 @@ metadata_col <- "type"
 total_seqs <- rowSums(asv_table)
 total_seqs <- data.frame(total_seqs, row.names = row.names(asv_table))
 
+
+
 pdf(file = file.path(output_dir, "graphics","roc_seq_depth.pdf"))
 for(s in 1:length(min_seq_depths)){
   seq_d <- min_seq_depths[s]#new sequencing depth
