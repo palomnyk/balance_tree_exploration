@@ -239,7 +239,7 @@ roc_axes <- function(test_data,
                     error_range = 0.10){
   # This function takes predictor variables (test_data) and tests it 
   # against the correct data (true_resp) and returns a dataframe of the 
-  # true postives and true positives as ratios between 0 and 1
+  # true postives and false positives as ratios between 0 and 1
   # test_data is the testing variable
   # the true_resp is the correct variable
   # the error range provides an acceptable amount of error for when 
@@ -272,13 +272,11 @@ roc_axes <- function(test_data,
         true_pos = c(true_pos, tail(true_pos)+1)
         true_neg = c(true_neg, tail(true_neg))
         false_pos = c(false_pos, tail(false_pos))
-      }
-      else if (decision == truth & truth == F){
+      }else if (decision == truth & truth == F){
         true_neg = c(true_neg, tail(true_neg)+1)
         true_pos = c(true_pos, tail(true_pos))
         false_pos = c(false_pos, tail(false_pos))
-      }
-      else if (decision =! truth & truth == T){
+      }else if (decision != truth & truth == T){
         true_neg = c(true_neg, tail(true_neg))
         true_pos = c(true_pos, tail(true_pos))
         false_pos = c(false_pos, tail(false_pos)+1)
@@ -286,7 +284,6 @@ roc_axes <- function(test_data,
     }#for (rw in 1:nrow(test_data)){
   }#for (grp in groups){
   print(paste("max(false_pos):", max(false_pos), "max(true_pos):", max(true_pos), "any na:", any(is.na(true_pos))))
-  
   if( max(true_neg) != 0){
     true_neg = true_neg/max(true_neg)
   }
