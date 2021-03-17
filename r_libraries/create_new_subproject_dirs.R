@@ -18,7 +18,7 @@ project <- args[1]
 new_dir <- file.path(home_dir, project)
 main_dirs <- c("downloaded_seqs", "output", "scripts")
 output_subdirs <- c("graphics", "r_objects", "tables", "taxonomy", "tree_process_blast")
-script_subdirs <- c("data_preprocessing", "philr_statistics", "random_forest", "ref_tree_script", "download_scripts")
+script_subdirs <- c("data_preprocessing", "philr_statistics", "random_forest", "ref_tree_script","transformations", "download_scripts")
 
 {
   if (!dir.exists(home_dir)) {stop(paste("This script expects this project to be located at", home_dir, "."))}
