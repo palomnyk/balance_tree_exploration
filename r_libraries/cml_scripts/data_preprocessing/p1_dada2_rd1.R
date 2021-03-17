@@ -26,18 +26,20 @@ library("optparse")
 option_list <- list(
   make_option(c("-d", "--homedir"), type="character", 
               default=file.path('~','git','balance_tree_exploration'), 
-              help="dataset dir path", metavar="character"),
+              help="dataset dir path", metavar="home dir"),
   make_option(c("-p", "--project"), type="character", default=NULL, 
-              help="project folder", metavar="character"),
+              help="project folder", metavar="project"),
   make_option(c("-f", "--r1_pattern"), type="character", default="_R1.fastq.gz", 
-              help="pattern for forward filenames for paired-end reads", metavar="character"),
+              help="pattern for forward filenames for paired-end reads", 
+              metavar="forward read suffix"),
   make_option(c("-r", "--r2_pattern"), type="character", default="_R2.fastq.gz", 
-              help="pattern for reverse filenames for paired-end reads", metavar="character"),
+              help="pattern for reverse filenames for paired-end reads", 
+              metavar="reverse read suffix"),
   make_option(c("-t", "--trunLen"), type="integer", default="240", 
-              help="truncation length for paired-end reads", metavar="character")
+              help="truncation length for paired-end reads", metavar="truncation length")
 ); 
 
-opt_parser <- OptionParser(option_list=option_list);
+opt_parser <- optparse::OptionParser(option_list=option_list);
 opt <- parse_args(opt_parser);
 
 print(opt)
@@ -95,6 +97,7 @@ seqtab <- dada2::removeBimeraDenovo(seqtab, method="consensus", multithread=FALS
 setwd(file.path(output_dir, "tables"))
 saveRDS(seqtab, file.path(output_dir, "r_objects","ForwardReads_DADA2.rds"))
 write.table(seqtab,file.path(output_dir,"tables","ForwardReads_DADA2.txt"),sep="\t")
+saveRDS(rowSums(seqtab), file.path(output_dir, "r_objects","raw_ASV_total_row_seqs.rds"))
 
 fastaRef <- file.path(home_dir, "taxonomy", "rdp_train_set_16.fa.gz")
 taxTab <- dada2::assignTaxonomy(seqtab, refFasta = fastaRef, multithread=TRUE)
@@ -107,6 +110,9 @@ names(seqs) <- seqs # This propagates to the tip labels of the tree
 alignment <- DECIPHER::AlignSeqs(DNAStringSet(seqs), anchor=NA,verbose=FALSE)
 
 saveRDS(taxTab, file.path(output_dir, "r_objects", "ForwardReads_DADA2_taxonomy.rds"))
+write.table(taxTab, 
+            file = file.path(output_dir, "tables", "ForwardReads_DADA2_taxonomy.csv"),
+            sep = ",")
 saveRDS(alignment, file.path(output_dir, "r_objects","ForwardReads_DADA2_alignment.rds"))
 
 print("Alignment completed")

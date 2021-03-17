@@ -18,12 +18,15 @@ option_list <- list(
   make_option(c("-p", "--project"), type="character", default=NULL, 
               help="project folder", metavar="project"),
   make_option(c("-f", "--r1_pattern"), type="character", default="_R1.fastq.gz", 
-              help="pattern for forward filenames for paired-end reads", metavar="forward read suffix"),
-  make_option(c("-r", "--r2_pattern"), type="character", default="_R2.fastq.gz", 
-              help="pattern for reverse filenames for paired-end reads", metavar="reverse read suffix")
+              help="pattern for forward filenames for paired-end reads", 
+              metavar="forward read suffix"),
+  make_option(c("-r", "--r2_pattern"), type="character", 
+              default="_R2.fastq.gz", 
+              help="pattern for reverse filenames for paired-end reads", 
+              metavar="reverse read suffix")
 ); 
 
-opt_parser <- OptionParser(option_list=option_list);
+opt_parser <- optparse::OptionParser(option_list=option_list);
 opt <- parse_args(opt_parser);
 
 print(opt)
@@ -42,7 +45,7 @@ f_path <- file.path(home_dir, project, "downloaded_seqs") # CHANGE ME to the dir
 fnFs <- sort(list.files(f_path, pattern=opt$r1_pattern, full.names = TRUE))
 # Extract sample names, assuming filenames have format: SAMPLENAME_XXX.fastq
 sample.names <- sapply(strsplit(basename(fnFs), "_"), `[`, 1)
-plotQualF <- plotQualityProfile(fnFs[1:2])
+plotQualF <- dada2::plotQualityProfile(fnFs[1:2])
 message("created forward plotQualityProfile")
 
 dir.create(file.path(output_dir, "graphics"), showWarnings = FALSE)
@@ -55,7 +58,7 @@ message("saved forward plotQualityProfile")
 
 tryCatch({
   fnRs <- sort(list.files(f_path, pattern=opt$r2_pattern, full.names = TRUE))
-  plotQualR <- plotQualityProfile(fnRs[1:2])
+  plotQualR <- dada2::plotQualityProfile(fnRs[1:2])
   message("Created reverse plotQualityProfile")
   png(filename="plotQualR.png")
   plot(plotQualR)
