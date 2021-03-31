@@ -4,11 +4,6 @@
 
 rm(list = ls()) #clear workspace
 
-##-functions--------------------------------------------------------##
-find_step_size <- function(num_steps, max_dep, min_dep) {
-  return( (max_dep - min_dep) / num_steps )
-}
-
 ##-Load Depencencies------------------------------------------------##
 if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
 if (!requireNamespace("vegan", quietly = TRUE)) BiocManager::install("vegan")
@@ -22,7 +17,11 @@ project <- "Vanderbilt"
 output_dir <- file.path(home_dir, project, 'output')
 setwd(file.path(home_dir))
 
-##-Functions--------------------------------------------------------##
+##-functions--------------------------------------------------------##
+find_step_size <- function(num_steps, max_dep, min_dep) {
+  return( (max_dep - min_dep) / num_steps )
+}
+
 source(file.path(home_dir, "r_libraries", "statistical_functions.R"))
 source(file.path(home_dir, "r_libraries", "table_manipulations.R"))
 
@@ -30,6 +29,9 @@ source(file.path(home_dir, "r_libraries", "table_manipulations.R"))
 asv_table <- readRDS(file.path(output_dir, "r_objects", "ForwardReads_DADA2.rds"))
 
 ##-Create new dataframe---------------------------------------------##
+
+set.seed(54)
+
 total_seqs <- rowSums(asv_table)
 max_depth <- max(total_seqs)
 min_depth <- 10#min(total_seqs)
@@ -38,16 +40,15 @@ num_steps <- 200
 step_length <- find_step_size(num_steps, max_depth, min_depth)
 
 new_df <- data.frame(max_row)
-new_colnams <- c("no_rare")
 
-num_drop <- num_steps/ncol(asv_table)
+num_drop <- floor(ncol(asv_table)/num_steps)
 
 for(s in 1:num_steps){
-  new_col <- vegan::rrarefy(max_row, s*step_length)
-  # non_zeros <- 
-  # new_col <- 
-  new_colnams <- c(new_colnams, paste0("total_seq", character(s*step_length)))
-  new_df[,ncol(new_df)+1] <- t(new_col)
+  new_col <- new_df[,ncol(new_df)]
+  non_zeros <- as.integer(which(max_row != 0))
+  new_zeros <- sample(non_zeros, num_drop)
+  new_col[new_zeros] <- 0
+  new_df[,ncol(new_df)+1] <- new_col
 }
 
 new_df <- t(new_df)
