@@ -102,7 +102,7 @@ for(s in 1:length(min_seq_depths)){
   ln_asv <- lognorm(sd_filt_asv)#dataset 6
   
   ald <- ALDEx2::aldex.clr(sd_filt_asv, mc.samples=12, denom="all", verbose=F)
-  ald <-  data.frame(ald@analysisData)
+  ald <- data.frame(ald@analysisData)
   print(paste("size of ald:", object.size(ald)))
   print(paste("ald dim:", paste(dim(ald))))
   
@@ -115,6 +115,7 @@ for(s in 1:length(min_seq_depths)){
     my_table <- as.data.frame(my_datasets[ds])
     zeros <- sum(my_table == 0)
     print(dim(my_table))
+    ##-Create a PCA-----------------------------------------------------##
     my_prcmp <- prcomp(my_table, 
                        center = TRUE,
                        rank = mds_depth)#,
