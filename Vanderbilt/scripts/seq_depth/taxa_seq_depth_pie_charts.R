@@ -38,13 +38,17 @@ make_taxa_pie_chart <- function(tabl, title_info) {
   pie_areas <- data.frame("label" = colnames(tabl), 
                           "counts" = colSums(tabl),
                           row.names = 1:ncol(tabl))
-  g <- ggplot(pie_areas, aes(x="", y=counts, fill=label)) +
+  g <- ggplot(pie_areas, aes(x="", y=counts, fill=factor(label))) +
     geom_bar(stat="identity", width=1) +
     coord_polar("y", start=0) +
     ggplot2::ggtitle(title_info) +
     theme(legend.position = "none") +
+    guides(fill=FALSE) +
     theme_classic()
   return(g)
+}
+total_cells <- function(df){
+  return(dim(df)[1]*dim(df)[2])
 }
 
 
@@ -108,7 +112,10 @@ for( taxa_col in 1:ncol(asv_tax)){
   tname <- names(asv_tax)[taxa_col]
   # pdf(file = file.path(output_dir, "graphics", paste0(tname,"_seq_depth_taxa_pie.pdf")))
   # zero_plots <- list()
-  # taxa_plots <- list()
+  taxa_plots_fi <- list()
+  taxa_plots_fo <- list()
+  zero_plots_fi <- list()
+  zero_plots_fo <- list()
   for(s in 1:length(min_seq_depths)){
     seq_d <- min_seq_depths[s]#new sequencing depth
     sd_filt_asv <- asv_table[total_seqs$total_seqs >= seq_d,]#dataset 1
@@ -117,36 +124,30 @@ for( taxa_col in 1:ncol(asv_tax)){
     my_table <- makeTaxaTable(sd_filt_asv, asv_tax, taxa_col)
     fo_table <- makeTaxaTable(filter_out, asv_tax, taxa_col)
     #make taxa pie_charts
-    # fi_plot <- make_taxa_pie_chart(my_table, paste(project, names(asv_tax)[taxa_col], "filter_in", seq_d))
-    # fo_plot <- make_taxa_pie_chart(fo_table, paste(project, names(asv_tax)[taxa_col], "filter_out", seq_d))
-    # taxa_plots <- append(taxa_plots, fi_plot)
-    # taxa_plots <- append(taxa_plots, fo_plot)
+    fi_plot <- make_taxa_pie_chart(my_table, paste(project, names(asv_tax)[taxa_col], "filter_in", seq_d))
+    fo_plot <- make_taxa_pie_chart(fo_table, paste(project, names(asv_tax)[taxa_col], "filter_out", seq_d))
+    taxa_plots_fi[[s]] <- fi_plot
+    taxa_plots_fo[[s]] <- fo_plot
     
     #make taxa pie_charts
-    fi_zeros <- sum(my_table == 0)
-    fi_nonzeros <- ncol(my_table)*nrow(my_table) - fi_zeros
-    fo_zeros <- sum(fo_table == 0)
-    fo_nonzeros <- ncol(fo_table)*nrow(fo_table) - fo_zeros
+    fi_zeros <- sum(my_table == 0)/total_cells(my_table)
+    fi_nonzeros <- (ncol(my_table)*nrow(my_table) - fi_zeros)/total_cells(my_table)
+    fo_zeros <- sum(fo_table == 0)/total_cells(fo_table)
+    fo_nonzeros <- (ncol(fo_table)*nrow(fo_table) - fo_zeros)/total_cells(fo_table)
 
-    # my_zeros <- data.frame("non-zeros" = c(fo_nonzeros),
-    #                        "zeros" = c(fo_zeros))
-    # zero_plots <- append(zero_plots, make_taxa_pie_chart(my_zeros, 
-    #                                                     paste(project, names(asv_tax)[taxa_col], "filter_out zeros", seq_d)))
-    # my_zeros <- data.frame("non-zeros" = c(fi_nonzeros),
-    #                        "zeros" = c(fi_zeros))
-    # zero_plots <- append(zero_plots, make_taxa_pie_chart(my_zeros, 
-    #                                                     paste(project, names(asv_tax)[taxa_col], "filter_out zeros", seq_d)))
-    # 
+    my_zeros <- data.frame("non-zeros" = c(fo_nonzeros),
+                           "zeros" = c(fo_zeros))
+    zero_plots_fo[[s]] <- make_taxa_pie_chart(my_zeros,
+                                              paste(project, names(asv_tax)[taxa_col], "filter_out zeros", seq_d))
+    my_zeros <- data.frame("non-zeros" = c(fi_nonzeros),
+                           "zeros" = c(fi_zeros))
+    zero_plots_fi[[s]] <- make_taxa_pie_chart(my_zeros,
+                                              paste(project, names(asv_tax)[taxa_col], "filter_in zeros", seq_d))
+
     #Do stats
     fisher_data <- matrix(c(fi_zeros,fi_nonzeros,fo_zeros,fo_nonzeros), nrow = 2)
-    zero_ft <- fisher.test(fisher_data)
+    zero_ft <- chisq.test(fisher_data, simulate.p.value = T)
     
-    # fi_taxa <- colSums(my_table)
-    # names(fi_taxa) <- replace( colnames(my_table), is.na(colnames(my_table)), "UNKNOWN")
-    # fo_taxa <-  colSums(fo_table)
-    # names(fo_taxa) <- replace( colnames(fo_table), is.na(colnames(fo_table)), "UNKNOWN")
-    # 
-    # 
     fi_taxa <- data.frame("fi" = colSums(my_table),
                          row.names = replace( colnames(my_table), is.na(colnames(my_table)), "UNKNOWN"))
     fo_taxa <- data.frame("fo" = colSums(fo_table),
@@ -187,9 +188,12 @@ for( taxa_col in 1:ncol(asv_tax)){
       counter <- counter + 1
     }
   }
-  # n <- length(taxa_plots)
+  n <- length(taxa_plots_fi)
   # nCol <- floor(sqrt(n))
-  # grid.arrange(grobs=taxa_plots[[]], ncol=nCol)
+  do.call("grid.arrange", c(append(taxa_plots_fi, taxa_plots_fo), 
+                            ncol=n))
+  do.call("grid.arrange", c(append(zero_plots_fi, zero_plots_fo), 
+                            ncol=n))
   # dev.off()
 }  
 
@@ -197,56 +201,48 @@ result_df <- data.frame(taxa_lev, taxa_name, mds_lev, seq_depth,
                         var_exp, spear_cor, fi_left_zeros, fo_left_zeros,
                         taxa_pval, zero_pval)
 
-for (i in 2:max(result_df$taxa_lev)){
-  pca_only <- result_df[taxa_lev == i, ]
-  g <- ggplot2::ggplot(pca_only,
-                       aes(x=seq_depth, y=spear_cor^2)) +
-    ggplot2::geom_point() +
-    ggplot2::geom_line() +
-    ggplot2::ggtitle(paste0(project, ": Taxa Lev: ",  pca_only$taxa_name[1], " PCA1 vs seq depth")) +
-    ggplot2::xlab("Min sequence depth per sample") +
-    ggplot2::ylab("R ^ 2") +
-    ggplot2::labs(fill = "Transformations") +
-    theme(axis.text.x = element_text(angle = 90)) +
-    ggplot2::theme_minimal()
-  print(g)
-  
-  g <- ggplot2::ggplot(pca_only,
-                       aes(x=seq_depth)) +
-    ggplot2::geom_point(aes(y=fo_left_zeros)) +
-    ggplot2::geom_line(aes(y=fo_left_zeros)) +
-    ggplot2::geom_point(aes(y=fi_left_zeros)) +
-    ggplot2::geom_line(aes(y=fi_left_zeros)) +
-    ggplot2::ggtitle(paste0(project, ": Taxa Level:",  pca_only$taxa_name[1], " Zeros vs seq depth")) +
-    ggplot2::xlab("Min sequence depth per sample") +
-    ggplot2::ylab("Zeros") +
-    theme(axis.text.x = element_text(angle = 90)) +
-    ggplot2::theme_minimal()
-  print(g)
+# for (i in 2:max(result_df$taxa_lev)){
+#   pca_only <- result_df[taxa_lev == i, ]
+#   g <- ggplot2::ggplot(pca_only,
+#                        aes(x=seq_depth)) +
+#     ggplot2::geom_point(aes(y=fo_left_zeros)) +
+#     ggplot2::geom_line(aes(y=fo_left_zeros)) +
+#     ggplot2::geom_point(aes(y=fi_left_zeros)) +
+#     ggplot2::geom_line(aes(y=fi_left_zeros)) +
+#     ggplot2::ggtitle(paste0(project, ": Taxa Level:",  pca_only$taxa_name[1], " Zeros vs seq depth")) +
+#     ggplot2::xlab("Min sequence depth per sample") +
+#     ggplot2::ylab("Zeros") +
+#     theme(axis.text.x = element_text(angle = 90)) +
+#     ggplot2::theme_minimal()
+#   print(g)
+# }
 
-  g <- ggplot2::ggplot(pca_only,
-                       aes(x=seq_depth, y=zero_pval)) +
-    ggplot2::geom_point() +
-    ggplot2::geom_line() +
-    ggplot2::ggtitle(paste0(project, ": Taxa Lev: ",  pca_only$taxa_name[1], " PCA1 vs seq depth")) +
-    ggplot2::xlab("Min sequence depth per sample") +
-    ggplot2::ylab("Zeros vs zeros Fisher pvalues") +
-    theme(axis.text.x = element_text(angle = 90)) +
-    ggplot2::theme_minimal()
-  print(g)
+g <- ggplot2::ggplot(result_df,
+                     aes(x=seq_depth, y=taxa_pval, group = factor(taxa_name))) +
+  ggplot2::geom_point(aes(color = factor(taxa_name))) +
+  ggplot2::geom_line(aes(color = factor(taxa_name))) +
+  ggplot2::ggtitle(paste0(project, ': Formalized filter-in vs filter-out taxa chi sq')) +
+  ggplot2::xlab("Min sequence depth per sample") +
+  ggplot2::ylab("Taxa vs taxa chi sqr pvalue") 
+print(g)
 
-  g <- ggplot2::ggplot(pca_only,
-                       aes(x=seq_depth, y=taxa_pval)) +
-    ggplot2::geom_point() +
-    ggplot2::geom_line() +
-    ggplot2::ggtitle(paste0(project, ": Taxa Lev: ",  pca_only$taxa_name[1], " PCA1 vs seq depth")) +
-    ggplot2::xlab("Min sequence depth per sample") +
-    ggplot2::ylab("Taxa vs taxa chi sqr pvalue") +
-    ggplot2::geom_text(aes(x=seq_depth, y=taxa_pval, label = round(taxa_pval, 3)), 
-                       nudge_y = 0.01, 
-                       nudge_x = 10) + 
-    theme(axis.text.x = element_text(angle = 90)) +
-    ggplot2::theme_minimal()
-  print(g)
-  
-}
+g <- ggplot2::ggplot(result_df,
+                     aes(x=seq_depth, y=zero_pval, group = factor(taxa_name))) +
+  ggplot2::geom_point(aes(color = factor(taxa_name))) +
+  ggplot2::geom_line(aes(color = factor(taxa_name))) +
+  ggplot2::ggtitle(paste0(project, ': Normalized filter-in vs filter-out zeros Fisher test')) +
+  ggplot2::xlab("Min sequence depth per sample") +
+  ggplot2::ylab("Pvalue") 
+print(g)
+
+g <- ggplot2::ggplot(result_df,
+                     aes(x=seq_depth, y=spear_cor^2, group = factor(taxa_name))) +
+  ggplot2::geom_point(aes(color = factor(taxa_name))) +
+  ggplot2::geom_line(aes(color = factor(taxa_name))) +
+  ggplot2::ggtitle(paste0(project, ": Taxa Lev: ","PCA1 vs seq depth")) +
+  ggplot2::xlab("Min sequence depth per sample") +
+  ggplot2::ylab("R ^ 2") +
+  ggplot2::labs(fill = "Transformations") +
+  theme(axis.text.x = element_text(angle = 90)) +
+  ggplot2::theme_minimal()
+print(g)
