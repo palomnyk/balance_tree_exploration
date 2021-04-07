@@ -42,9 +42,13 @@ make_taxa_pie_chart <- function(tabl, title_info) {
     geom_bar(stat="identity", width=1) +
     coord_polar("y", start=0) +
     ggplot2::ggtitle(title_info) +
-    theme(legend.position = "none") +
+    theme(legend.position = "none",
+          axis.text.x=element_blank(),
+          axis.text.y=element_blank(),
+          axis.ticks=element_blank(),
+          axis.title.x=element_blank(),
+          axis.title.y=element_blank(),) +
     guides(fill=FALSE) +
-    theme_classic()
   return(g)
 }
 total_cells <- function(df){
@@ -110,8 +114,7 @@ counter <- 1
 ##-Loop and build result DF-----------------------------------------##
 for( taxa_col in 1:ncol(asv_tax)){
   tname <- names(asv_tax)[taxa_col]
-  # pdf(file = file.path(output_dir, "graphics", paste0(tname,"_seq_depth_taxa_pie.pdf")))
-  # zero_plots <- list()
+  pdf(file = file.path(output_dir, "graphics", paste0(tname,"_seq_depth_taxa_pie.pdf")))
   taxa_plots_fi <- list()
   taxa_plots_fo <- list()
   zero_plots_fi <- list()
@@ -124,8 +127,9 @@ for( taxa_col in 1:ncol(asv_tax)){
     my_table <- makeTaxaTable(sd_filt_asv, asv_tax, taxa_col)
     fo_table <- makeTaxaTable(filter_out, asv_tax, taxa_col)
     #make taxa pie_charts
-    fi_plot <- make_taxa_pie_chart(my_table, paste(project, names(asv_tax)[taxa_col], "filter_in", seq_d))
-    fo_plot <- make_taxa_pie_chart(fo_table, paste(project, names(asv_tax)[taxa_col], "filter_out", seq_d))
+    taxa_char <- substr(names(asv_tax)[taxa_col],1,1)
+    fi_plot <- make_taxa_pie_chart(my_table, paste( taxa_char, "fi t", seq_d))
+    fo_plot <- make_taxa_pie_chart(fo_table, paste(taxa_char, "fo t", seq_d))
     taxa_plots_fi[[s]] <- fi_plot
     taxa_plots_fo[[s]] <- fo_plot
     
@@ -138,11 +142,11 @@ for( taxa_col in 1:ncol(asv_tax)){
     my_zeros <- data.frame("non-zeros" = c(fo_nonzeros),
                            "zeros" = c(fo_zeros))
     zero_plots_fo[[s]] <- make_taxa_pie_chart(my_zeros,
-                                              paste(project, names(asv_tax)[taxa_col], "filter_out zeros", seq_d))
+                                              paste(taxa_char, "fo z", seq_d))
     my_zeros <- data.frame("non-zeros" = c(fi_nonzeros),
                            "zeros" = c(fi_zeros))
     zero_plots_fi[[s]] <- make_taxa_pie_chart(my_zeros,
-                                              paste(project, names(asv_tax)[taxa_col], "filter_in zeros", seq_d))
+                                              paste(taxa_char, "fi z", seq_d))
 
     #Do stats
     fisher_data <- matrix(c(fi_zeros,fi_nonzeros,fo_zeros,fo_nonzeros), nrow = 2)
@@ -194,7 +198,7 @@ for( taxa_col in 1:ncol(asv_tax)){
                             ncol=n))
   do.call("grid.arrange", c(append(zero_plots_fi, zero_plots_fo), 
                             ncol=n))
-  # dev.off()
+  dev.off()
 }  
 
 result_df <- data.frame(taxa_lev, taxa_name, mds_lev, seq_depth, 
@@ -221,7 +225,7 @@ g <- ggplot2::ggplot(result_df,
                      aes(x=seq_depth, y=taxa_pval, group = factor(taxa_name))) +
   ggplot2::geom_point(aes(color = factor(taxa_name))) +
   ggplot2::geom_line(aes(color = factor(taxa_name))) +
-  ggplot2::ggtitle(paste0(project, ': Formalized filter-in vs filter-out taxa chi sq')) +
+  ggplot2::ggtitle(paste0(project, ': Normalized filter-in vs filter-out taxa chi sq')) +
   ggplot2::xlab("Min sequence depth per sample") +
   ggplot2::ylab("Taxa vs taxa chi sqr pvalue") 
 print(g)
