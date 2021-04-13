@@ -48,7 +48,7 @@ make_taxa_pie_chart <- function(tabl, title_info) {
           axis.ticks=element_blank(),
           axis.title.x=element_blank(),
           axis.title.y=element_blank(),) +
-    guides(fill=FALSE) +
+    guides(fill=FALSE)
   return(g)
 }
 total_cells <- function(df){
@@ -150,7 +150,8 @@ for( taxa_col in 1:ncol(asv_tax)){
 
     #Do stats
     fisher_data <- matrix(c(fi_zeros,fi_nonzeros,fo_zeros,fo_nonzeros), nrow = 2)
-    zero_ft <- chisq.test(fisher_data, simulate.p.value = T)
+    # zero_ft <- chisq.test(fisher_data, simulate.p.value = T)
+    zero_ft <- chisq.test(c(fi_zeros,fi_nonzeros), c(fo_zeros,fo_nonzeros), simulate.p.value = T)
     
     fi_taxa <- data.frame("fi" = colSums(my_table),
                          row.names = replace( colnames(my_table), is.na(colnames(my_table)), "UNKNOWN"))
