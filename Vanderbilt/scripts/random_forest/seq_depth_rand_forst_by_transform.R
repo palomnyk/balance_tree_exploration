@@ -14,6 +14,10 @@ munge_ref_ps <- function(ps){
   phy_tree(ps) <- makeNodeLabel(phy_tree(ps), method="number", prefix='n')
   return(ps)
 }
+approx_auc <- function(true_pos, false_pos) {
+  #code straight from: https://stackoverflow.com/questions/4903092/calculate-auc-in-r
+  return(mean(sample(true_pos,1000,replace=T) > sample(false_pos,1000,replace=T)))
+}
 
 ##-Load Depencencies------------------------------------------------##
 if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
@@ -85,7 +89,7 @@ all_rocs <- list(raw_ROCs, clr_ROCs, logrnorm_ROCs, DESeq_ROCs, ald_ROCs)
 
 min_seq_depths <- c(0, 500, 1000, 5000, 10000, 20000, 40000)
 mds_depth <- 5
-mta = "type"
+mta = "Treatment"
 
 total_seqs <- rowSums(asv_table)
 total_seqs <- data.frame(total_seqs, row.names = row.names(asv_table))
@@ -152,8 +156,8 @@ for(s in 1:length(min_seq_depths)){
   
 }#for sd
 
-# pdf(file = file.path(output_dir, "graphics","roc_seq_depth_by_seq_dep.pdf"))
-for( ds in 1:length(my_datasets)){
+pdf(file = file.path(output_dir, "graphics", paste0(mta, "_roc_seq_depth.pdf")))
+for( ds in 1:length(my_ds_names)){
   
   par(bg = 'grey96')
   plot(true_pos ~ false_pos,
@@ -162,11 +166,11 @@ for( ds in 1:length(my_datasets)){
        xlab = "False positives",
        ylab = "True positives",
        col = palette()[1],
-       main = paste(project, "stool/swab","seq_dept:", my_ds_names[ds]),
+       main = paste(project, mta,"seq_dept:", my_ds_names[ds]),
        ylim = c(0,1))
   for(i in 2:length(min_seq_depths)){
     lines(true_pos ~ false_pos,
-          data = as.data.frame(all_rocs[[ds]][[1]]),
+          data = as.data.frame(all_rocs[[ds]][[i]]),
           col = palette()[i],
           type = "l")
   }
@@ -178,6 +182,25 @@ for( ds in 1:length(my_datasets)){
          legend = factor(min_seq_depths), 
          col = palette(), 
          pch = 15,
-         cex=0.5)
+         cex=0.4)
 }
-# dev.off()
+
+for( ds in 1:length(my_ds_names)){
+  auc <- c()
+  for(i in 1:length(min_seq_depths)){
+    my_table <- as.data.frame(all_rocs[[ds]][[i]])
+    auc[i] <- approx_auc(my_table$true_pos, my_table$false_pos)
+  }
+  my_data <- data.frame(min_seq_depths, auc)
+  g <- ggplot2::ggplot(data=my_data, aes(x=factor(min_seq_depths), y=auc)) +
+    geom_bar(stat="identity") +
+    ggplot2::ggtitle(paste0(project, ", Rnmd Frst AUC,", " Transf: ", my_ds_names[ds])) 
+  print(g)
+}
+dev.off()
+
+
+saveRDS(all_rocs, file.path(output_dir, "r_objects", paste0(mta, "all_rocs_seq_depth_rand_fores.rds")))
+
+# all_rocs <- readRDS(file.path(output_dir, "r_objects", paste0(mta, "all_rocs_seq_depth_rand_fores.rds")))
+
