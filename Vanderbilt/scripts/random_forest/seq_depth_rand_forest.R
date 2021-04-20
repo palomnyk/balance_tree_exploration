@@ -87,7 +87,7 @@ all_rocs <- list(raw_ROCs, clr_ROCs, logrnorm_ROCs, DESeq_ROCs, ald_ROCs)
 
 # my_ds_names <- c( "raw seqs", "clr(raw seqs)", "lognorm raw seqs")
 
-min_seq_depths <- c(0, 500, 1000, 5000, 10000, 20000, 40000)
+min_seq_depths <- c(0, 500, 1000, 4000, 5000, 5500, 6000, 10000, 20000, 40000)
 mds_depth <- 5
 mta = "Treatment"
 
