@@ -112,20 +112,24 @@ zero_pval <- c()
 
 counter <- 1
 ##-Loop and build result DF-----------------------------------------##
-for( taxa_col in 1:ncol(asv_tax)){
-  tname <- names(asv_tax)[taxa_col]
+for( taxa_col in 6:ncol(asv_tax)){
+  tname <- names(asv_tax)[taxa_col] #taxa name
   pdf(file = file.path(output_dir, "graphics", paste0(tname,"_seq_depth_taxa_pie.pdf")))
   taxa_plots_fi <- list()
   taxa_plots_fo <- list()
   zero_plots_fi <- list()
   zero_plots_fo <- list()
+  
+  dhyp <- c()
+  fish_t <- c()
+  
   for(s in 1:length(min_seq_depths)){
     seq_d <- min_seq_depths[s]#new sequencing depth
     sd_filt_asv <- asv_table[total_seqs$total_seqs >= seq_d,]#dataset 1
     filter_out <- asv_table[total_seqs$total_seqs < seq_d,]
 
-    my_table <- makeTaxaTable(sd_filt_asv, asv_tax, taxa_col)
-    fo_table <- makeTaxaTable(filter_out, asv_tax, taxa_col)
+    my_table <- makeTaxaTable(sd_filt_asv, asv_tax, taxa_col)#filter in
+    fo_table <- makeTaxaTable(filter_out, asv_tax, taxa_col)#filter out
     #make taxa pie_charts
     taxa_char <- substr(names(asv_tax)[taxa_col],1,1)
     fi_plot <- make_taxa_pie_chart(my_table, paste( taxa_char, "fi t", seq_d))
@@ -134,24 +138,42 @@ for( taxa_col in 1:ncol(asv_tax)){
     taxa_plots_fo[[s]] <- fo_plot
     
     #make taxa pie_charts
-    fi_zeros <- sum(my_table == 0)/total_cells(my_table)
-    fi_nonzeros <- (ncol(my_table)*nrow(my_table) - fi_zeros)/total_cells(my_table)
-    fo_zeros <- sum(fo_table == 0)/total_cells(fo_table)
-    fo_nonzeros <- (ncol(fo_table)*nrow(fo_table) - fo_zeros)/total_cells(fo_table)
+    fi_zeros <- sum(my_table == 0)#/total_cells(fo_table)
+    fi_nonzeros <- (ncol(my_table)*nrow(my_table) - fi_zeros)#/total_cells(fo_table)
+    fo_zeros <- sum(fo_table == 0)#/total_cells(fo_table)
+    fo_nonzeros <- (ncol(fo_table)*nrow(fo_table) - fo_zeros)#/total_cells(fo_table)
 
-    my_zeros <- data.frame("non-zeros" = c(fo_nonzeros),
+    fo_all_zeros <- data.frame("non-zeros" = c(fo_nonzeros),
                            "zeros" = c(fo_zeros))
-    zero_plots_fo[[s]] <- make_taxa_pie_chart(my_zeros,
+    zero_plots_fo[[s]] <- make_taxa_pie_chart(fo_all_zeros,
                                               paste(taxa_char, "fo z", seq_d))
-    my_zeros <- data.frame("non-zeros" = c(fi_nonzeros),
+    fi_all_zeros <- data.frame("non-zeros" = c(fi_nonzeros),
                            "zeros" = c(fi_zeros))
-    zero_plots_fi[[s]] <- make_taxa_pie_chart(my_zeros,
+    zero_plots_fi[[s]] <- make_taxa_pie_chart(fi_all_zeros,
                                               paste(taxa_char, "fi z", seq_d))
 
     #Do stats
-    fisher_data <- matrix(c(fi_zeros,fi_nonzeros,fo_zeros,fo_nonzeros), nrow = 2)
-    # zero_ft <- chisq.test(fisher_data, simulate.p.value = T)
-    zero_ft <- chisq.test(c(fi_zeros,fi_nonzeros), c(fo_zeros,fo_nonzeros), simulate.p.value = T)
+    fisher_data <- rbind( fi_all_zeros, fo_all_zeros, deparse.level = 1 )
+    print(paste0("Fisher zero data taxa_lev: ", tname, "seq depth: ", seq_d))
+    print(fisher_data)
+    zero_ft <- fisher.test(fisher_data, simulate.p.value = T)
+    zero_chi <- chisq.test(c(fi_zeros,fi_nonzeros), c(fo_zeros,fo_nonzeros), simulate.p.value = T, rescale.p = T)
+    
+    ##-fisher by "hand"--------------------------------------------------##
+    row_tots <- rowSums(fisher_data)
+    col_tots <- colSums(fisher_data)
+    tot_tots <- sum(fisher_data)
+    #black balls = non_zoros
+    #white balls = zeros
+    #drawn out = fo (filter out)
+    fish_dhyp <- dhyper(x=fo_zeros, m=col_tots[2], n=col_tots[1], k=sum(row_tots[2]), log = FALSE)
+    fish_phyp <- phyper(q=fo_zeros, m=col_tots[2], n=col_tots[1], k=sum(row_tots[2]), log = FALSE, lower.tail = FALSE)
+    
+    fish_t <- c(fish_t, zero_ft$p.value)
+    dhyp <- c(dhyp, fish_dhyp)
+    
+    # df <- (nrow(comb_tax)-1) * (ncol(comb_tax)-1)
+    cat("chisq.test:", zero_chi$p.value, "; fisher.test:", zero_ft$p.value, "; dhyper:", fish_dhyp)
     
     fi_taxa <- data.frame("fi" = colSums(my_table),
                          row.names = replace( colnames(my_table), is.na(colnames(my_table)), "UNKNOWN"))
@@ -162,11 +184,11 @@ for( taxa_col in 1:ncol(asv_tax)){
     comb_tax <- comb_tax[-c(1)]
 
     comb_tax[is.na(comb_tax)] <- 0
-    print(apply(comb_tax,2,max))
-    print(comb_tax[1,])
-    col_max <- c(apply(comb_tax,2,max))
-    comb_tax <- sweep(comb_tax, 2, apply(comb_tax,2,max), FUN = "/")
-    print(comb_tax[1,])
+    # print(apply(comb_tax,2,max))
+    # print(comb_tax[1,])
+    # col_max <- c(apply(comb_tax,2,max))
+    # comb_tax <- sweep(comb_tax, 2, apply(comb_tax,2,max), FUN = "/")
+    # print(comb_tax[1,])
     taxa_chi <- chisq.test(comb_tax$fo, comb_tax$fi, simulate.p.value = T )
     
     ##-Create a PCA-----------------------------------------------------##
@@ -193,13 +215,17 @@ for( taxa_col in 1:ncol(asv_tax)){
       counter <- counter + 1
     }
   }
+  plot(min_seq_depths, log10(dhyp),
+       main = "Genus Zeros, log10(fisher) and log10(dhyp)")
+  points(min_seq_depths, log10(fish_t))
+  
   n <- length(taxa_plots_fi)
   # nCol <- floor(sqrt(n))
-  do.call("grid.arrange", c(append(taxa_plots_fi, taxa_plots_fo), 
-                            ncol=n))
-  do.call("grid.arrange", c(append(zero_plots_fi, zero_plots_fo), 
-                            ncol=n))
-  dev.off()
+  # do.call("grid.arrange", c(append(taxa_plots_fi, taxa_plots_fo), 
+  #                           ncol=n))
+  # do.call("grid.arrange", c(append(zero_plots_fi, zero_plots_fo), 
+  #                           ncol=n))
+  # dev.off()
 }  
 
 result_df <- data.frame(taxa_lev, taxa_name, mds_lev, seq_depth, 
@@ -223,21 +249,21 @@ result_df <- data.frame(taxa_lev, taxa_name, mds_lev, seq_depth,
 # }
 
 g <- ggplot2::ggplot(result_df,
-                     aes(x=seq_depth, y=taxa_pval, group = factor(taxa_name))) +
+                     aes(x=seq_depth, y=log(taxa_pval), group = factor(taxa_name))) +
   ggplot2::geom_point(aes(color = factor(taxa_name))) +
   ggplot2::geom_line(aes(color = factor(taxa_name))) +
-  ggplot2::ggtitle(paste0(project, ': Normalized filter-in vs filter-out taxa chi sq')) +
+  ggplot2::ggtitle(paste0(project, ': Non-normalized filter-in vs filter-out taxa chi sq')) +
   ggplot2::xlab("Min sequence depth per sample") +
-  ggplot2::ylab("Taxa vs taxa chi sqr pvalue") 
+  ggplot2::ylab("log(pvalue)") 
 print(g)
 
 g <- ggplot2::ggplot(result_df,
-                     aes(x=seq_depth, y=zero_pval, group = factor(taxa_name))) +
+                     aes(x=seq_depth, y=log(zero_pval), group = factor(taxa_name))) +
   ggplot2::geom_point(aes(color = factor(taxa_name))) +
   ggplot2::geom_line(aes(color = factor(taxa_name))) +
-  ggplot2::ggtitle(paste0(project, ': Normalized filter-in vs filter-out zeros Fisher test')) +
+  ggplot2::ggtitle(paste0(project, ': Non-normalized filter-in vs filter-out zeros Fisher test')) +
   ggplot2::xlab("Min sequence depth per sample") +
-  ggplot2::ylab("Pvalue") 
+  ggplot2::ylab("Log(Pvalue)") 
 print(g)
 
 g <- ggplot2::ggplot(result_df,
