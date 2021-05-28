@@ -113,6 +113,8 @@ taxa_pval <- c()
 zero_pval <- c()
 fi_zero_percent <- c()
 fo_zero_percent <- c()
+fi_nonzero_percent <- c()
+fo_nonzero_percent <- c()
 
 counter <- 1
 ##-Loop and build result DF-----------------------------------------##
@@ -199,6 +201,8 @@ for( taxa_col in 1:ncol(asv_tax)){
       zero_pval[counter] <- zero_ft$p.value
       fi_zero_percent[counter] <- sum(my_table == 0)/total_cells(my_table)
       fo_zero_percent[counter] <- sum(fo_table == 0)/total_cells(fo_table)
+      fi_nonzero_percent[counter] <- 1 - fi_zero_percent[counter]
+      fo_nonzero_percent[counter] <- 1 - fi_zero_percent[counter]
       counter <- counter + 1
     }
   }
@@ -214,7 +218,8 @@ for( taxa_col in 1:ncol(asv_tax)){
 
 result_df <- data.frame(taxa_lev, taxa_name, mds_lev, seq_depth, 
                         var_exp, spear_cor, fi_left_zeros, fo_left_zeros,
-                        taxa_pval, zero_pval, fi_zero_percent, fo_zero_percent)
+                        taxa_pval, zero_pval, fi_zero_percent, fo_zero_percent,
+                        fi_nonzero_percent, fo_nonzero_percent)
 
 # for (i in 2:max(result_df$taxa_lev)){
 #   pca_only <- result_df[taxa_lev == i, ]
@@ -252,9 +257,6 @@ g <- ggplot2::ggplot(result_df,
   ggplot2::ylab("Log(Pvalue)") 
 print(g)
 
-result_df$fo_nonzero_percent <- 1 - result_df$fo_zero_percent
-result_df$fi_nonzero_percent <- 1 - result_df$fi_zero_percent
-
 # useful for scatter pie charts
 # https://cran.r-project.org/web/packages/scatterpie/vignettes/scatterpie.html
 ggplot2::ggplot() +
@@ -270,13 +272,35 @@ ggsave(g, filename = file.path(output_dir, "graphics", paste0("test","_seq_depth
 
                            # cols=c("fi_nonzero_percent", "fi_zero_percent")) + coord_equal()
 
+#Zero scatterpie
 ggplot2::ggplot() +
   geom_scatterpie(aes(x=log10(seq_depth)*100, y=log10(zero_pval), group = factor(taxa_name), r=4),
                   data=result_df, 
                   cols=c("fi_nonzero_percent", "fi_zero_percent")) + 
   ggplot2::geom_line(aes(x=log10(seq_depth)*100, y=log10(zero_pval), color = factor(taxa_name))) +
   # ggplot2::theme(legend.position = "none") +
-  ggplot2::ylab("log(Fisher test(filter-in, filter-out zeros))")
+  ggplot2::ylab("log(Fisher test(filter-in, filter-out zeros))") +
+  ggplot2::coord_equal() +
+  ggplot2::ggtitle(paste0(project, ": Filter-in zeros"))
+
+ggplot2::ggplot() +
+  geom_scatterpie(aes(x=log10(seq_depth)*100, y=log10(zero_pval), group = factor(taxa_name), r=4),
+                  data=result_df, 
+                  cols=c("fi_nonzero_percent", "fi_zero_percent")) + 
+  ggplot2::geom_line(aes(x=log10(seq_depth)*100, y=log10(zero_pval), color = factor(taxa_name))) +
+  # ggplot2::theme(legend.position = "none") +
+  ggplot2::ylab("log(Fisher test(filter-in, filter-out zeros))") +
+  ggplot2::coord_equal() +
+  ggplot2::ggtitle(paste0(project, ": Filter-in zeros"))
+
+#taxa scatterpie
+ggplot2::ggplot() +
+  geom_scatterpie(aes(x=log10(seq_depth)*100, y=log10(taxa_pval), group = factor(taxa_name), r=4),
+                  data=result_df, 
+                  cols=c("fi_nonzero_percent", "fi_zero_percent")) + 
+  ggplot2::geom_line(aes(x=log10(seq_depth)*100, y=log10(zero_pval), color = factor(taxa_name))) +
+  # ggplot2::theme(legend.position = "none") +
+  ggplot2::ylab("log(Fisher test(filter-in, filter-out zeros))") +
   ggplot2::coord_equal() +
   ggplot2::ggtitle(paste0(project, ": Filter-in zeros"))
 
