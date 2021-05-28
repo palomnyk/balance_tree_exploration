@@ -59,8 +59,10 @@ total_cells <- function(df){
 ##-Load Depencencies------------------------------------------------##
 if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
 if (!requireNamespace("gridExtra", quietly = TRUE)) install.packages("gridExtra")
+if (!requireNamespace("scatterpie", quietly = TRUE)) install.packages("scatterpie")
 library("ggplot2")
 library("gridExtra")
+library("scatterpie")
 
 ##-Establish directory layout---------------------------------------##
 home_dir <- file.path('~','git','balance_tree_exploration')
@@ -109,20 +111,18 @@ fi_left_zeros <- c()
 fo_left_zeros <- c()
 taxa_pval <- c()
 zero_pval <- c()
+fi_zero_percent <- c()
+fo_zero_percent <- c()
 
 counter <- 1
 ##-Loop and build result DF-----------------------------------------##
-for( taxa_col in 6:ncol(asv_tax)){
+for( taxa_col in 1:ncol(asv_tax)){
   tname <- names(asv_tax)[taxa_col] #taxa name
   pdf(file = file.path(output_dir, "graphics", paste0(tname,"_seq_depth_taxa_pie.pdf")))
   taxa_plots_fi <- list()
   taxa_plots_fo <- list()
   zero_plots_fi <- list()
   zero_plots_fo <- list()
-  
-  dhyp <- c()
-  fish_t <- c()
-  
   for(s in 1:length(min_seq_depths)){
     seq_d <- min_seq_depths[s]#new sequencing depth
     sd_filt_asv <- asv_table[total_seqs$total_seqs >= seq_d,]#dataset 1
@@ -138,11 +138,11 @@ for( taxa_col in 6:ncol(asv_tax)){
     taxa_plots_fo[[s]] <- fo_plot
     
     #make taxa pie_charts
-    fi_zeros <- sum(my_table == 0)#/total_cells(fo_table)
-    fi_nonzeros <- (ncol(my_table)*nrow(my_table) - fi_zeros)#/total_cells(fo_table)
+    fi_zeros <- sum(my_table == 0)#/total_cells(my_table)
+    fi_nonzeros <- (total_cells(my_table) - fi_zeros)#/total_cells(my_table)
     fo_zeros <- sum(fo_table == 0)#/total_cells(fo_table)
-    fo_nonzeros <- (ncol(fo_table)*nrow(fo_table) - fo_zeros)#/total_cells(fo_table)
-
+    fo_nonzeros <- (total_cells(fo_table) - fo_zeros)#/total_cells(fo_table)
+    
     fo_all_zeros <- data.frame("non-zeros" = c(fo_nonzeros),
                            "zeros" = c(fo_zeros))
     zero_plots_fo[[s]] <- make_taxa_pie_chart(fo_all_zeros,
@@ -152,29 +152,14 @@ for( taxa_col in 6:ncol(asv_tax)){
     zero_plots_fi[[s]] <- make_taxa_pie_chart(fi_all_zeros,
                                               paste(taxa_char, "fi z", seq_d))
 
-    #Do stats
+    #Do stats - zeros first
     fisher_data <- rbind( fi_all_zeros, fo_all_zeros, deparse.level = 1 )
     print(paste0("Fisher zero data taxa_lev: ", tname, "seq depth: ", seq_d))
     print(fisher_data)
     zero_ft <- fisher.test(fisher_data, simulate.p.value = T)
     zero_chi <- chisq.test(c(fi_zeros,fi_nonzeros), c(fo_zeros,fo_nonzeros), simulate.p.value = T, rescale.p = T)
     
-    ##-fisher by "hand"--------------------------------------------------##
-    row_tots <- rowSums(fisher_data)
-    col_tots <- colSums(fisher_data)
-    tot_tots <- sum(fisher_data)
-    #black balls = non_zoros
-    #white balls = zeros
-    #drawn out = fo (filter out)
-    fish_dhyp <- dhyper(x=fo_zeros, m=col_tots[2], n=col_tots[1], k=sum(row_tots[2]), log = FALSE)
-    fish_phyp <- phyper(q=fo_zeros, m=col_tots[2], n=col_tots[1], k=sum(row_tots[2]), log = FALSE, lower.tail = FALSE)
-    
-    fish_t <- c(fish_t, zero_ft$p.value)
-    dhyp <- c(dhyp, fish_dhyp)
-    
-    # df <- (nrow(comb_tax)-1) * (ncol(comb_tax)-1)
-    cat("chisq.test:", zero_chi$p.value, "; fisher.test:", zero_ft$p.value, "; dhyper:", fish_dhyp)
-    
+    #Taxas
     fi_taxa <- data.frame("fi" = colSums(my_table),
                          row.names = replace( colnames(my_table), is.na(colnames(my_table)), "UNKNOWN"))
     fo_taxa <- data.frame("fo" = colSums(fo_table),
@@ -212,25 +197,24 @@ for( taxa_col in 6:ncol(asv_tax)){
       fo_left_zeros[counter] <- fo_zeros
       taxa_pval[counter] <- taxa_chi$p.value
       zero_pval[counter] <- zero_ft$p.value
+      fi_zero_percent[counter] <- sum(my_table == 0)/total_cells(my_table)
+      fo_zero_percent[counter] <- sum(fo_table == 0)/total_cells(fo_table)
       counter <- counter + 1
     }
   }
-  plot(min_seq_depths, log10(dhyp),
-       main = "Genus Zeros, log10(fisher) and log10(dhyp)")
-  points(min_seq_depths, log10(fish_t))
-  
-  n <- length(taxa_plots_fi)
+  # n <- length(taxa_plots_fi)
   # nCol <- floor(sqrt(n))
-  # do.call("grid.arrange", c(append(taxa_plots_fi, taxa_plots_fo), 
+  # do.call("grid.arrange", c(append(taxa_plots_fi, taxa_plots_fo),
   #                           ncol=n))
-  # do.call("grid.arrange", c(append(zero_plots_fi, zero_plots_fo), 
+  # do.call("grid.arrange", c(append(zero_plots_fi, zero_plots_fo),
   #                           ncol=n))
   # dev.off()
-}  
+  # dev.off()
+}
 
 result_df <- data.frame(taxa_lev, taxa_name, mds_lev, seq_depth, 
                         var_exp, spear_cor, fi_left_zeros, fo_left_zeros,
-                        taxa_pval, zero_pval)
+                        taxa_pval, zero_pval, fi_zero_percent, fo_zero_percent)
 
 # for (i in 2:max(result_df$taxa_lev)){
 #   pca_only <- result_df[taxa_lev == i, ]
@@ -258,13 +242,45 @@ g <- ggplot2::ggplot(result_df,
 print(g)
 
 g <- ggplot2::ggplot(result_df,
-                     aes(x=seq_depth, y=log(zero_pval), group = factor(taxa_name))) +
+                     aes(x=seq_depth, y=log(zero_pval), group = factor(taxa_name),
+                         label=round(fo_zero_percent, 2)*100)) +
   ggplot2::geom_point(aes(color = factor(taxa_name))) +
   ggplot2::geom_line(aes(color = factor(taxa_name))) +
+  ggplot2::geom_text() +
   ggplot2::ggtitle(paste0(project, ': Non-normalized filter-in vs filter-out zeros Fisher test')) +
   ggplot2::xlab("Min sequence depth per sample") +
   ggplot2::ylab("Log(Pvalue)") 
 print(g)
+
+result_df$fo_nonzero_percent <- 1 - result_df$fo_zero_percent
+result_df$fi_nonzero_percent <- 1 - result_df$fi_zero_percent
+
+# useful for scatter pie charts
+# https://cran.r-project.org/web/packages/scatterpie/vignettes/scatterpie.html
+ggplot2::ggplot() +
+  geom_scatterpie(aes(x=log10(seq_depth)*100, y=log10(zero_pval), group = factor(taxa_name), r=4),
+                  data=result_df, 
+                  cols=c("fo_nonzero_percent", "fo_zero_percent")) + 
+  ggplot2::geom_line(aes(x=log10(seq_depth)*100, y=log10(zero_pval), color = factor(taxa_name))) +
+  # ggplot2::theme(legend.position = "none") +
+  ggplot2::coord_equal() +
+  ggplot2::ggtitle(paste0(project, ": Filter-out zeros")) +
+  ggplot2::ylab("log(Fisher test(filter-in, filter-out zeros))") 
+ggsave(g, filename = file.path(output_dir, "graphics", paste0("test","_seq_depth_taxa_pie.pdf")), height = 5, width = 40)
+
+                           # cols=c("fi_nonzero_percent", "fi_zero_percent")) + coord_equal()
+
+ggplot2::ggplot() +
+  geom_scatterpie(aes(x=log10(seq_depth)*100, y=log10(zero_pval), group = factor(taxa_name), r=4),
+                  data=result_df, 
+                  cols=c("fi_nonzero_percent", "fi_zero_percent")) + 
+  ggplot2::geom_line(aes(x=log10(seq_depth)*100, y=log10(zero_pval), color = factor(taxa_name))) +
+  # ggplot2::theme(legend.position = "none") +
+  ggplot2::ylab("log(Fisher test(filter-in, filter-out zeros))")
+  ggplot2::coord_equal() +
+  ggplot2::ggtitle(paste0(project, ": Filter-in zeros"))
+
+
 
 g <- ggplot2::ggplot(result_df,
                      aes(x=seq_depth, y=spear_cor^2, group = factor(taxa_name))) +
