@@ -120,7 +120,6 @@ counter <- 1
 ##-Loop and build result DF-----------------------------------------##
 for( taxa_col in 1:ncol(asv_tax)){
   tname <- names(asv_tax)[taxa_col] #taxa name
-  pdf(file = file.path(output_dir, "graphics", paste0(tname,"_seq_depth_taxa_pie.pdf")))
   taxa_plots_fi <- list()
   taxa_plots_fo <- list()
   zero_plots_fi <- list()
@@ -129,15 +128,14 @@ for( taxa_col in 1:ncol(asv_tax)){
     seq_d <- min_seq_depths[s]#new sequencing depth
     sd_filt_asv <- asv_table[total_seqs$total_seqs >= seq_d,]#dataset 1
     filter_out <- asv_table[total_seqs$total_seqs < seq_d,]
-
     my_table <- makeTaxaTable(sd_filt_asv, asv_tax, taxa_col)#filter in
     fo_table <- makeTaxaTable(filter_out, asv_tax, taxa_col)#filter out
     #make taxa pie_charts
     taxa_char <- substr(names(asv_tax)[taxa_col],1,1)
-    fi_plot <- make_taxa_pie_chart(my_table, paste( taxa_char, "fi t", seq_d))
-    fo_plot <- make_taxa_pie_chart(fo_table, paste(taxa_char, "fo t", seq_d))
-    taxa_plots_fi[[s]] <- fi_plot
-    taxa_plots_fo[[s]] <- fo_plot
+    # fi_plot <- make_taxa_pie_chart(my_table, paste( taxa_char, "fi t", seq_d))
+    # fo_plot <- make_taxa_pie_chart(fo_table, paste(taxa_char, "fo t", seq_d))
+    # taxa_plots_fi[[s]] <- fi_plot
+    # taxa_plots_fo[[s]] <- fo_plot
     
     #make taxa pie_charts
     fi_zeros <- sum(my_table == 0)#/total_cells(my_table)
@@ -166,16 +164,10 @@ for( taxa_col in 1:ncol(asv_tax)){
                          row.names = replace( colnames(my_table), is.na(colnames(my_table)), "UNKNOWN"))
     fo_taxa <- data.frame("fo" = colSums(fo_table),
                           row.names = replace( colnames(fo_table), is.na(colnames(fo_table)), "UNKNOWN"))
-    
     comb_tax <- merge(fi_taxa, by = "row.names", fo_taxa, all = T)
     comb_tax <- comb_tax[-c(1)]
 
     comb_tax[is.na(comb_tax)] <- 0
-    # print(apply(comb_tax,2,max))
-    # print(comb_tax[1,])
-    # col_max <- c(apply(comb_tax,2,max))
-    # comb_tax <- sweep(comb_tax, 2, apply(comb_tax,2,max), FUN = "/")
-    # print(comb_tax[1,])
     taxa_chi <- chisq.test(comb_tax$fo, comb_tax$fi, simulate.p.value = T )
     
     ##-Create a PCA-----------------------------------------------------##
@@ -220,7 +212,7 @@ result_df <- data.frame(taxa_lev, taxa_name, mds_lev, seq_depth,
                         var_exp, spear_cor, fi_left_zeros, fo_left_zeros,
                         taxa_pval, zero_pval, fi_zero_percent, fo_zero_percent,
                         fi_nonzero_percent, fo_nonzero_percent)
-
+pdf(file = file.path(output_dir, "graphics", paste0(tname,"_seq_depth_taxa_pie.pdf")))
 # for (i in 2:max(result_df$taxa_lev)){
 #   pca_only <- result_df[taxa_lev == i, ]
 #   g <- ggplot2::ggplot(pca_only,
@@ -268,7 +260,7 @@ ggplot2::ggplot() +
   ggplot2::coord_equal() +
   ggplot2::ggtitle(paste0(project, ": Filter-out zeros")) +
   ggplot2::ylab("log(Fisher test(filter-in, filter-out zeros))") 
-ggsave(g, filename = file.path(output_dir, "graphics", paste0("test","_seq_depth_taxa_pie.pdf")), height = 5, width = 40)
+# ggsave(g, filename = file.path(output_dir, "graphics", paste0("test","_seq_depth_taxa_pie.pdf")), height = 5, width = 40)
 
                            # cols=c("fi_nonzero_percent", "fi_zero_percent")) + coord_equal()
 
@@ -305,6 +297,30 @@ ggplot2::ggplot() +
   ggplot2::ggtitle(paste0(project, ": Filter-in zeros"))
 
 
+g <- ggplot2::ggplot(result_df,
+                     aes(x=log(seq_depth), y=fo_zero_percent, 
+                         group = factor(taxa_name),
+                         )) +
+  ggplot2::geom_point(aes(color = factor(taxa_name))) +
+  ggplot2::geom_line(aes(color = factor(taxa_name))) +
+  # ggplot2::geom_text() +
+  ggplot2::ggtitle(paste0(project, ": Discarded data: zero percent")) +
+  ggplot2::xlab("Min sequence depth per sample") +
+  ggplot2::ylab("Percent)") 
+print(g)
+
+g <- ggplot2::ggplot(result_df,
+                     aes(x=log(seq_depth), y=fi_zero_percent, 
+                         group = factor(taxa_name),
+                     )) +
+  ggplot2::geom_point(aes(color = factor(taxa_name))) +
+  ggplot2::geom_line(aes(color = factor(taxa_name))) +
+  # ggplot2::geom_text() +
+  ggplot2::ggtitle(paste0(project, ": Kept data: zero percent")) +
+  ggplot2::xlab("Min sequence depth per sample") +
+  ggplot2::ylab("Percent") 
+print(g)
+
 
 g <- ggplot2::ggplot(result_df,
                      aes(x=seq_depth, y=spear_cor^2, group = factor(taxa_name))) +
@@ -317,3 +333,5 @@ g <- ggplot2::ggplot(result_df,
   theme(axis.text.x = element_text(angle = 90)) +
   ggplot2::theme_minimal()
 print(g)
+
+dev.off()
