@@ -74,12 +74,15 @@ samples_left <- vector(mode = "integer", length = length(my_ds_names) * length(m
 taxa_left <- vector(mode = "integer", length = length(my_ds_names) * length(min_seq_depths) * mds_depth)
 zero_count <- vector(mode = "integer", length = length(my_ds_names) * length(min_seq_depths) * mds_depth)
 
+
+pdf(file = file.path(output_dir, "graphics", "seq_depth_artifact_PCA12345_scatter.pdf"))
 counter <- 1
 for(s in 1:length(min_seq_depths)){
   seq_d <- min_seq_depths[s]#new sequencing depth
   sd_filt_asv <- asv_table[total_seqs$total_seqs >= seq_d,]#dataset 1
   print(paste("sd_filtered dim:", paste(dim(sd_filt_asv))))
   safe_rns <- intersect(row.names(ref_ps@otu_table), row.names(sd_filt_asv)) #rows for this iterate
+  ts <- rowSums(sd_filt_asv[safe_rns,])
   my_clr <- compositions::clr(sd_filt_asv)#dataset 2
   new_tree <- phyloseq::prune_taxa(colnames(sd_filt_asv), ref_ps@phy_tree)#update tree for new phyloseq obj
   new_ref_ps <- phyloseq::prune_samples(safe_rns, ref_ps) #remove non-safe rows from ps
@@ -96,11 +99,11 @@ for(s in 1:length(min_seq_depths)){
                             part.weights='enorm.x.gm.counts',
                             ilr.weights='blw.sqrt')#dataset 4
   print(paste("made new philr", dim(as.data.frame(ref_philr))))
-
+  
   ln_asv <- lognorm(sd_filt_asv)#dataset 6
   
   ald <- ALDEx2::aldex.clr(sd_filt_asv, mc.samples=12, denom="all", verbose=F)
-  ald <-  data.frame(ald@analysisData)
+  ald <- data.frame(ald@analysisData)
   print(paste("size of ald:", object.size(ald)))
   print(paste("ald dim:", paste(dim(ald))))
   
@@ -113,6 +116,7 @@ for(s in 1:length(min_seq_depths)){
     my_table <- as.data.frame(my_datasets[ds])
     zeros <- sum(my_table == 0)
     print(dim(my_table))
+    ##-Create a PCA-----------------------------------------------------##
     my_prcmp <- prcomp(my_table, 
                        center = TRUE,
                        rank = mds_depth)#,
@@ -120,11 +124,20 @@ for(s in 1:length(min_seq_depths)){
     ##-Extract PCA matrix and convert to dataframe----------------------##
     myPCA <- data.frame(my_prcmp$x)
     my_var_exp <- my_prcmp$sdev^2/sum(my_prcmp$sdev^2)
-    
     print(paste("finished ds:", ds))
     for (md in 1:mds_depth){
       # kend[counter] <- cor.test(log10(total_seqs[total_seqs > seq_d]), myPCA[,md], method = "kendall")$estimate
       # perma_r2[counter] <- adonis2(log10(total_seqs[total_seqs > seq_d]) ~ myPCA[,md])$R2[1]
+      if (md == 1){
+        my_spear <- cor.test(ts, myPCA[,md],
+                             method = "spearman")
+        plot(log10(ts), myPCA[,2],
+             main = paste0( project, my_datasets[ds], ", PCA", md,"\nr_sq: ", my_spear$estimate^2),
+             sub = paste0("spear: ", my_spear$estimate),
+             xlab = paste0("Sequencing depth"),
+             ylab = paste0("PCA", md)
+        )
+      }
       ds_num[counter] <- ds
       ds_nam[counter] <- my_ds_names[ds]
       mds_lev[counter] <- md
@@ -138,7 +151,7 @@ for(s in 1:length(min_seq_depths)){
     }
   }
 }
-
+dev.off()
 result_df <- data.frame(ds_num, ds_nam, perma_r2, mds_lev, seq_depth, var_exp, spear_cor, samples_left, zero_count, taxa_left)
 print("created resulting DF")
 
