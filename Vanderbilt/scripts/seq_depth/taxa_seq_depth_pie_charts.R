@@ -72,10 +72,8 @@ add_row_to_master <- function(single_row_df, master_df, row_name){
 
 ##-Load Depencencies------------------------------------------------##
 if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
-if (!requireNamespace("gridExtra", quietly = TRUE)) install.packages("gridExtra")
-if (!requireNamespace("scatterpie", quietly = TRUE)) install.packages("scatterpie")
+if (!requireNamespace("scatterpie", quietly = TRUE)) BiocManager::install("scatterpie")
 library("ggplot2")
-library("gridExtra")
 library("scatterpie")
 
 ##-Establish directory layout---------------------------------------##
@@ -122,8 +120,6 @@ fi_taxa_master <- data.frame(matrix(ncol = length(asv_tax_names), nrow = 0))
 colnames(fi_taxa_master) <- asv_tax_names
 fo_taxa_master <- data.frame(matrix(ncol = length(asv_tax_names), nrow = 0))
 colnames(fo_taxa_master) <- asv_tax_names
-
-length(c(test1, new_row))
 
 ##-Layout loop constants--------------------------------------------##
 min_seq_depths <- c(100, 500, 1000, 5000, 10000, 20000, 40000)
