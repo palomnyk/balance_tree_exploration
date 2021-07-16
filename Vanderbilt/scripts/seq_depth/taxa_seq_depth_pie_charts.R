@@ -134,7 +134,7 @@ taxa_lev <- c()
 mds_lev <- c()
 var_exp <- c()
 spear_cor <- c() #cor(total_seqs[total_seqs >= seq_d], myPCA[,md], method = "spearman")
-taxa_left <- c()
+taxa_left <- c() #number of taxa in the kept data
 taxa_out <- c()
 zero_count <- c()
 fi_left_zeros <- c()
@@ -221,8 +221,8 @@ for( taxa_col in 1:ncol(asv_tax)){
       seq_depth[counter] <- seq_d
       var_exp[counter] <- my_var_exp[md]
       spear_cor[counter] <- cor(total_seqs[total_seqs >= seq_d], myPCA[,md], method = "spearman")
-      taxa_left[counter] <- ncol(condensed_fi_table)
-      taxa_out[counter] <- ncol(condensed_fo_table)
+      taxa_left[counter] <- sum(colSums(my_table != 0) > 0)
+      taxa_out[counter] <- sum(colSums(fo_table != 0) > 0)
       taxa_left[counter] <- ncol(my_table)
       taxa_lev[counter] <- taxa_col
       taxa_name[counter] <- tname
