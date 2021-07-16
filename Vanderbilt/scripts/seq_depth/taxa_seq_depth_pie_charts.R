@@ -61,7 +61,7 @@ add_row_to_master <- function(single_row_df, master_df, row_name){
   # new_names <- setdiff(names(master_df), names(single_row_df))
   new_names <- names(master_df)[! colnames(master_df) %in% colnames(single_row_df)]
   print(paste("new_names length:", length(new_names)))
-  print(paste(colnames(single_row_df)))
+  # print(paste(colnames(single_row_df)))
   temp_df <- data.frame(matrix(ncol = length(new_names), nrow = 1))
   names(temp_df) <- new_names
   temp_df <- cbind(single_row_df, temp_df)
@@ -135,7 +135,9 @@ mds_lev <- c()
 var_exp <- c()
 spear_cor <- c() #cor(total_seqs[total_seqs >= seq_d], myPCA[,md], method = "spearman")
 taxa_left <- c() #number of taxa in the kept data
-taxa_out <- c()
+taxa_out <- c() #number of taxa in the data that is filtered away
+num_otu_in <- c() #number of otus in the kept data
+num_otu_out <- c() #number of otus in the throwaway data
 zero_count <- c()
 fi_left_zeros <- c()
 fo_left_zeros <- c()
@@ -236,6 +238,8 @@ for( taxa_col in 1:ncol(asv_tax)){
       fo_nonzero_percent[counter] <- 1 - fi_zero_percent[counter]
       fo_taxa_master <- add_row_to_master(t(as.data.frame(fo_taxa)), fo_taxa_master, counter)
       fi_taxa_master <- add_row_to_master(t(as.data.frame(fi_taxa)), fi_taxa_master, counter)
+      num_otu_in <- sum(fi_taxa) #number of otus in the kept data
+      num_otu_out <- sum(fo_taxa) #number of otus in the throwaway data
       
       counter <- counter + 1
     }
@@ -245,20 +249,13 @@ for( taxa_col in 1:ncol(asv_tax)){
     write.table(fo_table, file=file.path(output_dir, "tables", "seq_dept_taxa_tables", saved_df_name))
     
   }
-  # n <- length(taxa_plots_fi)
-  # nCol <- floor(sqrt(n))
-  # do.call("grid.arrange", c(append(taxa_plots_fi, taxa_plots_fo),
-  #                           ncol=n))
-  # do.call("grid.arrange", c(append(zero_plots_fi, zero_plots_fo),
-  #                           ncol=n))
-  # dev.off()
-  # dev.off()
 }
 
 result_df <- data.frame(taxa_lev, taxa_name, mds_lev, seq_depth, 
                         var_exp, spear_cor, fi_left_zeros, fo_left_zeros,
                         taxa_pval, zero_pval, fi_zero_percent, fo_zero_percent,
-                        fi_nonzero_percent, fo_nonzero_percent, taxa_out, taxa_left)
+                        fi_nonzero_percent, fo_nonzero_percent, taxa_out, taxa_left,
+                        num_otu_in, num_otu_out)
 
 write.table(result_df, 
             file = file.path(output_dir, "tables", paste0(project, "taxa_seq_depth_pie_charts_results.csv")),
@@ -411,7 +408,6 @@ p <- ggplot2::ggplot() +
 print(p)
 
 
-
 g <- ggplot2::ggplot(result_df,
                      aes(x=log(seq_depth), y=fo_zero_percent, 
                          group = factor(taxa_name),
@@ -421,7 +417,8 @@ g <- ggplot2::ggplot(result_df,
   # ggplot2::geom_text() +
   ggplot2::ggtitle(paste0(project, ": Discarded data: zero percent")) +
   ggplot2::xlab("Min sequence depth per sample") +
-  ggplot2::ylab("Percent") 
+  ggplot2::ylab("Percent") + 
+  ggplot2::theme(text = element_text(size = 20))
 print(g)
 
 
@@ -446,6 +443,30 @@ g <- ggplot2::ggplot(result_df,
   ggplot2::geom_line(aes(color = factor(taxa_name))) +
   # ggplot2::geom_text() +
   ggplot2::ggtitle(paste0(project, ": Number of taxa in removed data vs log of seq depth")) +
+  ggplot2::xlab("Log of min sequence depth per sample") +
+  ggplot2::ylab("Number of taxa") 
+print(g)
+
+g <- ggplot2::ggplot(result_df,
+                     aes(x=log(seq_depth), y=num_otu_in, 
+                         group = factor(taxa_name),
+                     )) +
+  ggplot2::geom_point(aes(color = factor(taxa_name))) +
+  ggplot2::geom_line(aes(color = factor(taxa_name))) +
+  # ggplot2::geom_text() +
+  ggplot2::ggtitle(paste0(project, ": Number of OTUs in data kept vs log of seq depth")) +
+  ggplot2::xlab("Log of min sequence depth per sample") +
+  ggplot2::ylab("Number of taxa") 
+print(g)
+
+g <- ggplot2::ggplot(result_df,
+                     aes(x=log(seq_depth), y=num_otu_out, 
+                         group = factor(taxa_name),
+                     )) +
+  ggplot2::geom_point(aes(color = factor(taxa_name))) +
+  ggplot2::geom_line(aes(color = factor(taxa_name))) +
+  # ggplot2::geom_text() +
+  ggplot2::ggtitle(paste0(project, ": Number of OTUs in data tossed vs log of seq depth")) +
   ggplot2::xlab("Log of min sequence depth per sample") +
   ggplot2::ylab("Number of taxa") 
 print(g)
