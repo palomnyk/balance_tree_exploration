@@ -240,6 +240,7 @@ for( taxa_col in 1:ncol(asv_tax)){
       fi_taxa_master <- add_row_to_master(t(as.data.frame(fi_taxa)), fi_taxa_master, counter)
       num_otu_in <- sum(fi_taxa) #number of otus in the kept data
       num_otu_out <- sum(fo_taxa) #number of otus in the throwaway data
+
       
       counter <- counter + 1
     }
