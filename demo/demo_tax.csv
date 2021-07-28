@@ -1,9 +1,9 @@
 ,Kingdom,Phylum,Class,Order,Family,Genus
-TGCTAAGGCCGATGGCGACCGGCGCA,Bacteria,Bacteroidetes,Bacteroidia,Bacteroidales,Bacteroidaceae,“1”
-CGCTAAGTTTGATGGCGACCGGCGCA,Bacteria,Bacteroidetes,Bacteroidia,Bacteroidales,Bacteroidaceae,“2”
-TGCTAAGTTTGATGGCGACCGGCGCA,Bacteria,Bacteroidetes,Bacteroidia,Bacteroidales,Bacteroidaceae,“3”
-TGCTAAGGCTGATGGCGACCGGCGCA,Bacteria,Bacteroidetes,Bacteroidia,Bacteroidales,Bacteroidaceae,“4”
-TGCTTTCTCTTGCTGGCGACCGGCGCA,Bacteria,Bacteroidetes,Bacteroidia,Bacteroidales,Bacteroidaceae,“5”
-TTGCAAACCAAAGCTGGCGACCAGCG,Bacteria,Bacteroidetes,Bacteroidia,Bacteroidales,Bacteroidaceae,“6”
-TCCTTCGGGACTGATTATTTTGTGAC,Bacteria,Bacteroidetes,Bacteroidia,Bacteroidales,Bacteroidaceae,“7”
-TGCTAAGGCTGATGGCGACCGGCGCT,Bacteria,Bacteroidetes,Bacteroidia,Bacteroidales,Bacteroidaceae,“8”
+a,Bacteria,Bacteroidetes,Bacteroidia,Bacteroidales,Bacteroidaceae,A
+b,Bacteria,Bacteroidetes,Bacteroidia,Bacteroidales,Bacteroidaceae,B
+c,Bacteria,Bacteroidetes,Bacteroidia,Bacteroidales,Bacteroidaceae,C
+d,Bacteria,Bacteroidetes,Bacteroidia,Bacteroidales,Bacteroidaceae,D
+e,Bacteria,Bacteroidetes,Bacteroidia,Bacteroidales,Bacteroidaceae,E
+f,Bacteria,Bacteroidetes,Bacteroidia,Bacteroidales,Bacteroidaceae,F
+g,Bacteria,Bacteroidetes,Bacteroidia,Bacteroidales,Bacteroidaceae,G
+h,Bacteria,Bacteroidetes,Bacteroidia,Bacteroidales,Bacteroidaceae,H

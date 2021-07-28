@@ -44,7 +44,7 @@ cbbPalette <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00"
 set.seed(77)
 samp_size <- 8
 raw_reads <- base::sample(0:100, size=samp_size, replace = T)
-names(raw_reads) <- 1:samp_size
+names(raw_reads) <- letters[1:samp_size]
 alr_reads <- compositions::alr(raw_reads)
 names(alr_reads) <- names(raw_reads)[1:samp_size-1]
 print(log((raw_reads[1]/raw_reads[8])))
@@ -82,7 +82,7 @@ g <- ggplot2::ggplot(data = dat,
         axis.title.x = element_blank(),
         axis.text.x = element_blank()) +
   ggplot2::theme_bw()
-ggplot2::ggsave(filename = file.path(output_dir, "graphics", 
+ggplot2::ggsave(filename = file.path(output_dir, 
                                      paste0(project, "_raw_data_demo.pdf")),
                 height = 4, width = 1, plot = g)
 print(g)
@@ -101,7 +101,7 @@ g <- ggplot2::ggplot(data = dat,
         axis.title.x = element_blank(),
         axis.text.x = element_blank()) +
   ggplot2::theme_bw()
-ggplot2::ggsave(filename = file.path(output_dir, "graphics", 
+ggplot2::ggsave(filename = file.path(output_dir, 
                                      paste0(project, "_ralr_demo.pdf")),
                 height = 4, width = 1, plot = g)
 print(g)
@@ -120,7 +120,7 @@ g <- ggplot2::ggplot(data = dat,
         axis.title.x = element_blank(),
         axis.text.x = element_blank()) +
   theme_bw()
-ggplot2::ggsave(filename = file.path(output_dir, "graphics", 
+ggplot2::ggsave(filename = file.path(output_dir, 
                                      paste0(project, "_clr_demo.pdf")),
                 height = 4, width = 1, plot = g)
 print(g)
@@ -128,29 +128,39 @@ print(g)
 ##-Import tables and data preprocessing-----------------------------##
 
 demo_tree_fasta <- "
->1
+>a
 TGCTAAGGCCGATGGCGACCGGCGCA
->2
+>b
 CGCTAAGTTTGATGGCGACCGGCGCA
->3
+>c
 TGCTAAGTTTGATGGCGACCGGCGCA
->4
+>d
 TGCTAAGGCTGATGGCGACCGGCGCA
->5
+>e
 TGCTTTCTCTTGCTGGCGACCGGCGCA
->6
+>f
 TTGCAAACCAAAGCTGGCGACCAGCG
->7
+>g
 TCCTTCGGGACTGATTATTTTGTGAC
->8
+>h
 TGCTAAGGCTGATGGCGACCGGCGCT
 "
+#deom_tree was made by passing the demo_fasta through https://www.ebi.ac.uk/Tools/msa/clustalo/ using the phylip option
 
 demo_tree <- ape::read.tree(file.path(home_dir, "demo", "clustalo-p2m-phylip.dnd"))
-demo_taxa <- read.table(file.path(home_dir, "demo", "demo_tax.csv"), sep=",")
+demo_tree <- ape::makeNodeLabel(demo_tree, method="number", prefix='n')
 
+philr::name.balance(demo_tree, 'n1')
+demo_taxa <- read.table(file.path(home_dir, "demo", "demo_tax.csv"), sep=",",
+                        row.names = 1, header = TRUE)
 
-ape::plot.phylo(demo_tree)
+# test <- data.frame(raw_reads)
+
+demo_phylo <- phyloseq::phyloseq(otu_table(as.matrix(raw_reads), taxa_are_rows = T),
+                                 tax_table(as.matrix(demo_taxa)),
+                                 phy_tree(demo_tree))
+
+ape::plot.phylo(demo_phylo@phy_tree)
 
 
 ##-Test for reqs----------------------------------------------------##
@@ -160,9 +170,7 @@ print('All multichotomies resolved?')
 is.binary.tree(demo_tree) # All multichotomies resolved?
 
 ## ---- message=FALSE, warning=FALSE-----------------------------------------
-demo_tree <- ape::makeNodeLabel(demo_tree, method="number", prefix='n')
 
-philr::name.balance(phy_tree(ps), tax_table(ps), 'n1')
 
 ##-philr transform--------------------------------------------------##
 ps.philr <- philr(ps@otu_table, ps@phy_tree,
