@@ -25,7 +25,11 @@ option_list <- list(
   optparse::make_option(c("-l", "--metadata_delim"), type="character", default=NULL,
               help="metadata file deliminator", metavar="character"),
   optparse::make_option(c("-r", "--metadata_rowname"), type="character", default=NULL,
-              help="metadata file row to use for row names", metavar="character")
+              help="metadata file row to use for row names", metavar="character"),
+  optparse::make_option(c("-s", "--outputfilesuffix"), type="character", default="",
+                        help="output_file_suffix", metavar="character"),
+  optparse::make_option(c("-f", "--filter_level"), type="numeric", default="0",
+                        help="taxonimic level for making otu table 1-6", metavar="numeric")
   ); 
 
 opt_parser <- optparse::OptionParser(option_list=option_list);
@@ -75,8 +79,9 @@ close(con)
 
 print("Imported R objects")
 
+
 ##-import tables----------------------------------------------------##
-myMeta = read.table(opt$metadata,
+myMeta <- read.table(opt$metadata,
                     sep=opt$metadata_delim,
                     header=TRUE,
                     row.names = opt$metadata_rowname,
@@ -105,7 +110,7 @@ print("Created ps")
 #examine tree
 library("ape")
 
-pdf(file.path(output_dir, "graphics", paste0("upgma_denovo","_2", ".pdf")))
+pdf(file.path(output_dir, "graphics", paste0("upgma_denovo","_2",opt$outputfilesuffix, ".pdf")))
 
 plot_tree(ps, "treeonly", nodeplotblank, ladderize="left")
 
