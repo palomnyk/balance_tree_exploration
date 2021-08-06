@@ -82,9 +82,11 @@ for(mta in 3:ncol(metadata)){
     pred <- predict(rf, my_table_test)
     
     preds <- ROCR::prediction(as.numeric(pred), as.numeric(resp_var_test))
+    auc <- ROCR::performance(preds, "auc")@y.values[[1]]
+    print(paste("auc: ", auc))
     #update output
     metadata_col <- append(metadata_col, mta)
-    auc_val <- append(auc_val, ROCR::performance(preds, "auc")@y.values[[1]])
+    auc_val <- append(auc_val, auc)
     ds_name <- append(ds_name, my_ds_ilr_type[ds])
     ds_method <- append(ds_method, my_ds_method[ds])
     
