@@ -52,6 +52,7 @@ my_ds_method <- c("None",
 
 pdf(file = file.path(output_dir, "graphics","auc_ilrVphilr.pdf"))
 for(mta in 3:ncol(metadata)){
+  print(paste("starting metadata col:", mta))
   resp_var_test <- metadata[,mta][test_index]
   resp_var_train <- metadata[,mta][train_index]
   
@@ -62,6 +63,7 @@ for(mta in 3:ncol(metadata)){
   ds_method <- c()
   
   for( ds in 1:length(my_ds_method)){
+    print(paste("starting ds:", ds))
     if (ds == 1) my_table <- asv_table 
     else {
       if (ds <= 7){
@@ -88,6 +90,7 @@ for(mta in 3:ncol(metadata)){
     ds_method <- append(ds_method, my_ds_method[ds])
     
   }#for ds
+  print("Writing table")
   write.table(data.frame(metadata_col, auc_val, ds_name, ds_method), 
               row.names=FALSE, sep = ",",
               file = file.path(output_dir, "tables", 
