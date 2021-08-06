@@ -29,7 +29,6 @@ source(file.path(home_dir, "r_libraries", "table_manipulations.R"))
 asv_table <- data.frame(readRDS(file.path(output_dir, "r_objects", "ForwardReads_DADA2.rds")))
 
 ref_ps <- readRDS(file.path(output_dir, "r_objects", "ref_tree_phyloseq_obj.rds"))
-asv_tax <- data.frame(readRDS(file.path(output_dir, "r_objects", "ForwardReads_DADA2_taxonomy.rds")))
 
 metadata <- read.table(file.path(home_dir, project, "patient_metadata.tsv"), 
                        sep="\t", 
@@ -85,7 +84,7 @@ for(mta in 3:ncol(metadata)){
     preds <- ROCR::prediction(as.numeric(pred), as.numeric(resp_var_test))
     #update output
     metadata_col <- append(metadata_col, mta)
-    auc_val <- append(auc_val, ROCR::performance(preds, "auc"))
+    auc_val <- append(auc_val, ROCR::performance(preds, "auc")@y.values[[1]])
     ds_name <- append(ds_name, my_ds_ilr_type[ds])
     ds_method <- append(ds_method, my_ds_method[ds])
     
