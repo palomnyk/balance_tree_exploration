@@ -4,6 +4,54 @@
 rm(list = ls()) #clear workspace
 
 ##-functions--------------------------------------------------------##
+make_ilr_taxa_auc_df <- function(ps_obj,
+                                 metadata = metadata,
+                                 metadata_cols,
+                                 train_index = train_index,
+                                 test_index = test_index,
+                                 philr_ilr_weights = philr_ilr_weights,  
+                                 philr_taxa_weights = philr_taxa_weights){
+  all_auc <- c()
+  metadata_col <- c()
+  taxa_weight <- c()
+  ilr_weight <- c()
+  for (ilr_w in 1:length(philr_ilr_weights)){
+    for (tax_w in 1:length(philr_taxa_weights)){
+      my_table <- philr::philr(ps_obj@otu_table, ps_obj@phy_tree, 
+                               part.weights = philr_taxa_weights[tax_w],
+                               ilr.weights = philr_ilr_weights[ilr_w])
+      
+      my_table_train <- my_table[train_index,]
+      my_table_test <- my_table[test_index,]
+      
+      for(mta in metadata_cols){
+        print(paste("starting metadata col:", mta))
+        resp_var_test <- metadata[,mta][test_index]
+        resp_var_train <- metadata[,mta][train_index]
+        
+        #rf requires rownames on resp var
+        names(resp_var_test) <- row.names(my_table_test)
+        
+        rf <- randomForest::randomForest(my_table_train, resp_var_train)
+        
+        pred <- predict(rf, my_table_test)
+        
+        preds <- ROCR::prediction(as.numeric(pred), as.numeric(resp_var_test))
+        auc <- ROCR::performance(preds, "auc")@y.values[[1]]
+        print(paste("auc: ", auc))
+        #update output
+        metadata_col <- append(metadata_col, colnames(metadata)[mta])
+        all_auc <- append(all_auc, auc)
+        taxa_weight <- c(taxa_weight, philr_taxa_weights[tax_w])
+        ilr_weight <- c(ilr_weight, philr_ilr_weights[ilr_w])
+      }#for mta
+    }#taxa
+  }#ilr
+  return(data.frame(all_auc,
+                    metadata_col,
+                    taxa_weight,
+                    ilr_weight))
+}#end function
 
 ##-Load Depencencies------------------------------------------------##
 if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
@@ -29,6 +77,7 @@ source(file.path(home_dir, "r_libraries", "table_manipulations.R"))
 ##-Import tables and data preprocessing-----------------------------##
 asv_table <- asv_table <- data.frame(readRDS(file.path(output_dir, "r_objects", "ForwardReads_DADA2.rds")))
 
+#clean up otu tables
 ref_ps <- readRDS(file.path(output_dir, "r_objects", "ref_tree_phyloseq_obj.rds"))
 clean_otu <- data.frame(ref_ps@otu_table@.Data)
 clean_otu <- philr_tutorial_normalization(clean_otu)
@@ -37,6 +86,13 @@ ref_ps_clean <- phyloseq::phyloseq( otu_table(clean_otu, taxa_are_rows = F),
                                     phy_tree(ref_ps@phy_tree),
                                     tax_table(ref_ps@tax_table), 
                                     sample_data(ref_ps@sam_data))
+
+denovo_tree_ps <- readRDS(file.path(output_dir, "r_objects", "denovo_tree_UPGMA_phyloseq_obj.rds"))
+clean_den_otu <- philr_tutorial_normalization(data.frame(denovo_tree_ps@otu_table@.Data))
+denovo_tree_ps <- phyloseq::phyloseq( otu_table(clean_den_otu, taxa_are_rows = F),
+                                      phy_tree(ape::makeNodeLabel(phy_tree(denovo_tree_ps@phy_tree))),
+                                      tax_table(denovo_tree_ps@tax_table), 
+                                      sample_data(denovo_tree_ps@sam_data))
 
 metadata <- read.table(file.path(home_dir, project, "patient_metadata.tsv"), 
                        sep="\t", 
@@ -48,111 +104,126 @@ metadata$type <- droplevels(metadata$type)
 metadata$type <- factor(metadata$type)
 
 metadata <- metadata[row.names(metadata) %in% row.names(clean_otu), ]
+
+rf_cols <- 3:6
+
+#for making different philr weights
+philr_taxa_weights <- c("uniform","gm.counts","anorm","anorm.x.gm.counts","enorm","enorm.x.gm.counts")
+philr_ilr_weights <- c("uniform","blw","blw.sqrt","mean.descendants")
+
 ##-----------------Create training/testing sets---------------------##
 set.seed(36)
 train_index <- sample(x = nrow(metadata), size = 0.75*nrow(metadata), replace=FALSE)
 test_index <- c(1:nrow(metadata))[!(1:nrow(metadata) %in% train_index)]
 
-#to be filled by output from generate random tree data
-all_rand_auc <-c()
-rand_metadata_col <- c()
-
+##-Create plot data-------------------------------------------------##
 # generate random tree data
-for (treee in 1:100){
+rand_all_plot_data <- data.frame(all_auc = c(),
+                             metadata_col = c(),
+                             taxa_weight = c(),
+                             ilr_weight = c())
+for (treee in 1:10){
   #make random tree
   rand_tree <- rtree(n = length(ref_ps@phy_tree$tip.label), tip.label = ref_ps@phy_tree$tip.label)
-  #make random tree ps object with clean otu data
-  rand_ps <- phyloseq::phyloseq( otu_table(clean_otu, taxa_are_rows = F), 
-                                 phy_tree(rand_tree),
-                                 tax_table(ref_ps@tax_table), 
-                                 sample_data(ref_ps@sam_data))
-  
-  my_table <- philr::philr(rand_ps@otu_table, rand_ps@phy_tree)
-  
-  my_table_train <- my_table[train_index,]
-  my_table_test <- my_table[test_index,]
-  
-  for(mta in 3:6){
-    print(paste("starting metadata col:", mta))
-    resp_var_test <- metadata[,mta][test_index]
-    resp_var_train <- metadata[,mta][train_index]
-    
-    #rf requires rownames on resp var
-    names(resp_var_test) <- row.names(my_table_test)
-    
-    print(paste("attempting to run tree", treee, "through meta", mta))
-    rf <- randomForest(my_table_train, resp_var_train)
-    
-    pred <- predict(rf, my_table_test)
-    preds <- ROCR::prediction(as.numeric(pred), as.numeric(resp_var_test))
-    auc <- ROCR::performance(preds, "auc")@y.values[[1]]
-    print(paste("auc: ", auc))
-    #update output
-    rand_metadata_col <- append(rand_metadata_col, mta)
-    all_rand_auc <- append(all_rand_auc, auc)
-  }
+  #put int in philr
+  rand_tree_ps <- phyloseq::phyloseq( otu_table(clean_otu, taxa_are_rows = F), 
+                                      phy_tree(rand_tree),
+                                      tax_table(ref_ps@tax_table), 
+                                      sample_data(ref_ps@sam_data))
+  rand_plot_data <- make_ilr_taxa_auc_df(ps_obj = rand_tree_ps,
+                                        metadata_cols = rf_cols,
+                                        metadata = metadata,
+                                        train_index = train_index,
+                                        test_index = test_index,
+                                        philr_ilr_weights = philr_ilr_weights,  
+                                        philr_taxa_weights = philr_taxa_weights)
+  rand_all_plot_data <- rbind(rand_all_plot_data, rand_plot_data)
 }
 
-# calculate philr auc 
-philr_taxa_weights <- c("uniform","gm.counts","anorm","anorm.x.gm.counts","enorm","enorm.x.gm.counts")
-philr_ilr_weights <- c("uniform","blw","blw.sqrt","mean.descendants")
+# calculate ref philr auc 
+ref_plot_data <- make_ilr_taxa_auc_df(ps_obj = ref_ps_clean,
+                                      metadata_cols = rf_cols,
+                                      metadata = metadata,
+                                      train_index = train_index,
+                                      test_index = test_index,
+                                      philr_ilr_weights = philr_ilr_weights,  
+                                      philr_taxa_weights = philr_taxa_weights)
 
-taxa_weight <- c()
-ilr_weight <- c()
-all_ref_auc <-c()
-ref_metadata_col <- c()
+# generate denovo tree data
+denovo_plot_data <- make_ilr_taxa_auc_df( ps_obj = denovo_tree_ps,
+                                          metadata_cols = rf_cols,
+                                          metadata = metadata,
+                                          train_index = train_index,
+                                          test_index = test_index,
+                                          philr_ilr_weights = philr_ilr_weights,  
+                                          philr_taxa_weights = philr_taxa_weights)
 
-# generate random tree data
-for (ilr_w in 1:length(philr_ilr_weights)){
-  for (tax_w in 1:length(philr_taxa_weights)){
-    my_table <- philr::philr(ref_ps_clean@otu_table, ref_ps_clean@phy_tree, 
-                             part.weights = philr_taxa_weights[tax_w],
-                             ilr.weights = philr_ilr_weights[ilr_w])
-    
-    my_table_train <- my_table[train_index,]
-    my_table_test <- my_table[test_index,]
-    
-    for(mta in 3:6){
-      print(paste("starting metadata col:", mta))
-      resp_var_test <- metadata[,mta][test_index]
-      resp_var_train <- metadata[,mta][train_index]
-      
-      #rf requires rownames on resp var
-      names(resp_var_test) <- row.names(my_table_test)
-      
-      rf <- randomForest(my_table_train, resp_var_train)
-      
-      pred <- predict(rf, my_table_test)
-      
-      preds <- ROCR::prediction(as.numeric(pred), as.numeric(resp_var_test))
-      auc <- ROCR::performance(preds, "auc")@y.values[[1]]
-      print(paste("auc: ", auc))
-      #update output
-      ref_metadata_col <- append(ref_metadata_col, mta)
-      all_ref_auc <- append(all_ref_auc, auc)
-      taxa_weight <- c(taxa_weight, philr_taxa_weights[tax_w])
-      ilr_weight <- c(ilr_weight, philr_ilr_weights[ilr_w])
-    }
-  }
+##-Make all the histograms------------------------------------------##
+pdf(file = file.path(output_dir, "graphics","auc_rand_vs_ref_philr_all.pdf"))
+plot_data <- data.frame(all_auc = c(rand_all_plot_data$all_auc,
+                                    ref_plot_data$all_auc,
+                                    denovo_plot_data$all_auc),
+                        auc_lab = c(rep("Random Tree", nrow(rand_all_plot_data)),
+                                    rep("Ref Tree", nrow(ref_plot_data)),
+                                    rep("Denovo Tree", nrow(denovo_plot_data))))
+data_set <- "All Metadata AUC"
+g <- ggplot2::ggplot(plot_data, aes(x=all_auc, fill=auc_lab)) + 
+  ggplot2::geom_histogram(bins = 150, colour="black", size = 0.1) +
+  ggplot2::labs(fill = "Tree type") +
+  ggplot2::ggtitle(paste0(project, ", ", data_set," Rand Forst AUC")) +
+  ggplot2::xlab("AUC") +
+  ggplot2::ylab("Samples per bin")
+g
+#looking at individual metadata
+for (mta in unique(colnames(metadata)[rf_cols])){
+  print(mta)
+  plot_data <- data.frame(all_auc = c(rand_all_plot_data$all_auc[rand_all_plot_data$metadata_col == mta],
+                                      ref_plot_data$all_auc[ref_plot_data$metadata_col == mta],
+                                      denovo_plot_data$all_auc[denovo_plot_data$metadata_col == mta]),
+                          auc_lab = c(rep("Random Tree", sum(rand_all_plot_data$metadata_col == mta)),
+                                      rep("Ref Tree", sum(ref_plot_data$metadata_col == mta)),
+                                      rep("Denovo Tree", sum(denovo_plot_data$metadata_col == mta))))
+  data_set <- mta
+  g <- ggplot2::ggplot(plot_data, aes(x=all_auc, fill=auc_lab)) + 
+    ggplot2::geom_histogram(bins = 150, colour="black", size = 0.1) +
+    ggplot2::labs(fill = "Tree type") +
+    ggplot2::ggtitle(paste0(project, ", ", data_set, " Rand Forst AUC")) +
+    ggplot2::xlab("AUC") +
+    ggplot2::ylab("Samples per bin")
+  print(g)
+}#end for
+
+my_dfs <- list(rand_all_plot_data, ref_plot_data, denovo_plot_data)
+my_df_names <-c("Random Tree", "Ref Tree", "Denovo")
+
+for (ds in 1:length(my_dfs)){
+  plot_data <- my_dfs[ds][[1]]
+  data_set <- my_df_names[ds]
+  g <- ggplot2::ggplot(plot_data, aes(x=all_auc, fill=metadata_col)) + 
+    ggplot2::geom_histogram(bins = 150, colour="black", size = 0.1) +
+    ggplot2::labs(fill = "Metadata") +
+    ggplot2::ggtitle(paste0(project, ", ", data_set, " only Rand Forst AUC ")) +
+    ggplot2::xlab("AUC") +
+    ggplot2::ylab("Samples per bin")
+  print(g)
+  
+  g <- ggplot2::ggplot(plot_data, aes(x=all_auc, 
+                                      fill = ilr_weight)) + 
+    ggplot2::geom_histogram(bins = 150, colour="black", size = 0.1) +
+    ggplot2::ggtitle(paste0(project, ", ", data_set, " only Rand Forst AUC ILR.weight")) +
+    ggplot2::xlab("AUC") +
+    ggplot2::ylab("Samples per bin")
+  g
+  
+  g <- ggplot2::ggplot(plot_data, aes(x=all_auc, 
+                                      fill = taxa_weight)) + 
+    ggplot2::geom_histogram(bins = 150, colour="black", size = 0.1) +
+    ggplot2::ggtitle(paste0(project, ", ", data_set, " only Rand Forst AUC Taxa.weight")) +
+    ggplot2::xlab("AUC") +
+    ggplot2::ylab("Samples per bin")
+  g
 }
-
-
-pdf(file = file.path(output_dir, "graphics","auc_rand_vs_ref_philr.pdf"))
-hist(all_rand_auc, breaks = 150, xlab = "AUC", 
-     main = "Histogram of all Random Tree philR")
-
-hist(all_ref_auc, breaks = 150, xlab = "AUC", 
-     main = "Histogram of all Refernce Tree philR")
-
-#https://www.dataanalytics.org.uk/plot-two-overlapping-histograms-on-one-chart-in-r/
-ref_hist <- hist(all_ref_auc, breaks = 300, plot = FALSE)
-
-rand_hist <- hist(all_rand_auc, breaks = 300, plot = FALSE)
-
-plot(ref_hist, col = "blue", 
-     main = "Random Tree philR (red) vs Reference Tree philR (blue)",
-     xlab = "AUC")
-plot(rand_hist, col = rgb(255,192,203, max = 255, alpha = 80, names = "lt.pink"), 
-     add = TRUE)
 
 dev.off()
+
+
