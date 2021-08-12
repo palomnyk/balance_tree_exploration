@@ -184,13 +184,25 @@ for (mta in unique(colnames(metadata)[rf_cols])){
                                       rep("Ref Tree", sum(ref_plot_data$metadata_col == mta)),
                                       rep("Denovo Tree", sum(denovo_plot_data$metadata_col == mta))))
   data_set <- mta
+  rand_norm <- shapiro.test(rand_all_plot_data$all_auc[rand_all_plot_data$metadata_col == mta])
   g <- ggplot2::ggplot(plot_data, aes(x=all_auc, fill=auc_lab)) + 
     ggplot2::geom_histogram(bins = 150, colour="black", size = 0.1) +
     ggplot2::labs(fill = "Tree type") +
-    ggplot2::ggtitle(paste0(project, ", ", data_set, " Rand Forst AUC")) +
+    ggplot2::ggtitle(paste0(project, ", ", data_set, " Rand Forst AUC; ", "Rand Shapiro: ", round(rand_norm$p.value, 4))) +
     ggplot2::xlab("AUC") +
     ggplot2::ylab("Samples per bin")
   print(g)
+  
+  g <- ggplot2::ggplot(plot_data, aes(all_auc, auc_lab)) + 
+    ggplot2::geom_boxplot(outlier.shape = NA) +
+    ggplot2::geom_jitter(width = 0.1, height = 0.1) +
+    ggplot2::ggtitle(paste(project, mta, "all data")) +
+    ggplot2::geom_hline(yintercept = 0) +
+    ggplot2::theme(axis.text.x = element_text(angle = 45)) +
+    ggplot2::xlab("AUC") +
+    ggplot2::ylab(unique(auc_lab))
+  print(g)
+  
 }#end for
 
 my_dfs <- list(rand_all_plot_data, ref_plot_data, denovo_plot_data)
@@ -224,6 +236,100 @@ for (ds in 1:length(my_dfs)){
   g
 }
 
+
+for (my_col in 1:ncol(rand_all_plot_data)){
+  
+  g <- ggplot2::ggplot(rand_all_plot_data, aes(all_auc, )) + geom_boxplot() + 
+    ggtitle(main_lab) +
+    geom_hline(yintercept = 0) +
+    theme(axis.text.x = element_text(angle = 45)) +
+    xlab("Transformations") +
+    ylab(y_lab)
+  print(g)
+  
+}
+
+g <- ggplot2::ggplot(rand_all_plot_data, aes(all_auc, metadata_col)) + 
+  geom_boxplot() + 
+  ggtitle("main_lab") +
+  geom_hline(yintercept = 0) +
+  theme(axis.text.x = element_text(angle = 45)) +
+  xlab("Transformations")
+  # ylab(y_lab)
+print(g)
+
+g <- ggplot2::ggplot(rand_all_plot_data, aes(all_auc, taxa_weight)) + 
+  geom_boxplot() + 
+  ggtitle("main_lab") +
+  geom_hline(yintercept = 0) +
+  theme(axis.text.x = element_text(angle = 45)) +
+  xlab("Transformations")
+print(g)
+
+
+
+meta_rand_pd <- rand_all_plot_data[rand_all_plot_data$metadata_col == "sex",]
+
+g <- ggplot2::ggplot(rand_all_plot_data, aes(all_auc, ilr_weight)) + 
+  geom_boxplot() + 
+  ggtitle("main_lab") +
+  geom_hline(yintercept = 0) +
+  theme(axis.text.x = element_text(angle = 45)) +
+  xlab("Transformations")
+print(g)
+
+
+for (mta in 1:length(unique(rand_all_plot_data$metadata_col))){
+  my_meta <- as.character(unique(rand_all_plot_data$metadata_col)[mta])
+  print(my_meta)
+  auc_plot_data <- c()
+  meta_plot_data <- c()
+  taxa_weight <- c()
+  ilr_weight <- c()
+  for (ds in 1:length(my_dfs)){
+    my_df <- my_dfs[[ds]]
+    my_df <- my_df[my_df$metadata_col == my_meta,]
+    auc_plot_data <- c(auc_plot_data, my_df$all_auc)
+    meta_plot_data <- c(meta_plot_data, rep(my_df_names[ds], nrow(my_df)))
+    taxa_weight <- c(taxa_weight, as.character(my_df$taxa_weight))
+    ilr_weight <- c(ilr_weight, as.character(my_df$ilr_weight))
+  }
+  plot_data <- data.frame("AUC" = auc_plot_data, 
+                          "Tree_types" = meta_plot_data,
+                          "ilr_weight" = ilr_weight,
+                          "taxa_weight" = taxa_weight)
+  g <- ggplot2::ggplot(plot_data, aes(AUC, Tree_types)) + 
+    ggplot2::geom_boxplot(outlier.shape = NA) +
+    ggplot2::geom_jitter(aes(color = as.factor(ilr_weight)),width = 0.1, height = 0.1) +
+    ggplot2::ggtitle(paste(project, my_meta, "colored by ilr weight")) +
+    ggplot2::geom_hline(yintercept = 0) +
+    ggplot2::theme(axis.text.x = element_text(angle = 45)) +
+    ggplot2::xlab("AUC") +
+    ggplot2::ylab(unique(meta_plot_data)) +
+    ggplot2::labs(color = "ilr weight")  
+  print(g)
+  
+  g <- ggplot2::ggplot(plot_data, aes(AUC, Tree_types)) + 
+    ggplot2::geom_boxplot(outlier.shape = NA) +
+    ggplot2::geom_jitter(aes(color = as.factor(taxa_weight)), width = 0.1, height = 0.1) +
+    ggplot2::ggtitle(paste(project, my_meta, "colored by taxa weight")) +
+    ggplot2::geom_hline(yintercept = 0) +
+    ggplot2::theme(axis.text.x = element_text(angle = 45)) +
+    ggplot2::xlab("AUC") +
+    ggplot2::ylab(unique(meta_plot_data)) +
+    ggplot2::labs(color = "taxa weight")  
+  print(g)
+}
+
 dev.off()
+
+
+
+
+
+# Notes from meeting with AF on 11 Aug 2021
+# Fit random trees to gausian
+# Rug
+# Finish on imigrant gut
 
 
