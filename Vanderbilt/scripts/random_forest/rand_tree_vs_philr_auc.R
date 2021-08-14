@@ -10,17 +10,21 @@ make_ilr_taxa_auc_df <- function(ps_obj,
                                  train_index = train_index,
                                  test_index = test_index,
                                  philr_ilr_weights = philr_ilr_weights,  
-                                 philr_taxa_weights = philr_taxa_weights){
+                                 philr_taxa_weights = philr_taxa_weights,
+                                 just_otu = FALSE){
   all_auc <- c()
   metadata_col <- c()
   taxa_weight <- c()
   ilr_weight <- c()
   for (ilr_w in 1:length(philr_ilr_weights)){
     for (tax_w in 1:length(philr_taxa_weights)){
-      my_table <- philr::philr(ps_obj@otu_table, ps_obj@phy_tree, 
-                               part.weights = philr_taxa_weights[tax_w],
-                               ilr.weights = philr_ilr_weights[ilr_w])
-      
+      if (just_otu == TRUE){
+        my_table <- ps_obj
+      }else{
+        my_table <- philr::philr(ps_obj@otu_table, ps_obj@phy_tree, 
+                                 part.weights = philr_taxa_weights[tax_w],
+                                 ilr.weights = philr_ilr_weights[ilr_w])
+      }
       my_table_train <- my_table[train_index,]
       my_table_test <- my_table[test_index,]
       
@@ -240,7 +244,7 @@ for (ds in 1:length(my_dfs)){
 for (my_col in 1:ncol(rand_all_plot_data)){
   
   g <- ggplot2::ggplot(rand_all_plot_data, aes(all_auc, )) + geom_boxplot() + 
-    ggtitle(main_lab) +
+    ggtitle("random tree only") +
     geom_hline(yintercept = 0) +
     theme(axis.text.x = element_text(angle = 45)) +
     xlab("Transformations") +
@@ -251,7 +255,7 @@ for (my_col in 1:ncol(rand_all_plot_data)){
 
 g <- ggplot2::ggplot(rand_all_plot_data, aes(all_auc, metadata_col)) + 
   geom_boxplot() + 
-  ggtitle("main_lab") +
+  ggtitle("rand_all_plot_data") +
   geom_hline(yintercept = 0) +
   theme(axis.text.x = element_text(angle = 45)) +
   xlab("Transformations")
@@ -260,7 +264,7 @@ print(g)
 
 g <- ggplot2::ggplot(rand_all_plot_data, aes(all_auc, taxa_weight)) + 
   geom_boxplot() + 
-  ggtitle("main_lab") +
+  ggtitle("rand_all_plot_data") +
   geom_hline(yintercept = 0) +
   theme(axis.text.x = element_text(angle = 45)) +
   xlab("Transformations")
@@ -272,7 +276,7 @@ meta_rand_pd <- rand_all_plot_data[rand_all_plot_data$metadata_col == "sex",]
 
 g <- ggplot2::ggplot(rand_all_plot_data, aes(all_auc, ilr_weight)) + 
   geom_boxplot() + 
-  ggtitle("main_lab") +
+  ggtitle("rand_all_plot_data") +
   geom_hline(yintercept = 0) +
   theme(axis.text.x = element_text(angle = 45)) +
   xlab("Transformations")
@@ -286,6 +290,20 @@ for (mta in 1:length(unique(rand_all_plot_data$metadata_col))){
   meta_plot_data <- c()
   taxa_weight <- c()
   ilr_weight <- c()
+  
+  #normality
+  plot_data <- data.frame(auc = rand_all_plot_data$all_auc[rand_all_plot_data$metadata_col == my_meta])
+  rand_shap <- shapiro.test( plot_data$auc )
+  qqnorm(plot_data$auc, main = paste0("Random Tree $", my_meta," shap: ", round(rand_shap$p.value, 6)))
+  qqline(plot_data$auc)
+  g <- ggplot2::ggplot(plot_data, aes(x=auc)) + 
+    ggplot2::geom_histogram(bins = 150, colour="black", size = 0.1) +
+    # ggplot2::labs(fill = "Metadata") +
+    ggplot2::ggtitle(paste0(project, " only Rand Forst AUC ", my_meta, " shap: ", round(rand_shap$p.value, 4))) +
+    ggplot2::xlab("AUC") +
+    ggplot2::ylab("Samples per bin")
+  print(g)
+  
   for (ds in 1:length(my_dfs)){
     my_df <- my_dfs[[ds]]
     my_df <- my_df[my_df$metadata_col == my_meta,]
@@ -301,7 +319,7 @@ for (mta in 1:length(unique(rand_all_plot_data$metadata_col))){
   g <- ggplot2::ggplot(plot_data, aes(AUC, Tree_types)) + 
     ggplot2::geom_boxplot(outlier.shape = NA) +
     ggplot2::geom_jitter(aes(color = as.factor(ilr_weight)),width = 0.1, height = 0.1) +
-    ggplot2::ggtitle(paste(project, my_meta, "colored by ilr weight")) +
+    ggplot2::ggtitle(paste(project, my_meta, "colored by ilr weight; ranTreeShap:", round(rand_shap$p.value, 4))) +
     ggplot2::geom_hline(yintercept = 0) +
     ggplot2::theme(axis.text.x = element_text(angle = 45)) +
     ggplot2::xlab("AUC") +
@@ -312,7 +330,7 @@ for (mta in 1:length(unique(rand_all_plot_data$metadata_col))){
   g <- ggplot2::ggplot(plot_data, aes(AUC, Tree_types)) + 
     ggplot2::geom_boxplot(outlier.shape = NA) +
     ggplot2::geom_jitter(aes(color = as.factor(taxa_weight)), width = 0.1, height = 0.1) +
-    ggplot2::ggtitle(paste(project, my_meta, "colored by taxa weight")) +
+    ggplot2::ggtitle(paste(project, my_meta, "colored by taxa weight; ranTreeShap:", round(rand_shap$p.value, 4))) +
     ggplot2::geom_hline(yintercept = 0) +
     ggplot2::theme(axis.text.x = element_text(angle = 45)) +
     ggplot2::xlab("AUC") +
