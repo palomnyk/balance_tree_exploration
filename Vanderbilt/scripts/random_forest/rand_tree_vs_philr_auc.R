@@ -49,7 +49,9 @@ make_ilr_taxa_auc_df <- function(ps_obj,
         taxa_weight <- c(taxa_weight, philr_taxa_weights[tax_w])
         ilr_weight <- c(ilr_weight, philr_ilr_weights[ilr_w])
       }#for mta
+      if (just_otu == TRUE) break
     }#taxa
+    if (just_otu == TRUE) break
   }#ilr
   return(data.frame(all_auc,
                     metadata_col,
@@ -77,6 +79,12 @@ setwd(file.path(home_dir))
 ##-Functions--------------------------------------------------------##
 source(file.path(home_dir, "r_libraries", "statistical_functions.R"))
 source(file.path(home_dir, "r_libraries", "table_manipulations.R"))
+
+
+##-Set up constants-------------------------------------------------##
+rf_cols <- 3:6
+num_cycles <- 100
+if(num_cycles < 3) stop("num_cycles should be 3 or more")
 
 ##-Import tables and data preprocessing-----------------------------##
 asv_table <- asv_table <- data.frame(readRDS(file.path(output_dir, "r_objects", "ForwardReads_DADA2.rds")))
@@ -109,24 +117,25 @@ metadata$type <- factor(metadata$type)
 
 metadata <- metadata[row.names(metadata) %in% row.names(clean_otu), ]
 
-rf_cols <- 3:6
-
 #for making different philr weights
 philr_taxa_weights <- c("uniform","gm.counts","anorm","anorm.x.gm.counts","enorm","enorm.x.gm.counts")
 philr_ilr_weights <- c("uniform","blw","blw.sqrt","mean.descendants")
 
-##-----------------Create training/testing sets---------------------##
+##-Random num seed--------------------------------------------------##
 set.seed(36)
-train_index <- sample(x = nrow(metadata), size = 0.75*nrow(metadata), replace=FALSE)
-test_index <- c(1:nrow(metadata))[!(1:nrow(metadata) %in% train_index)]
 
 ##-Create plot data-------------------------------------------------##
-# generate random tree data
-rand_all_plot_data <- data.frame(all_auc = c(),
-                             metadata_col = c(),
-                             taxa_weight = c(),
-                             ilr_weight = c())
-for (treee in 1:10){
+all_plot_data <- data.frame(all_auc = c(),
+                            metadata_col = c(),
+                            taxa_weight = c(),
+                            ilr_weight = c(),
+                            random_batch = c(),
+                            tree_group = c())
+for (ran_num in 1:num_cycles){
+  ##-Create training/testing sets-------------------------------------##
+  train_index <- sample(x = nrow(metadata), size = 0.75*nrow(metadata), replace=FALSE)
+  test_index <- c(1:nrow(metadata))[!(1:nrow(metadata) %in% train_index)]
+  
   #make random tree
   rand_tree <- rtree(n = length(ref_ps@phy_tree$tip.label), tip.label = ref_ps@phy_tree$tip.label)
   #put int in philr
@@ -135,211 +144,138 @@ for (treee in 1:10){
                                       tax_table(ref_ps@tax_table), 
                                       sample_data(ref_ps@sam_data))
   rand_plot_data <- make_ilr_taxa_auc_df(ps_obj = rand_tree_ps,
+                                         metadata_cols = rf_cols,
+                                         metadata = metadata,
+                                         train_index = train_index,
+                                         test_index = test_index,
+                                         philr_ilr_weights = philr_ilr_weights,  
+                                         philr_taxa_weights = philr_taxa_weights)
+  rand_plot_data$tree_group <- rep("random", nrow(rand_plot_data))
+  all_plot_data <- rbind(all_plot_data, rand_plot_data)
+  
+  # calculate ref philr auc 
+  ref_plot_data <- make_ilr_taxa_auc_df(ps_obj = ref_ps_clean,
                                         metadata_cols = rf_cols,
                                         metadata = metadata,
                                         train_index = train_index,
                                         test_index = test_index,
                                         philr_ilr_weights = philr_ilr_weights,  
                                         philr_taxa_weights = philr_taxa_weights)
-  rand_all_plot_data <- rbind(rand_all_plot_data, rand_plot_data)
+  ref_plot_data$tree_group <- rep("Silva_ref", nrow(ref_plot_data))
+  all_plot_data <- rbind(all_plot_data, ref_plot_data)
+  
+  # generate denovo tree data
+  denovo_plot_data <- make_ilr_taxa_auc_df( ps_obj = denovo_tree_ps,
+                                            metadata_cols = rf_cols,
+                                            metadata = metadata,
+                                            train_index = train_index,
+                                            test_index = test_index,
+                                            philr_ilr_weights = philr_ilr_weights,  
+                                            philr_taxa_weights = philr_taxa_weights)
+  denovo_plot_data$tree_group <- rep("UPGMA", nrow(denovo_plot_data))
+  all_plot_data <- rbind(all_plot_data, denovo_plot_data)
+  
+  # generate "raw data" data
+  raw_plot_data <- make_ilr_taxa_auc_df(ps_obj = asv_table,
+                                        metadata_cols = rf_cols,
+                                        metadata = metadata,
+                                        train_index = train_index,
+                                        test_index = test_index,
+                                        philr_ilr_weights = philr_ilr_weights,  
+                                        philr_taxa_weights = philr_taxa_weights,
+                                        just_otu = TRUE )
+  raw_plot_data$tree_group <- rep("raw_data", nrow(raw_plot_data))
+  all_plot_data <- rbind(all_plot_data, raw_plot_data)
 }
 
-# calculate ref philr auc 
-ref_plot_data <- make_ilr_taxa_auc_df(ps_obj = ref_ps_clean,
-                                      metadata_cols = rf_cols,
-                                      metadata = metadata,
-                                      train_index = train_index,
-                                      test_index = test_index,
-                                      philr_ilr_weights = philr_ilr_weights,  
-                                      philr_taxa_weights = philr_taxa_weights)
+weight_table <- data.frame(tree_type = c(),
+                         metadata = c(),
+                         taxa_pval = c(),
+                         ilr_pval = c())
 
-# generate denovo tree data
-denovo_plot_data <- make_ilr_taxa_auc_df( ps_obj = denovo_tree_ps,
-                                          metadata_cols = rf_cols,
-                                          metadata = metadata,
-                                          train_index = train_index,
-                                          test_index = test_index,
-                                          philr_ilr_weights = philr_ilr_weights,  
-                                          philr_taxa_weights = philr_taxa_weights)
 
 ##-Make all the histograms------------------------------------------##
-pdf(file = file.path(output_dir, "graphics","auc_rand_vs_ref_philr_all.pdf"))
-plot_data <- data.frame(all_auc = c(rand_all_plot_data$all_auc,
-                                    ref_plot_data$all_auc,
-                                    denovo_plot_data$all_auc),
-                        auc_lab = c(rep("Random Tree", nrow(rand_all_plot_data)),
-                                    rep("Ref Tree", nrow(ref_plot_data)),
-                                    rep("Denovo Tree", nrow(denovo_plot_data))))
-data_set <- "All Metadata AUC"
-g <- ggplot2::ggplot(plot_data, aes(x=all_auc, fill=auc_lab)) + 
-  ggplot2::geom_histogram(bins = 150, colour="black", size = 0.1) +
-  ggplot2::labs(fill = "Tree type") +
-  ggplot2::ggtitle(paste0(project, ", ", data_set," Rand Forst AUC")) +
-  ggplot2::xlab("AUC") +
-  ggplot2::ylab("Samples per bin")
-g
-#looking at individual metadata
-for (mta in unique(colnames(metadata)[rf_cols])){
-  print(mta)
-  plot_data <- data.frame(all_auc = c(rand_all_plot_data$all_auc[rand_all_plot_data$metadata_col == mta],
-                                      ref_plot_data$all_auc[ref_plot_data$metadata_col == mta],
-                                      denovo_plot_data$all_auc[denovo_plot_data$metadata_col == mta]),
-                          auc_lab = c(rep("Random Tree", sum(rand_all_plot_data$metadata_col == mta)),
-                                      rep("Ref Tree", sum(ref_plot_data$metadata_col == mta)),
-                                      rep("Denovo Tree", sum(denovo_plot_data$metadata_col == mta))))
-  data_set <- mta
-  rand_norm <- shapiro.test(rand_all_plot_data$all_auc[rand_all_plot_data$metadata_col == mta])
-  g <- ggplot2::ggplot(plot_data, aes(x=all_auc, fill=auc_lab)) + 
-    ggplot2::geom_histogram(bins = 150, colour="black", size = 0.1) +
-    ggplot2::labs(fill = "Tree type") +
-    ggplot2::ggtitle(paste0(project, ", ", data_set, " Rand Forst AUC; ", "Rand Shapiro: ", round(rand_norm$p.value, 4))) +
-    ggplot2::xlab("AUC") +
-    ggplot2::ylab("Samples per bin")
-  print(g)
+pdf(file = file.path(output_dir, "graphics", paste0("auc_rand_v_ref_v_upgma_v_raw_", num_cycles, ".pdf")))
+for (mta in 1:length(unique(all_plot_data$metadata_col))){
+  my_meta <- as.character(unique(all_plot_data$metadata_col)[mta])
+  message(my_meta)
   
-  g <- ggplot2::ggplot(plot_data, aes(all_auc, auc_lab)) + 
-    ggplot2::geom_boxplot(outlier.shape = NA) +
-    ggplot2::geom_jitter(width = 0.1, height = 0.1) +
-    ggplot2::ggtitle(paste(project, mta, "all data")) +
-    ggplot2::geom_hline(yintercept = 0) +
-    ggplot2::theme(axis.text.x = element_text(angle = 45)) +
-    ggplot2::xlab("AUC") +
-    ggplot2::ylab(unique(auc_lab))
-  print(g)
+  plot_data <- all_plot_data[all_plot_data$metadata_col == my_meta,]
   
-}#end for
-
-my_dfs <- list(rand_all_plot_data, ref_plot_data, denovo_plot_data)
-my_df_names <-c("Random Tree", "Ref Tree", "Denovo")
-
-for (ds in 1:length(my_dfs)){
-  plot_data <- my_dfs[ds][[1]]
-  data_set <- my_df_names[ds]
-  g <- ggplot2::ggplot(plot_data, aes(x=all_auc, fill=metadata_col)) + 
-    ggplot2::geom_histogram(bins = 150, colour="black", size = 0.1) +
-    ggplot2::labs(fill = "Metadata") +
-    ggplot2::ggtitle(paste0(project, ", ", data_set, " only Rand Forst AUC ")) +
-    ggplot2::xlab("AUC") +
-    ggplot2::ylab("Samples per bin")
-  print(g)
-  
-  g <- ggplot2::ggplot(plot_data, aes(x=all_auc, 
-                                      fill = ilr_weight)) + 
-    ggplot2::geom_histogram(bins = 150, colour="black", size = 0.1) +
-    ggplot2::ggtitle(paste0(project, ", ", data_set, " only Rand Forst AUC ILR.weight")) +
-    ggplot2::xlab("AUC") +
-    ggplot2::ylab("Samples per bin")
-  g
-  
-  g <- ggplot2::ggplot(plot_data, aes(x=all_auc, 
-                                      fill = taxa_weight)) + 
-    ggplot2::geom_histogram(bins = 150, colour="black", size = 0.1) +
-    ggplot2::ggtitle(paste0(project, ", ", data_set, " only Rand Forst AUC Taxa.weight")) +
-    ggplot2::xlab("AUC") +
-    ggplot2::ylab("Samples per bin")
-  g
-}
-
-
-for (my_col in 1:ncol(rand_all_plot_data)){
-  
-  g <- ggplot2::ggplot(rand_all_plot_data, aes(all_auc, )) + geom_boxplot() + 
-    ggtitle("random tree only") +
-    geom_hline(yintercept = 0) +
-    theme(axis.text.x = element_text(angle = 45)) +
-    xlab("Transformations") +
-    ylab(y_lab)
-  print(g)
-  
-}
-
-g <- ggplot2::ggplot(rand_all_plot_data, aes(all_auc, metadata_col)) + 
-  geom_boxplot() + 
-  ggtitle("rand_all_plot_data") +
-  geom_hline(yintercept = 0) +
-  theme(axis.text.x = element_text(angle = 45)) +
-  xlab("Transformations")
-  # ylab(y_lab)
-print(g)
-
-g <- ggplot2::ggplot(rand_all_plot_data, aes(all_auc, taxa_weight)) + 
-  geom_boxplot() + 
-  ggtitle("rand_all_plot_data") +
-  geom_hline(yintercept = 0) +
-  theme(axis.text.x = element_text(angle = 45)) +
-  xlab("Transformations")
-print(g)
-
-
-
-meta_rand_pd <- rand_all_plot_data[rand_all_plot_data$metadata_col == "sex",]
-
-g <- ggplot2::ggplot(rand_all_plot_data, aes(all_auc, ilr_weight)) + 
-  geom_boxplot() + 
-  ggtitle("rand_all_plot_data") +
-  geom_hline(yintercept = 0) +
-  theme(axis.text.x = element_text(angle = 45)) +
-  xlab("Transformations")
-print(g)
-
-
-for (mta in 1:length(unique(rand_all_plot_data$metadata_col))){
-  my_meta <- as.character(unique(rand_all_plot_data$metadata_col)[mta])
-  print(my_meta)
-  auc_plot_data <- c()
-  meta_plot_data <- c()
-  taxa_weight <- c()
-  ilr_weight <- c()
-  
-  #normality
-  plot_data <- data.frame(auc = rand_all_plot_data$all_auc[rand_all_plot_data$metadata_col == my_meta])
-  rand_shap <- shapiro.test( plot_data$auc )
-  qqnorm(plot_data$auc, main = paste0("Random Tree $", my_meta," shap: ", round(rand_shap$p.value, 6)))
-  qqline(plot_data$auc)
-  g <- ggplot2::ggplot(plot_data, aes(x=auc)) + 
-    ggplot2::geom_histogram(bins = 150, colour="black", size = 0.1) +
-    # ggplot2::labs(fill = "Metadata") +
-    ggplot2::ggtitle(paste0(project, " only Rand Forst AUC ", my_meta, " shap: ", round(rand_shap$p.value, 4))) +
-    ggplot2::xlab("AUC") +
-    ggplot2::ylab("Samples per bin")
-  print(g)
-  
-  for (ds in 1:length(my_dfs)){
-    my_df <- my_dfs[[ds]]
-    my_df <- my_df[my_df$metadata_col == my_meta,]
-    auc_plot_data <- c(auc_plot_data, my_df$all_auc)
-    meta_plot_data <- c(meta_plot_data, rep(my_df_names[ds], nrow(my_df)))
-    taxa_weight <- c(taxa_weight, as.character(my_df$taxa_weight))
-    ilr_weight <- c(ilr_weight, as.character(my_df$ilr_weight))
+  my_shap_pval <- c()
+  my_shap_tg <- c()
+  taxa_w_pval <- c()
+  ilr_w_pval <- c()
+  for (tg in unique(plot_data$tree_group)){
+    auc <- plot_data$all_auc[plot_data$tree_group ==  tg]
+    ilr_w <- plot_data$ilr_weight[plot_data$tree_group ==  tg]
+    taxa_w <- plot_data$taxa_weight[plot_data$tree_group ==  tg]
+    rand_shap <- shapiro.test(auc)
+    my_shap_tg <- c(my_shap_tg, tg)
+    my_shap_pval <- c(my_shap_pval, rand_shap$p.value)
+    if (tg != "raw_data"){
+      t_pval <- anova(lm(auc ~ taxa_w))$"Pr(>F)"[1]
+      i_pval <-  anova(lm(auc ~ ilr_w))$"Pr(>F)"[1]
+      new_row <- c(tg, my_meta,  t_pval, i_pval)
+      weight_table <- rbind(weight_table, new_row)
+    }
   }
-  plot_data <- data.frame("AUC" = auc_plot_data, 
-                          "Tree_types" = meta_plot_data,
-                          "ilr_weight" = ilr_weight,
-                          "taxa_weight" = taxa_weight)
-  g <- ggplot2::ggplot(plot_data, aes(AUC, Tree_types)) + 
+  # "tree_type" = c(),
+  # "metadata" = c(),
+  # "taxa_pval" = c(),
+  # "ilr_pval" = c())
+  
+  
+  g <- ggplot2::ggplot(plot_data, aes(all_auc, tree_group)) + 
     ggplot2::geom_boxplot(outlier.shape = NA) +
     ggplot2::geom_jitter(aes(color = as.factor(ilr_weight)),width = 0.1, height = 0.1) +
-    ggplot2::ggtitle(paste(project, my_meta, "colored by ilr weight; ranTreeShap:", round(rand_shap$p.value, 4))) +
+    ggplot2::ggtitle(paste(project, my_meta, "colored by ilr weight")) +
     ggplot2::geom_hline(yintercept = 0) +
     ggplot2::theme(axis.text.x = element_text(angle = 45)) +
     ggplot2::xlab("AUC") +
-    ggplot2::ylab(unique(meta_plot_data)) +
+    ggplot2::ylab("Tree type") +
     ggplot2::labs(color = "ilr weight")  
   print(g)
   
-  g <- ggplot2::ggplot(plot_data, aes(AUC, Tree_types)) + 
+  g <- ggplot2::ggplot(plot_data, aes(all_auc, tree_group)) + 
     ggplot2::geom_boxplot(outlier.shape = NA) +
-    ggplot2::geom_jitter(aes(color = as.factor(taxa_weight)), width = 0.1, height = 0.1) +
-    ggplot2::ggtitle(paste(project, my_meta, "colored by taxa weight; ranTreeShap:", round(rand_shap$p.value, 4))) +
+    ggplot2::geom_jitter(aes(color = as.factor(taxa_weight)),width = 0.1, height = 0.1) +
+    ggplot2::ggtitle(paste(project, my_meta, "colored by taxa weight")) +
     ggplot2::geom_hline(yintercept = 0) +
     ggplot2::theme(axis.text.x = element_text(angle = 45)) +
     ggplot2::xlab("AUC") +
-    ggplot2::ylab(unique(meta_plot_data)) +
-    ggplot2::labs(color = "taxa weight")  
+    ggplot2::ylab("Tree type") +
+    ggplot2::labs(color = "ilr weight")  
   print(g)
 }
 
 dev.off()
+
+weight_table$taxa_adj <- p.adjust(weight_table$taxa_pval, method = "BH")
+weight_table$ilr_adj <- p.adjust(weight_table$ilr_pval, method = "BH")
+
+write.table(weight_table,
+            sep = ",",
+            row.names = FALSE,
+            file = file.path(output_dir, "tables", paste0("auc_rand_v_ref_v_upgma_v_raw_", num_cycles, ".csv")))
+
+# #normality
+# qqnorm(plot_data$all_auc, main = paste0("Random Tree $", my_meta," shap: ", round(rand_shap$p.value, 6)))
+# qqline(plot_data$all_auc)
+# g <- ggplot2::ggplot(plot_data, aes(x=all_auc)) + 
+#   ggplot2::geom_histogram(bins = 150, colour="black", size = 0.1) +
+#   # ggplot2::labs(fill = "Metadata") +
+#   ggplot2::ggtitle(paste0(project, " only Rand Forst AUC ", my_meta, " shap: ", round(rand_shap$p.value, 4))) +
+#   ggplot2::xlab("AUC") +
+#   ggplot2::ylab("Samples per bin")
+# print(g)
+
+
+
+
+
+
+
 
 
 
