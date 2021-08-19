@@ -44,8 +44,12 @@ make_ilr_taxa_auc_df <- function(ps_obj,
         pred <- predict(rf, my_table_test)
         
         print(paste("num factors", nlevels(resp_var_test)))
-        my_roc <- pROC::roc(as.numeric(pred), as.numeric(resp_var_test))
-        print("prediction made")
+        if (nlevels(resp_var_test) > 2){
+          my_roc <- pROC::multiclass.roc(as.numeric(pred), as.numeric(resp_var_test))
+        }else{
+          my_roc <- pROC::roc(as.numeric(pred), as.numeric(resp_var_test))
+        }
+        print("ROC made")
         auc <- pROC::auc(my_roc)
         print(paste("auc: ", auc))
         #update all output
