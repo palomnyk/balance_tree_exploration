@@ -72,6 +72,8 @@ make_ilr_taxa_auc_df <- function(ps_obj,
 if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
 # if (!requireNamespace("ROCR", quietly = TRUE)) BiocManager::install("ROCR")
 if (!requireNamespace("pROC", quietly = TRUE)) BiocManager::install("pROC")
+if (!requireNamespace("ggpubr", quietly = TRUE)) BiocManager::install("ggpubr")
+library("ggpubr")
 library("pROC")
 library("philr")
 library("ggplot2")
@@ -215,12 +217,12 @@ while (counter < num_cycles & skips < 5){
   }
 }
 
-weight_table <- data.frame(tree_type = c(),
-                         metadata = c(),
-                         taxa_pval = c(),
-                         ilr_pval = c())
+weight_table <- data.frame(tree_type = c(F),
+                           metadata = c(F),
+                           taxa_pval = c(F),
+                           ilr_pval = c(F))
 
-
+weight_counter <- 1
 ##-Make all the histograms------------------------------------------##
 pdf(file = file.path(output_dir, "graphics", paste0("auc_rand_v_ref_v_upgma_v_raw_", num_cycles, ".pdf")))
 for (mta in 1:length(unique(all_plot_data$metadata_col))){
@@ -244,35 +246,40 @@ for (mta in 1:length(unique(all_plot_data$metadata_col))){
       t_pval <- anova(lm(auc ~ taxa_w))$"Pr(>F)"[1]
       i_pval <-  anova(lm(auc ~ ilr_w))$"Pr(>F)"[1]
       new_row <- c(tg, my_meta,  t_pval, i_pval)
-      weight_table <- rbind(weight_table, new_row)
+      names(new_row) <- c("tree_type", "metadata", "taxa_pval", "ilr_pval")
+      weight_table[weight_counter,] <- new_row
+      weight_counter <- weight_counter + 1
     }
   }
-  # "tree_type" = c(),
-  # "metadata" = c(),
-  # "taxa_pval" = c(),
-  # "ilr_pval" = c())
   
+  betwn_bar_anova <- anova(lm(data = plot_data,all_auc ~ tree_group))
+  my_comparisons <- list( c("raw_data", "Silva_ref"), c( "UPGMA", "Silva_ref"), c("Silva_ref", "random") )
   
-  g <- ggplot2::ggplot(plot_data, aes(all_auc, tree_group)) + 
-    ggplot2::geom_boxplot(outlier.shape = NA) +
-    ggplot2::geom_jitter(aes(color = as.factor(ilr_weight)),width = 0.001, height = 0.1) +
-    ggplot2::ggtitle(paste(project, my_meta, "colored by ilr weight")) +
+  g <- ggplot2::ggplot(plot_data, aes(y = all_auc, x= tree_group)) + 
+    ggplot2::geom_boxplot() +
+    ggplot2::geom_jitter(aes(color = as.factor(ilr_weight)),width = 0.2, height = 0.001) +
+    ggplot2::ggtitle(paste(project, my_meta, "col by ilr", "anova:", round(betwn_bar_anova$`Pr(>F)`, 5))) +
     ggplot2::geom_hline(yintercept = 0) +
     ggplot2::theme(axis.text.x = element_text(angle = 45)) +
+    ggplot2::theme_classic() +
+    # ggplot2::scale_y_discrete(labels = seq(0, 1, by = 0.2)) +
     ggplot2::xlab("AUC") +
     ggplot2::ylab("Tree type") +
-    ggplot2::labs(color = "ilr weight")  
+    ggplot2::labs(color = "ilr weight") +
+    ggpubr::stat_compare_means(comparisons = my_comparisons)
   print(g)
   
-  g <- ggplot2::ggplot(plot_data, aes(all_auc, tree_group)) + 
-    ggplot2::geom_boxplot(outlier.shape = NA) +
-    ggplot2::geom_jitter(aes(color = as.factor(taxa_weight)),width = 0.001, height = 0.1) +
-    ggplot2::ggtitle(paste(project, my_meta, "colored by taxa weight")) +
-    ggplot2::geom_hline(yintercept = 0) +
+  g <- ggplot2::ggplot(plot_data, aes(y = all_auc, x= tree_group)) + 
+    ggplot2::geom_boxplot() +
+    ggplot2::geom_jitter(aes(color = as.factor(taxa_weight)),width = 0.2, height = 0.001) +
+    ggplot2::ggtitle(paste(project, my_meta, "col by taxa", "anova:", round(betwn_bar_anova$`Pr(>F)`, 5))) +    ggplot2::geom_hline(yintercept = 0) +
     ggplot2::theme(axis.text.x = element_text(angle = 45)) +
+    ggplot2::theme_classic() +
+    # ggplot2::scale_y_discrete(labels = seq(0, 1, by = 0.2)) +
     ggplot2::xlab("AUC") +
     ggplot2::ylab("Tree type") +
-    ggplot2::labs(color = "ilr weight")  
+    ggplot2::labs(color = "Taxa weight") +
+    ggpubr::stat_compare_means(comparisons = my_comparisons)
   print(g)
 }
 
