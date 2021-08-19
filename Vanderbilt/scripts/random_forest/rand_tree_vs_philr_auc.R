@@ -221,10 +221,9 @@ weight_table <- data.frame(tree_type = c(F),
                            metadata = c(F),
                            taxa_pval = c(F),
                            ilr_pval = c(F))
-
 weight_counter <- 1
-##-Make all the histograms------------------------------------------##
-pdf(file = file.path(output_dir, "graphics", paste0("auc_rand_v_ref_v_upgma_v_raw_", num_cycles, ".pdf")))
+##-Make all the boxplots--------------------------------------------##
+pdf(file = file.path(output_dir, "graphics", paste0("auc_rand_v_ref_v_upgma_v_raw_vert_", num_cycles, ".pdf")))
 for (mta in 1:length(unique(all_plot_data$metadata_col))){
   my_meta <- as.character(unique(all_plot_data$metadata_col)[mta])
   message(my_meta)
