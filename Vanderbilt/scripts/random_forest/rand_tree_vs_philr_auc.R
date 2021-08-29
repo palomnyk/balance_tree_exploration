@@ -117,6 +117,8 @@ if(num_cycles < 3) stop("num_cycles should be 3 or more")
 
 ##-Import tables and data preprocessing-----------------------------##
 asv_table <- asv_table <- data.frame(readRDS(file.path(output_dir, "r_objects", "ForwardReads_DADA2.rds")))
+total_seqs <- rowSums(asv_table)
+total_seqs <- data.frame(total_seqs, row.names = row.names(asv_table))
 
 #clean up otu tables
 ref_ps <- readRDS(file.path(output_dir, "r_objects", "ref_tree_phyloseq_obj.rds"))
@@ -227,10 +229,27 @@ while (counter < num_cycles & skips < 5){
     raw_plot_data$tree_group <- rep("raw_data", nrow(raw_plot_data))
     all_plot_data <- rbind(all_plot_data, raw_plot_data)
     
+    # generate "raw data" data
+    raw_plot_data <- make_ilr_taxa_auc_df(ps_obj = total_seqs,
+                                          metadata_cols = rf_cols,
+                                          metadata = metadata,
+                                          train_index = train_index,
+                                          test_index = test_index,
+                                          philr_ilr_weights = philr_ilr_weights,  
+                                          philr_taxa_weights = philr_taxa_weights,
+                                          just_otu = TRUE )
+    raw_plot_data$tree_group <- rep("read_depth", nrow(raw_plot_data))
+    all_plot_data <- rbind(all_plot_data, raw_plot_data)
+    
     counter <- counter + 1
     skips <- 0
   }
 }
+
+write.table(all_plot_data,
+            file = file.path(output_dir, "tables", paste0("auc_rand_v_ref_v_upgma_v_raw_vert_", num_cycles, ".csv")),
+            sep = ",",
+            row.names = FALSE)
 
 weight_table <- data.frame(tree_type = c(F),
                            metadata = c(F),
