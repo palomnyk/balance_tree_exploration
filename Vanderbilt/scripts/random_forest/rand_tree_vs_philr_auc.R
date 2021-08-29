@@ -30,33 +30,50 @@ make_ilr_taxa_auc_df <- function(ps_obj,
       my_table_test <- my_table[test_index,]
       
       for(mta in metadata_cols){
-        print(paste("starting metadata col:", mta))
-        resp_var_test <- metadata[,mta][test_index]
-        resp_var_train <- metadata[,mta][train_index]
-        
-        #rf requires rownames on resp var
-        names(resp_var_test) <- row.names(my_table_test)
-        
-        print(paste("unique vals in resp_var_train:", unique(resp_var_train)))
-        print(paste("num factors", nlevels(resp_var_train)))
-        rf <- randomForest::randomForest(my_table_train, resp_var_train)
-        
-        pred <- predict(rf, my_table_test)
-        
-        print(paste("num factors", nlevels(resp_var_test)))
-        if (nlevels(resp_var_test) > 2){
-          my_roc <- pROC::multiclass.roc(as.numeric(pred), as.numeric(resp_var_test))
-        }else{
-          my_roc <- pROC::roc(as.numeric(pred), as.numeric(resp_var_test))
-        }
-        print("ROC made")
-        auc <- pROC::auc(my_roc)
-        print(paste("auc: ", auc))
-        #update all output
-        metadata_col <- append(metadata_col, colnames(metadata)[mta])
-        all_auc <- append(all_auc, auc)
-        taxa_weight <- c(taxa_weight, philr_taxa_weights[tax_w])
-        ilr_weight <- c(ilr_weight, philr_ilr_weights[ilr_w])
+        tryCatch(
+          { 
+            print(paste("starting metadata col:", mta, colnames(metadata)[mta]))
+            
+            resp_var_test <- metadata[,mta][test_index]
+            resp_var_train <- metadata[,mta][train_index]
+            
+            #rf requires rownames on resp var
+            names(resp_var_test) <- row.names(my_table_test)
+            
+            print(paste("unique vals in resp_var_train:", unique(resp_var_train)))
+            print(paste("num factors", nlevels(resp_var_train)))
+            rf <- randomForest::randomForest(my_table_train, resp_var_train)
+            
+            pred <- predict(rf, my_table_test)
+            # print(paste("pred:", pred))
+            print(paste("num factors", nlevels(resp_var_test)))
+            roc_data <- data.frame(pred = pred, resp_var_test = resp_var_test)
+            # View(roc_data)
+            print(roc_data)
+            if (nlevels(resp_var_test) > 2){
+              auc <- pROC::multiclass.roc(as.numeric(pred), as.numeric(resp_var_test),
+                                             na.rm = TRUE, auc = TRUE)
+            }else{
+              auc <- pROC::roc(as.numeric(pred), as.numeric(resp_var_test),
+                                na.rm = TRUE, auc = TRUE)
+            }
+            print("ROC made")
+            # auc <- pROC::auc(my_roc)
+            # print(paste("auc: ")
+            #update all output
+            metadata_col <- append(metadata_col, colnames(metadata)[mta])
+            all_auc <- append(all_auc, auc)
+            taxa_weight <- c(taxa_weight, philr_taxa_weights[tax_w])
+            ilr_weight <- c(ilr_weight, philr_ilr_weights[ilr_w])
+          },
+          error=function(cond) {
+            print('Opps, an error is thrown')
+            message(cond)
+          },
+          warning=function(cond) {
+            print('Opps, a warning is thrown')
+            message(cond)          }
+        )
       }#for mta
       if (just_otu == TRUE) break
     }#taxa
@@ -95,7 +112,7 @@ source(file.path(home_dir, "r_libraries", "table_manipulations.R"))
 
 ##-Set up constants-------------------------------------------------##
 rf_cols <- 3:7
-num_cycles <- 10
+num_cycles <- 3
 if(num_cycles < 3) stop("num_cycles should be 3 or more")
 
 ##-Import tables and data preprocessing-----------------------------##
@@ -128,8 +145,6 @@ metadata <- metadata[row.names(metadata) %in% row.names(clean_otu), ]
 metadata$type <- droplevels(metadata$type)
 metadata$type <- factor(metadata$type)
 
-
-
 #for making different philr weights
 philr_taxa_weights <- c("uniform","gm.counts","anorm","anorm.x.gm.counts","enorm","enorm.x.gm.counts")
 philr_ilr_weights <- c("uniform","blw","blw.sqrt","mean.descendants")
@@ -150,7 +165,6 @@ while (counter < num_cycles & skips < 5){
   ##-Create training/testing sets-------------------------------------##
   train_index <- sample(x = nrow(metadata), size = 0.75*nrow(metadata), replace=FALSE)
   test_index <- c(1:nrow(metadata))[!(1:nrow(metadata) %in% train_index)]
-  
   should_break <- FALSE
   for(mta in rf_cols){
     if( length(unique(metadata[,mta][test_index])) != nlevels(metadata[,mta][test_index]) |
@@ -168,6 +182,7 @@ while (counter < num_cycles & skips < 5){
                                         phy_tree(rand_tree),
                                         tax_table(ref_ps@tax_table), 
                                         sample_data(ref_ps@sam_data))
+    print("making random AUC")
     rand_plot_data <- make_ilr_taxa_auc_df(ps_obj = rand_tree_ps,
                                            metadata_cols = rf_cols,
                                            metadata = metadata,
@@ -178,7 +193,7 @@ while (counter < num_cycles & skips < 5){
     rand_plot_data$tree_group <- rep("random", nrow(rand_plot_data))
     all_plot_data <- rbind(all_plot_data, rand_plot_data)
     
-    # calculate ref philr auc 
+    print("making ref AUC")
     ref_plot_data <- make_ilr_taxa_auc_df(ps_obj = ref_ps_clean,
                                           metadata_cols = rf_cols,
                                           metadata = metadata,
@@ -189,7 +204,7 @@ while (counter < num_cycles & skips < 5){
     ref_plot_data$tree_group <- rep("Silva_ref", nrow(ref_plot_data))
     all_plot_data <- rbind(all_plot_data, ref_plot_data)
     
-    # generate denovo tree data
+    print("making UPGMA AUC")
     denovo_plot_data <- make_ilr_taxa_auc_df( ps_obj = denovo_tree_ps,
                                               metadata_cols = rf_cols,
                                               metadata = metadata,
@@ -252,7 +267,7 @@ for (mta in 1:length(unique(all_plot_data$metadata_col))){
   }
   
   betwn_bar_anova <- anova(lm(data = plot_data,all_auc ~ tree_group))
-  my_comparisons <- list( c("raw_data", "Silva_ref"), c( "UPGMA", "Silva_ref"), c("Silva_ref", "random") )
+  my_comparisons <- list( c("raw_data", "Silva_ref"), c( "UPGMA", "Silva_ref"), c("Silva_ref", "random"), c("raw_data", "random") )
   
   g <- ggplot2::ggplot(plot_data, aes(y = all_auc, x= tree_group)) + 
     ggplot2::geom_boxplot() +
@@ -302,14 +317,6 @@ write.table(weight_table,
 #   ggplot2::xlab("AUC") +
 #   ggplot2::ylab("Samples per bin")
 # print(g)
-
-
-
-
-
-
-
-
 
 
 
