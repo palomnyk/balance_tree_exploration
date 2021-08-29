@@ -21,4 +21,8 @@ module load R
 
 Rscript /users/amyerke/git/balance_tree_exploration/Vanderbilt/scripts/random_forest/rand_tree_vs_philr_auc.R
 
-done
+echo ""
+echo "======================================================"
+echo "End Time   : $(date)"
+echo "======================================================"
+
