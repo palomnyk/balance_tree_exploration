@@ -10,6 +10,7 @@
 #SBATCH --mail-user=amyerke@uncc.edu                            	# Specified email address
 #SBATCH --output=/users/amyerke/slurmLogs/%x.%j.out     # Set directory for standard output
 #SBATCH --error=/users/amyerke/slurmLogs/%x.%j.err      # Set directory for error log
+#SBATCH --get-user-env
 
 ### Display the job context
 echo Job: $SLURM_JOB_NAME with ID $SLURM_JOB_ID
