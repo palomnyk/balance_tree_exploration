@@ -87,7 +87,9 @@ make_ilr_taxa_auc_df <- function(ps_obj,
 
 ##-Load Depencencies------------------------------------------------##
 if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
-# if (!requireNamespace("ROCR", quietly = TRUE)) BiocManager::install("ROCR")
+if (!requireNamespace("ape", quietly = TRUE)) BiocManager::install("ape")
+if (!requireNamespace("philr", quietly = TRUE)) BiocManager::install("philr")
+if (!requireNamespace("randomForest", quietly = TRUE)) BiocManager::install("randomForest")
 if (!requireNamespace("pROC", quietly = TRUE)) BiocManager::install("pROC")
 if (!requireNamespace("ggpubr", quietly = TRUE)) BiocManager::install("ggpubr")
 library("ggpubr")
