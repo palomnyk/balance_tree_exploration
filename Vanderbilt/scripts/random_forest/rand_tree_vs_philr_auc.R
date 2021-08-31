@@ -92,6 +92,8 @@ if (!requireNamespace("philr", quietly = TRUE)) BiocManager::install("philr")
 if (!requireNamespace("randomForest", quietly = TRUE)) BiocManager::install("randomForest")
 if (!requireNamespace("pROC", quietly = TRUE)) BiocManager::install("pROC")
 if (!requireNamespace("ggpubr", quietly = TRUE)) BiocManager::install("ggpubr")
+if (!requireNamespace("phyloseq", quietly = TRUE)) BiocManager::install("phyloseq")
+library("phyloseq")
 library("ggpubr")
 library("pROC")
 library("philr")
@@ -231,7 +233,7 @@ while (counter < num_cycles & skips < 5){
     raw_plot_data$tree_group <- rep("raw_data", nrow(raw_plot_data))
     all_plot_data <- rbind(all_plot_data, raw_plot_data)
     
-    # generate "raw data" data
+    # generate "read depth" data
     raw_plot_data <- make_ilr_taxa_auc_df(ps_obj = total_seqs,
                                           metadata_cols = rf_cols,
                                           metadata = metadata,
