@@ -4,8 +4,8 @@
 #SBATCH --job-name=slurmOutput                                   		# Job name
 #SBATCH --time=15:00:00                                      		# Time limit (hrs:min:sec)
 #SBATCH --nodes=1                                         			# Number of nodes requested
-#SBATCH --ntasks-per-node=16                               			# Number of CPUs (processor cores/tasks)
-#SBATCH --mem=20gb                                          		# Memory limit
+#SBATCH --ntasks-per-node=1                          			# Number of CPUs (processor cores/tasks)
+#SBATCH --mem=36gb                                          		# Memory limit
 #SBATCH --mail-type=BEGIN,END,FAIL                              	# Mail events (NONE, BEGIN, END, FAIL, ALL)
 #SBATCH --mail-user=amyerke@uncc.edu                            	# Specified email address
 #SBATCH --output=/users/amyerke/slurmLogs/%x.%j.out     # Set directory for standard output
@@ -18,7 +18,6 @@ echo Job: $SLURM_JOB_NAME with ID $SLURM_JOB_ID
 echo Running on host: `hostname`
 echo Using $SLURM_NTASKS processors across $SLURM_NNODES nodes
 
-module load openmpi
 module load R
 
 srun Rscript /users/amyerke/git/balance_tree_exploration/Vanderbilt/scripts/random_forest/rand_tree_vs_philr_auc.R
