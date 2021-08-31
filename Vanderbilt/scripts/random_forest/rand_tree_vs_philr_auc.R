@@ -188,7 +188,7 @@ while (counter < num_cycles & skips < 5){
                                         phy_tree(rand_tree),
                                         tax_table(ref_ps@tax_table), 
                                         sample_data(ref_ps@sam_data))
-    print("making random AUC")
+    message("making random AUC")
     rand_plot_data <- make_ilr_taxa_auc_df(ps_obj = rand_tree_ps,
                                            metadata_cols = rf_cols,
                                            metadata = metadata,
@@ -199,7 +199,7 @@ while (counter < num_cycles & skips < 5){
     rand_plot_data$tree_group <- rep("random", nrow(rand_plot_data))
     all_plot_data <- rbind(all_plot_data, rand_plot_data)
     
-    print("making ref AUC")
+    message("making ref AUC")
     ref_plot_data <- make_ilr_taxa_auc_df(ps_obj = ref_ps_clean,
                                           metadata_cols = rf_cols,
                                           metadata = metadata,
@@ -210,7 +210,7 @@ while (counter < num_cycles & skips < 5){
     ref_plot_data$tree_group <- rep("Silva_ref", nrow(ref_plot_data))
     all_plot_data <- rbind(all_plot_data, ref_plot_data)
     
-    print("making UPGMA AUC")
+    message("making UPGMA AUC")
     denovo_plot_data <- make_ilr_taxa_auc_df( ps_obj = denovo_tree_ps,
                                               metadata_cols = rf_cols,
                                               metadata = metadata,
@@ -221,7 +221,7 @@ while (counter < num_cycles & skips < 5){
     denovo_plot_data$tree_group <- rep("UPGMA", nrow(denovo_plot_data))
     all_plot_data <- rbind(all_plot_data, denovo_plot_data)
     
-    # generate "raw data" data
+    message('generate "raw data" data')
     raw_plot_data <- make_ilr_taxa_auc_df(ps_obj = asv_table,
                                           metadata_cols = rf_cols,
                                           metadata = metadata,
@@ -233,7 +233,7 @@ while (counter < num_cycles & skips < 5){
     raw_plot_data$tree_group <- rep("raw_data", nrow(raw_plot_data))
     all_plot_data <- rbind(all_plot_data, raw_plot_data)
     
-    # generate "read depth" data
+    message('generate "read depth" data')
     raw_plot_data <- make_ilr_taxa_auc_df(ps_obj = total_seqs,
                                           metadata_cols = rf_cols,
                                           metadata = metadata,
