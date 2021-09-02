@@ -12,6 +12,7 @@ make_ilr_taxa_auc_df <- function(ps_obj,
                                  philr_ilr_weights = philr_ilr_weights,  
                                  philr_taxa_weights = philr_taxa_weights,
                                  just_otu = FALSE){
+  library("ROCR")
   #Function for making random forest AUC values
   all_auc <- c()
   metadata_col <- c()
@@ -51,11 +52,10 @@ make_ilr_taxa_auc_df <- function(ps_obj,
             # View(roc_data)
             print(roc_data)
             if (nlevels(resp_var_test) > 2){
-              auc <- pROC::multiclass.roc(as.numeric(pred), as.numeric(resp_var_test),
-                                             na.rm = TRUE, auc = TRUE)
+              print("multilevels")
             }else{
-              auc <- pROC::roc(as.numeric(pred), as.numeric(resp_var_test),
-                                na.rm = TRUE, auc = TRUE)
+              preds <- ROCR::prediction(as.numeric(pred), as.numeric(resp_var_test))
+              auc <- ROCR::performance(preds, "auc")@y.values[[1]]
             }
             print("ROC made")
             # auc <- pROC::auc(my_roc)
@@ -90,16 +90,15 @@ if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocMana
 if (!requireNamespace("ape", quietly = TRUE)) BiocManager::install("ape")
 if (!requireNamespace("philr", quietly = TRUE)) BiocManager::install("philr")
 if (!requireNamespace("randomForest", quietly = TRUE)) BiocManager::install("randomForest")
-if (!requireNamespace("pROC", quietly = TRUE)) BiocManager::install("pROC")
+if (!requireNamespace("ROCR", quietly = TRUE)) BiocManager::install("ROCR")
 if (!requireNamespace("ggpubr", quietly = TRUE)) BiocManager::install("ggpubr")
 if (!requireNamespace("phyloseq", quietly = TRUE)) BiocManager::install("phyloseq")
 library("phyloseq")
 library("ggpubr")
-library("pROC")
+library("ROCR")
 library("philr")
 library("ggplot2")
 library("randomForest")
-# library("ROCR")
 library("ape")
 
 ##-Establish directory layout---------------------------------------##
