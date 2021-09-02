@@ -18,7 +18,7 @@ echo Job: $SLURM_JOB_NAME with ID $SLURM_JOB_ID
 echo Running on host: `hostname`
 echo Using $SLURM_NTASKS processors across $SLURM_NNODES nodes
 
-module load RR/3.6.0
+module load R/3.6.0
 
 srun Rscript /users/amyerke/git/balance_tree_exploration/Vanderbilt/scripts/random_forest/rand_tree_vs_philr_auc.R
 
