@@ -93,6 +93,7 @@ if (!requireNamespace("randomForest", quietly = TRUE)) BiocManager::install("ran
 if (!requireNamespace("ROCR", quietly = TRUE)) BiocManager::install("ROCR")
 if (!requireNamespace("ggpubr", quietly = TRUE)) BiocManager::install("ggpubr")
 if (!requireNamespace("phyloseq", quietly = TRUE)) BiocManager::install("phyloseq")
+if (!requireNamespace("ggplot2", quietly = TRUE)) BiocManager::install("ggplot2")
 library("phyloseq")
 library("ggpubr")
 library("ROCR")
@@ -127,6 +128,8 @@ total_seqs <- data.frame(total_seqs, row.names = row.names(asv_table))
 ref_ps <- readRDS(file.path(output_dir, "r_objects", "ref_tree_phyloseq_obj.rds"))
 clean_otu <- data.frame(ref_ps@otu_table@.Data)
 clean_otu <- philr_tutorial_normalization(clean_otu)
+print(paste("nrow orginal ref:", nrow(ref_ps@otu_table), "nrow clean ref: ", nrow(clean_otu)))
+
 phy_tree(ref_ps) <- ape::makeNodeLabel(phy_tree(ref_ps), method="number", prefix='n')
 ref_ps_clean <- phyloseq::phyloseq( otu_table(clean_otu, taxa_are_rows = F), 
                                     phy_tree(ref_ps@phy_tree),
@@ -135,10 +138,13 @@ ref_ps_clean <- phyloseq::phyloseq( otu_table(clean_otu, taxa_are_rows = F),
 
 denovo_tree_ps <- readRDS(file.path(output_dir, "r_objects", "denovo_tree_UPGMA_phyloseq_obj.rds"))
 clean_den_otu <- philr_tutorial_normalization(data.frame(denovo_tree_ps@otu_table@.Data))
-denovo_tree_ps <- phyloseq::phyloseq( otu_table(clean_den_otu, taxa_are_rows = F),
+print(paste("nrow orginal denovo:", nrow(denovo_tree_ps@otu_table), "nrow clean denovo otu: ", nrow(clean_den_otu)))
+cln_denovo_tree_ps <- phyloseq::phyloseq( otu_table(clean_den_otu, taxa_are_rows = F),
                                       phy_tree(ape::makeNodeLabel(phy_tree(denovo_tree_ps@phy_tree))),
                                       tax_table(denovo_tree_ps@tax_table), 
                                       sample_data(denovo_tree_ps@sam_data))
+denovo_tree_ps <- transform_sample_counts(denovo_tree_ps, function(x) x + 1 )
+
 
 metadata <- read.table(file.path(home_dir, project, "patient_metadata.tsv"), 
                        sep="\t", 
@@ -220,6 +226,17 @@ while (counter < num_cycles & skips < 5){
     denovo_plot_data$tree_group <- rep("UPGMA", nrow(denovo_plot_data))
     all_plot_data <- rbind(all_plot_data, denovo_plot_data)
     
+    message("making cleaned UPGMA AUC")
+    denovo_plot_data <- make_ilr_taxa_auc_df( ps_obj = cln_denovo_tree_ps,
+                                              metadata_cols = rf_cols,
+                                              metadata = metadata,
+                                              train_index = train_index,
+                                              test_index = test_index,
+                                              philr_ilr_weights = philr_ilr_weights,  
+                                              philr_taxa_weights = philr_taxa_weights)
+    denovo_plot_data$tree_group <- rep("clean_UPGMA", nrow(denovo_plot_data))
+    all_plot_data <- rbind(all_plot_data, denovo_plot_data)
+    
     message('generate "raw data" data')
     raw_plot_data <- make_ilr_taxa_auc_df(ps_obj = asv_table,
                                           metadata_cols = rf_cols,
@@ -242,6 +259,18 @@ while (counter < num_cycles & skips < 5){
                                           philr_taxa_weights = philr_taxa_weights,
                                           just_otu = TRUE )
     raw_plot_data$tree_group <- rep("read_depth", nrow(raw_plot_data))
+    all_plot_data <- rbind(all_plot_data, raw_plot_data)
+    
+    message('generate lognorm data')
+    raw_plot_data <- make_ilr_taxa_auc_df(ps_obj = lognorm(asv_table),
+                                          metadata_cols = rf_cols,
+                                          metadata = metadata,
+                                          train_index = train_index,
+                                          test_index = test_index,
+                                          philr_ilr_weights = philr_ilr_weights,  
+                                          philr_taxa_weights = philr_taxa_weights,
+                                          just_otu = TRUE )
+    raw_plot_data$tree_group <- rep("lognorm", nrow(raw_plot_data))
     all_plot_data <- rbind(all_plot_data, raw_plot_data)
     
     counter <- counter + 1
