@@ -34,20 +34,20 @@ make_ilr_taxa_auc_df <- function(ps_obj,
         tryCatch(
           { 
             print(paste("starting metadata col:", mta, colnames(metadata)[mta]))
-            
+            if (any(is.na(my_table))) break
             resp_var_test <- metadata[,mta][test_index]
             resp_var_train <- metadata[,mta][train_index]
             
             #rf requires rownames on resp var
             names(resp_var_test) <- row.names(my_table_test)
             
-            print(paste("unique vals in resp_var_train:", unique(resp_var_train)))
-            print(paste("num factors", nlevels(resp_var_train)))
+            # print(paste("unique vals in resp_var_train:", unique(resp_var_train)))
+            # print(paste("num factors", nlevels(resp_var_train)))
             rf <- randomForest::randomForest(my_table_train, resp_var_train)
             
             pred <- predict(rf, my_table_test)
             # print(paste("pred:", pred))
-            print(paste("num factors", nlevels(resp_var_test)))
+            # print(paste("num factors", nlevels(resp_var_test)))
             roc_data <- data.frame(pred = pred, resp_var_test = resp_var_test)
             # View(roc_data)
             print(roc_data)
@@ -69,10 +69,13 @@ make_ilr_taxa_auc_df <- function(ps_obj,
           error=function(cond) {
             print('Opps, an error is thrown')
             message(cond)
+            print(message(cond))
           },
           warning=function(cond) {
             print('Opps, a warning is thrown')
-            message(cond)          }
+            message(cond)
+            print(message(cond))
+            }
         )
       }#for mta
       if (just_otu == TRUE) break
@@ -116,7 +119,7 @@ source(file.path(home_dir, "r_libraries", "table_manipulations.R"))
 
 ##-Set up constants-------------------------------------------------##
 rf_cols <- 3:7
-num_cycles <- 3
+num_cycles <- 20
 if(num_cycles < 3) stop("num_cycles should be 3 or more")
 
 ##-Import tables and data preprocessing-----------------------------##
@@ -171,7 +174,7 @@ all_plot_data <- data.frame(all_auc = c(),
                             random_batch = c(),
                             tree_group = c())
 skips <- 0
-counter <- 1
+counter <- 0
 while (counter < num_cycles & skips < 5){
   ##-Create training/testing sets-------------------------------------##
   train_index <- sample(x = nrow(metadata), size = 0.75*nrow(metadata), replace=FALSE)
@@ -193,7 +196,7 @@ while (counter < num_cycles & skips < 5){
                                         phy_tree(rand_tree),
                                         tax_table(ref_ps@tax_table), 
                                         sample_data(ref_ps@sam_data))
-    message("making random AUC")
+    print("making random AUC")
     rand_plot_data <- make_ilr_taxa_auc_df(ps_obj = rand_tree_ps,
                                            metadata_cols = rf_cols,
                                            metadata = metadata,
@@ -204,7 +207,7 @@ while (counter < num_cycles & skips < 5){
     rand_plot_data$tree_group <- rep("random", nrow(rand_plot_data))
     all_plot_data <- rbind(all_plot_data, rand_plot_data)
     
-    message("making ref AUC")
+    print("making ref AUC")
     ref_plot_data <- make_ilr_taxa_auc_df(ps_obj = ref_ps_clean,
                                           metadata_cols = rf_cols,
                                           metadata = metadata,
@@ -215,7 +218,7 @@ while (counter < num_cycles & skips < 5){
     ref_plot_data$tree_group <- rep("Silva_ref", nrow(ref_plot_data))
     all_plot_data <- rbind(all_plot_data, ref_plot_data)
     
-    message("making UPGMA AUC")
+    print("making UPGMA AUC")
     denovo_plot_data <- make_ilr_taxa_auc_df( ps_obj = denovo_tree_ps,
                                               metadata_cols = rf_cols,
                                               metadata = metadata,
@@ -226,7 +229,7 @@ while (counter < num_cycles & skips < 5){
     denovo_plot_data$tree_group <- rep("UPGMA", nrow(denovo_plot_data))
     all_plot_data <- rbind(all_plot_data, denovo_plot_data)
     
-    message("making cleaned UPGMA AUC")
+    print("making cleaned UPGMA AUC")
     denovo_plot_data <- make_ilr_taxa_auc_df( ps_obj = cln_denovo_tree_ps,
                                               metadata_cols = rf_cols,
                                               metadata = metadata,
@@ -237,7 +240,7 @@ while (counter < num_cycles & skips < 5){
     denovo_plot_data$tree_group <- rep("clean_UPGMA", nrow(denovo_plot_data))
     all_plot_data <- rbind(all_plot_data, denovo_plot_data)
     
-    message('generate "raw data" data')
+    print('generate "raw data" data')
     raw_plot_data <- make_ilr_taxa_auc_df(ps_obj = asv_table,
                                           metadata_cols = rf_cols,
                                           metadata = metadata,
@@ -249,7 +252,7 @@ while (counter < num_cycles & skips < 5){
     raw_plot_data$tree_group <- rep("raw_data", nrow(raw_plot_data))
     all_plot_data <- rbind(all_plot_data, raw_plot_data)
     
-    message('generate "read depth" data')
+    print('generate "read depth" data')
     raw_plot_data <- make_ilr_taxa_auc_df(ps_obj = total_seqs,
                                           metadata_cols = rf_cols,
                                           metadata = metadata,
@@ -261,7 +264,7 @@ while (counter < num_cycles & skips < 5){
     raw_plot_data$tree_group <- rep("read_depth", nrow(raw_plot_data))
     all_plot_data <- rbind(all_plot_data, raw_plot_data)
     
-    message('generate lognorm data')
+    print('generate lognorm data')
     raw_plot_data <- make_ilr_taxa_auc_df(ps_obj = lognorm(asv_table),
                                           metadata_cols = rf_cols,
                                           metadata = metadata,
