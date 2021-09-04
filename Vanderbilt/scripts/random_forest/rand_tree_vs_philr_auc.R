@@ -27,8 +27,8 @@ make_ilr_taxa_auc_df <- function(ps_obj,
                                  part.weights = philr_taxa_weights[tax_w],
                                  ilr.weights = philr_ilr_weights[ilr_w])
       }
-      my_table_train <- my_table[train_index,]
-      my_table_test <- my_table[test_index,]
+      my_table_train <- data.frame(my_table[train_index,])
+      my_table_test <- data.frame(my_table[test_index,])
       
       for(mta in metadata_cols){
         tryCatch(
@@ -44,13 +44,10 @@ make_ilr_taxa_auc_df <- function(ps_obj,
             # print(paste("unique vals in resp_var_train:", unique(resp_var_train)))
             # print(paste("num factors", nlevels(resp_var_train)))
             rf <- randomForest::randomForest(my_table_train, resp_var_train)
-            
             pred <- predict(rf, my_table_test)
             # print(paste("pred:", pred))
             # print(paste("num factors", nlevels(resp_var_test)))
             roc_data <- data.frame(pred = pred, resp_var_test = resp_var_test)
-            # View(roc_data)
-            print(roc_data)
             if (nlevels(resp_var_test) > 2){
               print("multilevels")
             }else{
@@ -125,7 +122,8 @@ if(num_cycles < 3) stop("num_cycles should be 3 or more")
 ##-Import tables and data preprocessing-----------------------------##
 asv_table <- asv_table <- data.frame(readRDS(file.path(output_dir, "r_objects", "ForwardReads_DADA2.rds")))
 total_seqs <- rowSums(asv_table)
-total_seqs <- data.frame(total_seqs, row.names = row.names(asv_table))
+total_seqs <- data.frame("total_seqs"=total_seqs, "duplicate" = total_seqs,
+                         row.names = row.names(asv_table))
 
 #clean up otu tables
 ref_ps <- readRDS(file.path(output_dir, "r_objects", "ref_tree_phyloseq_obj.rds"))
@@ -192,68 +190,68 @@ while (counter < num_cycles & skips < 5){
     #make random tree
     rand_tree <- rtree(n = length(ref_ps@phy_tree$tip.label), tip.label = ref_ps@phy_tree$tip.label)
     #put int in philr
-    rand_tree_ps <- phyloseq::phyloseq( otu_table(clean_otu, taxa_are_rows = F), 
+    rand_tree_ps <- phyloseq::phyloseq( otu_table(clean_otu, taxa_are_rows = F),
                                         phy_tree(rand_tree),
-                                        tax_table(ref_ps@tax_table), 
+                                        tax_table(ref_ps@tax_table),
                                         sample_data(ref_ps@sam_data))
-    print("making random AUC")
+    write("making random AUC")
     rand_plot_data <- make_ilr_taxa_auc_df(ps_obj = rand_tree_ps,
                                            metadata_cols = rf_cols,
                                            metadata = metadata,
                                            train_index = train_index,
                                            test_index = test_index,
-                                           philr_ilr_weights = philr_ilr_weights,  
+                                           philr_ilr_weights = philr_ilr_weights,
                                            philr_taxa_weights = philr_taxa_weights)
     rand_plot_data$tree_group <- rep("random", nrow(rand_plot_data))
     all_plot_data <- rbind(all_plot_data, rand_plot_data)
-    
-    print("making ref AUC")
+
+    write("making ref AUC")
     ref_plot_data <- make_ilr_taxa_auc_df(ps_obj = ref_ps_clean,
                                           metadata_cols = rf_cols,
                                           metadata = metadata,
                                           train_index = train_index,
                                           test_index = test_index,
-                                          philr_ilr_weights = philr_ilr_weights,  
+                                          philr_ilr_weights = philr_ilr_weights,
                                           philr_taxa_weights = philr_taxa_weights)
     ref_plot_data$tree_group <- rep("Silva_ref", nrow(ref_plot_data))
     all_plot_data <- rbind(all_plot_data, ref_plot_data)
-    
-    print("making UPGMA AUC")
+
+    write("making UPGMA AUC")
     denovo_plot_data <- make_ilr_taxa_auc_df( ps_obj = denovo_tree_ps,
                                               metadata_cols = rf_cols,
                                               metadata = metadata,
                                               train_index = train_index,
                                               test_index = test_index,
-                                              philr_ilr_weights = philr_ilr_weights,  
+                                              philr_ilr_weights = philr_ilr_weights,
                                               philr_taxa_weights = philr_taxa_weights)
     denovo_plot_data$tree_group <- rep("UPGMA", nrow(denovo_plot_data))
     all_plot_data <- rbind(all_plot_data, denovo_plot_data)
-    
-    print("making cleaned UPGMA AUC")
+
+    write("making cleaned UPGMA AUC")
     denovo_plot_data <- make_ilr_taxa_auc_df( ps_obj = cln_denovo_tree_ps,
                                               metadata_cols = rf_cols,
                                               metadata = metadata,
                                               train_index = train_index,
                                               test_index = test_index,
-                                              philr_ilr_weights = philr_ilr_weights,  
+                                              philr_ilr_weights = philr_ilr_weights,
                                               philr_taxa_weights = philr_taxa_weights)
     denovo_plot_data$tree_group <- rep("clean_UPGMA", nrow(denovo_plot_data))
     all_plot_data <- rbind(all_plot_data, denovo_plot_data)
-    
-    print('generate "raw data" data')
+
+    write('generate "raw data" data')
     raw_plot_data <- make_ilr_taxa_auc_df(ps_obj = asv_table,
                                           metadata_cols = rf_cols,
                                           metadata = metadata,
                                           train_index = train_index,
                                           test_index = test_index,
-                                          philr_ilr_weights = philr_ilr_weights,  
+                                          philr_ilr_weights = philr_ilr_weights,
                                           philr_taxa_weights = philr_taxa_weights,
                                           just_otu = TRUE )
     raw_plot_data$tree_group <- rep("raw_data", nrow(raw_plot_data))
     all_plot_data <- rbind(all_plot_data, raw_plot_data)
     
-    print('generate "read depth" data')
-    raw_plot_data <- make_ilr_taxa_auc_df(ps_obj = total_seqs,
+    write('generate "read depth" data')
+    raw_plot_data <- make_ilr_taxa_auc_df(ps_obj = data.frame(total_seqs),
                                           metadata_cols = rf_cols,
                                           metadata = metadata,
                                           train_index = train_index,
@@ -264,13 +262,13 @@ while (counter < num_cycles & skips < 5){
     raw_plot_data$tree_group <- rep("read_depth", nrow(raw_plot_data))
     all_plot_data <- rbind(all_plot_data, raw_plot_data)
     
-    print('generate lognorm data')
+    write('generate lognorm data')
     raw_plot_data <- make_ilr_taxa_auc_df(ps_obj = lognorm(asv_table),
                                           metadata_cols = rf_cols,
                                           metadata = metadata,
                                           train_index = train_index,
                                           test_index = test_index,
-                                          philr_ilr_weights = philr_ilr_weights,  
+                                          philr_ilr_weights = philr_ilr_weights,
                                           philr_taxa_weights = philr_taxa_weights,
                                           just_otu = TRUE )
     raw_plot_data$tree_group <- rep("lognorm", nrow(raw_plot_data))
