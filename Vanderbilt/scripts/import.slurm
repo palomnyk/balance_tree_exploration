@@ -2,7 +2,7 @@
 
 #SBATCH --partition=Orion                                    		# Partition/queue requested on server
 #SBATCH --job-name=slurmOutput                                   		# Job name
-#SBATCH --time=15:00:00                                      		# Time limit (hrs:min:sec)
+#SBATCH --time=25:00:00                                      		# Time limit (hrs:min:sec)
 #SBATCH --nodes=1                                         			# Number of nodes requested
 #SBATCH --ntasks-per-node=1                          			# Number of CPUs (processor cores/tasks)
 #SBATCH --mem=150gb                                          		# Memory limit
