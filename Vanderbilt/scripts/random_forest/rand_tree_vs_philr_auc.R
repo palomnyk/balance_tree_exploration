@@ -216,16 +216,16 @@ while (counter < num_cycles & skips < 5){
     ref_plot_data$tree_group <- rep("Silva_ref", nrow(ref_plot_data))
     all_plot_data <- rbind(all_plot_data, ref_plot_data)
 
-    write("making UPGMA AUC")
-    denovo_plot_data <- make_ilr_taxa_auc_df( ps_obj = denovo_tree_ps,
-                                              metadata_cols = rf_cols,
-                                              metadata = metadata,
-                                              train_index = train_index,
-                                              test_index = test_index,
-                                              philr_ilr_weights = philr_ilr_weights,
-                                              philr_taxa_weights = philr_taxa_weights)
-    denovo_plot_data$tree_group <- rep("UPGMA", nrow(denovo_plot_data))
-    all_plot_data <- rbind(all_plot_data, denovo_plot_data)
+    # write("making UPGMA AUC")
+    # denovo_plot_data <- make_ilr_taxa_auc_df( ps_obj = denovo_tree_ps,
+    #                                           metadata_cols = rf_cols,
+    #                                           metadata = metadata,
+    #                                           train_index = train_index,
+    #                                           test_index = test_index,
+    #                                           philr_ilr_weights = philr_ilr_weights,
+    #                                           philr_taxa_weights = philr_taxa_weights)
+    # denovo_plot_data$tree_group <- rep("UPGMA", nrow(denovo_plot_data))
+    # all_plot_data <- rbind(all_plot_data, denovo_plot_data)
 
     write("making cleaned UPGMA AUC")
     denovo_plot_data <- make_ilr_taxa_auc_df( ps_obj = cln_denovo_tree_ps,
