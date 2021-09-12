@@ -1,25 +1,25 @@
 #!/usr/bin/env Rscript
-# Running the p0_dada2_find_trunLen.R with command line args
-# Note: download result with scp amy@hpc.uncc.edu:~/git/balance_tree_exploration/McDonald/output/graphics/plotQualF.png .
-
+# Running the p3_otu_table.R with command line args
 
 rm(list = ls()) #clear workspace
 
 ##-Establish directory layout---------------------------------------##
 home_dir <- file.path('~','git','balance_tree_exploration')
 project <- "Vanderbilt"
+cml_scripts <- file.path(home_dir, "r_libraries", "cml_scripts")
+r_script <- file.path(cml_scripts, "transformations", "p3_otu_table.R")
 
-r_script <- file.path(home_dir, "r_libraries", "cml_scripts", "data_preprocessing","p0_dada2_find_trunLen.R")
+metad <- file.path(home_dir,project, "SraRunTable.txt")
 
+##-Make args for cml script-----------------------------------------##
 my_args <- paste(
   "-d", home_dir,
   "-p", project,
-  "-f", "_1.fastq.gz",
-  "-r", "_2.fastq.gz"
+  "-t", "5"
 )
 
+##-Make and run command---------------------------------------------##
 sys_command <- paste(r_script, my_args)
-
 tryCatch(
   { 
     system(sys_command,

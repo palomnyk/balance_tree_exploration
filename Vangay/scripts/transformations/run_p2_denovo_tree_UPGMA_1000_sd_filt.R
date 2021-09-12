@@ -1,25 +1,28 @@
 #!/usr/bin/env Rscript
-# Running the p0_dada2_find_trunLen.R with command line args
-# Note: download result with scp amy@hpc.uncc.edu:~/git/balance_tree_exploration/McDonald/output/graphics/plotQualF.png .
-
+# Running the p2_denovo_tree_UPGMA.R with command line args
 
 rm(list = ls()) #clear workspace
 
 ##-Establish directory layout---------------------------------------##
 home_dir <- file.path('~','git','balance_tree_exploration')
 project <- "Vanderbilt"
+cml_scripts <- file.path(home_dir, "r_libraries", "cml_scripts")
+r_script <- file.path(cml_scripts, "transformations", "p2_denovo_tree_UPGMA.R")
 
-r_script <- file.path(home_dir, "r_libraries", "cml_scripts", "data_preprocessing","p0_dada2_find_trunLen.R")
+metad <- file.path(home_dir,project, "SraRunTable.txt")
+medtad_delim <- ","
 
+##-Make args for cml script-----------------------------------------##
 my_args <- paste(
   "-d", home_dir,
   "-p", project,
-  "-f", "_1.fastq.gz",
-  "-r", "_2.fastq.gz"
+  "-m", metad,
+  "-l", ",",
+  "-r", "Run"
 )
 
+##-Make and run command---------------------------------------------##
 sys_command <- paste(r_script, my_args)
-
 tryCatch(
   { 
     system(sys_command,
@@ -33,7 +36,7 @@ tryCatch(
     message(cond)
   },
   warning=function(cond) {
-    print('Oppsa warning is thrown')
+    print('Opp sa warning is thrown')
     message(cond)
     # Choose a return value in case of warning
     #return(NULL)
