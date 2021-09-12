@@ -40,7 +40,7 @@ if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocMana
 
 ##-Establish directory layout---------------------------------------##
 home_dir <- file.path('~','git','balance_tree_exploration')
-project <- "Vanderbilt"
+project <- "Vangay"
 #home_dir <- file.path('cloud','project')
 output_dir <- file.path(home_dir, project, 'output')
 setwd(file.path(home_dir))
@@ -93,7 +93,7 @@ adj_pval <- p.adjust(pval, method = "BH")
 dFrame <- data.frame(taxa_lev, taxa_name, taxa_int, meta_name, meta_col, pval, adj_pval)
 dFrame <- dFrame [order(dFrame$pval),]
 dFrame$adj_pval <- p.adjust( dFrame$pval, method = "BH" )	
-write.table(dFrame, file=file.path(output_dir, "tables", "Vanderbilt_pValuesUnivariate_taxaVmetadata.tsv"), 
+write.table(dFrame, file=file.path(output_dir, "tables", "Vangay_pValuesUnivariate_taxaVmetadata.tsv"), 
             sep="\t", 
             row.names=FALSE)
 

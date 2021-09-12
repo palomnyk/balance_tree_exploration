@@ -12,7 +12,7 @@ srafile = getSRAdbFile()
 con = dbConnect('SQLite',srafile)
 ##-Establish directory layout---------------------------------------##
 home_dir <- file.path('~','git','balance_tree_exploration')
-project <- "Vanderbilt"
+project <- "Vangay"
 download_dir <- file.path(home_dir, project, "downloaded_seqs")
 ##-Download SRA files ----------------------------------------------##
 sra_run_table <- read.table(file.path(home_dir, project, "SraRunTable.txt"),

@@ -12,7 +12,7 @@ if (!requireNamespace("BiocManager", quietly = TRUE)){
 library("phyloseq")
 ##-Establish directory layout---------------------------------------##
 home_dir <- file.path('~','git','balance_tree_exploration')
-project <- "Vanderbilt"
+project <- "Vangay"
 #home_dir <- file.path('cloud','project')
 output_dir <- file.path(home_dir, project, 'output')
 

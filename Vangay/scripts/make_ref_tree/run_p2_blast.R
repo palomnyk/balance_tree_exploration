@@ -7,7 +7,7 @@ rm(list = ls()) #clear workspace
 
 ##-Establish directory layout---------------------------------------##
 home_dir <- file.path('~','git','balance_tree_exploration')
-project <- "Vanderbilt"
+project <- "Vangay"
 cml_scripts <- file.path(home_dir, "r_libraries", "cml_scripts")
 r_script <- file.path(cml_scripts, "make_ref_tree", "p2_blast.sh")
 
