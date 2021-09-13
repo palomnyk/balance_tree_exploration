@@ -156,7 +156,7 @@ source(file.path(home_dir, "r_libraries", "table_manipulations.R"))
 
 ##-Set up constants-------------------------------------------------##
 rf_cols <- 1:16
-num_cycles <- 5
+num_cycles <- 20
 if(num_cycles < 2) stop("num_cycles should be 2 or more")
 
 ##-Import tables and data preprocessing-----------------------------##
