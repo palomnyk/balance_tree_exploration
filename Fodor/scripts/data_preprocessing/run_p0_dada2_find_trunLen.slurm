@@ -20,7 +20,7 @@ echo Using $SLURM_NTASKS processors across $SLURM_NNODES nodes
 
 module load R/3.6.0
 
-srun Rscript ~/git/balance_tree_exploration/r_script/r_libraries/cml_scripts/data_preprocessing/p0_dada2_find_trunLen.R \
+srun Rscript ~/git/balance_tree_exploration/r_libraries/cml_scripts/data_preprocessing/p0_dada2_find_trunLen.R \
 -d ~/git/balance_tree_exploration \
 -p Fodor \
 -f _1.fastq.gz \
