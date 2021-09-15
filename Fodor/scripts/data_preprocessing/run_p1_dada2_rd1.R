@@ -14,7 +14,7 @@ my_args <- paste(
   "-p", project,
   "-f", "_1.fastq.gz",
   "-r", "_2.fastq.gz",
-  "-t", "240"
+  "-t", "130"
 )
 
 sys_command <- paste(r_script, my_args)

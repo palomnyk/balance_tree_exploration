@@ -25,7 +25,7 @@ srun Rscript ~/git/balance_tree_exploration/r_libraries/cml_scripts/data_preproc
 -p Fodor \
 -f _1.fastq.gz \
 -r _2.fastq.gz \
--t 240
+-t 130
 
 echo ""
 echo "======================================================"
