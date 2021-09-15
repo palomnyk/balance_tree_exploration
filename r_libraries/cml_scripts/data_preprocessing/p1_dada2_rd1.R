@@ -47,10 +47,9 @@ print(opt)
 ##-Load Depencencies------------------------------------------------##
 # ‘ape’, ‘dplyr’, ‘reshape2’, ‘plyr’
 # .cran_packages <- c("ggplot2", "gridExtra")
-if (!requireNamespace("BiocManager", quietly = TRUE)){
-  install.packages("BiocManager")
-  BiocManager::install("dada2",type = "source", checkBuilt = TRUE)
-}
+if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
+if (!requireNamespace("DECIPHER", quietly = TRUE)) BiocManager::install("DECIPHER")
+if (!requireNamespace("dada2", quietly = TRUE)) BiocManager::install("dada2",type = "source", checkBuilt = TRUE)
 library("dada2")
 library("DECIPHER")
 
