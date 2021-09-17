@@ -16,7 +16,7 @@ munge_ref_ps <- function(ps){
 }
 
 ##-Load Depencencies------------------------------------------------##
-if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
+# if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
 if (!requireNamespace("ALDEx2", quietly = TRUE)) BiocManager::install("ALDEx2")
 if (!requireNamespace("ape", quietly = TRUE)) BiocManager::install("ape")
 if (!requireNamespace("philr", quietly = TRUE)) BiocManager::install("philr")
