@@ -16,13 +16,19 @@ munge_ref_ps <- function(ps){
 }
 
 ##-Load Depencencies------------------------------------------------##
-# if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
-# if (!requireNamespace("ALDEx2", quietly = TRUE)) BiocManager::install("ALDEx2")
+if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
+if (!requireNamespace("ALDEx2", quietly = TRUE)) BiocManager::install("ALDEx2")
+if (!requireNamespace("ape", quietly = TRUE)) BiocManager::install("ape")
+if (!requireNamespace("philr", quietly = TRUE)) BiocManager::install("philr")
+if (!requireNamespace("phyloseq", quietly = TRUE)) BiocManager::install("phyloseq")
+if (!requireNamespace("ggplot2", quietly = TRUE)) BiocManager::install("ggplot2")
+if (!requireNamespace("compositions", quietly = TRUE)) BiocManager::install("compositions")
+if (!requireNamespace("vegan", quietly = TRUE)) BiocManager::install("vegan")
 library("compositions")
 library("phyloseq")
 library("vegan")
 library("DESeq2")
-library("philr")
+library("philR")
 library("ape")
 library("ALDEx2")
 library("ggplot2")

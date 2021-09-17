@@ -18,7 +18,7 @@ echo Job: $SLURM_JOB_NAME with ID $SLURM_JOB_ID
 echo Running on host: `hostname`
 echo Using $SLURM_NTASKS processors across $SLURM_NNODES nodes
 
-module load R/3.6.0
+module load R
 
 srun Rscript ~/git/balance_tree_exploration/Vanderbilt/scripts/shannon_diversity/shannon_diversity_seq_depth_vs_metadata.R
 
