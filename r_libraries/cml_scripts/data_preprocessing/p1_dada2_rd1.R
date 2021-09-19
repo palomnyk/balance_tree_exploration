@@ -70,7 +70,9 @@ filtFs <- file.path(filt_path, paste0(sampleNames, "_R1_filt.fastq"))
 #Filter
 out <- dada2::filterAndTrim(fnFs, filtFs,truncLen=opt$trunLen,
                      maxN=0, maxEE=c(2), truncQ=2, rm.phix=TRUE,
-                     compress=FALSE, multithread=FALSE) 
+                     compress=FALSE, multithread=TRUE) 
+
+print("Completed filter and trim")
 
 dds <- vector("list", length(sampleNames))
 names(dds) <- sampleNames
@@ -78,6 +80,7 @@ names(dds) <- sampleNames
 index <-1 
 
 for (f in filtFs){
+  
   errF <- dada2::learnErrors(f, multithread = FALSE)
   derepFs <- dada2::derepFastq(f, verbose=TRUE)
   dadaFs <- dada2::dada(derepFs, err=errF, multithread=FALSE)
