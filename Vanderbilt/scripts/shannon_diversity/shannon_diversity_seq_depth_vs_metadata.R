@@ -156,7 +156,7 @@ for(s in 1:length(min_seq_depths)){
         # )
       }
       for (m in metad_cols){
-        meta_cor[[m]][counter] <- cor.test(shan_div, metadata[,m],
+        meta_cor[[m]][counter] <- cor.test(shan_div, metadata[safe_rns,m],
                                            method = "spearman")
       }
       ds_num[counter] <- ds
