@@ -16,14 +16,14 @@ munge_ref_ps <- function(ps){
 }
 
 ##-Load Depencencies------------------------------------------------##
-# if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
-# if (!requireNamespace("ALDEx2", quietly = TRUE)) BiocManager::install("ALDEx2")
-# if (!requireNamespace("ape", quietly = TRUE)) BiocManager::install("ape")
-# if (!requireNamespace("philr", quietly = TRUE)) BiocManager::install("philr")
-# if (!requireNamespace("phyloseq", quietly = TRUE)) BiocManager::install("phyloseq")
-# if (!requireNamespace("ggplot2", quietly = TRUE)) BiocManager::install("ggplot2")
-# if (!requireNamespace("compositions", quietly = TRUE)) BiocManager::install("compositions")
-# if (!requireNamespace("vegan", quietly = TRUE)) BiocManager::install("vegan")
+if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
+if (!requireNamespace("ALDEx2", quietly = TRUE)) BiocManager::install("ALDEx2")
+if (!requireNamespace("ape", quietly = TRUE)) BiocManager::install("ape")
+if (!requireNamespace("philr", quietly = TRUE)) BiocManager::install("philr")
+if (!requireNamespace("phyloseq", quietly = TRUE)) BiocManager::install("phyloseq")
+if (!requireNamespace("ggplot2", quietly = TRUE)) BiocManager::install("ggplot2")
+if (!requireNamespace("compositions", quietly = TRUE)) BiocManager::install("compositions")
+if (!requireNamespace("vegan", quietly = TRUE)) BiocManager::install("vegan")
 library("compositions")
 library("phyloseq")
 library("vegan")
@@ -56,6 +56,9 @@ metadata <- read.table(file.path(home_dir, project, "patient_metadata.tsv"),
                        row.names = "Run", 
                        check.names = FALSE,
                        stringsAsFactors=TRUE)
+metadata <- metadata[row.names(metadata) %in% row.names(asv_table), ]
+metadata$type <- droplevels(metadata$type)
+metadata$type <- factor(metadata$type)
 
 metad_cols <- 1:2
 
@@ -95,7 +98,7 @@ for(s in 1:length(min_seq_depths)){
   sd_filt_asv <- asv_table[total_seqs$total_seqs >= seq_d,]#dataset 1
   print(paste("sd_filtered dim:", paste(dim(sd_filt_asv))))
   safe_rns <- intersect(row.names(ref_ps@otu_table), row.names(sd_filt_asv)) #rows for this iterate
-  shan_dirv <- vegan::diversity(sd_filt_asv[safe_rns,])
+  shan_div <- vegan::diversity(sd_filt_asv[safe_rns,])
   my_clr <- compositions::clr(sd_filt_asv)#dataset 2
   new_tree <- phyloseq::prune_taxa(colnames(sd_filt_asv), ref_ps@phy_tree)#update tree for new phyloseq obj
   new_ref_ps <- phyloseq::prune_samples(safe_rns, ref_ps) #remove non-safe rows from ps
@@ -143,7 +146,7 @@ for(s in 1:length(min_seq_depths)){
       # kend[counter] <- cor.test(log10(total_seqs[total_seqs > seq_d]), myPCA[,md], method = "kendall")$estimate
       # perma_r2[counter] <- adonis2(log10(total_seqs[total_seqs > seq_d]) ~ myPCA[,md])$R2[1]
       if (md == 1){
-        my_spear <- cor.test(shan_dirv, myPCA[,md],
+        my_spear <- cor.test(shan_div, myPCA[,md],
                              method = "spearman")
         # plot(log10(shan_dirv), myPCA[,2],
         #      main = paste0( project, my_datasets[ds], ", PCA", md,"\nr_sq: ", my_spear$estimate^2),
@@ -153,7 +156,7 @@ for(s in 1:length(min_seq_depths)){
         # )
       }
       for (m in metad_cols){
-        meta_cor[[m]][counter] <- cor.test(shan_dirv, metadata[,m],
+        meta_cor[[m]][counter] <- cor.test(shan_div, metadata[,m],
                                            method = "spearman")
       }
       ds_num[counter] <- ds
@@ -161,7 +164,7 @@ for(s in 1:length(min_seq_depths)){
       mds_lev[counter] <- md
       seq_depth[counter] <- seq_d
       var_exp[counter] <- my_var_exp[md]
-      spear_cor[counter] <- cor(shan_dirv, myPCA[,md], method = "spearman")
+      spear_cor[counter] <- cor(shan_div, myPCA[,md], method = "spearman")
       samples_left[counter] <- nrow(my_table)
       taxa_left[counter] <- sum(colSums(my_table) > 0)
       zero_count[counter] <- zeros
