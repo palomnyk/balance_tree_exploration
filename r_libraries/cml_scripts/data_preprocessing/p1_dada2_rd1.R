@@ -70,7 +70,7 @@ filtFs <- file.path(filt_path, paste0(sampleNames, "_R1_filt.fastq"))
 #Filter
 out <- dada2::filterAndTrim(fnFs, filtFs,truncLen=opt$trunLen,
                      maxN=0, maxEE=c(2), truncQ=2, rm.phix=TRUE,
-                     compress=FALSE, multithread=TRUE) 
+                     compress=FALSE, multithread=FALSE) 
 
 print("Completed filter and trim")
 
