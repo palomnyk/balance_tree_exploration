@@ -97,7 +97,6 @@ for(s in 1:length(min_seq_depths)){
   sd_filt_asv <- asv_table[total_seqs$total_seqs >= seq_d,]#dataset 1
   print(paste("sd_filtered dim:", paste(dim(sd_filt_asv))))
   safe_rns <- intersect(row.names(ref_ps@otu_table), row.names(sd_filt_asv)) #rows for this iterate
-  shan_div <- vegan::diversity(sd_filt_asv[safe_rns,])
   my_clr <- compositions::clr(sd_filt_asv)#dataset 2
   new_tree <- phyloseq::prune_taxa(colnames(sd_filt_asv), ref_ps@phy_tree)#update tree for new phyloseq obj
   new_ref_ps <- phyloseq::prune_samples(safe_rns, ref_ps) #remove non-safe rows from ps
@@ -131,6 +130,7 @@ for(s in 1:length(min_seq_depths)){
     print(my_ds_names[ds])
     my_table <- as.data.frame(my_datasets[ds])
     zeros <- sum(my_table == 0)
+    shan_div <- vegan::diversity(my_table)
     print(dim(my_table))
     ##-Create a PCA-----------------------------------------------------##
     my_prcmp <- prcomp(my_table, 
@@ -185,71 +185,192 @@ result_df <- read.table(file = file.path(output_dir, "tables", paste0(project, "
                         sep = ",")
 
 pdf(file = file.path(output_dir, "graphics", "shan_div_artifact_PCA12345_line.pdf"))
+# for(meta in tail(colnames(result_df), length(metad_cols) )){
+#   print(meta)
+#   
+#   for (i in 1:max(result_df$mds_lev)){
+#     pca_only <- result_df[result_df$mds_lev == i, ]
+#     g <- ggplot2::ggplot(pca_only, 
+#                          aes(x=seq_depth, y=meta, group = ds_nam)) +
+#       ggplot2::geom_point(aes(color = factor(ds_nam))) +
+#       ggplot2::geom_line(aes(color = factor(ds_nam))) +
+#       # ggplot2::annotate("text", x = head(pca_only$seq_depth, n = length(my_ds_names)), 
+#       #                   y = head(c(pca_only$spear_cor^2), n = length(my_ds_names)), 
+#       #                   label = head(pca_only$ds_nam, n = length(my_ds_names)),
+#       #                   hjust = -0.1) +
+#       ggplot2::ggtitle(paste0(project, ": PCA",  i, " vs Shannon Diversity")) +
+#       ggplot2::xlab("Min sequence depth per sample") +
+#       ggplot2::ylab("R squared") + 
+#       ggplot2::labs(fill = "Transformations") +
+#       theme(axis.text.x = element_text(angle = 90)) +
+#       ggplot2::theme_minimal()
+#     print(g)
+#     
+#     #plot remaining taxa
+#     g <- ggplot2::ggplot(pca_only, 
+#                          aes(x=seq_depth, y=taxa_left, group = ds_nam)) +
+#       ggplot2::geom_point(aes(color = factor(ds_nam))) +
+#       ggplot2::geom_line(aes(color = factor(ds_nam))) +
+#       ggplot2::ggtitle(paste0(project, ": PCA",  i, " vs Shannon Diversity")) +
+#       ggplot2::xlab("Min sequence depth per sample") +
+#       ggplot2::ylab("Taxa") + 
+#       ggplot2::labs(fill = "Transformations") +
+#       theme(axis.text.x = element_text(angle = 90)) +
+#       ggplot2::theme_minimal()
+#     g
+#     print(g)
+#     
+#     #plot remaining samples
+#     g <- ggplot2::ggplot(pca_only, 
+#                          aes(x=seq_depth, y=samples_left, group = ds_nam)) +
+#       ggplot2::geom_point(aes(color = factor(ds_nam))) +
+#       ggplot2::geom_line(aes(color = factor(ds_nam))) +
+#       ggplot2::ggtitle(paste0(project, ": PCA",  i, " vs Shannon Diversity")) +
+#       ggplot2::xlab("Min sequence depth per sample") +
+#       ggplot2::ylab("Samples") + 
+#       ggplot2::labs(fill = "Transformations") +
+#       theme(axis.text.x = element_text(angle = 90)) +
+#       ggplot2::theme_minimal()
+#     g
+#     print(g)
+#     
+#     #plot percentage of zeros
+#     g <- ggplot2::ggplot(pca_only,
+#                          aes(x=seq_depth, y=zero_count/samples_left*taxa_left, group = ds_nam)) +
+#       ggplot2::geom_point(aes(color = factor(ds_nam))) +
+#       ggplot2::geom_line(aes(color = factor(ds_nam))) +
+#       ggplot2::ggtitle(paste0(project, ": PCA",  i, " vs Shannon Diversity")) +
+#       ggplot2::xlab("Min sequence depth per sample") +
+#       ggplot2::ylab("Percentage of Zeros") +
+#       ggplot2::labs(fill = "Transformations") +
+#       theme(axis.text.x = element_text(angle = 90)) +
+#       ggplot2::theme_minimal()
+#     g
+#     print(g)
+#   }
+# }
 
-for(meta in tail(colnames(result_df), length(metad_cols) )){
-  print(meta)
+
+for (i in 1){
+  pca_only <- result_df[result_df$mds_lev == i, ]
+  g <- ggplot2::ggplot(pca_only, 
+                       aes(x=seq_depth, y=Age, group = ds_nam)) +
+    ggplot2::geom_point(aes(color = factor(ds_nam))) +
+    ggplot2::geom_line(aes(color = factor(ds_nam))) +
+    # ggplot2::annotate("text", x = head(pca_only$seq_depth, n = length(my_ds_names)), 
+    #                   y = head(c(pca_only$spear_cor^2), n = length(my_ds_names)), 
+    #                   label = head(pca_only$ds_nam, n = length(my_ds_names)),
+    #                   hjust = -0.1) +
+    ggplot2::ggtitle(paste0(project, ": Seq depth vs Shannon Diversity")) +
+    ggplot2::xlab("Min sequence depth per sample") +
+    ggplot2::ylab("Shannon Div correlation with Age") + 
+    ggplot2::labs(fill = "Transformations") +
+    theme(axis.text.x = element_text(angle = 90)) +
+    ggplot2::theme_minimal()
+  print(g)
   
-  for (i in 1:max(result_df$mds_lev)){
-    pca_only <- result_df[result_df$mds_lev == i, ]
-    g <- ggplot2::ggplot(pca_only, 
-                         aes(x=seq_depth, y=meta^2, group = ds_nam)) +
-      ggplot2::geom_point(aes(color = factor(ds_nam))) +
-      ggplot2::geom_line(aes(color = factor(ds_nam))) +
-      # ggplot2::annotate("text", x = head(pca_only$seq_depth, n = length(my_ds_names)), 
-      #                   y = head(c(pca_only$spear_cor^2), n = length(my_ds_names)), 
-      #                   label = head(pca_only$ds_nam, n = length(my_ds_names)),
-      #                   hjust = -0.1) +
-      ggplot2::ggtitle(paste0(project, ": PCA",  i, " vs Shannon Diversity")) +
-      ggplot2::xlab("Min sequence depth per sample") +
-      ggplot2::ylab("R squared") + 
-      ggplot2::labs(fill = "Transformations") +
-      theme(axis.text.x = element_text(angle = 90)) +
-      ggplot2::theme_minimal()
-    print(g)
-    
-    #plot remaining taxa
-    g <- ggplot2::ggplot(pca_only, 
-                         aes(x=seq_depth, y=taxa_left, group = ds_nam)) +
-      ggplot2::geom_point(aes(color = factor(ds_nam))) +
-      ggplot2::geom_line(aes(color = factor(ds_nam))) +
-      ggplot2::ggtitle(paste0(project, ": PCA",  i, " vs Shannon Diversity")) +
-      ggplot2::xlab("Min sequence depth per sample") +
-      ggplot2::ylab("Taxa") + 
-      ggplot2::labs(fill = "Transformations") +
-      theme(axis.text.x = element_text(angle = 90)) +
-      ggplot2::theme_minimal()
-    g
-    print(g)
-    
-    #plot remaining samples
-    g <- ggplot2::ggplot(pca_only, 
-                         aes(x=seq_depth, y=samples_left, group = ds_nam)) +
-      ggplot2::geom_point(aes(color = factor(ds_nam))) +
-      ggplot2::geom_line(aes(color = factor(ds_nam))) +
-      ggplot2::ggtitle(paste0(project, ": PCA",  i, " vs Shannon Diversity")) +
-      ggplot2::xlab("Min sequence depth per sample") +
-      ggplot2::ylab("Samples") + 
-      ggplot2::labs(fill = "Transformations") +
-      theme(axis.text.x = element_text(angle = 90)) +
-      ggplot2::theme_minimal()
-    g
-    print(g)
-    
-    #plot percentage of zeros
-    g <- ggplot2::ggplot(pca_only,
-                         aes(x=seq_depth, y=zero_count/samples_left*taxa_left, group = ds_nam)) +
-      ggplot2::geom_point(aes(color = factor(ds_nam))) +
-      ggplot2::geom_line(aes(color = factor(ds_nam))) +
-      ggplot2::ggtitle(paste0(project, ": PCA",  i, " vs Shannon Diversity")) +
-      ggplot2::xlab("Min sequence depth per sample") +
-      ggplot2::ylab("Percentage of Zeros") +
-      ggplot2::labs(fill = "Transformations") +
-      theme(axis.text.x = element_text(angle = 90)) +
-      ggplot2::theme_minimal()
-    g
-    print(g)
-  }
+  #plot remaining taxa
+  g <- ggplot2::ggplot(pca_only, 
+                       aes(x=seq_depth, y=taxa_left, group = ds_nam)) +
+    ggplot2::geom_point(aes(color = factor(ds_nam))) +
+    ggplot2::geom_line(aes(color = factor(ds_nam))) +
+    ggplot2::ggtitle(paste0(project, ": Seq depth vs Shannon Diversity")) +
+    ggplot2::xlab("Min sequence depth per sample") +
+    ggplot2::ylab("Taxa") + 
+    ggplot2::labs(fill = "Transformations") +
+    theme(axis.text.x = element_text(angle = 90)) +
+    ggplot2::theme_minimal()
+  g
+  print(g)
   
+  #plot remaining samples
+  g <- ggplot2::ggplot(pca_only, 
+                       aes(x=seq_depth, y=samples_left, group = ds_nam)) +
+    ggplot2::geom_point(aes(color = factor(ds_nam))) +
+    ggplot2::geom_line(aes(color = factor(ds_nam))) +
+    ggplot2::ggtitle(paste0(project, ": Seq depth vs Shannon Diversity")) +
+    ggplot2::xlab("Min sequence depth per sample") +
+    ggplot2::ylab("Samples") + 
+    ggplot2::labs(fill = "Transformations") +
+    theme(axis.text.x = element_text(angle = 90)) +
+    ggplot2::theme_minimal()
+  g
+  print(g)
+  
+  #plot percentage of zeros
+  g <- ggplot2::ggplot(pca_only,
+                       aes(x=seq_depth, y=zero_count/samples_left*taxa_left, group = ds_nam)) +
+    ggplot2::geom_point(aes(color = factor(ds_nam))) +
+    ggplot2::geom_line(aes(color = factor(ds_nam))) +
+    ggplot2::ggtitle(paste0(project, ": Seq depth vs Shannon Diversity")) +
+    ggplot2::xlab("Min sequence depth per sample") +
+    ggplot2::ylab("Percentage of Zeros") +
+    ggplot2::labs(fill = "Transformations") +
+    theme(axis.text.x = element_text(angle = 90)) +
+    ggplot2::theme_minimal()
+  g
+  print(g)
+}
+
+for (i in 1){
+  pca_only <- result_df[result_df$mds_lev == i, ]
+  g <- ggplot2::ggplot(pca_only, 
+                       aes(x=seq_depth, y=BMI, group = ds_nam)) +
+    ggplot2::geom_point(aes(color = factor(ds_nam))) +
+    ggplot2::geom_line(aes(color = factor(ds_nam))) +
+    # ggplot2::annotate("text", x = head(pca_only$seq_depth, n = length(my_ds_names)), 
+    #                   y = head(c(pca_only$spear_cor^2), n = length(my_ds_names)), 
+    #                   label = head(pca_only$ds_nam, n = length(my_ds_names)),
+    #                   hjust = -0.1) +
+    ggplot2::ggtitle(paste0(project, ": Seq depth vs Shannon Diversity")) +
+    ggplot2::xlab("Min sequence depth per sample") +
+    ggplot2::ylab("R squared") + 
+    ggplot2::labs(fill = "Transformations") +
+    theme(axis.text.x = element_text(angle = 90)) +
+    ggplot2::theme_minimal()
+  print(g)
+  
+  #plot remaining taxa
+  g <- ggplot2::ggplot(pca_only, 
+                       aes(x=seq_depth, y=taxa_left, group = ds_nam)) +
+    ggplot2::geom_point(aes(color = factor(ds_nam))) +
+    ggplot2::geom_line(aes(color = factor(ds_nam))) +
+    ggplot2::ggtitle(paste0(project, ": Seq depth vs Shannon Diversity")) +
+    ggplot2::xlab("Shannon Div correlation with BMI") +
+    ggplot2::ylab("Taxa") + 
+    ggplot2::labs(fill = "Transformations") +
+    theme(axis.text.x = element_text(angle = 90)) +
+    ggplot2::theme_minimal()
+  g
+  print(g)
+  
+  #plot remaining samples
+  g <- ggplot2::ggplot(pca_only, 
+                       aes(x=seq_depth, y=samples_left, group = ds_nam)) +
+    ggplot2::geom_point(aes(color = factor(ds_nam))) +
+    ggplot2::geom_line(aes(color = factor(ds_nam))) +
+    ggplot2::ggtitle(paste0(project, ": Seq depth vs Shannon Diversity")) +
+    ggplot2::xlab("Min sequence depth per sample") +
+    ggplot2::ylab("Samples") + 
+    ggplot2::labs(fill = "Transformations") +
+    theme(axis.text.x = element_text(angle = 90)) +
+    ggplot2::theme_minimal()
+  g
+  print(g)
+  
+  #plot percentage of zeros
+  g <- ggplot2::ggplot(pca_only,
+                       aes(x=seq_depth, y=zero_count/samples_left*taxa_left, group = ds_nam)) +
+    ggplot2::geom_point(aes(color = factor(ds_nam))) +
+    ggplot2::geom_line(aes(color = factor(ds_nam))) +
+    ggplot2::ggtitle(paste0(project, ": Seq depth vs Shannon Diversity")) +
+    ggplot2::xlab("Min sequence depth per sample") +
+    ggplot2::ylab("Percentage of Zeros") +
+    ggplot2::labs(fill = "Transformations") +
+    theme(axis.text.x = element_text(angle = 90)) +
+    ggplot2::theme_minimal()
+  g
+  print(g)
 }
 
 dev.off()
