@@ -130,7 +130,11 @@ for(s in 1:length(min_seq_depths)){
     print(my_ds_names[ds])
     my_table <- as.data.frame(my_datasets[ds])
     zeros <- sum(my_table == 0)
+    if (any(my_table) < 0){
+      shan_div <- vegan::diversity(my_table + abs(min(my_table)))
+    }else{
     shan_div <- vegan::diversity(my_table)
+    }
     print(dim(my_table))
     ##-Create a PCA-----------------------------------------------------##
     my_prcmp <- prcomp(my_table, 
