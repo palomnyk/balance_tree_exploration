@@ -65,7 +65,6 @@ metad_cols <- 1:2
 #Plot shannon diversity against log10(total_seqs)
 #Plot other normalization methods: otu log 100 and alr and clr 
 my_ds_names <- c( "raw seqs", "clr(raw seqs)", "lognorm", "philr ref", "DESeq2", "ALDEx2")
-# my_ds_names <- c( "raw seqs", "clr(raw seqs)")
 min_seq_depths <- c(0, 500, 1000, 5000, 10000, 20000, 40000)
 mds_depth <- 5
 
@@ -84,14 +83,14 @@ samples_left <- vector(mode = "integer", length = length(my_ds_names) * length(m
 taxa_left <- vector(mode = "integer", length = length(my_ds_names) * length(min_seq_depths) * mds_depth)
 zero_count <- vector(mode = "integer", length = length(my_ds_names) * length(min_seq_depths) * mds_depth)
 meta_cor <- list()
-
 for (i in metad_cols){
   meta_cor[[i]] <- vector(mode = "integer", length = length(my_ds_names) * length(min_seq_depths) * mds_depth)
   names(meta_cor)[i] <- colnames(metadata)[i]
 }
+meta_cor <- data.frame(meta_cor)
 
 
-pdf(file = file.path(output_dir, "graphics", "seq_depth_artifact_PCA12345_scatter.pdf"))
+# pdf(file = file.path(output_dir, "graphics", "seq_depth_artifact_PCA12345_scatter.pdf"))
 counter <- 1
 for(s in 1:length(min_seq_depths)){
   seq_d <- min_seq_depths[s]#new sequencing depth
@@ -155,9 +154,10 @@ for(s in 1:length(min_seq_depths)){
         #      ylab = paste0("PCA", md)
         # )
       }
-      for (m in metad_cols){
-        meta_cor[[m]][counter] <- cor.test(shan_div, metadata[safe_rns,m],
-                                           method = "spearman")
+      for (m in 1:length(metad_cols)){
+        print(m)
+        meta_cor[counter, m] <- cor.test(shan_div, metadata[safe_rns,m],
+                                           method = "spearman")$estimate
       }
       ds_num[counter] <- ds
       ds_nam[counter] <- my_ds_names[ds]
@@ -169,10 +169,10 @@ for(s in 1:length(min_seq_depths)){
       taxa_left[counter] <- sum(colSums(my_table) > 0)
       zero_count[counter] <- zeros
       counter <- counter + 1
-    }
+    }#for loop mds
   }
 }
-dev.off()
+# dev.off()
 result_df <- data.frame(ds_num, ds_nam, perma_r2, mds_lev, seq_depth, var_exp, spear_cor, samples_left, zero_count, taxa_left)
 print("created resulting DF, next joining it to metadata cor data")
 result_df <- cbind(result_df, data.frame(meta_cor))
