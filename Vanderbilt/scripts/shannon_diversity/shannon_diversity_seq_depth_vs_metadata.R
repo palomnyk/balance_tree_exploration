@@ -131,9 +131,12 @@ for(s in 1:length(min_seq_depths)){
     my_table <- as.data.frame(my_datasets[ds])
     zeros <- sum(my_table == 0)
     if (any(my_table) < 0){
-      shan_div <- vegan::diversity(my_table + abs(min(my_table)))
+      print("my_table has negative numbers")
+      y_table <- my_table + abs(min(my_table))
+      shan_div <- vegan::diversity(x = y_table)
     }else{
-    shan_div <- vegan::diversity(my_table)
+      print("no negatives in my_table")
+      shan_div <- vegan::diversity(my_table)
     }
     print(dim(my_table))
     ##-Create a PCA-----------------------------------------------------##
