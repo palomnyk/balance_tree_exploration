@@ -136,12 +136,14 @@ make_ilr_taxa_auc_df <- function(ps_obj,
 if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
 # if (!requireNamespace("ROCR", quietly = TRUE)) BiocManager::install("ROCR")
 if (!requireNamespace("pROC", quietly = TRUE)) BiocManager::install("pROC")
+if (!requireNamespace("compositions", quietly = TRUE)) BiocManager::install("compositions")
 library("pROC")
 library("philr")
 library("ggplot2")
 library("randomForest")
 # library("ROCR")
 library("ape")
+library("compositions")
 
 ##-Establish directory layout---------------------------------------##
 home_dir <- file.path('~','git','balance_tree_exploration')
@@ -178,6 +180,27 @@ denovo_tree_ps <- phyloseq::phyloseq( otu_table(clean_den_otu, taxa_are_rows = F
                                       phy_tree(ape::makeNodeLabel(phy_tree(denovo_tree_ps@phy_tree))),
                                       tax_table(denovo_tree_ps@tax_table), 
                                       sample_data(denovo_tree_ps@sam_data))
+
+if (dir.exists(file.path(output_dir,"r_objects", "lognorm_asv.rds"))) {
+  ln_asv_tab <- readRDS(file.path(output_dir,"r_objects", "lognorm_asv.rds"))
+}else{
+  ln_asv_tab <- lognorm(asv_table)
+  saveRDS(ln_asv_tab, file = file.path(output_dir,"r_objects", "lognorm_asv.rds"))
+}
+
+if (dir.exists(file.path(output_dir,"r_objects", "alr_asv.rds"))) {
+  my_alr <- readRDS(file.path(output_dir,"r_objects", "alr_asv.rds"))
+}else{
+  my_alr <- as.data.frame(compositions::alr(as.matrix(asv_table)))
+  saveRDS(my_alr, file = file.path(output_dir,"r_objects", "alr_asv.rds"))
+}
+
+if (dir.exists(file.path(output_dir,"r_objects", "clr_asv.rds"))) {
+  my_clr <- readRDS(file.path(output_dir,"r_objects", "clr_asv.rds"))
+}else{
+  my_alr <- as.data.frame(compositions::clr(as.matrix(asv_table)))
+  saveRDS(my_alr, file = file.path(output_dir,"r_objects", "clr_asv.rds"))
+}
 
 metadata <- read.table(file.path(home_dir, project, "fullMetadata.tsv"), 
                        sep="\t", 
@@ -273,11 +296,46 @@ while (counter < num_cycles & skips < 2*rf_cols){
     raw_plot_data$tree_group <- rep("raw_data", nrow(raw_plot_data))
     all_plot_data <- rbind(all_plot_data, raw_plot_data)
     
+    # generate lognorm data
+    raw_plot_data <- make_ilr_taxa_auc_df(ps_obj = ln_asv_tab,
+                                          metadata_cols = rf_cols,
+                                          metadata = metadata,
+                                          train_index = train_index,
+                                          test_index = test_index,
+                                          philr_ilr_weights = philr_ilr_weights,  
+                                          philr_taxa_weights = philr_taxa_weights,
+                                          just_otu = TRUE )
+    raw_plot_data$tree_group <- rep("lognorm", nrow(raw_plot_data))
+    all_plot_data <- rbind(all_plot_data, raw_plot_data)
+    
+    # generate lognorm data
+    raw_plot_data <- make_ilr_taxa_auc_df(ps_obj = my_alr,
+                                          metadata_cols = rf_cols,
+                                          metadata = metadata,
+                                          train_index = train_index,
+                                          test_index = test_index,
+                                          philr_ilr_weights = philr_ilr_weights,  
+                                          philr_taxa_weights = philr_taxa_weights,
+                                          just_otu = TRUE )
+    raw_plot_data$tree_group <- rep("alr", nrow(raw_plot_data))
+    all_plot_data <- rbind(all_plot_data, raw_plot_data)
+    
+    # generate lognorm data
+    raw_plot_data <- make_ilr_taxa_auc_df(ps_obj = my_clr,
+                                          metadata_cols = rf_cols,
+                                          metadata = metadata,
+                                          train_index = train_index,
+                                          test_index = test_index,
+                                          philr_ilr_weights = philr_ilr_weights,  
+                                          philr_taxa_weights = philr_taxa_weights,
+                                          just_otu = TRUE )
+    raw_plot_data$tree_group <- rep("clr", nrow(raw_plot_data))
+    all_plot_data <- rbind(all_plot_data, raw_plot_data)
+    
     counter <- counter + 1
     skips <- 0
   }
 }
-
 
 write.table(all_plot_data,
             file = file.path(output_dir, "tables", paste0("auc_rand_v_ref_v_upgma_v_raw_", num_cycles, ".csv")),
@@ -363,8 +421,8 @@ for (mta in 1:length(unique(all_plot_data$metadata_col))){
     # ggplot2::scale_y_discrete(labels = seq(0, 1, by = 0.2)) +
     ggplot2::ylab("AUC") +
     ggplot2::xlab("Tree type") +
-    ggplot2::labs(color = "ilr weight") +
-    ggpubr::stat_compare_means(comparisons = my_comparisons)
+    ggplot2::labs(color = "ilr weight") 
+    # ggpubr::stat_compare_means(comparisons = my_comparisons)
   print(g)
   
   g <- ggplot2::ggplot(plot_data, aes(y = all_auc, x= tree_group)) + 
@@ -377,8 +435,8 @@ for (mta in 1:length(unique(all_plot_data$metadata_col))){
     # ggplot2::scale_y_discrete(labels = seq(0, 1, by = 0.2)) +
     ggplot2::ylab("AUC") +
     ggplot2::xlab("Tree type") +
-    ggplot2::labs(color = "Taxa weight") +
-    ggpubr::stat_compare_means(comparisons = my_comparisons)
+    ggplot2::labs(color = "Part weight weight") 
+    # ggpubr::stat_compare_means(comparisons = my_comparisons)
   print(g)
 }
 
@@ -402,4 +460,6 @@ dev.off()
 #   ggplot2::xlab("AUC") +
 #   ggplot2::ylab("Samples per bin")
 # print(g)
+
+
 
