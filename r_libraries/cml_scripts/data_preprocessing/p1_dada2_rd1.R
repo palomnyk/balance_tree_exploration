@@ -72,7 +72,7 @@ completed_filtFs <- list.files(filt_path, full.names = TRUE)
 uncompleted_filtFs <- setdiff.Vector(filtFs, completed_filtFs)
 uncompleted_fnFs <- tail(fnFs, length(uncompleted_filtFs))
 
-if (completed_filtFs == 0){
+if (length(completed_filtFs) == 0){
   #Filter
   out <- dada2::filterAndTrim(fnFs, filtFs,truncLen=opt$trunLen,
                               maxN=0, maxEE=c(2), truncQ=2, rm.phix=TRUE,
