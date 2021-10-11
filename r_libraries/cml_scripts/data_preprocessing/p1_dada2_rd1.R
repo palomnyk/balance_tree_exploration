@@ -67,11 +67,21 @@ sampleNames <- sapply(strsplit(basename(fnFs), "_"), `[`, 1)
 filt_path <- file.path(f_path, "filtered") # Place filtered files in filtered/ subdirectory
 filtFs <- file.path(filt_path, paste0(sampleNames, "_R1_filt.fastq"))
 
-#Filter
-out <- dada2::filterAndTrim(fnFs, filtFs,truncLen=opt$trunLen,
-                     maxN=0, maxEE=c(2), truncQ=2, rm.phix=TRUE,
-                     compress=FALSE, multithread=FALSE) 
+#Only FAT the seqs that need it
+completed_filtFs <- list.files(filt_path, full.names = TRUE)
+uncompleted_filtFs <- setdiff.Vector(filtFs, completed_filtFs)
+uncompleted_fnFs <- tail(fnFs, length(uncompleted_filtFs))
 
+if (completed_filtFs == 0){
+  #Filter
+  out <- dada2::filterAndTrim(fnFs, filtFs,truncLen=opt$trunLen,
+                              maxN=0, maxEE=c(2), truncQ=2, rm.phix=TRUE,
+                              compress=FALSE, multithread=FALSE)
+}else{
+  out <- dada2::filterAndTrim(uncompleted_fnFs, uncompleted_filtFs,truncLen=opt$trunLen,
+                              maxN=0, maxEE=c(2), truncQ=2, rm.phix=TRUE,
+                              compress=FALSE, multithread=FALSE)
+}
 print("Completed filter and trim")
 
 dds <- vector("list", length(sampleNames))
@@ -80,7 +90,6 @@ names(dds) <- sampleNames
 index <-1 
 
 for (f in filtFs){
-  
   errF <- dada2::learnErrors(f, multithread = FALSE)
   derepFs <- dada2::derepFastq(f, verbose=TRUE)
   dadaFs <- dada2::dada(derepFs, err=errF, multithread=FALSE)
