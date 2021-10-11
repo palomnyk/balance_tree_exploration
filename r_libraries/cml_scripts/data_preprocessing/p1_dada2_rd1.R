@@ -69,8 +69,8 @@ filtFs <- file.path(filt_path, paste0(sampleNames, "_R1_filt.fastq"))
 
 #Only FAT the seqs that need it
 completed_filtFs <- list.files(filt_path, full.names = TRUE)
-uncompleted_filtFs <- setdiff.Vector(filtFs, completed_filtFs)
-uncompleted_fnFs <- tail(fnFs, length(uncompleted_filtFs))
+# uncompleted_filtFs <- setdiff.Vector(filtFs, completed_filtFs)
+# uncompleted_fnFs <- tail(fnFs, length(uncompleted_filtFs))
 
 if (! length(completed_filtFs) == length(filtFs)){
   #Filter
