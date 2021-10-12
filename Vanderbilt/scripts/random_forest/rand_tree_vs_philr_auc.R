@@ -98,6 +98,7 @@ library("philr")
 library("ggplot2")
 library("randomForest")
 library("ape")
+print("finished loading libraries")
 
 ##-Establish directory layout---------------------------------------##
 home_dir <- file.path('~','git','balance_tree_exploration')
