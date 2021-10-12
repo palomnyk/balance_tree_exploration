@@ -122,7 +122,7 @@ total_seqs <- rowSums(asv_table)
 total_seqs <- data.frame("total_seqs"=total_seqs, "duplicate" = total_seqs,
                          row.names = row.names(asv_table))
 
-#clean up otu tables
+print("Cleaning Ref tree otu with philr tutorial normalization")
 ref_ps <- readRDS(file.path(output_dir, "r_objects", "ref_tree_phyloseq_obj.rds"))
 clean_otu <- data.frame(ref_ps@otu_table@.Data)
 clean_otu <- philr_tutorial_normalization(clean_otu)
@@ -133,7 +133,7 @@ ref_ps_clean <- phyloseq::phyloseq( otu_table(clean_otu, taxa_are_rows = F),
                                     phy_tree(ref_ps@phy_tree),
                                     tax_table(ref_ps@tax_table), 
                                     sample_data(ref_ps@sam_data))
-
+print("Cleaning UPGMA tree otu with philr tutorial normalization")
 denovo_tree_ps <- readRDS(file.path(output_dir, "r_objects", "denovo_tree_UPGMA_phyloseq_obj.rds"))
 clean_den_otu <- philr_tutorial_normalization(data.frame(denovo_tree_ps@otu_table@.Data))
 print(paste("nrow orginal denovo:", nrow(denovo_tree_ps@otu_table), "nrow clean denovo otu: ", nrow(clean_den_otu)))
@@ -147,7 +147,7 @@ phy_tree(cln_denovo_tree_ps) <- makeNodeLabel(phy_tree(cln_denovo_tree_ps), meth
 
 ##-Random num seed--------------------------------------------------##
 set.seed(36)
-##-make random trees for ref taxa-----------------------------------##
+print("making random trees")
 ref_rand_list <- list()
 for (rand in 1:10){
   rand_tree <- rtree(n = length(ref_ps@phy_tree$tip.label), tip.label = ref_ps@phy_tree$tip.label)
@@ -274,9 +274,9 @@ while (counter < num_cycles & skips < 5){
       all_plot_data <- rbind(all_plot_data, rand_plot_data)
     }
     
-    write("making random AUC")
+    write("making orig upgma random AUC")
     for( rand_ps in 1:length(orig_upgma_rand_list)){
-      rand_tree_ps <- orig_rand_list[rand_ps]
+      rand_tree_ps <- orig_upgma_rand_list[rand_ps]
       rand_plot_data <- make_ilr_taxa_auc_df(ps_obj = rand_tree_ps,
                                              metadata_cols = rf_cols,
                                              metadata = metadata,
@@ -284,11 +284,25 @@ while (counter < num_cycles & skips < 5){
                                              test_index = test_index,
                                              philr_ilr_weights = philr_ilr_weights,
                                              philr_taxa_weights = philr_taxa_weights)
-      rand_plot_data$trans_group <- rep("orig_rand", nrow(rand_plot_data))
+      rand_plot_data$trans_group <- rep("orig_upgma_rand", nrow(rand_plot_data))
       rand_plot_data$random_batch <- rep(rand_ps, nrow(rand_plot_data))
       all_plot_data <- rbind(all_plot_data, rand_plot_data)
     }
-
+    write("making random cleaned upgma AUC")
+    for( rand_ps in 1:length(cln_upgma_rand_list)){
+      rand_tree_ps <- cln_upgma_rand_list[rand_ps]
+      rand_plot_data <- make_ilr_taxa_auc_df(ps_obj = rand_tree_ps,
+                                             metadata_cols = rf_cols,
+                                             metadata = metadata,
+                                             train_index = train_index,
+                                             test_index = test_index,
+                                             philr_ilr_weights = philr_ilr_weights,
+                                             philr_taxa_weights = philr_taxa_weights)
+      rand_plot_data$trans_group <- rep("clean_upgma_rand", nrow(rand_plot_data))
+      rand_plot_data$random_batch <- rep(rand_ps, nrow(rand_plot_data))
+      all_plot_data <- rbind(all_plot_data, rand_plot_data)
+    }
+    
     write("making ref AUC")
     ref_plot_data <- make_ilr_taxa_auc_df(ps_obj = ref_ps_clean,
                                           metadata_cols = rf_cols,
