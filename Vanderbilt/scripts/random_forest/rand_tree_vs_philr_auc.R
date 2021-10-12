@@ -274,9 +274,9 @@ while (counter < num_cycles & skips < 5){
       all_plot_data <- rbind(all_plot_data, rand_plot_data)
     }
     
-    write("making random AUC")
+    write("making orig upgma random AUC")
     for( rand_ps in 1:length(orig_upgma_rand_list)){
-      rand_tree_ps <- orig_rand_list[rand_ps]
+      rand_tree_ps <- orig_upgma_rand_list[rand_ps]
       rand_plot_data <- make_ilr_taxa_auc_df(ps_obj = rand_tree_ps,
                                              metadata_cols = rf_cols,
                                              metadata = metadata,
@@ -284,11 +284,25 @@ while (counter < num_cycles & skips < 5){
                                              test_index = test_index,
                                              philr_ilr_weights = philr_ilr_weights,
                                              philr_taxa_weights = philr_taxa_weights)
-      rand_plot_data$trans_group <- rep("orig_rand", nrow(rand_plot_data))
+      rand_plot_data$trans_group <- rep("orig_upgma_rand", nrow(rand_plot_data))
       rand_plot_data$random_batch <- rep(rand_ps, nrow(rand_plot_data))
       all_plot_data <- rbind(all_plot_data, rand_plot_data)
     }
-
+    write("making random cleaned upgma AUC")
+    for( rand_ps in 1:length(cln_upgma_rand_list)){
+      rand_tree_ps <- cln_upgma_rand_list[rand_ps]
+      rand_plot_data <- make_ilr_taxa_auc_df(ps_obj = rand_tree_ps,
+                                             metadata_cols = rf_cols,
+                                             metadata = metadata,
+                                             train_index = train_index,
+                                             test_index = test_index,
+                                             philr_ilr_weights = philr_ilr_weights,
+                                             philr_taxa_weights = philr_taxa_weights)
+      rand_plot_data$trans_group <- rep("clean_upgma_rand", nrow(rand_plot_data))
+      rand_plot_data$random_batch <- rep(rand_ps, nrow(rand_plot_data))
+      all_plot_data <- rbind(all_plot_data, rand_plot_data)
+    }
+    
     write("making ref AUC")
     ref_plot_data <- make_ilr_taxa_auc_df(ps_obj = ref_ps_clean,
                                           metadata_cols = rf_cols,
