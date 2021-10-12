@@ -220,6 +220,21 @@ metadata$type <- factor(metadata$type)
 philr_taxa_weights <- c("uniform","gm.counts","anorm","anorm.x.gm.counts","enorm","enorm.x.gm.counts")
 philr_ilr_weights <- c("uniform","blw","blw.sqrt","mean.descendants")
 
+##-Create tree attribute vectors------------------------------------##
+tree_name <- c()
+num_nodes <- c()
+ave_branch_length <- c()
+ultrametric <- c()
+# branch_length
+# compute.brlen(phy, method = "Grafen", power = 1, ...)
+# base.freq()
+
+##-Create non-tree attribute vectors--------------------------------##
+tree_name <- c()
+num_nodes <- c()
+ave_branch_length <- c()
+ultrametric <- c()
+
 ##-Create plot data-------------------------------------------------##
 all_plot_data <- data.frame(all_auc = c(),
                             metadata_col = c(),
@@ -282,6 +297,32 @@ while (counter < num_cycles & skips < 5){
                                           philr_ilr_weights = philr_ilr_weights,
                                           philr_taxa_weights = philr_taxa_weights)
     ref_plot_data$trans_group <- rep("Silva_ref", nrow(ref_plot_data))
+    ref_plot_data$random_batch <- rep("None", nrow(ref_plot_data))
+    all_plot_data <- rbind(all_plot_data, ref_plot_data)
+    
+    write("making seq only ref AUC")
+    ref_plot_data <- make_ilr_taxa_auc_df(ps_obj = as.data.frame(ref_ps_clean@otu_table),
+                                          metadata_cols = rf_cols,
+                                          metadata = metadata,
+                                          train_index = train_index,
+                                          test_index = test_index,
+                                          philr_ilr_weights = philr_ilr_weights,
+                                          philr_taxa_weights = philr_taxa_weights,
+                                          just_otu = TRUE)
+    ref_plot_data$trans_group <- rep("taxa_Silva_ref", nrow(ref_plot_data))
+    ref_plot_data$random_batch <- rep("None", nrow(ref_plot_data))
+    all_plot_data <- rbind(all_plot_data, ref_plot_data)
+    
+    write("making seq only ref AUC")
+    ref_plot_data <- make_ilr_taxa_auc_df(ps_obj = as.data.frame(cln_denovo_tree_ps@otu_table),
+                                          metadata_cols = rf_cols,
+                                          metadata = metadata,
+                                          train_index = train_index,
+                                          test_index = test_index,
+                                          philr_ilr_weights = philr_ilr_weights,
+                                          philr_taxa_weights = philr_taxa_weights,
+                                          just_otu = TRUE)
+    ref_plot_data$trans_group <- rep("taxa_upgma", nrow(ref_plot_data))
     ref_plot_data$random_batch <- rep("None", nrow(ref_plot_data))
     all_plot_data <- rbind(all_plot_data, ref_plot_data)
 
@@ -512,5 +553,3 @@ dev.off()
 #   ggplot2::xlab("AUC") +
 #   ggplot2::ylab("Samples per bin")
 # print(g)
-
-
