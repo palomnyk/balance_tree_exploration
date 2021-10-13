@@ -159,7 +159,7 @@ for (rand in 1:10){
   phy_tree(rand_tree_ps) <- makeNodeLabel(rand_tree_ps, method="number", prefix='n')
   ref_rand_list[[rand]] <- rand_tree_ps
 }
-##-make random trees for cln upgma taxa-------------------------------##
+print("make random trees for cln upgma taxa")
 cln_upgma_rand_list <- list()
 for (rand in 1:10){
   rand_tree <- rtree(n = length(cln_denovo_tree_ps@phy_tree$tip.label), tip.label = cln_denovo_tree_ps@phy_tree$tip.label)
@@ -172,7 +172,7 @@ for (rand in 1:10){
   cln_upgma_rand_list[[rand]] <- rand_tree_ps
 }
 
-##-make random trees for original upgma taxa--------------------------##
+print("make random trees for original upgma taxa")
 orig_upgma_rand_list <- list()
 for (rand in 1:10){
   rand_tree <- rtree(n = length(denovo_tree_ps@phy_tree$tip.label), tip.label = denovo_tree_ps@phy_tree$tip.label)
@@ -185,7 +185,7 @@ for (rand in 1:10){
   orig_upgma_rand_list[[rand]] <- rand_tree_ps
 }
 
-#create lognorm, ALR and CLR
+print("creating lognorm, ALR and CLR")
 #add raw seq transformations
 if (dir.exists(file.path(output_dir,"r_objects", "lognorm_asv.rds"))) {
   ln_asv_tab <- readRDS(file.path(output_dir,"r_objects", "lognorm_asv.rds"))
