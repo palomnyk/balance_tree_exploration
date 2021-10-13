@@ -156,7 +156,7 @@ for (rand in 1:10){
                                       phy_tree(rand_tree),
                                       tax_table(ref_ps@tax_table),
                                       sample_data(ref_ps@sam_data))
-  phy_tree(rand_tree_ps) <- makeNodeLabel(rand_tree_ps, method="number", prefix='n')
+  phy_tree(rand_tree_ps) <- ape::makeNodeLabel(phy_tree(rand_tree_ps), method="number", prefix='n')
   ref_rand_list[[rand]] <- rand_tree_ps
 }
 print("make random trees for cln upgma taxa")
@@ -168,7 +168,7 @@ for (rand in 1:10){
                                       phy_tree(rand_tree),
                                       tax_table(cln_denovo_tree_ps@tax_table),
                                       sample_data(cln_denovo_tree_ps@sam_data))
-  phy_tree(rand_tree_ps) <- makeNodeLabel(rand_tree_ps, method="number", prefix='n')
+  phy_tree(rand_tree_ps) <- ape::makeNodeLabel(phy_tree(rand_tree_ps), method="number", prefix='n')
   cln_upgma_rand_list[[rand]] <- rand_tree_ps
 }
 
@@ -181,7 +181,7 @@ for (rand in 1:10){
                                       phy_tree(rand_tree),
                                       tax_table(denovo_tree_ps@tax_table),
                                       sample_data(denovo_tree_ps@sam_data))
-  phy_tree(rand_tree_ps) <- makeNodeLabel(rand_tree_ps, method="number", prefix='n')
+  phy_tree(rand_tree_ps) <- ape::makeNodeLabel(phy_tree(rand_tree_ps), method="number", prefix='n')
   orig_upgma_rand_list[[rand]] <- rand_tree_ps
 }
 
