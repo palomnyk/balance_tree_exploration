@@ -98,6 +98,7 @@ library("philr")
 library("ggplot2")
 library("randomForest")
 library("ape")
+library("reshape2")
 print("finished loading libraries")
 
 ##-Establish directory layout---------------------------------------##
@@ -221,21 +222,6 @@ metadata$type <- factor(metadata$type)
 philr_taxa_weights <- c("uniform","gm.counts","anorm","anorm.x.gm.counts","enorm","enorm.x.gm.counts")
 philr_ilr_weights <- c("uniform","blw","blw.sqrt","mean.descendants")
 
-##-Create tree attribute vectors------------------------------------##
-tree_name <- c()
-num_nodes <- c()
-ave_branch_length <- c()
-ultrametric <- c()
-# branch_length
-# compute.brlen(phy, method = "Grafen", power = 1, ...)
-# base.freq()
-
-##-Create non-tree attribute vectors--------------------------------##
-tree_name <- c()
-num_nodes <- c()
-ave_branch_length <- c()
-ultrametric <- c()
-
 ##-Create plot data-------------------------------------------------##
 all_plot_data <- data.frame(all_auc = c(),
                             metadata_col = c(),
@@ -245,6 +231,8 @@ all_plot_data <- data.frame(all_auc = c(),
                             trans_group = c())
 skips <- 0
 counter <- 0
+
+print("entering while loop")
 while (counter < num_cycles & skips < 5){
   ##-Create training/testing sets-------------------------------------##
   train_index <- sample(x = nrow(metadata), size = 0.75*nrow(metadata), replace=FALSE)
@@ -440,11 +428,15 @@ while (counter < num_cycles & skips < 5){
     raw_plot_data$trans_group <- rep("clr", nrow(raw_plot_data))
     all_plot_data <- rbind(all_plot_data, raw_plot_data)
     
+    print(paste("completed loop:", counter))
     counter <- counter + 1
     skips <- 0
   }
 }
 
+print(paste0("saving plot data to hardrive:\n",
+             as.character(file.path(output_dir, "tables", paste0("auc_rand_v_ref_v_upgma_v_raw_vert_", 
+                                                                num_cycles, ".csv")))))
 write.table(all_plot_data,
             file = file.path(output_dir, "tables", paste0("auc_rand_v_ref_v_upgma_v_raw_vert_", num_cycles, ".csv")),
             sep = ",",
@@ -460,6 +452,8 @@ weight_table <- data.frame(tree_type = c(F),
                            taxa_pval = c(F),
                            ilr_pval = c(F))
 weight_counter <- 1
+
+print("Make all the boxplots")
 ##-Make all the boxplots--------------------------------------------##
 pdf(file = file.path(output_dir, "graphics", paste0("auc_rand_v_ref_v_upgma_v_raw_vert_", num_cycles, ".pdf")))
 g <- ggplot2::ggplot(all_plot_data, aes(y = all_auc, x= trans_group)) + 
@@ -488,6 +482,36 @@ g <- ggplot2::ggplot(all_plot_data, aes(y = all_auc, x= trans_group)) +
   ggplot2::xlab("Tree type") +
   ggplot2::labs(color = "Part weight")
 print(g)
+
+
+# subset_test <- all_plot_data[all_plot_data$metadata_col == "type",]
+# 
+# subset_test <- subset_test[subset_test$trans_group == ]
+# 
+# flat_test <- reshape2::melt(data = subset_test,
+#                             id.vars = "taxa_weight",
+#                             variable.name = "taxa_weights")
+# 
+# g <- ggplot2::ggplot(subset_test, aes(y = all_auc, x= trans_group, group=taxa_weight)) + 
+#   ggplot2::geom_boxplot() +
+#   ggplot2::geom_jitter(aes(color = as.factor(ilr_weight)),width = 0.2, height = 0.001)
+#   # ggplot2::ggtitle(paste(project, my_meta, "col by ilr", "anova:", round(betwn_bar_anova$`Pr(>F)`, 5))) +
+#   # ggplot2::geom_hline(yintercept = 0) +
+#   ggplot2::theme(axis.text.x = element_text(angle = 45)) +
+#   ggplot2::theme_classic() +
+#   # ggplot2::scale_y_discrete(labels = seq(0, 1, by = 0.2)) +
+#   ggplot2::ylab("AUC") +
+#   ggplot2::xlab("Tree type") +
+#   ggplot2::labs(color = "ilr weight") 
+#   # ggpubr::stat_compare_means(comparisons = my_comparisons)
+# print(g)
+
+
+# for (mta in 1:length(unique(all_plot_data$metadata_col))){
+#   my_meta <- as.character(unique(all_plot_data$metadata_col)[mta])
+#   message(my_meta)
+#   my_data <- subset()
+# }
 
 for (mta in 1:length(unique(all_plot_data$metadata_col))){
   my_meta <- as.character(unique(all_plot_data$metadata_col)[mta])
