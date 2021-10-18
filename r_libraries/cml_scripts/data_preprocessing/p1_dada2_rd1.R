@@ -80,18 +80,25 @@ if (! length(completed_filtFs) == length(filtFs)){
 }
 print("Completed filter and trim")
 
-dds <- vector("list", length(sampleNames))
-names(dds) <- sampleNames
+if (file.exists(file.path(output_dir,"r_objects", "dada2_dds.rds"))) {
+  dds <- readRDS(file.path(output_dir,"r_objects", "dada2_dds.rds"))
+  index <- length(dds) + 1
+}else{
+  index <- 1
+  dds <- vector("list")
+}
 
-index <-1 
-
-for (f in filtFs){
+for (i in index:length(filtFs)){
+  print(paste0("On run", i, " of ", length(filtFs), "for dada2:dada"))
+  f <- filtFs[i]
   errF <- dada2::learnErrors(f, multithread = FALSE)
   derepFs <- dada2::derepFastq(f, verbose=TRUE)
   dadaFs <- dada2::dada(derepFs, err=errF, multithread=FALSE)
-  dds[[index]]<-dadaFs
-  index<-index+1
+  dds[[index]] <- dadaFs
+  saveRDS(dds, file = file.path(output_dir,"r_objects", "dada2_dds.rds"))
+  index <- index + 1
 }
+names(dds) <- sampleNames
 
 seqtab <- dada2::makeSequenceTable(dds)
 
