@@ -189,27 +189,27 @@ for (rand in 1:10){
 }
 
 print("creating lognorm, ALR and CLR")
-#add raw seq transformations
 if (dir.exists(file.path(output_dir,"r_objects", "lognorm_asv.rds"))) {
   ln_asv_tab <- readRDS(file.path(output_dir,"r_objects", "lognorm_asv.rds"))
 }else{
   ln_asv_tab <- lognorm(asv_table)
   saveRDS(ln_asv_tab, file = file.path(output_dir,"r_objects", "lognorm_asv.rds"))
 }
+print("creating lognorm, ALR and CLR")
 if (dir.exists(file.path(output_dir,"r_objects", "alr_asv.rds"))) {
   my_alr <- readRDS(file.path(output_dir,"r_objects", "alr_asv.rds"))
 }else{
   my_alr <- as.data.frame(compositions::alr(as.matrix(asv_table)))
   saveRDS(my_alr, file = file.path(output_dir,"r_objects", "alr_asv.rds"))
 }
+print("creating lognorm, ALR and CLR")
 if (dir.exists(file.path(output_dir,"r_objects", "clr_asv.rds"))) {
   my_clr <- readRDS(file.path(output_dir,"r_objects", "clr_asv.rds"))
 }else{
   my_alr <- as.data.frame(compositions::clr(as.matrix(asv_table)))
   saveRDS(my_alr, file = file.path(output_dir,"r_objects", "clr_asv.rds"))
 }
-
-#load and fix metadata
+print("loading and munging metadata")
 metadata <- read.table(file.path(home_dir, project, "patient_metadata.tsv"), 
                        sep="\t", 
                        header=TRUE, 
