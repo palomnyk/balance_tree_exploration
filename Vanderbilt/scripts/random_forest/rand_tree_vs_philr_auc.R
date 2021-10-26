@@ -195,18 +195,23 @@ if (dir.exists(file.path(output_dir,"r_objects", "lognorm_asv.rds"))) {
   ln_asv_tab <- lognorm(asv_table)
   saveRDS(ln_asv_tab, file = file.path(output_dir,"r_objects", "lognorm_asv.rds"))
 }
-print("creating lognorm, ALR and CLR")
-if (dir.exists(file.path(output_dir,"r_objects", "alr_asv.rds"))) {
+
+my_zeros <- apply(asv_table, 2, function(x) {
+  return(sum(x == 0))
+})
+alr_col <- which(my_zeros == min(my_zeros))[1]
+print("creating ALR")
+if (file.exists(file.path(output_dir,"r_objects", "alr_asv.rds"))) {
   my_alr <- readRDS(file.path(output_dir,"r_objects", "alr_asv.rds"))
 }else{
-  my_alr <- as.data.frame(compositions::alr(as.matrix(asv_table)))
+  my_alr <- as.data.frame(compositions::alr(as.matrix(asv_table + 1), ivar = alr_col))
   saveRDS(my_alr, file = file.path(output_dir,"r_objects", "alr_asv.rds"))
 }
-print("creating lognorm, ALR and CLR")
+print("creating CLR")
 if (dir.exists(file.path(output_dir,"r_objects", "clr_asv.rds"))) {
   my_clr <- readRDS(file.path(output_dir,"r_objects", "clr_asv.rds"))
 }else{
-  my_alr <- as.data.frame(compositions::clr(as.matrix(asv_table)))
+  my_alr <- as.data.frame(compositions::clr(as.matrix(asv_table + 1), ivar = alr_col))
   saveRDS(my_alr, file = file.path(output_dir,"r_objects", "clr_asv.rds"))
 }
 print("loading and munging metadata")
