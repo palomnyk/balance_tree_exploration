@@ -256,7 +256,7 @@ while (counter < num_cycles & skips < 5){
   if (should_break == FALSE){
     print("making ref cln random AUC")
     for( rand_ps in 1:length(cln_ref_rand_list)){
-      rand_tree_ps <- cln_ref_rand_list[rand_ps]
+      rand_tree_ps <- cln_ref_rand_list[[rand_ps]]
       rand_plot_data <- make_ilr_taxa_auc_df(ps_obj = rand_tree_ps,
                                              metadata_cols = rf_cols,
                                              metadata = metadata,
@@ -269,9 +269,9 @@ while (counter < num_cycles & skips < 5){
       all_plot_data <- rbind(all_plot_data, rand_plot_data)
     }
     
-    write("making orig ref random AUC")
+    print("making orig ref random AUC")
     for( rand_ps in 1:length(orig_ref_rand_list)){
-      rand_tree_ps <- orig_ref_rand_list[rand_ps]
+      rand_tree_ps <- orig_ref_rand_list[[rand_ps]]
       rand_plot_data <- make_ilr_taxa_auc_df(ps_obj = rand_tree_ps,
                                              metadata_cols = rf_cols,
                                              metadata = metadata,
@@ -285,7 +285,7 @@ while (counter < num_cycles & skips < 5){
     }
     print("making random cleaned upgma AUC")
     for( rand_ps in 1:length(cln_upgma_rand_list)){
-      rand_tree_ps <- cln_upgma_rand_list[rand_ps]
+      rand_tree_ps <- cln_upgma_rand_list[[rand_ps]]
       rand_plot_data <- make_ilr_taxa_auc_df(ps_obj = rand_tree_ps,
                                              metadata_cols = rf_cols,
                                              metadata = metadata,
@@ -336,7 +336,7 @@ while (counter < num_cycles & skips < 5){
     ref_plot_data$random_batch <- rep("None", nrow(ref_plot_data))
     all_plot_data <- rbind(all_plot_data, ref_plot_data)
 
-    # write("making UPGMA AUC")
+    # print("making UPGMA AUC")
     # denovo_plot_data <- make_ilr_taxa_auc_df( ps_obj = denovo_tree_ps,
     #                                           metadata_cols = rf_cols,
     #                                           metadata = metadata,
@@ -384,7 +384,7 @@ while (counter < num_cycles & skips < 5){
     raw_plot_data$trans_group <- rep("raw_data", nrow(raw_plot_data))
     all_plot_data <- rbind(all_plot_data, raw_plot_data)
     
-    # write('generate "read depth" data')
+    # print('generate "read depth" data')
     # raw_plot_data <- make_ilr_taxa_auc_df(ps_obj = data.frame(total_seqs),
     #                                       metadata_cols = rf_cols,
     #                                       metadata = metadata,
