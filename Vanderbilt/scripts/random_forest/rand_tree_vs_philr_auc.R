@@ -93,7 +93,6 @@ if (!requireNamespace("phyloseq", quietly = TRUE)) BiocManager::install("phylose
 if (!requireNamespace("ggplot2", quietly = TRUE)) BiocManager::install("ggplot2")
 if (!requireNamespace("rgr", quietly = TRUE)) install.packages("rgr")
 library("rgr")
-# library("compositions")
 library("phyloseq")
 library("ggpubr")
 library("ROCR")
@@ -107,7 +106,6 @@ print("finished loading libraries")
 ##-Establish directory layout---------------------------------------##
 home_dir <- file.path('~','git','balance_tree_exploration')
 project <- "Vanderbilt"
-#home_dir <- file.path('cloud','project')
 output_dir <- file.path(home_dir, project, 'output')
 setwd(file.path(home_dir))
 
@@ -152,7 +150,7 @@ phy_tree(cln_denovo_tree_ps) <- makeNodeLabel(phy_tree(cln_denovo_tree_ps), meth
 ##-Random num seed--------------------------------------------------##
 set.seed(36)
 print("making random trees")
-ref_rand_list <- list()
+orig_ref_rand_list <- list()
 for (rand in 1:10){
   rand_tree <- rtree(n = length(ref_ps@phy_tree$tip.label), tip.label = ref_ps@phy_tree$tip.label)
   #put int in philr
@@ -161,7 +159,7 @@ for (rand in 1:10){
                                       tax_table(ref_ps@tax_table),
                                       sample_data(ref_ps@sam_data))
   phy_tree(rand_tree_ps) <- ape::makeNodeLabel(phy_tree(rand_tree_ps), method="number", prefix='n')
-  ref_rand_list[[rand]] <- rand_tree_ps
+  orig_ref_rand_list[[rand]] <- rand_tree_ps
 }
 print("make random trees for cln upgma taxa")
 cln_upgma_rand_list <- list()
@@ -176,17 +174,17 @@ for (rand in 1:10){
   cln_upgma_rand_list[[rand]] <- rand_tree_ps
 }
 
-print("make random trees for original upgma taxa")
-orig_upgma_rand_list <- list()
+print("make random trees for clean ref taxa")
+cln_ref_rand_list <- list()
 for (rand in 1:10){
-  rand_tree <- rtree(n = length(denovo_tree_ps@phy_tree$tip.label), tip.label = denovo_tree_ps@phy_tree$tip.label)
+  rand_tree <- rtree(n = length(ref_ps_clean@phy_tree$tip.label), tip.label = denovo_tree_ps@phy_tree$tip.label)
   #put int in philr
-  rand_tree_ps <- phyloseq::phyloseq( otu_table(denovo_tree_ps, taxa_are_rows = F),
-                                      phy_tree(rand_tree),
-                                      tax_table(denovo_tree_ps@tax_table),
-                                      sample_data(denovo_tree_ps@sam_data))
+  rand_tree_ps <- phyloseq::phyloseq(otu_table(ref_ps_clean, taxa_are_rows = F),
+                                     phy_tree(rand_tree),
+                                     tax_table(ref_ps_clean@tax_table),
+                                     sample_data(ref_ps_clean@sam_data))
   phy_tree(rand_tree_ps) <- ape::makeNodeLabel(phy_tree(rand_tree_ps), method="number", prefix='n')
-  orig_upgma_rand_list[[rand]] <- rand_tree_ps
+  cln_ref_rand_list[[rand]] <- rand_tree_ps
 }
 
 print("creating lognorm, ALR and CLR")
@@ -256,9 +254,9 @@ while (counter < num_cycles & skips < 5){
     }
   }
   if (should_break == FALSE){
-    write("making ref random AUC")
-    for( rand_ps in 1:length(ref_rand_list)){
-      rand_tree_ps <- ref_rand_list[rand_ps]
+    print("making ref cln random AUC")
+    for( rand_ps in 1:length(cln_ref_rand_list)){
+      rand_tree_ps <- cln_ref_rand_list[rand_ps]
       rand_plot_data <- make_ilr_taxa_auc_df(ps_obj = rand_tree_ps,
                                              metadata_cols = rf_cols,
                                              metadata = metadata,
@@ -266,14 +264,14 @@ while (counter < num_cycles & skips < 5){
                                              test_index = test_index,
                                              philr_ilr_weights = philr_ilr_weights,
                                              philr_taxa_weights = philr_taxa_weights)
-      rand_plot_data$trans_group <- rep("ref_rand", nrow(rand_plot_data))
+      rand_plot_data$trans_group <- rep("cln_ref_rand", nrow(rand_plot_data))
       rand_plot_data$random_batch <- rep(rand_ps, nrow(rand_plot_data))
       all_plot_data <- rbind(all_plot_data, rand_plot_data)
     }
     
-    write("making orig upgma random AUC")
-    for( rand_ps in 1:length(orig_upgma_rand_list)){
-      rand_tree_ps <- orig_upgma_rand_list[rand_ps]
+    write("making orig ref random AUC")
+    for( rand_ps in 1:length(orig_ref_rand_list)){
+      rand_tree_ps <- orig_ref_rand_list[rand_ps]
       rand_plot_data <- make_ilr_taxa_auc_df(ps_obj = rand_tree_ps,
                                              metadata_cols = rf_cols,
                                              metadata = metadata,
@@ -285,7 +283,7 @@ while (counter < num_cycles & skips < 5){
       rand_plot_data$random_batch <- rep(rand_ps, nrow(rand_plot_data))
       all_plot_data <- rbind(all_plot_data, rand_plot_data)
     }
-    write("making random cleaned upgma AUC")
+    print("making random cleaned upgma AUC")
     for( rand_ps in 1:length(cln_upgma_rand_list)){
       rand_tree_ps <- cln_upgma_rand_list[rand_ps]
       rand_plot_data <- make_ilr_taxa_auc_df(ps_obj = rand_tree_ps,
@@ -300,7 +298,7 @@ while (counter < num_cycles & skips < 5){
       all_plot_data <- rbind(all_plot_data, rand_plot_data)
     }
     
-    write("making ref AUC")
+    print("making ref AUC")
     ref_plot_data <- make_ilr_taxa_auc_df(ps_obj = ref_ps_clean,
                                           metadata_cols = rf_cols,
                                           metadata = metadata,
@@ -312,7 +310,7 @@ while (counter < num_cycles & skips < 5){
     ref_plot_data$random_batch <- rep("None", nrow(ref_plot_data))
     all_plot_data <- rbind(all_plot_data, ref_plot_data)
     
-    write("making seq only ref AUC")
+    print("making seq only ref AUC")
     ref_plot_data <- make_ilr_taxa_auc_df(ps_obj = as.data.frame(ref_ps_clean@otu_table),
                                           metadata_cols = rf_cols,
                                           metadata = metadata,
@@ -325,7 +323,7 @@ while (counter < num_cycles & skips < 5){
     ref_plot_data$random_batch <- rep("None", nrow(ref_plot_data))
     all_plot_data <- rbind(all_plot_data, ref_plot_data)
     
-    write("making seq only ref AUC")
+    print("making seq only ref AUC")
     ref_plot_data <- make_ilr_taxa_auc_df(ps_obj = as.data.frame(cln_denovo_tree_ps@otu_table),
                                           metadata_cols = rf_cols,
                                           metadata = metadata,
@@ -349,7 +347,7 @@ while (counter < num_cycles & skips < 5){
     # denovo_plot_data$trans_group <- rep("UPGMA", nrow(denovo_plot_data))
     # all_plot_data <- rbind(all_plot_data, denovo_plot_data)
 
-    write("making cleaned UPGMA AUC")
+    print("making cleaned UPGMA AUC")
     denovo_plot_data <- make_ilr_taxa_auc_df( ps_obj = cln_denovo_tree_ps,
                                               metadata_cols = rf_cols,
                                               metadata = metadata,
@@ -361,7 +359,7 @@ while (counter < num_cycles & skips < 5){
     denovo_plot_data$trans_group <- rep("clean_UPGMA", nrow(denovo_plot_data))
     all_plot_data <- rbind(all_plot_data, denovo_plot_data)
     
-    write("making orig UPGMA AUC")
+    print("making orig UPGMA AUC")
     denovo_plot_data <- make_ilr_taxa_auc_df( ps_obj = denovo_tree_ps,
                                               metadata_cols = rf_cols,
                                               metadata = metadata,
@@ -373,7 +371,7 @@ while (counter < num_cycles & skips < 5){
     denovo_plot_data$trans_group <- rep("orig_UPGMA", nrow(denovo_plot_data))
     all_plot_data <- rbind(all_plot_data, denovo_plot_data)
 
-    write('generate "raw data" data')
+    print('generate "raw data" data')
     raw_plot_data <- make_ilr_taxa_auc_df(ps_obj = asv_table,
                                           metadata_cols = rf_cols,
                                           metadata = metadata,
@@ -398,7 +396,7 @@ while (counter < num_cycles & skips < 5){
     # raw_plot_data$trans_group <- rep("read_depth", nrow(raw_plot_data))
     # all_plot_data <- rbind(all_plot_data, raw_plot_data)
     
-    write('generate lognorm data')
+    print('generate lognorm data')
     raw_plot_data <- make_ilr_taxa_auc_df(ps_obj = ln_asv_tab,
                                           metadata_cols = rf_cols,
                                           metadata = metadata,
@@ -411,7 +409,7 @@ while (counter < num_cycles & skips < 5){
     raw_plot_data$trans_group <- rep("lognorm", nrow(raw_plot_data))
     all_plot_data <- rbind(all_plot_data, raw_plot_data)
     
-    write('generate alr data')
+    print('generate alr data')
     raw_plot_data <- make_ilr_taxa_auc_df(ps_obj = my_alr,
                                           metadata_cols = rf_cols,
                                           metadata = metadata,
@@ -424,7 +422,7 @@ while (counter < num_cycles & skips < 5){
     raw_plot_data$trans_group <- rep("alr", nrow(raw_plot_data))
     all_plot_data <- rbind(all_plot_data, raw_plot_data)
     
-    write('generate clr data')
+    print('generate clr data')
     raw_plot_data <- make_ilr_taxa_auc_df(ps_obj = my_clr,
                                           metadata_cols = rf_cols,
                                           metadata = metadata,
