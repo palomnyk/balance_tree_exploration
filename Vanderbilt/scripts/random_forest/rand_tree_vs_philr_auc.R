@@ -22,15 +22,28 @@ make_ilr_taxa_auc_df <- function(ps_obj,
   ilr_weight <- c()
   for (ilr_w in 1:length(philr_ilr_weights)){
     for (tax_w in 1:length(philr_taxa_weights)){
-      if (just_otu == TRUE){
-        my_table <- ps_obj
-      }else{
-        my_table <- philr::philr(ps_obj@otu_table, ps_obj@phy_tree, 
-                                 part.weights = philr_taxa_weights[tax_w],
-                                 ilr.weights = philr_ilr_weights[ilr_w])
-      }
-      my_table_train <- data.frame(my_table[train_index,])
-      my_table_test <- data.frame(my_table[test_index,])
+      tryCatch({
+        if (just_otu == TRUE){
+          my_table <- ps_obj
+        }else{
+          my_table <- philr::philr(ps_obj@otu_table, ps_obj@phy_tree, 
+                                   part.weights = philr_taxa_weights[tax_w],
+                                   ilr.weights = philr_ilr_weights[ilr_w])
+        }
+        my_table_train <- data.frame(my_table[train_index,])
+        my_table_test <- data.frame(my_table[test_index,])
+        },
+        error=function(cond) {
+          print('Opps, an error is thrown')
+          message(cond)
+          print(message(cond))
+        },
+        warning=function(cond) {
+          print('Opps, a warning is thrown')
+          message(cond)
+          print(message(cond))
+        }
+      )
       for(mta in metadata_cols){
         tryCatch(
           { 
@@ -323,7 +336,7 @@ while (counter < num_cycles & skips < 5){
     ref_plot_data$random_batch <- rep("None", nrow(ref_plot_data))
     all_plot_data <- rbind(all_plot_data, ref_plot_data)
     
-    print("making seq only ref AUC")
+    print("making seq only cln upgma AUC")
     ref_plot_data <- make_ilr_taxa_auc_df(ps_obj = as.data.frame(cln_denovo_tree_ps@otu_table),
                                           metadata_cols = rf_cols,
                                           metadata = metadata,
