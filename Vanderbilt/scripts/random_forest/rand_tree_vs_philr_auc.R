@@ -396,17 +396,17 @@ while (counter < num_cycles & skips < 5){
     my_plot_data$trans_group <- rep("raw_data", nrow(my_plot_data))
     all_plot_data <- rbind(all_plot_data, my_plot_data)
     
-    print(paste("counter:", counter, " generate ", "read depth data"))
-    my_plot_data <- make_ilr_taxa_auc_df(ps_obj = data.frame(total_seqs),
-                                          metadata_cols = rf_cols,
-                                          metadata = metadata,
-                                          train_index = train_index,
-                                          test_index = test_index,
-                                          philr_ilr_weights = philr_ilr_weights,
-                                          philr_taxa_weights = philr_taxa_weights,
-                                          just_otu = TRUE )
-    my_plot_data$trans_group <- rep("read_depth", nrow(my_plot_data))
-    all_plot_data <- rbind(all_plot_data, my_plot_data)
+    # print(paste("counter:", counter, " generate ", "read depth data"))
+    # my_plot_data <- make_ilr_taxa_auc_df(ps_obj = data.frame(total_seqs),
+    #                                       metadata_cols = rf_cols,
+    #                                       metadata = metadata,
+    #                                       train_index = train_index,
+    #                                       test_index = test_index,
+    #                                       philr_ilr_weights = philr_ilr_weights,
+    #                                       philr_taxa_weights = philr_taxa_weights,
+    #                                       just_otu = TRUE )
+    # my_plot_data$trans_group <- rep("read_depth", nrow(my_plot_data))
+    # all_plot_data <- rbind(all_plot_data, my_plot_data)
     
     print(paste("counter:", counter, " generate ", "lognorm data"))
     my_plot_data <- make_ilr_taxa_auc_df(ps_obj = ln_asv_tab,
