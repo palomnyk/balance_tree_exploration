@@ -252,7 +252,7 @@ all_plot_data <- data.frame(all_auc = c(),
 skips <- 0
 counter <- 0
 
-print("entering while loop")
+print(paste("counter:", counter, " entering while loop"))
 while (counter < num_cycles & skips < 5){
   ##-Create training/testing sets-------------------------------------##
   train_index <- sample(x = nrow(metadata), size = 0.75*nrow(metadata), replace=FALSE)
@@ -267,7 +267,7 @@ while (counter < num_cycles & skips < 5){
     }
   }
   if (should_break == FALSE){
-    print("making ref cln random AUC")
+    print(paste("counter:", counter, " making ref cln random AUC"))
     for( rand_ps in 1:length(cln_ref_rand_list)){
       rand_tree_ps <- cln_ref_rand_list[[rand_ps]]
       rand_plot_data <- make_ilr_taxa_auc_df(ps_obj = rand_tree_ps,
@@ -282,7 +282,7 @@ while (counter < num_cycles & skips < 5){
       all_plot_data <- rbind(all_plot_data, rand_plot_data)
     }
     
-    print("making orig ref random AUC")
+    print(paste("counter:", counter, " making orig ref random AUC"))
     for( rand_ps in 1:length(orig_ref_rand_list)){
       rand_tree_ps <- orig_ref_rand_list[[rand_ps]]
       rand_plot_data <- make_ilr_taxa_auc_df(ps_obj = rand_tree_ps,
@@ -296,7 +296,7 @@ while (counter < num_cycles & skips < 5){
       rand_plot_data$random_batch <- rep(rand_ps, nrow(rand_plot_data))
       all_plot_data <- rbind(all_plot_data, rand_plot_data)
     }
-    print("making random cleaned upgma AUC")
+    print(paste("counter:", counter, " making random cleaned upgma AUC"))
     for( rand_ps in 1:length(cln_upgma_rand_list)){
       rand_tree_ps <- cln_upgma_rand_list[[rand_ps]]
       rand_plot_data <- make_ilr_taxa_auc_df(ps_obj = rand_tree_ps,
@@ -310,21 +310,20 @@ while (counter < num_cycles & skips < 5){
       rand_plot_data$random_batch <- rep(rand_ps, nrow(rand_plot_data))
       all_plot_data <- rbind(all_plot_data, rand_plot_data)
     }
-    
-    print("making ref AUC")
-    ref_plot_data <- make_ilr_taxa_auc_df(ps_obj = ref_ps_clean,
+    print(paste("counter:", counter, " making ref cln tree philr AUC"))
+    my_plot_data <- make_ilr_taxa_auc_df(ps_obj = ref_ps_clean,
                                           metadata_cols = rf_cols,
                                           metadata = metadata,
                                           train_index = train_index,
                                           test_index = test_index,
                                           philr_ilr_weights = philr_ilr_weights,
                                           philr_taxa_weights = philr_taxa_weights)
-    ref_plot_data$trans_group <- rep("Silva_ref", nrow(ref_plot_data))
-    ref_plot_data$random_batch <- rep("None", nrow(ref_plot_data))
-    all_plot_data <- rbind(all_plot_data, ref_plot_data)
+    my_plot_data$trans_group <- rep("Silva_ref", nrow(my_plot_data))
+    my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
+    all_plot_data <- rbind(all_plot_data, my_plot_data)
     
-    print("making seq only ref AUC")
-    ref_plot_data <- make_ilr_taxa_auc_df(ps_obj = as.data.frame(ref_ps_clean@otu_table),
+    print(paste("counter:", counter, " making clean ref no trees AUC"))
+    my_plot_data <- make_ilr_taxa_auc_df(ps_obj = as.data.frame(ref_ps_clean@otu_table),
                                           metadata_cols = rf_cols,
                                           metadata = metadata,
                                           train_index = train_index,
@@ -332,12 +331,12 @@ while (counter < num_cycles & skips < 5){
                                           philr_ilr_weights = philr_ilr_weights,
                                           philr_taxa_weights = philr_taxa_weights,
                                           just_otu = TRUE)
-    ref_plot_data$trans_group <- rep("taxa_Silva_ref", nrow(ref_plot_data))
-    ref_plot_data$random_batch <- rep("None", nrow(ref_plot_data))
-    all_plot_data <- rbind(all_plot_data, ref_plot_data)
+    my_plot_data$trans_group <- rep("taxa_Silva_ref", nrow(my_plot_data))
+    my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
+    all_plot_data <- rbind(all_plot_data, my_plot_data)
     
-    print("making seq only cln upgma AUC")
-    ref_plot_data <- make_ilr_taxa_auc_df(ps_obj = as.data.frame(cln_denovo_tree_ps@otu_table),
+    print(paste("counter:", counter, " making seq only clean ref (no trees) AUC"))
+    my_plot_data <- make_ilr_taxa_auc_df(ps_obj = as.data.frame(cln_denovo_tree_ps@otu_table),
                                           metadata_cols = rf_cols,
                                           metadata = metadata,
                                           train_index = train_index,
@@ -345,47 +344,47 @@ while (counter < num_cycles & skips < 5){
                                           philr_ilr_weights = philr_ilr_weights,
                                           philr_taxa_weights = philr_taxa_weights,
                                           just_otu = TRUE)
-    ref_plot_data$trans_group <- rep("taxa_upgma", nrow(ref_plot_data))
-    ref_plot_data$random_batch <- rep("None", nrow(ref_plot_data))
-    all_plot_data <- rbind(all_plot_data, ref_plot_data)
+    my_plot_data$trans_group <- rep("taxa_upgma", nrow(my_plot_data))
+    my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
+    all_plot_data <- rbind(all_plot_data, my_plot_data)
 
     # print("making UPGMA AUC")
-    # denovo_plot_data <- make_ilr_taxa_auc_df( ps_obj = denovo_tree_ps,
+    # my_plot_data <- make_ilr_taxa_auc_df( ps_obj = denovo_tree_ps,
     #                                           metadata_cols = rf_cols,
     #                                           metadata = metadata,
     #                                           train_index = train_index,
     #                                           test_index = test_index,
     #                                           philr_ilr_weights = philr_ilr_weights,
     #                                           philr_taxa_weights = philr_taxa_weights)
-    # denovo_plot_data$trans_group <- rep("UPGMA", nrow(denovo_plot_data))
-    # all_plot_data <- rbind(all_plot_data, denovo_plot_data)
+    # my_plot_data$trans_group <- rep("UPGMA", nrow(my_plot_data))
+    # all_plot_data <- rbind(all_plot_data, my_plot_data)
 
-    print("making cleaned UPGMA AUC")
-    denovo_plot_data <- make_ilr_taxa_auc_df( ps_obj = cln_denovo_tree_ps,
+    print(paste("counter:", counter, " making seq only clean upgma (no trees) AUC"))
+    my_plot_data <- make_ilr_taxa_auc_df( ps_obj = cln_denovo_tree_ps,
                                               metadata_cols = rf_cols,
                                               metadata = metadata,
                                               train_index = train_index,
                                               test_index = test_index,
                                               philr_ilr_weights = philr_ilr_weights,
                                               philr_taxa_weights = philr_taxa_weights)
-    denovo_plot_data$random_batch <- rep("None", nrow(denovo_plot_data))
-    denovo_plot_data$trans_group <- rep("clean_UPGMA", nrow(denovo_plot_data))
-    all_plot_data <- rbind(all_plot_data, denovo_plot_data)
+    my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
+    my_plot_data$trans_group <- rep("clean_UPGMA", nrow(my_plot_data))
+    all_plot_data <- rbind(all_plot_data, my_plot_data)
     
-    print("making orig UPGMA AUC")
-    denovo_plot_data <- make_ilr_taxa_auc_df( ps_obj = denovo_tree_ps,
+    print(paste("counter:", counter, " making seq only orig ref (no trees) AUC"))
+    my_plot_data <- make_ilr_taxa_auc_df( ps_obj = ref_tree_ps,
                                               metadata_cols = rf_cols,
                                               metadata = metadata,
                                               train_index = train_index,
                                               test_index = test_index,
                                               philr_ilr_weights = philr_ilr_weights,
                                               philr_taxa_weights = philr_taxa_weights)
-    denovo_plot_data$random_batch <- rep("None", nrow(denovo_plot_data))
-    denovo_plot_data$trans_group <- rep("orig_UPGMA", nrow(denovo_plot_data))
-    all_plot_data <- rbind(all_plot_data, denovo_plot_data)
+    my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
+    my_plot_data$trans_group <- rep("orig_ref", nrow(my_plot_data))
+    all_plot_data <- rbind(all_plot_data, my_plot_data)
 
-    print('generate "raw data" data')
-    raw_plot_data <- make_ilr_taxa_auc_df(ps_obj = asv_table,
+    print(paste("counter:", counter, " generate ", "'raw data' data"))
+    my_plot_data <- make_ilr_taxa_auc_df(ps_obj = asv_table,
                                           metadata_cols = rf_cols,
                                           metadata = metadata,
                                           train_index = train_index,
@@ -393,24 +392,12 @@ while (counter < num_cycles & skips < 5){
                                           philr_ilr_weights = philr_ilr_weights,
                                           philr_taxa_weights = philr_taxa_weights,
                                           just_otu = TRUE )
-    raw_plot_data$random_batch <- rep("None", nrow(raw_plot_data))
-    raw_plot_data$trans_group <- rep("raw_data", nrow(raw_plot_data))
-    all_plot_data <- rbind(all_plot_data, raw_plot_data)
+    my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
+    my_plot_data$trans_group <- rep("raw_data", nrow(my_plot_data))
+    all_plot_data <- rbind(all_plot_data, my_plot_data)
     
-    # print('generate "read depth" data')
-    # raw_plot_data <- make_ilr_taxa_auc_df(ps_obj = data.frame(total_seqs),
-    #                                       metadata_cols = rf_cols,
-    #                                       metadata = metadata,
-    #                                       train_index = train_index,
-    #                                       test_index = test_index,
-    #                                       philr_ilr_weights = philr_ilr_weights,  
-    #                                       philr_taxa_weights = philr_taxa_weights,
-    #                                       just_otu = TRUE )
-    # raw_plot_data$trans_group <- rep("read_depth", nrow(raw_plot_data))
-    # all_plot_data <- rbind(all_plot_data, raw_plot_data)
-    
-    print('generate lognorm data')
-    raw_plot_data <- make_ilr_taxa_auc_df(ps_obj = ln_asv_tab,
+    print(paste("counter:", counter, " generate ", "read depth data"))
+    my_plot_data <- make_ilr_taxa_auc_df(ps_obj = data.frame(total_seqs),
                                           metadata_cols = rf_cols,
                                           metadata = metadata,
                                           train_index = train_index,
@@ -418,12 +405,11 @@ while (counter < num_cycles & skips < 5){
                                           philr_ilr_weights = philr_ilr_weights,
                                           philr_taxa_weights = philr_taxa_weights,
                                           just_otu = TRUE )
-    raw_plot_data$random_batch <- rep("None", nrow(raw_plot_data))
-    raw_plot_data$trans_group <- rep("lognorm", nrow(raw_plot_data))
-    all_plot_data <- rbind(all_plot_data, raw_plot_data)
+    my_plot_data$trans_group <- rep("read_depth", nrow(my_plot_data))
+    all_plot_data <- rbind(all_plot_data, my_plot_data)
     
-    print('generate alr data')
-    raw_plot_data <- make_ilr_taxa_auc_df(ps_obj = my_alr,
+    print(paste("counter:", counter, " generate ", "lognorm data"))
+    my_plot_data <- make_ilr_taxa_auc_df(ps_obj = ln_asv_tab,
                                           metadata_cols = rf_cols,
                                           metadata = metadata,
                                           train_index = train_index,
@@ -431,12 +417,12 @@ while (counter < num_cycles & skips < 5){
                                           philr_ilr_weights = philr_ilr_weights,
                                           philr_taxa_weights = philr_taxa_weights,
                                           just_otu = TRUE )
-    raw_plot_data$random_batch <- rep("None", nrow(raw_plot_data))
-    raw_plot_data$trans_group <- rep("alr", nrow(raw_plot_data))
-    all_plot_data <- rbind(all_plot_data, raw_plot_data)
+    my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
+    my_plot_data$trans_group <- rep("lognorm", nrow(my_plot_data))
+    all_plot_data <- rbind(all_plot_data, my_plot_data)
     
-    print('generate clr data')
-    raw_plot_data <- make_ilr_taxa_auc_df(ps_obj = my_clr,
+    print(paste("counter:", counter, " generate alr data"))
+    my_plot_data <- make_ilr_taxa_auc_df(ps_obj = my_alr,
                                           metadata_cols = rf_cols,
                                           metadata = metadata,
                                           train_index = train_index,
@@ -444,9 +430,22 @@ while (counter < num_cycles & skips < 5){
                                           philr_ilr_weights = philr_ilr_weights,
                                           philr_taxa_weights = philr_taxa_weights,
                                           just_otu = TRUE )
-    raw_plot_data$random_batch <- rep("None", nrow(raw_plot_data))
-    raw_plot_data$trans_group <- rep("clr", nrow(raw_plot_data))
-    all_plot_data <- rbind(all_plot_data, raw_plot_data)
+    my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
+    my_plot_data$trans_group <- rep("alr", nrow(my_plot_data))
+    all_plot_data <- rbind(all_plot_data, my_plot_data)
+    
+    print(paste("counter:", counter, " generate clr data"))
+    my_plot_data <- make_ilr_taxa_auc_df(ps_obj = my_clr,
+                                          metadata_cols = rf_cols,
+                                          metadata = metadata,
+                                          train_index = train_index,
+                                          test_index = test_index,
+                                          philr_ilr_weights = philr_ilr_weights,
+                                          philr_taxa_weights = philr_taxa_weights,
+                                          just_otu = TRUE )
+    my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
+    my_plot_data$trans_group <- rep("clr", nrow(my_plot_data))
+    all_plot_data <- rbind(all_plot_data, my_plot_data)
     
     print(paste("completed loop:", counter))
     counter <- counter + 1
