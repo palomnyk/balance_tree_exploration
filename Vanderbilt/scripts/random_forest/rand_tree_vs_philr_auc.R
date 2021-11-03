@@ -528,98 +528,83 @@ g <- ggplot2::ggplot(all_plot_data, aes(y = all_auc, x= trans_group)) +
   ggplot2::labs(color = "Part weight")
 print(g)
 
-
-# subset_test <- all_plot_data[all_plot_data$metadata_col == "type",]
-# 
-# subset_test <- subset_test[subset_test$trans_group == ]
-# 
-# flat_test <- reshape2::melt(data = subset_test,
-#                             id.vars = "taxa_weight",
-#                             variable.name = "taxa_weights")
-# 
-# g <- ggplot2::ggplot(subset_test, aes(y = all_auc, x= trans_group, group=taxa_weight)) + 
-#   ggplot2::geom_boxplot() +
-#   ggplot2::geom_jitter(aes(color = as.factor(ilr_weight)),width = 0.2, height = 0.001)
-#   # ggplot2::ggtitle(paste(project, my_meta, "col by ilr", "anova:", round(betwn_bar_anova$`Pr(>F)`, 5))) +
-#   # ggplot2::geom_hline(yintercept = 0) +
-#   ggplot2::theme(axis.text.x = element_text(angle = 45)) +
-#   ggplot2::theme_classic() +
-#   # ggplot2::scale_y_discrete(labels = seq(0, 1, by = 0.2)) +
-#   ggplot2::ylab("AUC") +
-#   ggplot2::xlab("Tree type") +
-#   ggplot2::labs(color = "ilr weight") 
-#   # ggpubr::stat_compare_means(comparisons = my_comparisons)
-# print(g)
-
-
-# for (mta in 1:length(unique(all_plot_data$metadata_col))){
-#   my_meta <- as.character(unique(all_plot_data$metadata_col)[mta])
-#   message(my_meta)
-#   my_data <- subset()
-# }
-
 for (mta in 1:length(unique(all_plot_data$metadata_col))){
   my_meta <- as.character(unique(all_plot_data$metadata_col)[mta])
   message(my_meta)
   
-  plot_data <- all_plot_data[all_plot_data$metadata_col == my_meta,]
+    plot_data <- all_plot_data[all_plot_data$metadata_col == my_meta,]
+    
+    my_shap_pval <- c()
+    my_shap_tg <- c()
+    taxa_w_pval <- c()
+    ilr_w_pval <- c()
+    # for (tg in unique(plot_data$trans_group)){
+    #   auc <- plot_data$all_auc[plot_data$trans_group ==  tg]
+    #   ilr_w <- plot_data$ilr_weight[plot_data$trans_group ==  tg]
+    #   taxa_w <- plot_data$taxa_weight[plot_data$trans_group ==  tg]
+    #   rand_shap <- shapiro.test(auc)
+    #   my_shap_tg <- c(my_shap_tg, tg)
+    #   my_shap_pval <- c(my_shap_pval, rand_shap$p.value)
+    #   if (tg != "raw_data"){
+    #     t_pval <- anova(lm(auc ~ taxa_w))$"Pr(>F)"[1]
+    #     i_pval <-  anova(lm(auc ~ ilr_w))$"Pr(>F)"[1]
+    #     new_row <- c(tg, my_meta,  t_pval, i_pval)
+    #     names(new_row) <- c("tree_type", "metadata", "taxa_pval", "ilr_pval")
+    #     weight_table[weight_counter,] <- new_row
+    #     weight_counter <- weight_counter + 1
+    #   }
+    # }
+    
+    non_philr_ds <- c("cln_upgma_taxa_only", "Silva_ref_cln_taxa_only",
+                      "cln_upgma_taxa_only", "raw_data", "lognorm", "alr", 
+                      "clr", "Silva_ref_orig_taxa_only")
+    
+    not_none_tw <- which(plot_data$taxa_weight != "uniform" )
+    not_none_iw <- which(plot_data$ilr_weight != "uniform" )
+    philr_ds <- unique(plot_data$trans_group[c(not_none_tw,not_none_iw)] ) 
+    non_philr_ds_pd <- plot_data[!plot_data$trans_group %in% philr_ds,]
+    
+    philr_ds_pd <- all_plot_data[!all_plot_data$trans_group %in% non_philr_ds,]
+    
+    for(tw in unique(plot_data$taxa_weight)){
+    my_phil_ds_pd <- philr_ds_pd[philr_ds_pd$taxa_weight == tw,]
+    # new_pd <- rbind(non_philr_ds_pd, my_phil_ds_pd)
+    g <- ggplot2::ggplot(my_phil_ds_pd, aes(y = all_auc, x = trans_group)) + 
+      ggplot2::geom_boxplot() +
+      ggplot2::geom_jitter(aes(color = as.factor(ilr_weight)), size = 0.50) +
+      # ggplot2::geom_jitter(aes(color = as.factor(ilr_weight)),width = 0.2, height = 0.001) +
+      ggplot2::ggtitle(paste(project, my_meta, "only taxa weight:", tw, "| col by ilr")) +
+      # ggplot2::geom_hline(yintercept = 0) +
+      # ggplot2::theme(axis.text.x = element_text(angle = 45)) +
+      ggplot2::theme_classic() +
+      # ggplot2::scale_y_discrete(labels = seq(0, 1, by = 0.2)) +
+      ggplot2::ylab("AUC") +
+      ggplot2::xlab("Tree type") +
+      ggplot2::labs(color = "ilr weight") 
+      # ggpubr::stat_compare_means(comparisons = my_comparisons)
+    print(g)
+  }
+  for(iw in unique(plot_data$ilr_weight)){
+    my_phil_ds_pd <- philr_ds_pd[philr_ds_pd$ilr_weight == iw,]
+    new_pd <- rbind(non_philr_ds_pd, my_phil_ds_pd)
+    g <- ggplot2::ggplot(new_pd, aes(y = all_auc, x = trans_group)) + 
+      ggplot2::geom_boxplot() +
+      ggplot2::geom_jitter(aes(color = as.factor(taxa_weight)), size = 0.50) +
+      # ggplot2::geom_jitter(aes(color = as.factor(taxa_weight)),width = 0.2, height = 0.001) +
+      ggplot2::ggtitle(paste(project, my_meta, "col by ilr", iw, "| col by taxa weight")) +
+      # ggplot2::geom_hline(yintercept = 0) +
+      # ggplot2::theme(axis.text.x = element_text(angle = 45)) +
+      ggplot2::theme_classic() +
+      # ggplot2::scale_y_discrete(labels = seq(0, 1, by = 0.2)) +
+      ggplot2::ylab("AUC") +
+      ggplot2::xlab("Tree type") +
+      ggplot2::labs(color = "ilr weight") 
+      # ggpubr::stat_compare_means(comparisons = my_comparisons)
+    print(g)
+  }
   
-  my_shap_pval <- c()
-  my_shap_tg <- c()
-  taxa_w_pval <- c()
-  ilr_w_pval <- c()
-  # for (tg in unique(plot_data$trans_group)){
-  #   auc <- plot_data$all_auc[plot_data$trans_group ==  tg]
-  #   ilr_w <- plot_data$ilr_weight[plot_data$trans_group ==  tg]
-  #   taxa_w <- plot_data$taxa_weight[plot_data$trans_group ==  tg]
-  #   rand_shap <- shapiro.test(auc)
-  #   my_shap_tg <- c(my_shap_tg, tg)
-  #   my_shap_pval <- c(my_shap_pval, rand_shap$p.value)
-  #   if (tg != "raw_data"){
-  #     t_pval <- anova(lm(auc ~ taxa_w))$"Pr(>F)"[1]
-  #     i_pval <-  anova(lm(auc ~ ilr_w))$"Pr(>F)"[1]
-  #     new_row <- c(tg, my_meta,  t_pval, i_pval)
-  #     names(new_row) <- c("tree_type", "metadata", "taxa_pval", "ilr_pval")
-  #     weight_table[weight_counter,] <- new_row
-  #     weight_counter <- weight_counter + 1
-  #   }
-  # }
-  
-  non_philr_ds <- c("cln_upgma_taxa_only", "Silva_ref_cln_taxa_only",
-                    "cln_upgma_taxa_only", "raw_data", "lognorm", "alr", 
-                    "clr", "Silva_ref_orig_taxa_only")
-  non_philr_ds_pd <- plot_data <- all_plot_data[all_plot_data$trans_group %in% non_philr_ds,]
-  
-  betwn_bar_anova <- anova(lm(data = plot_data,all_auc ~ trans_group))
-  my_comparisons <- list( c("raw_data", "Silva_ref"), c( "UPGMA", "Silva_ref"), c("Silva_ref", "random"), c("raw_data", "random") )
-  
-  g <- ggplot2::ggplot(plot_data, aes(y = all_auc, x= trans_group)) + 
-    ggplot2::geom_boxplot() +
-    ggplot2::geom_jitter(aes(color = as.factor(ilr_weight)),width = 0.2, height = 0.001) +
-    ggplot2::ggtitle(paste(project, my_meta, "col by ilr", "anova:", round(betwn_bar_anova$`Pr(>F)`, 5))) +
-    # ggplot2::geom_hline(yintercept = 0) +
-    ggplot2::theme(axis.text.x = element_text(angle = 45)) +
-    ggplot2::theme_classic() +
-    # ggplot2::scale_y_discrete(labels = seq(0, 1, by = 0.2)) +
-    ggplot2::ylab("AUC") +
-    ggplot2::xlab("Tree type") +
-    ggplot2::labs(color = "ilr weight") +
-    ggpubr::stat_compare_means(comparisons = my_comparisons)
-  print(g)
-  
-  g <- ggplot2::ggplot(plot_data, aes(y = all_auc, x= trans_group)) + 
-    ggplot2::geom_boxplot() +
-    ggplot2::geom_jitter(aes(color = as.factor(taxa_weight)),width = 0.2, height = 0.001) +
-    ggplot2::ggtitle(paste(project, my_meta, "col by part", "anova:", round(betwn_bar_anova$`Pr(>F)`, 5))) +    ggplot2::geom_hline(yintercept = 0) +
-    ggplot2::theme(axis.text.x = element_text(angle = 45),
-                   axis.text.y = element_text(angle = 45)) +
-    ggplot2::theme_classic() +
-    # ggplot2::scale_y_discrete(labels = seq(0, 1, by = 0.2)) +
-    ggplot2::ylab("AUC") +
-    ggplot2::xlab("Tree type") +
-    ggplot2::labs(color = "Part weight") +
-    ggpubr::stat_compare_means(comparisons = my_comparisons)
-  print(g)
+  # betwn_bar_anova <- anova(lm(data = plot_data,all_auc ~ trans_group))
+  # my_comparisons <- list( c("raw_data", "Silva_ref"), c( "UPGMA", "Silva_ref"), c("Silva_ref", "random"), c("raw_data", "random") )
 }
 
 dev.off()
