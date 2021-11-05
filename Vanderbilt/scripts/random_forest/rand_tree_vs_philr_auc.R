@@ -130,6 +130,7 @@ source(file.path(home_dir, "r_libraries", "table_manipulations.R"))
 rf_cols <- 3:7
 num_cycles <- 20
 if(num_cycles < 3) stop("num_cycles should be 3 or more")
+main_output_label <- paste0("auc_rand_v_ref_v_upgma_v_raw_vert_", num_cycles)
 
 ##-Import tables and data preprocessing-----------------------------##
 asv_table <- asv_table <- data.frame(readRDS(file.path(output_dir, "r_objects", "ForwardReads_DADA2.rds")))
@@ -480,16 +481,14 @@ while (counter < num_cycles & skips < 5){
 }
 
 print(paste0("saving plot data to hardrive:\n",
-             as.character(file.path(output_dir, "tables", paste0("auc_rand_v_ref_v_upgma_v_raw_vert_", 
-                                                                num_cycles, ".csv")))))
+             as.character(file.path(output_dir, "tables", paste0(main_output_label, ".csv")))))
 write.table(all_plot_data,
-            file = file.path(output_dir, "tables", paste0("auc_rand_v_ref_v_upgma_v_raw_vert_", num_cycles, ".csv")),
+            file = file.path(output_dir, "tables", paste0(main_output_label, ".csv")),
             sep = ",",
             row.names = FALSE)
 
 all_plot_data <- read.table(file = file.path(output_dir, "tables", 
-                                             paste0("auc_rand_v_ref_v_upgma_v_raw_vert_", 
-                                                    num_cycles, ".csv")),
+                                             paste0(main_output_label, ".csv")),
             sep = ",", header = TRUE)
 
 weight_table <- data.frame(tree_type = c(F),
@@ -500,7 +499,7 @@ weight_counter <- 1
 
 print("Make all the boxplots")
 ##-Make all the boxplots--------------------------------------------##
-pdf(file = file.path(output_dir, "graphics", paste0("auc_rand_v_ref_v_upgma_v_raw_vert_", num_cycles, ".pdf")))
+pdf(file = file.path(output_dir, "graphics", paste0(main_output_label, ".pdf")))
 g <- ggplot2::ggplot(all_plot_data, aes(y = all_auc, x= trans_group)) + 
   ggplot2::geom_boxplot() +
   ggplot2::geom_jitter(aes(color = as.factor(ilr_weight)),width = 0.2, height = 0.001) +
@@ -564,20 +563,17 @@ for (mta in 1:length(unique(all_plot_data$metadata_col))){
     philr_ds <- unique(plot_data$trans_group[c(not_none_tw,not_none_iw)] ) 
     non_philr_ds_pd <- plot_data[!plot_data$trans_group %in% philr_ds,]
     
-    philr_ds_pd <- all_plot_data[!all_plot_data$trans_group %in% non_philr_ds,]
+    philr_ds_pd <- plot_data[!plot_data$trans_group %in% non_philr_ds,]
     
     for(tw in unique(plot_data$taxa_weight)){
     my_phil_ds_pd <- philr_ds_pd[philr_ds_pd$taxa_weight == tw,]
     # new_pd <- rbind(non_philr_ds_pd, my_phil_ds_pd)
     g <- ggplot2::ggplot(my_phil_ds_pd, aes(y = all_auc, x = trans_group)) + 
       ggplot2::geom_boxplot() +
-      ggplot2::geom_jitter(aes(color = as.factor(ilr_weight)), size = 0.50) +
-      # ggplot2::geom_jitter(aes(color = as.factor(ilr_weight)),width = 0.2, height = 0.001) +
+      ggplot2::geom_jitter(aes(color = as.factor(ilr_weight)), size = 0.75) +
       ggplot2::ggtitle(paste(project, my_meta, "only taxa weight:", tw, "| col by ilr")) +
-      # ggplot2::geom_hline(yintercept = 0) +
-      # ggplot2::theme(axis.text.x = element_text(angle = 45)) +
       ggplot2::theme_classic() +
-      # ggplot2::scale_y_discrete(labels = seq(0, 1, by = 0.2)) +
+      ggplot2::scale_x_discrete(guide = guide_axis(angle = 90)) +
       ggplot2::ylab("AUC") +
       ggplot2::xlab("Tree type") +
       ggplot2::labs(color = "ilr weight") 
@@ -589,13 +585,10 @@ for (mta in 1:length(unique(all_plot_data$metadata_col))){
     new_pd <- rbind(non_philr_ds_pd, my_phil_ds_pd)
     g <- ggplot2::ggplot(new_pd, aes(y = all_auc, x = trans_group)) + 
       ggplot2::geom_boxplot() +
-      ggplot2::geom_jitter(aes(color = as.factor(taxa_weight)), size = 0.50) +
-      # ggplot2::geom_jitter(aes(color = as.factor(taxa_weight)),width = 0.2, height = 0.001) +
-      ggplot2::ggtitle(paste(project, my_meta, "col by ilr", iw, "| col by taxa weight")) +
-      # ggplot2::geom_hline(yintercept = 0) +
-      # ggplot2::theme(axis.text.x = element_text(angle = 45)) +
+      ggplot2::geom_jitter(aes(color = as.factor(taxa_weight)), size = 0.75) +
+      ggplot2::ggtitle(paste(project, my_meta, "only ilr", iw, "| col by taxa weight")) +
       ggplot2::theme_classic() +
-      # ggplot2::scale_y_discrete(labels = seq(0, 1, by = 0.2)) +
+      ggplot2::scale_x_discrete(guide = guide_axis(angle = 90)) +
       ggplot2::ylab("AUC") +
       ggplot2::xlab("Tree type") +
       ggplot2::labs(color = "ilr weight") 
@@ -609,21 +602,3 @@ for (mta in 1:length(unique(all_plot_data$metadata_col))){
 
 dev.off()
 
-# weight_table$taxa_adj <- p.adjust(weight_table$taxa_pval, method = "BH")
-# weight_table$ilr_adj <- p.adjust(weight_table$ilr_pval, method = "BH")
-# 
-# write.table(weight_table,
-#             sep = ",",
-#             row.names = FALSE,
-#             file = file.path(output_dir, "tables", paste0("auc_rand_v_ref_v_upgma_v_raw_", num_cycles, ".csv")))
-
-# #normality
-# qqnorm(plot_data$all_auc, main = paste0("Random Tree $", my_meta," shap: ", round(rand_shap$p.value, 6)))
-# qqline(plot_data$all_auc)
-# g <- ggplot2::ggplot(plot_data, aes(x=all_auc)) + 
-#   ggplot2::geom_histogram(bins = 150, colour="black", size = 0.1) +
-#   # ggplot2::labs(fill = "Metadata") +
-#   ggplot2::ggtitle(paste0(project, " only Rand Forst AUC ", my_meta, " shap: ", round(rand_shap$p.value, 4))) +
-#   ggplot2::xlab("AUC") +
-#   ggplot2::ylab("Samples per bin")
-# print(g)
