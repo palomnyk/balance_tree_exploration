@@ -133,7 +133,7 @@ if(num_cycles < 3) stop("num_cycles should be 3 or more")
 main_output_label <- paste0("auc_rand_v_ref_v_upgma_v_raw_vert_", num_cycles)
 
 ##-Import tables and data preprocessing-----------------------------##
-asv_table <- asv_table <- data.frame(readRDS(file.path(output_dir, "r_objects", "ForwardReads_DADA2.rds")))
+asv_table <- data.frame(readRDS(file.path(output_dir, "r_objects", "ForwardReads_DADA2.rds")))
 total_seqs <- rowSums(asv_table)
 total_seqs <- data.frame("total_seqs"=total_seqs, "duplicate" = total_seqs,
                          row.names = row.names(asv_table))

@@ -89,7 +89,7 @@ if(num_cycles < 3) stop("num_cycles should be 3 or more")
 
 ##-Import tables and data preprocessing-----------------------------##
 print("Loading raw dada2 count table")
-asv_table <- asv_table <- data.frame(readRDS(file.path(output_dir, "r_objects", "ForwardReads_DADA2.rds")))
+asv_table <- data.frame(readRDS(file.path(output_dir, "r_objects", "ForwardReads_DADA2.rds")))
 
 print("Cleaning Ref tree otu with philr tutorial normalization")
 ref_ps <- readRDS(file.path(output_dir, "r_objects", "ref_tree_phyloseq_obj.rds"))
