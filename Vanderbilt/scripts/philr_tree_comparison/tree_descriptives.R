@@ -14,6 +14,8 @@ if (!requireNamespace("ROCR", quietly = TRUE)) BiocManager::install("ROCR")
 if (!requireNamespace("ggpubr", quietly = TRUE)) BiocManager::install("ggpubr")
 if (!requireNamespace("phyloseq", quietly = TRUE)) BiocManager::install("phyloseq")
 if (!requireNamespace("ggplot2", quietly = TRUE)) BiocManager::install("ggplot2")
+if (!requireNamespace("rgr", quietly = TRUE)) install.packages("rgr")
+library("rgr")
 library("phyloseq")
 library("ggpubr")
 library("ROCR")
@@ -21,6 +23,7 @@ library("philr")
 library("ggplot2")
 library("randomForest")
 library("ape")
+library("compositions")
 print("finished loading libraries")
 
 ##-Establish directory layout---------------------------------------##
@@ -46,9 +49,7 @@ dataframes <- list()
 dataframes_names <- c()
 
 ##-Import tables and data preprocessing-----------------------------##
-asv_table <- asv_table <- data.frame(readRDS(file.path(output_dir, "r_objects", "ForwardReads_DADA2.rds")))
-dataframes <- append(dataframes, list(asv_table))
-dataframes_names <- append(dataframes_names, "raw_data")
+asv_table <- data.frame(readRDS(file.path(output_dir, "r_objects", "ForwardReads_DADA2.rds")))
 
 print("Cleaning Ref tree otu with philr tutorial normalization")
 ref_ps <- readRDS(file.path(output_dir, "r_objects", "ref_tree_phyloseq_obj.rds"))
@@ -134,25 +135,34 @@ phylo_objects_names <- append(phylo_objects_names,
                               names(orig_upgma_rand_list)))
 
 print("creating lognorm, ALR and CLR")
-#add raw seq transformations
-if (file.exists(file.path(output_dir,"r_objects", "lognorm_asv.rds"))) {
+if (dir.exists(file.path(output_dir,"r_objects", "lognorm_asv.rds"))) {
   ln_asv_tab <- readRDS(file.path(output_dir,"r_objects", "lognorm_asv.rds"))
 }else{
   ln_asv_tab <- lognorm(asv_table)
   saveRDS(ln_asv_tab, file = file.path(output_dir,"r_objects", "lognorm_asv.rds"))
 }
+my_zeros <- apply(asv_table, 2, function(x) {
+  return(sum(x == 0))
+})
+alr_col <- which(my_zeros == min(my_zeros))[1]
+print("creating ALR")
 if (file.exists(file.path(output_dir,"r_objects", "alr_asv.rds"))) {
   my_alr <- readRDS(file.path(output_dir,"r_objects", "alr_asv.rds"))
 }else{
-  my_alr <- as.data.frame(compositions::alr(as.matrix(asv_table)))
+  my_alr <- as.data.frame(rgr::alr(as.matrix(asv_table + 1), j = as.numeric(alr_col)))
   saveRDS(my_alr, file = file.path(output_dir,"r_objects", "alr_asv.rds"))
 }
-if (file.exists(file.path(output_dir,"r_objects", "clr_asv.rds"))) {
+print("creating CLR")
+if (dir.exists(file.path(output_dir,"r_objects", "clr_asv.rds"))) {
   my_clr <- readRDS(file.path(output_dir,"r_objects", "clr_asv.rds"))
 }else{
-  my_clr <- as.data.frame(compositions::clr(as.matrix(asv_table)))
+  my_clr <- as.data.frame(rgr::clr(as.matrix(asv_table + 1)))
   saveRDS(my_clr, file = file.path(output_dir,"r_objects", "clr_asv.rds"))
 }
+
+print("adding dfs to dataframe list")
+dataframes <- append(dataframes, list(asv_table))
+dataframes_names <- append(dataframes_names, "raw_data")
 dataframes <- append(dataframes, list(ln_asv_tab))
 dataframes <- append(dataframes, list(my_alr))
 dataframes <- append(dataframes, list(asv_table))
@@ -167,6 +177,7 @@ num_tips <- c()
 ave_branch_length <- c()
 is_ultrametric <- c()
 var_branch_length <- c()
+philr_ncol <- c()
 # compute.brlen(phy, method = "Grafen", power = 1, ...)
 # base.freq()
 
@@ -179,6 +190,7 @@ total_cells <- c()
 
 print("updating tree and table descriptives from phylo objects")
 for (phy in 1:length(phylo_objects)){
+  print(phy)
   #tree
   my_phy <- phylo_objects[[phy]]
   my_tree <- my_phy@phy_tree
@@ -190,6 +202,18 @@ for (phy in 1:length(phylo_objects)){
   is_ultrametric <- c(is_ultrametric, ape::is.ultrametric(my_tree))
   #table
   my_table <- as.data.frame(my_phy@otu_table)
+  if ( phy != 4 && phy < 25 ) {
+    if (any(my_table == 0)){
+      new_table <- my_table + 1
+      my_philr <- philr::philr(df = new_table, tree = my_tree)
+      philr_ncol <- c(philr_ncol, ncol(my_philr))
+    }else{
+      my_philr <- philr::philr(df = my_table, tree = my_tree)
+      philr_ncol <- c(philr_ncol, ncol(my_philr))
+    }
+  }else{
+    philr_ncol <- c(philr_ncol, NA)
+  }
   table_name <- c(table_name, phylo_objects_names[phy])
   ncol_tab <- c(ncol_tab, ncol(my_table))
   nrow_tab <- c(nrow_tab, nrow(my_table))
@@ -211,8 +235,10 @@ print("forming dataframes from tree data")
 my_trees <- data.frame(tree_name,
                        num_nodes,
                        num_tips,
-                       ave_branch_length,
-                       is_ultrametric)
+                       # ave_branch_length,
+                       philr_ncol,
+                       is_ultrametric,
+                       philr_ncol)
 
 my_tables <- data.frame(table_name, ncol_tab, nrow_tab, 
                         has_zeros, total_cells)
@@ -227,40 +253,46 @@ write.table(my_tables,
             row.names = FALSE,
             file = file.path(output_dir, "tables", paste0(project, "table_descriptves", ".csv")))
 
-nested_lists <- list(ref_rand_list, orig_upgma_rand_list, cln_upgma_rand_list)
-
-tree_name <- c()
-branch_length_mean_mean <- c()
-branch_length_mean_var <- c()
-is_ultrametric <- c()
-num_tips <- c()
-num_node <- c()
-
-for (rand_list in nested_lists){
-  print(length(rand_list))
-  tree_name <- c(tree_name, gsub("[^a-zA-Z_]", "", names(rand_list)[1]))
-  rand_num_node <- lapply(rand_list, function(x) {x@phy_tree$Nnode})
-  rand_ave_branch_length <- lapply(rand_list, function(x) {mean(x@phy_tree$edge.length)})
-  rand_var_branch_length <- lapply(rand_list, function(x) {var(x@phy_tree$edge.length)})
-  rand_ntips <- lapply(rand_list, function(x) {length(x@phy_tree$tip.label)})
-  rand_ultra <- lapply(rand_list, function(x) {ape::is.ultrametric(x@phy_tree)})
-  
-  if (length(unique(unlist(rand_ultra))) > 1){ is_ultrametric <- c(is_ultrametric, "Mixed")}
-  else {is_ultrametric <- c(is_ultrametric, unlist(rand_ultra)[1])}
-  
-  branch_length_mean_mean <- c(branch_length_mean_mean, mean(unlist(ave_branch_length)))
-  branch_length_mean_var <- c(branch_length_mean_var, mean(unlist(rand_var_branch_length)))
-  num_tips <- c(num_tips, unlist(rand_ntips)[1])
-  num_node <- c(num_node, unlist(rand_num_node)[1])
-}
-
-rand_tree_desc <- data.frame(tree_name, branch_length_mean_mean,
-                             branch_length_mean_var, is_ultrametric, 
-                             num_tips, num_node)
-write.table(rand_tree_desc,
-            sep = ",",
-            row.names = FALSE,
-            file = file.path(output_dir, "tables", paste0(project, "rand_tree_descriptves", ".csv")))
+# nested_lists <- list(ref_rand_list, orig_upgma_rand_list, cln_upgma_rand_list)
+# 
+# tree_name <- c()
+# branch_length_mean_mean <- c()
+# branch_length_mean_var <- c()
+# is_ultrametric <- c()
+# num_tips <- c()
+# num_node <- c()
+# philr_ncol <- c()
+# 
+# my_ph_ncol <- lapply(ref_rand_list, function(x) {
+#   my_philr <- philr::philr(df=x$otu_table, tree=tx@phy_tree)
+#   return(ncol(my_philr))
+# })
+# 
+# for (rand_list in nested_lists){
+#   print(length(rand_list))
+#   tree_name <- c(tree_name, gsub("[^a-zA-Z_]", "", names(rand_list)[1]))
+#   rand_num_node <- lapply(rand_list, function(x) {x@phy_tree$Nnode})
+#   rand_ave_branch_length <- lapply(rand_list, function(x) {mean(x@phy_tree$edge.length)})
+#   rand_var_branch_length <- lapply(rand_list, function(x) {var(x@phy_tree$edge.length)})
+#   rand_ntips <- lapply(rand_list, function(x) {length(x@phy_tree$tip.label)})
+#   rand_ultra <- lapply(rand_list, function(x) {ape::is.ultrametric(x@phy_tree)})
+#   
+#   if (length(unique(unlist(rand_ultra))) > 1){ is_ultrametric <- c(is_ultrametric, "Mixed")}
+#   else {is_ultrametric <- c(is_ultrametric, unlist(rand_ultra)[1])}
+#   
+#   branch_length_mean_mean <- c(branch_length_mean_mean, mean(unlist(ave_branch_length)))
+#   branch_length_mean_var <- c(branch_length_mean_var, mean(unlist(rand_var_branch_length)))
+#   num_tips <- c(num_tips, unlist(rand_ntips)[1])
+#   num_node <- c(num_node, unlist(rand_num_node)[1])
+# }
+# 
+# rand_tree_desc <- data.frame(tree_name, branch_length_mean_mean,
+#                              branch_length_mean_var, is_ultrametric, 
+#                              num_tips, num_node)
+# write.table(rand_tree_desc,
+#             sep = ",",
+#             row.names = FALSE,
+#             file = file.path(output_dir, "tables", paste0(project, "rand_tree_descriptves", ".csv")))
 
 
 # rand_tree_desc <- data.frame(tree_name <- gsub("[^a-zA-Z]", "", names(ref_rand_list)[1]),
