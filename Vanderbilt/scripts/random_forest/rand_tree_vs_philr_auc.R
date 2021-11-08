@@ -558,17 +558,19 @@ for (mta in 1:length(unique(all_plot_data$metadata_col))){
                       "cln_upgma_taxa_only", "raw_data", "lognorm", "alr", 
                       "clr", "Silva_ref_orig_taxa_only")
     
-    not_none_tw <- which(plot_data$taxa_weight != "uniform" )
-    not_none_iw <- which(plot_data$ilr_weight != "uniform" )
-    philr_ds <- unique(plot_data$trans_group[c(not_none_tw,not_none_iw)] ) 
-    non_philr_ds_pd <- plot_data[!plot_data$trans_group %in% philr_ds,]
+    not_uniform_tw <- which(plot_data$taxa_weight != "uniform" )
+    not_uniform_iw <- which(plot_data$ilr_weight != "uniform" )
+    philr_ds <- unique(plot_data$trans_group[c(not_uniform_tw,not_uniform_iw)] ) #pulls out philr only data
+    non_philr_ds <- unique(plot_data$trans_group[ !(plot_data$trans_group %in% philr_ds)])
+    non_philr_ds_pd <- subset(plot_data, trans_group %in% non_philr_ds)
+    philr_ds_pd <- subset(plot_data, trans_group %in% philr_ds)
     
-    philr_ds_pd <- plot_data[!plot_data$trans_group %in% non_philr_ds,]
+    new_pd <- rbind(non_philr_ds_pd, philr_ds_pd)
     
     for(tw in unique(plot_data$taxa_weight)){
     my_phil_ds_pd <- philr_ds_pd[philr_ds_pd$taxa_weight == tw,]
-    # new_pd <- rbind(non_philr_ds_pd, my_phil_ds_pd)
-    g <- ggplot2::ggplot(my_phil_ds_pd, aes(y = all_auc, x = trans_group)) + 
+    new_pd <- rbind(non_philr_ds_pd, philr_ds_pd)
+    g <- ggplot2::ggplot(new_pd, aes(y = all_auc, x = trans_group)) + 
       ggplot2::geom_boxplot() +
       ggplot2::geom_jitter(aes(color = as.factor(ilr_weight)), size = 0.75) +
       ggplot2::ggtitle(paste(project, my_meta, "only taxa weight:", tw, "| col by ilr")) +
@@ -602,3 +604,62 @@ for (mta in 1:length(unique(all_plot_data$metadata_col))){
 
 dev.off()
 
+pdf(file = file.path(output_dir, "graphics", paste0("new_bp_", main_output_label, ".pdf")))
+for (mta in 1:length(unique(all_plot_data$metadata_col))){
+  my_meta <- as.character(unique(all_plot_data$metadata_col)[mta])
+  message(my_meta)
+  
+  plot_data <- all_plot_data[all_plot_data$metadata_col == my_meta,]
+
+  not_uniform_tw <- which(plot_data$taxa_weight != "uniform" )
+  not_uniform_iw <- which(plot_data$ilr_weight != "uniform" )
+  philr_ds <- unique(plot_data$trans_group[c(not_uniform_tw,not_uniform_iw)] ) #pulls out philr only data
+  non_philr_ds <- unique(plot_data$trans_group[ !(plot_data$trans_group %in% philr_ds)])
+  non_philr_ds_pd <- subset(plot_data, trans_group %in% non_philr_ds)
+  philr_ds_pd <- subset(plot_data, trans_group %in% philr_ds)
+  
+  new_pd <- rbind(non_philr_ds_pd, philr_ds_pd)
+  # trans_order <- unique(new_pd$trans_group)
+  # new_pd$trans_group <- factor(new_pd$trans_group, levels = trans_order)
+  
+  # my_means <- c()
+  # for (tg in 1:length(unique(new_pd$trans_group))){
+  #   trans_g <- new_pd$trans_group[tg]
+  #   my_vals <- which(new_pd$trans_group == trans_g)
+  #   my_means <- c(my_means, mean(new_pd$all_auc[my_vals]))
+  #   names(my_means)[tg] <- trans_g
+  # }
+  
+  for(tw in unique(plot_data$taxa_weight)){
+    for(iw in unique(plot_data$ilr_weight)){
+      philr_pd_tw_iw <- subset(philr_ds_pd, taxa_weight == tw & ilr_weight == iw)
+      jitter_pd <- rbind(non_philr_ds_pd, philr_pd_tw_iw)
+      # jitter_pd$trans_group <- factor(jitter_pd$trans_group, levels = trans_order)
+      #need to show means from new_pd, but show jitter of tw and iw
+      #or could just show selected points but show overal mean for each tw and iw
+      g <- ggplot2::ggplot(new_pd, aes(y = all_auc, x = trans_group)) + 
+        ggplot2::geom_boxplot() +
+        ggplot2::geom_jitter(data = jitter_pd, color = "blue", size = 0.7) +
+        ggplot2::ggtitle(label = paste(project, my_meta, "taxa weight:", tw, "ilr_weight:", iw)) +
+        # ggplot2::ggtitle( label = paste("num_tg:", length(unique(new_pd$trans_group)))) +
+        ggplot2::theme_classic() +
+        ggplot2::scale_x_discrete(guide = guide_axis(angle = 90)) +
+        ggplot2::ylab("AUC") +
+        ggplot2::xlab("Tree type")
+      print(g)
+      
+      # g <- ggplot2::ggplot(plot_data, aes(y = all_auc, x = trans_group)) + 
+      #   ggplot2::geom_boxplot() +
+      #   ggplot2::geom_jitter( color = "red", size = 0.7) +
+      #   ggplot2::ggtitle(label = paste(project, my_meta, "taxa weight:", tw, "ilr_weight:", iw)) +
+      #   # ggplot2::ggtitle( label = paste("num_tg:", length(unique(new_pd$trans_group)))) +
+      #   ggplot2::theme_classic() +
+      #   ggplot2::scale_x_discrete(guide = guide_axis(angle = 90)) +
+      #   ggplot2::ylab("AUC") +
+      #   ggplot2::xlab("Tree type")
+      # print(g)
+    }
+  }
+}
+
+dev.off()
