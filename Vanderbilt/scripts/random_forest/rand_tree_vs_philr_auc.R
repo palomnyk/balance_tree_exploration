@@ -294,7 +294,7 @@ while (counter < num_cycles & skips < 5){
                                              test_index = test_index,
                                              philr_ilr_weights = philr_ilr_weights,
                                              philr_taxa_weights = philr_taxa_weights)
-      rand_plot_data$trans_group <- rep("orig_upgma_rand", nrow(rand_plot_data))
+      rand_plot_data$trans_group <- rep("orig_ref_rand", nrow(rand_plot_data))
       rand_plot_data$random_batch <- rep(rand_ps, nrow(rand_plot_data))
       all_plot_data <- rbind(all_plot_data, rand_plot_data)
     }
@@ -619,8 +619,7 @@ for (mta in 1:length(unique(all_plot_data$metadata_col))){
   philr_ds_pd <- subset(plot_data, trans_group %in% philr_ds)
   
   new_pd <- rbind(non_philr_ds_pd, philr_ds_pd)
-  # trans_order <- unique(new_pd$trans_group)
-  # new_pd$trans_group <- factor(new_pd$trans_group, levels = trans_order)
+  new_pd$trans_group <- factor(new_pd$trans_group, levels = c(non_philr_ds, philr_ds))
   
   # my_means <- c()
   # for (tg in 1:length(unique(new_pd$trans_group))){
@@ -634,12 +633,13 @@ for (mta in 1:length(unique(all_plot_data$metadata_col))){
     for(iw in unique(plot_data$ilr_weight)){
       philr_pd_tw_iw <- subset(philr_ds_pd, taxa_weight == tw & ilr_weight == iw)
       jitter_pd <- rbind(non_philr_ds_pd, philr_pd_tw_iw)
-      # jitter_pd$trans_group <- factor(jitter_pd$trans_group, levels = trans_order)
+      jitter_pd$trans_group <- factor(jitter_pd$trans_group, levels = c(non_philr_ds, philr_ds))
       #need to show means from new_pd, but show jitter of tw and iw
       #or could just show selected points but show overal mean for each tw and iw
       g <- ggplot2::ggplot(new_pd, aes(y = all_auc, x = trans_group)) + 
         ggplot2::geom_boxplot() +
-        ggplot2::geom_jitter(data = jitter_pd, color = "blue", size = 0.7) +
+        ggplot2::geom_jitter(data = jitter_pd, color = "blue", size = 0.7,
+                             width = 0.2, height = 0.001) +
         ggplot2::ggtitle(label = paste(project, my_meta, "taxa weight:", tw, "ilr_weight:", iw)) +
         # ggplot2::ggtitle( label = paste("num_tg:", length(unique(new_pd$trans_group)))) +
         ggplot2::theme_classic() +
