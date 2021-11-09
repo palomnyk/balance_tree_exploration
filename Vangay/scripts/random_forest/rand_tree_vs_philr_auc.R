@@ -302,14 +302,14 @@ while (counter < num_cycles & skips < 5){
   train_index <- sample(x = nrow(metadata), size = 0.75*nrow(metadata), replace=FALSE)
   test_index <- c(1:nrow(metadata))[!(1:nrow(metadata) %in% train_index)]
   should_break <- FALSE
-  for(mta in rf_cols){
-    if( length(unique(metadata[,mta][test_index])) != nlevels(metadata[,mta][test_index]) |
-        length(unique(metadata[,mta][train_index])) != nlevels(metadata[,mta][train_index])){
-      print("levels not equal")
-      should_break <- TRUE
-      skips = skips + 1
-    }
-  }
+  # for(mta in rf_cols){
+  #   if( length(unique(metadata[,mta][test_index])) != nlevels(metadata[,mta][test_index]) |
+  #       length(unique(metadata[,mta][train_index])) != nlevels(metadata[,mta][train_index])){
+  #     print("levels not equal")
+  #     should_break <- TRUE
+  #     skips = skips + 1
+  #   }
+  # }
   if (should_break == FALSE){
     print(paste("counter:", counter, " making ref cln random AUC"))
     for( rand_ps in 1:length(cln_ref_rand_list)){
@@ -441,13 +441,14 @@ while (counter < num_cycles & skips < 5){
     all_plot_data <- rbind(all_plot_data, my_plot_data)
     
     print(paste("counter:", counter, " making seq only orig ref (no trees) AUC"))
-    my_plot_data <- make_ilr_taxa_auc_df( ps_obj = ref_tree_ps,
+    my_plot_data <- make_ilr_taxa_auc_df( ps_obj = as.data.frame(ref_tree_ps@otu_table),
                                           metadata_cols = rf_cols,
                                           metadata = metadata,
                                           train_index = train_index,
                                           test_index = test_index,
                                           philr_ilr_weights = philr_ilr_weights,
-                                          philr_taxa_weights = philr_taxa_weights)
+                                          philr_taxa_weights = philr_taxa_weights,
+                                          just_otu = TRUE)
     my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
     my_plot_data$trans_group <- rep("orig_ref_taxa_only", nrow(my_plot_data))
     all_plot_data <- rbind(all_plot_data, my_plot_data)
