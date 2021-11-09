@@ -113,7 +113,6 @@ library("philr")
 library("ggplot2")
 library("randomForest")
 library("ape")
-library("reshape2")
 print("finished loading libraries")
 
 ##-Establish directory layout---------------------------------------##
@@ -399,13 +398,14 @@ while (counter < num_cycles & skips < 5){
     all_plot_data <- rbind(all_plot_data, my_plot_data)
     
     print(paste("counter:", counter, " making seq only orig ref (no trees) AUC"))
-    my_plot_data <- make_ilr_taxa_auc_df( ps_obj = ref_tree_ps,
-                                              metadata_cols = rf_cols,
-                                              metadata = metadata,
-                                              train_index = train_index,
-                                              test_index = test_index,
-                                              philr_ilr_weights = philr_ilr_weights,
-                                              philr_taxa_weights = philr_taxa_weights)
+    my_plot_data <- make_ilr_taxa_auc_df( ps_obj = as.data.frame(ref_tree_ps@otu_table),
+                                          metadata_cols = rf_cols,
+                                          metadata = metadata,
+                                          train_index = train_index,
+                                          test_index = test_index,
+                                          philr_ilr_weights = philr_ilr_weights,
+                                          philr_taxa_weights = philr_taxa_weights,
+                                          just_otu = TRUE)
     my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
     my_plot_data$trans_group <- rep("orig_ref_taxa_only", nrow(my_plot_data))
     all_plot_data <- rbind(all_plot_data, my_plot_data)
