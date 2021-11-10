@@ -398,7 +398,7 @@ while (counter < num_cycles & skips < 5){
     all_plot_data <- rbind(all_plot_data, my_plot_data)
     
     print(paste("counter:", counter, " making seq only orig ref (no trees) AUC"))
-    my_plot_data <- make_ilr_taxa_auc_df( ps_obj = as.data.frame(ref_tree_ps@otu_table),
+    my_plot_data <- make_ilr_taxa_auc_df( ps_obj = as.data.frame(ref_ps@otu_table),
                                           metadata_cols = rf_cols,
                                           metadata = metadata,
                                           train_index = train_index,
