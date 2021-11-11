@@ -89,14 +89,18 @@ if (file.exists(file.path(output_dir,"r_objects", "dada2_dds.rds"))) {
 }
 
 for (i in index:length(filtFs)){
-  print(paste0("On run", i, " of ", length(filtFs), "for dada2:dada"))
-  f <- filtFs[i]
-  errF <- dada2::learnErrors(f, multithread = FALSE)
-  derepFs <- dada2::derepFastq(f, verbose=TRUE)
-  dadaFs <- dada2::dada(derepFs, err=errF, multithread=FALSE)
-  dds[[index]] <- dadaFs
-  saveRDS(dds, file = file.path(output_dir,"r_objects", "dada2_dds.rds"))
-  index <- index + 1
+  if (index < length(filtFs)){
+    print(paste0("On run", i, " of ", length(filtFs), "for dada2::dada"))
+    f <- filtFs[i]
+    errF <- dada2::learnErrors(f, multithread = FALSE)
+    derepFs <- dada2::derepFastq(f, verbose=TRUE)
+    dadaFs <- dada2::dada(derepFs, err=errF, multithread=FALSE)
+    dds[[index]] <- dadaFs
+    saveRDS(dds, file = file.path(output_dir,"r_objects", "dada2_dds.rds"))
+    index <- index + 1
+  }else{
+    print("Already completed dada2.")
+  }
 }
 names(dds) <- sampleNames
 
