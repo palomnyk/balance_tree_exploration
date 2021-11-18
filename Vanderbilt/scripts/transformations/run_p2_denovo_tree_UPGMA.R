@@ -18,7 +18,8 @@ my_args <- paste(
   "-p", project,
   "-m", metad,
   "-l", ",",
-  "-r", "Run"
+  "-r", "Run",
+  "-s", "_1000_sd_filtered"
 )
 
 ##-Make and run command---------------------------------------------##
