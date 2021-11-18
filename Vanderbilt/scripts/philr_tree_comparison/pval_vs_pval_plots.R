@@ -42,14 +42,14 @@ tree_philr_node_pvals <- function(philr_df, phylo_tree) {
   return(pvals)
 }
 
-log10_pval_pval_plot <- function(pvals_1, label_1, pvals_2, label_2, meta_c) {
+log10_pval_pval_plot <- function(pvals_1, label_1, pvals_2, label_2, meta_c, colmn_nam) {
   # function for making pval plots
   max_len <- min(length(pvals_1), length(pvals_2))
   plot_data <- data.frame(pval1 = sort(log10(sample(pvals_1, max_len, replace = F))), 
                           pval2 = sort(log10(sample(pvals_2, max_len, replace = F))))
   my_cor <- cor(plot_data$pval1, plot_data$pval2)
   g <- ggplot2::ggplot(data = plot_data, aes(x = pval1, y = pval2)) +  
-    ggplot2::ggtitle(paste("log10(pval) v  log10(pval)", "Rsq:", round(my_cor, 4),"meta:", meta_c)) +
+    ggplot2::ggtitle(paste("log10(pval) v  log10(pval)", "Rsq:", round(my_cor, 4),"meta:", colmn_nam)) +
     ggplot2::geom_point() +
     ggplot2::geom_abline(intercept = 0, slope = 1) +
     ggplot2::theme_classic() +
@@ -59,6 +59,13 @@ log10_pval_pval_plot <- function(pvals_1, label_1, pvals_2, label_2, meta_c) {
   return(g)
 }
 
+philr_by_meta_pvals <- function(philr_obj, meta_col) {
+  library("philr")
+  my_philr <- philr::philr(df = philr_obj@otu_table,
+                           tree = philr_obj@phy_tree)
+  pvals <- apply(my_philr, 2, function(x) {t.test(x ~ meta_col)$p.value})
+  return(pvals)
+}
 ##-Load Depencencies------------------------------------------------##
 # if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
 # if (!requireNamespace("ape", quietly = TRUE)) BiocManager::install("ape")
@@ -188,83 +195,87 @@ print("making philr tables")
 philr_taxa_weights <- c("uniform","gm.counts","anorm","anorm.x.gm.counts","enorm","enorm.x.gm.counts")
 philr_ilr_weights <- c("uniform","blw","blw.sqrt","mean.descendants")
 
-metad_col <- metadata$Age
+metad_num <- 7
+metad_col <- metadata[,7]
+metad_nam <- colnames(metadata)[metad_num]
 
-ref_ps_clean_philr <- philr::philr(df = ref_ps_clean@otu_table,
-                         tree = ref_ps_clean@phy_tree)
-ref_ps_clean_pvals <- apply(ref_ps_clean_philr, 2, function(x) {t.test(x, metad_col)$p.value})
+# philr_ds <- list(cln_denovo_tree_ps, ref_ps, ref_ps_clean)
+# names_philr_ds <- c("cln_upgma", "ref_orig", "ref_clean")
 
-test_pvals <- c()
 
-for (i in 1:ncol())
+# philr_pvals <- lapply(philr_ds, function(x){return(philr_by_meta_pvals(x,metad_col))})
+
+ref_ps_clean_pvals <- philr_by_meta_pvals(ref_ps_clean, metad_col)
+
+# test_pvals <- apply(ref_ps_clean_philr, 2, function(x) {t.test(x ~ metad_col)$p.value})
 
 cln_denovo_philr <- philr::philr(df = cln_denovo_tree_ps@otu_table,
                                    tree = cln_denovo_tree_ps@phy_tree)
-cln_denovo_pvals <- apply(cln_denovo_philr, 2, function(x) {t.test(x, metad_col)$p.value})
+cln_denovo_pvals <- apply(cln_denovo_philr, 2, function(x) {t.test(x ~ metad_col)$p.value})
 
 ref_ps_orig_philr <- philr::philr(df = ref_ps@otu_table + 1,
                             tree = ref_ps@phy_tree)
-ref_ps_orig_pvals <- apply(ref_ps_orig_philr, 2, function(x) {t.test(x, metad_col)$p.value})
+ref_ps_orig_pvals <- apply(ref_ps_orig_philr, 2, function(x) {t.test(x ~ metad_col)$p.value})
 
 pdf(file = file.path(output_dir, "graphics", "pval_vs_pval_plots.pdf"))
 hist(ref_ps_clean_pvals, breaks = 50)
 hist(ref_ps_orig_pvals, breaks = 50)
 hist(cln_denovo_pvals, breaks = 50)
 
-my_stool <- which(metadata$type == "STOOL")
-my_swab <- which(metadata$type == "SWAB")
-
-my_table <- ref_ps_clean_philr
-
-my_stool_df <- ref_ps_clean_philr[my_stool,]
-my_swab_df <- ref_ps_clean_philr[my_swab,]
-
-hist(my_stool_df, breaks = 50)
-hist(my_swab_df, breaks = 50)
-
-num_col_used <- 10
-num_factors <- length(unique(metadata$type))
-
-my_values <- list()
-my_label <- c()
-
-index <- 1
-for (i in 1:ncol(my_table)){
-  my_stool_df <- my_table[my_stool,i]
-  my_swab_df <- my_table[my_swab,i]
-  my_values[index] <- data.frame(my_stool_df)
-  my_label[index] <- paste0("stool_n", i)
-  index <- index + 1
-  my_values[index] <- data.frame(my_swab_df)
-  my_label[index] <- paste0("swab_n", i)
-  index <- index + 1
-}
-names(my_values) <- my_label
-boxplot(my_values, col = c("red", "blue"), las=2,
-        main = paste(project, "ref_ps_clean_philr, Type"))
-
-#doing sex now
-my_stool <- which(metadata$sex == "male")
-my_swab <- which(metadata$sex == "female")
-
-my_table <- ref_ps_clean_philr
-my_values <- list()
-my_label <- c()
-
-index <- 1
-for (i in 1:ncol(my_table)){
-  my_stool_df <- my_table[my_stool,i]
-  my_swab_df <- my_table[my_swab,i]
-  my_values[index] <- data.frame(my_stool_df)
-  my_label[index] <- paste0("male_n", i)
-  index <- index + 1
-  my_values[index] <- data.frame(my_swab_df)
-  my_label[index] <- paste0("female_n", i)
-  index <- index + 1
-}
-names(my_values) <- my_label
-boxplot(my_values, col = c("red", "blue"), las=2,
-        main = paste(project, "ref_ps_clean_philr, Sex"))
+# my_stool <- which(metadata$type == "STOOL")
+# my_swab <- which(metadata$type == "SWAB")
+# 
+# my_table <- ref_ps_clean_philr
+# 
+# my_stool_df <- ref_ps_clean_philr[my_stool,]
+# my_swab_df <- ref_ps_clean_philr[my_swab,]
+# 
+# hist(my_stool_df, breaks = 50)
+# hist(my_swab_df, breaks = 50)
+# 
+# num_col_used <- 10
+# num_factors <- length(unique(metadata$type))
+# 
+# my_values <- list()
+# my_label <- c()
+# 
+# index <- 1
+# for (i in 1:ncol(my_table)){
+#   my_stool_df <- my_table[my_stool,i]
+#   my_swab_df <- my_table[my_swab,i]
+#   my_values[index] <- data.frame(my_stool_df)
+#   my_label[index] <- paste0("stool_n", i)
+#   index <- index + 1
+#   my_values[index] <- data.frame(my_swab_df)
+#   my_label[index] <- paste0("swab_n", i)
+#   index <- index + 1
+# }
+# names(my_values) <- my_label
+# boxplot(my_values, col = c("red", "blue"), las=2,
+#         main = paste(project, "ref_ps_clean_philr, Type"))
+# 
+# #doing sex now
+# my_stool <- which(metadata$sex == "male")
+# my_swab <- which(metadata$sex == "female")
+# 
+# my_table <- ref_ps_clean_philr
+# my_values <- list()
+# my_label <- c()
+# 
+# index <- 1
+# for (i in 1:ncol(my_table)){
+#   my_stool_df <- my_table[my_stool,i]
+#   my_swab_df <- my_table[my_swab,i]
+#   my_values[index] <- data.frame(my_stool_df)
+#   my_label[index] <- paste0("male_n", i)
+#   index <- index + 1
+#   my_values[index] <- data.frame(my_swab_df)
+#   my_label[index] <- paste0("female_n", i)
+#   index <- index + 1
+# }
+# names(my_values) <- my_label
+# boxplot(my_values, col = c("red", "blue"), las=2,
+#         main = paste(project, "ref_ps_clean_philr, Sex"))
 
 
 # for (i in 1:ncol(my_table)){
@@ -276,8 +287,8 @@ boxplot(my_values, col = c("red", "blue"), las=2,
 #   }
 # }
 
-for (clmn in 1:ncol(ref_ps_clean_philr)){
-}
+# for (clmn in 1:ncol(ref_ps_clean_philr)){
+# }
 #verify qqplots by hand (histogram or node by node)
 #Are these pvals reasonable?
 #check against other metadata columns
@@ -285,23 +296,23 @@ for (clmn in 1:ncol(ref_ps_clean_philr)){
 stats::qqplot(ref_ps_clean_pvals, ref_ps_orig_pvals,
               main = paste("qqplot", "ref_ps_clean_pvals", "ref_ps_orig_philr"))
 log10_pval_pval_plot(ref_ps_orig_pvals, "ref_ps_orig_pvals",
-                     ref_ps_clean_pvals, "ref_ps_clean_pvals", metad_col)
+                     ref_ps_clean_pvals, "ref_ps_clean_pvals", metad_col, metad_nam)
 stats::qqplot(ref_ps_clean_pvals, cln_denovo_pvals,
               main = paste("qqplot", "ref_ps_clean_pvals", "cln_denovo_pvals"))
 log10_pval_pval_plot(ref_ps_clean_pvals, "ref_ps_clean_pvals",
-                     cln_denovo_pvals, "cln_denovo_pvals", metad_col)
+                     cln_denovo_pvals, "cln_denovo_pvals", metad_col, metad_nam)
 stats::qqplot(ref_ps_orig_pvals, cln_denovo_pvals,
               main = paste("qqplot", "ref_ps_clean_pvals", "cln_denovo_pvals"))
 log10_pval_pval_plot(cln_denovo_pvals, "cln_denovo_pvals",
-                     ref_ps_clean_pvals, "ref_ps_clean_pvals", metad_col)
+                     ref_ps_clean_pvals, "ref_ps_clean_pvals", metad_col, metad_nam)
 
 print("Generate random tree p values")
 ref_cln_rand_pvals <- lapply(cln_ref_rand_list, function(x) {
-  apply(x@otu_table, 2, function(y) {t.test(y, metad_col)$p.value})})
+  philr_by_meta_pvals(x, metad_col)})
 cln_upgma_rand_pvals <- lapply(cln_upgma_rand_list, function(x) {
-  apply(x@otu_table, 2, function(y) {t.test(y, metad_col)$p.value})})
+  philr_by_meta_pvals(x, metad_col)})
 ref_orig_rand_pvals <- lapply(orig_ref_rand_list, function(x) {
-  apply(x@otu_table, 2, function(y) {t.test(y, metad_col)$p.value})})
+  philr_by_meta_pvals(x, metad_col)})
 
 print("Generate random tree p values")
 cln_upgma_vs_ref_cln_rand_cor <- lapply(ref_cln_rand_pvals, function(x){
@@ -374,7 +385,7 @@ plot_data <- data.frame(bp_labels, cor_vals)
 
 g <- ggplot2::ggplot(data = plot_data, aes(y = bp_labels, x = cor_vals)) +  
   ggplot2::geom_boxplot() +
-  ggplot2::ggtitle(paste(project, "Random trees vs non-random-trees, metad:", metad_col)) +
+  ggplot2::ggtitle(paste(project, "Random trees vs non-random-trees, metad:", metad_name)) +
   # ggplot2::geom_hline(yintercept = 0) +
   ggplot2::theme(axis.text.x = element_text(angle = 45),
                  axis.text.y = element_text(angle = 45)) +
