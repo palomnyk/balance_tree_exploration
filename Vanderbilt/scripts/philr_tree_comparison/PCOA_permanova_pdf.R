@@ -35,7 +35,7 @@ source(file.path(home_dir, "r_libraries", "table_manipulations.R"))
 ##-Set up constants-------------------------------------------------##
 rf_cols <- 3:7
 main_output_label <- paste0(project, "_", "PCOA")
-dist_metric <- "bray"
+dist_metric <- "euclidean"
 
 ##-Import tables and data preprocessing-----------------------------##
 asv_table <- data.frame(readRDS(file.path(output_dir, "r_objects", "ForwardReads_DADA2.rds")))
@@ -62,10 +62,12 @@ cln_denovo_tree_ps <- phyloseq::phyloseq( otu_table(clean_den_otu, taxa_are_rows
                                           phy_tree(ape::makeNodeLabel(phy_tree(denovo_tree_ps@phy_tree))),
                                           tax_table(denovo_tree_ps@tax_table), 
                                           sample_data(denovo_tree_ps@sam_data))
-denovo_tree_ps <- transform_sample_counts(denovo_tree_ps, function(x) x + 1 )
+denovo_tree_ps <- phyloseq::transform_sample_counts(denovo_tree_ps, function(x) x + 1 )
+
 phy_tree(ref_ps_clean) <- makeNodeLabel(phy_tree(ref_ps_clean), method="number", prefix='n')
 phy_tree(cln_denovo_tree_ps) <- makeNodeLabel(phy_tree(cln_denovo_tree_ps), method="number", prefix='n')
-
+ref_ps <- phyloseq::transform_sample_counts(ref_ps, function(x) x + 1 )
+phy_tree(ref_ps) <- philr::makeNodeLabel(phy_tree(ref_ps), method="number", prefix='n')
 ##-Random num seed--------------------------------------------------##
 set.seed(36)
 print("making random trees")
@@ -159,19 +161,20 @@ nonphilr_ds <- list(asv_table, my_alr, my_clr, ln_asv_tab,
 names_nonphilr_ds <- c("asv_table", "alr", "clr", "lognorm", "cln_upgma_count_table",
                            "ref_orig_count_table", "ref_clean_count_table")
 
-print("removing zeros from re_ps")
-clean_otu <- data.frame(ref_ps@otu_table@.Data)
-clean_otu <- clean_otu + 1
-ref_ps <- phyloseq::phyloseq( otu_table(clean_otu, taxa_are_rows = F), 
-                                    phy_tree(ref_ps@phy_tree),
-                                    tax_table(ref_ps@tax_table), 
-                                    sample_data(ref_ps@sam_data))
+# print("removing zeros from re_ps")
+# clean_otu <- data.frame(ref_ps@otu_table@.Data)
+# clean_otu <- clean_otu + 1
+# ref_ps <- phyloseq::phyloseq( otu_table(clean_otu, taxa_are_rows = F), 
+#                                     phy_tree(ref_ps@phy_tree),
+#                                     tax_table(ref_ps@tax_table), 
+#                                     sample_data(ref_ps@sam_data))
 
 philr_ds <- list(cln_denovo_tree_ps, ref_ps, ref_ps_clean)
 names_philr_ds <- c("cln_upgma", "ref_orig", "ref_clean")
 
-
-permanova_pval <- c()
+print("Initializing empty vectors for permanova table")
+perma_pval <- c()
+perma_r2 <- c()
 part_weight <- c()
 ilr_weight <- c()
 metadata_col <- c()
@@ -186,18 +189,26 @@ for (ds in 1:length(nonphilr_ds)) {
   my_table <- nonphilr_ds[[ds]]
   my_ds_name <- names_nonphilr_ds[ds]
   ##---------------------PCOA transform and plots---------------------##
-  my_dist <- stats::dist(my_table, method = dist_metric)
+  # my_dist <- stats::dist(my_table, method = dist_metric)
   my_pcoa <- phyloseq::ordinate(otu_table(my_table, taxa_are_rows = F), 
-                                method = 'PCoA', distance = my_dist)
-  my_MDS <- data.frame(my_pcoa$vectors)
+                                method = 'PCoA', distance = dist_metric)
+  my_MDS <- data.frame(my_pcoa$vectors)[,1:2]
+
+  # my_pcoa1 <- vegan::capscale(my_table~1,distance = dist_metric)
+  # my_MDS1 <- data.frame(my_pcoa1$pCCA)
+  
+  # my_MDS1 <- vegan::eigenvals(my_pcoa1)
+  
+  # plot(my_MDS$MDS1, my_MDS$MDS2)
   
   for (mta in rf_cols){
     my_meta <- names(metadata)[mta]
     print(my_meta)
     
-    perm <- vegan::adonis2(formula = my_MDS$Axis.1 ~ my_MDS$Axis.2, method = dist_metric)
+    perm <- vegan::adonis2(formula = my_MDS ~ metadata[,mta], method = dist_metric)
     
-    permanova_pval <- c(permanova_pval, perm$`Pr(>F)`)
+    perma_pval <- c(perma_pval, perm$`Pr(>F)`[1])
+    perma_r2 <- c(perma_r2, perm$R2[1])
     nonphilr_pg_num <- c(nonphilr_pg_num, index)
     philr_pg_num <- c(philr_pg_num, 0)
     part_weight <- c(part_weight, 0)
@@ -212,10 +223,7 @@ for (ds in 1:length(nonphilr_ds)) {
       geom_point(aes(col = metadata[,my_meta])) +
       ggplot2::ggtitle(label = paste(project, my_ds_name, my_meta, perm$`Pr(>F)`)) +
       ggplot2::theme_classic() +
-      ggplot2::scale_x_discrete(guide = guide_axis(angle = 90)) +
-      ggplot2::ylab("AUC") +
-      ggplot2::xlab("Tree type")
-    
+      ggplot2::scale_x_discrete(guide = guide_axis(angle = 90))
     print(g)
   }
 }  
@@ -232,18 +240,19 @@ for(tw in philr_taxa_weights){
                                ilr.weights = iw)
       my_ds_name <- names_philr_ds[ds]
       ##---------------------PCOA transform and plots---------------------##
-      my_dist <- stats::dist(my_table, method=dist_metric)
+      # my_dist <- stats::dist(my_table, method=dist_metric)
       my_pcoa <- phyloseq::ordinate(otu_table(my_table, taxa_are_rows = F), 
-                                    method = 'PCoA', distance=my_dist)
-      my_MDS <- data.frame(my_pcoa$vectors)
+                                    method = 'PCoA', distance = dist_metric)
+      my_MDS <- data.frame(my_pcoa$vectors)[,1:2]
       
       for (mta in rf_cols){
         my_meta <- names(metadata)[mta]
         print(my_meta)
         
-        perm <- vegan::adonis2(formula = my_MDS$Axis.1 ~ my_MDS$Axis.2, method = dist_metric)
+        perm <- vegan::adonis2(formula = my_MDS ~ metadata[,mta], method = dist_metric)
         
-        permanova_pval <- c(permanova_pval, perm$`Pr(>F)`)
+        perma_pval <- c(perma_pval, perm$`Pr(>F)`[1])
+        perma_r2 <- c(perma_r2, perm$R2[1])
         part_weight <- c(part_weight, tw)
         ilr_weight <- c(ilr_weight, iw)
         metadata_col <- c(metadata_col, my_meta)
@@ -258,10 +267,7 @@ for(tw in philr_taxa_weights){
           geom_point(aes(col = metadata[,my_meta])) +
           ggplot2::ggtitle(label = paste(project, my_ds_name, my_meta, "pw:", tw, "iw:", iw, perm$`Pr(>F)`)) +
           ggplot2::theme_classic() +
-          ggplot2::scale_x_discrete(guide = guide_axis(angle = 90)) +
-          ggplot2::ylab("AUC") +
-          ggplot2::xlab("Tree type")
-        
+          ggplot2::scale_x_discrete(guide = guide_axis(angle = 90))
         print(g)
       }
     }  
@@ -269,10 +275,10 @@ for(tw in philr_taxa_weights){
 }
 dev.off()
 
-dFrame <- data.frame(permanova_pval, part_weight, ilr_weight, 
+dFrame <- data.frame(perma_pval, perma_r2, part_weight, ilr_weight, 
                      metadata_col, transformation, distance_metric,
                      philr_pg_num, nonphilr_pg_num)
-dFrame$adj_pval <- p.adjust( dFrame$permanova_pval, method = "BH" )	
+dFrame$adj_pval <- p.adjust(dFrame$perma_pval, method = "BH" )	
 dFrame <- dFrame [order(dFrame$adj_pval),]
 
 write.table(dFrame, file=file.path(output_dir, "tables", paste0(main_output_label, "_", dist_metric, ".tsv")), 
