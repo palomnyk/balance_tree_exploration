@@ -64,7 +64,7 @@ metad_cols <- 1:2
 
 #Plot shannon diversity against log10(total_seqs)
 #Plot other normalization methods: otu log 100 and alr and clr 
-my_ds_names <- c( "raw seqs", "clr(raw seqs)", "lognorm", "philr ref", "DESeq2", "ALDEx2")
+my_ds_names <- c( "raw seqs", "clr", "lognorm", "philr ref", "DESeq2", "ALDEx2")
 min_seq_depths <- c(0, 500, 1000, 5000, 10000, 20000, 40000)
 mds_depth <- 5
 
@@ -130,6 +130,7 @@ for(s in 1:length(min_seq_depths)){
     print(my_ds_names[ds])
     my_table <- as.data.frame(my_datasets[ds])
     zeros <- sum(my_table == 0)
+    print(dim(my_table))
     if (any(my_table) < 0){
       print("my_table has negative numbers")
       y_table <- my_table + abs(min(my_table))
@@ -138,7 +139,6 @@ for(s in 1:length(min_seq_depths)){
       print("no negatives in my_table")
       shan_div <- vegan::diversity(my_table)
     }
-    print(dim(my_table))
     ##-Create a PCA-----------------------------------------------------##
     my_prcmp <- prcomp(my_table, 
                        center = TRUE,
