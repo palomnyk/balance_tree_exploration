@@ -1,5 +1,5 @@
 # Author: Aaron Yerke (aaronyerke@gmail.com)
-# Script for creating taxo anova pvalues.
+# Script for creating taxa anova pvalues.
 # This was helepful: https://github.com/jsilve24/philr/blob/master/vignettes/philr-intro.Rmd#L142
 
 rm(list = ls()) #clear workspace
