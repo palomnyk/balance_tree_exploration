@@ -29,35 +29,6 @@ meta_col <- "host_phenotype"
 source(file.path(home_dir, "r_libraries", "statistical_functions.R"))
 source(file.path(home_dir, "r_libraries", "table_manipulations.R"))
 
-SNF_fun <- function(df1, df2) {
-  library(SNFtool)
-  ##-Set variables for SNFtool----------------------------------------##
-  K = 20;		# number of neighbors, usually (10~30)
-  alpha = 0.5;  	# hyperparameter, usually (0.3~0.8)
-  SNF_T = 10; 	# Number of Iterations, usually (10~20)
-  
-  ##-The SNFtool process from the readme------------------------------##
-  Dist1 <- dist2(as.matrix(df1),as.matrix(df1));
-  Dist2 <- dist2(as.matrix(df2),as.matrix(df2));
-  
-  W1 <- affinityMatrix(Dist1, K, alpha)
-  W2 <- affinityMatrix(Dist2, K, alpha)
-  
-  W <- SNF(list(W1,W2), K, SNF_T)
-  
-  C <- 2 					# number of clusters
-  group <- spectralClustering(W, C); 	# the final subtypes information
-  
-  # displayClusters(W, group)
-  # SNFNMI <- calNMI(group, truelabel)
-  
-  ConcordanceMatrix <- concordanceNetworkNMI(list(W, W1,W2),C)
-  detach(package:SNFtool)
-  
-  # return(data.frame(ConcordanceMatrix))
-  return(data.frame(W))
-}
-
 ##-Import tables and data preprocessing-----------------------------##
 philr_trans_ref <- read.table(file.path(output_dir, "tables", "ref_tree_ps_philr_transform.csv"),
                               sep = ",",
