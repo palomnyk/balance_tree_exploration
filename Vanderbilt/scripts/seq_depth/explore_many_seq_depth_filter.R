@@ -18,7 +18,6 @@ munge_ref_ps <- function(ps){
 ##-Load Depencencies------------------------------------------------##
 if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
 if (!requireNamespace("ALDEx2", quietly = TRUE)) BiocManager::install("ALDEx2")
-if (!requireNamespace("edgeR", quietly = TRUE)) BiocManager::install("edgeR")
 library("compositions")
 library("phyloseq")
 library("vegan")
@@ -27,7 +26,6 @@ library("philr")
 library("ape")
 library("ALDEx2")
 library("ggplot2")
-library("edgeR")
 
 ##-Establish directory layout---------------------------------------##
 home_dir <- file.path('~','git','balance_tree_exploration')
@@ -55,7 +53,7 @@ metadata <- read.table(file.path(home_dir, project, "patient_metadata.tsv"),
 
 #Plot shannon diversity against log10(total_seqs)
 #Plot other normalization methods: otu log 100 and alr and clr 
-my_ds_names <- c( "raw seqs", "clr(raw seqs)", "lognorm raw seqs", "philr ref", "DESeq2", "ALDEx2.clr")
+my_ds_names <- c( "raw seqs", "clr(raw seqs)", "lognorm raw seqs", "philr ref", "DESeq2", "ALDEx2.clr", "Shannon Diversity")
 min_seq_depths <- c(0, 500, 1000, 5000, 10000, 20000, 40000)
 mds_depth <- 5
 
@@ -74,14 +72,14 @@ samples_left <- vector(mode = "integer", length = length(my_ds_names) * length(m
 taxa_left <- vector(mode = "integer", length = length(my_ds_names) * length(min_seq_depths) * mds_depth)
 zero_count <- vector(mode = "integer", length = length(my_ds_names) * length(min_seq_depths) * mds_depth)
 
-
-
+pdf(file = file.path(output_dir, "graphics", "seq_depth_artifact_PCA12345_scatter.pdf"))
 counter <- 1
 for(s in 1:length(min_seq_depths)){
   seq_d <- min_seq_depths[s]#new sequencing depth
   sd_filt_asv <- asv_table[total_seqs$total_seqs >= seq_d,]#dataset 1
   print(paste("sd_filtered dim:", paste(dim(sd_filt_asv))))
   safe_rns <- intersect(row.names(ref_ps@otu_table), row.names(sd_filt_asv)) #rows for this iterate
+  ts <- rowSums(sd_filt_asv[safe_rns,])
   my_clr <- compositions::clr(sd_filt_asv)#dataset 2
   new_tree <- phyloseq::prune_taxa(colnames(sd_filt_asv), ref_ps@phy_tree)#update tree for new phyloseq obj
   new_ref_ps <- phyloseq::prune_samples(safe_rns, ref_ps) #remove non-safe rows from ps
@@ -106,11 +104,14 @@ for(s in 1:length(min_seq_depths)){
   print(paste("size of ald:", object.size(ald)))
   print(paste("ald dim:", paste(dim(ald))))
   
-  my_datasets <- list(sd_filt_asv, my_clr,  ln_asv, ref_philr, new_DESeq2, ald)
+  my_sd <- vegan::diversity(sd_filt_asv)
+  
+  my_datasets <- list(sd_filt_asv, my_clr,  ln_asv, ref_philr, new_DESeq2, ald, my_sd)
   
   print(paste("finished seq depth filter:", s))
   
   for( ds in 1:length(my_datasets)){
+    print("In 2nd for loop.")
     print(my_ds_names[ds])
     my_table <- as.data.frame(my_datasets[ds])
     zeros <- sum(my_table == 0)
@@ -123,11 +124,20 @@ for(s in 1:length(min_seq_depths)){
     ##-Extract PCA matrix and convert to dataframe----------------------##
     myPCA <- data.frame(my_prcmp$x)
     my_var_exp <- my_prcmp$sdev^2/sum(my_prcmp$sdev^2)
-    
     print(paste("finished ds:", ds))
     for (md in 1:mds_depth){
       # kend[counter] <- cor.test(log10(total_seqs[total_seqs > seq_d]), myPCA[,md], method = "kendall")$estimate
       # perma_r2[counter] <- adonis2(log10(total_seqs[total_seqs > seq_d]) ~ myPCA[,md])$R2[1]
+      if (md == 1){
+        my_spear <- cor.test(ts, myPCA[,md],
+                             method = "spearman")
+        plot(log10(ts), myPCA[,2],
+             main = paste0( project, my_datasets[ds], ", PCA", md,"\nr_sq: ", my_spear$estimate^2),
+             sub = paste0("spear: ", my_spear$estimate),
+             xlab = paste0("Sequencing depth"),
+             ylab = paste0("PCA", md)
+            )
+      }
       ds_num[counter] <- ds
       ds_nam[counter] <- my_ds_names[ds]
       mds_lev[counter] <- md
@@ -135,20 +145,22 @@ for(s in 1:length(min_seq_depths)){
       var_exp[counter] <- my_var_exp[md]
       spear_cor[counter] <- cor(total_seqs[total_seqs >= seq_d], myPCA[,md], method = "spearman")
       samples_left[counter] <- nrow(my_table)
-      taxa_left[counter] <- ncol(my_table)
+      taxa_left[counter] <- sum(colSums(my_table) > 0)
       zero_count[counter] <- zeros
       counter <- counter + 1
     }
   }
 }
-
+dev.off()
 result_df <- data.frame(ds_num, ds_nam, perma_r2, mds_lev, seq_depth, var_exp, spear_cor, samples_left, zero_count, taxa_left)
 print("created resulting DF")
-
 
 write.table(result_df, 
             file = file.path(output_dir, "tables", paste0(project, "_PCA_seqdep_filt_results.csv")),
             sep = ",")
+
+result_df <- read.table(file = file.path(output_dir, "tables", paste0(project, "_PCA_seqdep_filt_results.csv")),
+                        sep = ",")
 
 pdf(file = file.path(output_dir, "graphics", "seq_depth_artifact_PCA12345_bar.pdf"))
 for (i in 1:max(result_df$mds_lev)){
@@ -166,18 +178,18 @@ print("made bar charts")
 
 pdf(file = file.path(output_dir, "graphics", "seq_depth_artifact_PCA12345_line.pdf"))
 for (i in 1:max(result_df$mds_lev)){
-  pca_only <- result_df[mds_lev == i, ]
+  pca_only <- result_df[result_df$mds_lev == i, ]
   g <- ggplot2::ggplot(pca_only, 
                        aes(x=seq_depth, y=spear_cor^2, group = ds_nam)) +
     ggplot2::geom_point(aes(color = factor(ds_nam))) +
     ggplot2::geom_line(aes(color = factor(ds_nam))) +
-    ggplot2::annotate("text", x = head(pca_only$seq_depth, n = length(my_ds_names)), 
-                      y = head(c(pca_only$spear_cor^2), n = length(my_ds_names)), 
-                      label = head(pca_only$ds_nam, n = length(my_ds_names)),
-                      hjust = -0.1) +
+    # ggplot2::annotate("text", x = head(pca_only$seq_depth, n = length(my_ds_names)), 
+    #                   y = head(c(pca_only$spear_cor^2), n = length(my_ds_names)), 
+    #                   label = head(pca_only$ds_nam, n = length(my_ds_names)),
+    #                   hjust = -0.1) +
     ggplot2::ggtitle(paste0(project, ": PCA",  i, " vs total sequences per sample")) +
     ggplot2::xlab("Min sequence depth per sample") +
-    ggplot2::ylab("paste(italic(R) ^ 2, \" = .75\")") + 
+    ggplot2::ylab("R squared") + 
     ggplot2::labs(fill = "Transformations") +
     theme(axis.text.x = element_text(angle = 90)) +
     ggplot2::theme_minimal()
