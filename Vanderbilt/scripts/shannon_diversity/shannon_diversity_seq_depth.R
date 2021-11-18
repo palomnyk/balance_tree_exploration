@@ -41,6 +41,9 @@ metadata$type <- factor(metadata$type)
 
 metad_cols <- which(unlist(lapply(metadata, is.numeric)))
 
+total_seqs <- rowSums(asv_table)
+total_seqs <- data.frame(total_seqs, row.names = row.names(asv_table))
+
 #Plot shannon diversity against log10(total_seqs)
 #Plot other normalization methods: otu log 100 and alr and clr 
 min_seq_depths <- c(0, 500, 1000, 5000, 10000, 20000, 40000)
@@ -161,10 +164,11 @@ g <- ggplot2::ggplot(melted_results,
                      aes(x=seq_depth, y=log10(value), group = Metadata)) +
   ggplot2::geom_point(aes(color = factor(Metadata))) +
   ggplot2::geom_line(aes(color = factor(Metadata))) +
-  ggplot2::ggtitle(paste0(project, ", PCA: ",i," Read depth vs log20(P-val) of Shannon Diversity vs metadata")) +
+  ggplot2::ggtitle(paste0(project, ", PCA: ",i," Read depth vs log10(P-val) of Shannon Diversity vs metadata")) +
   ggplot2::xlab("Min sequence depth per sample") +
   ggplot2::ylab("log10(pval)") +
   ggplot2::labs(fill = "Metadata") +
+  ggplot2::geom_hline(yintercept = log10(0.05), linetype = "longdash", color = "black") +
   theme(axis.text.x = element_text(angle = 90)) +
   ggplot2::theme_minimal()
 print(g)
