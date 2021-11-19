@@ -1,6 +1,8 @@
 # History files
 .Rhistory
 .Rapp.history
+.RDataTmp
+*.Rproj
 # Session Data files
 .RData
 # Example code in package build process
@@ -32,3 +34,5 @@ rsconnect/
 */sequences/
 .Rproj.user
 /Western_gut
+*/logs
+*/log
