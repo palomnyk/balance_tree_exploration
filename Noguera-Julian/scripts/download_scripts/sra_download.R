@@ -8,7 +8,7 @@ rm(list = ls()) #clear workspace
 
 ##-Establish directory layout---------------------------------------##
 home_dir <- file.path('~','git','balance_tree_exploration')
-project <- "Noguera-julian"
+project <- "Noguera-Julian"
 download_dir <- file.path(home_dir, project, "downloaded_seqs")
 sra_run_table <- read.table(file.path(home_dir, project, "SraRunTable.txt"),
                             sep = ",",
