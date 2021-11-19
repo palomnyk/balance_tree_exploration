@@ -6,14 +6,18 @@ rm(list = ls()) #clear workspace
 
 ##-Load Depencencies------------------------------------------------##
 
-##-Establish directory layout---------------------------------------##
+print("Establishing constants")
 home_dir <- file.path('~','git','balance_tree_exploration')
 project <- "Noguera-Julian"
 download_dir <- file.path(home_dir, project, "downloaded_seqs")
+
+print(paste("Download destination:", download_dir))
+
 sra_run_table <- read.table(file.path(home_dir, project, "SraRunTable.txt"),
                             sep = ",",
                             header = TRUE)
 
+print("Creating SRR list.")
 my_rows <- sra_run_table$Assay.Type == "AMPLICON"
 my_accessions <- sra_run_table$Run[my_rows]
 
@@ -27,22 +31,21 @@ print(paste("need to download this many more:", length(my_accessions) - length(d
 ##-Download SRA files ----------------------------------------------##
 setwd(download_dir)
 for (run in my_accessions) {
-  
-  my_file <- paste0(run, ".fastq.gz")
+  my_file <- paste0(run, "_1.fastq.gz")
   if (!my_file %in% downloaded_files){
     print(paste("attempting download of:", run))
     my_command <- paste("module load sra-tools ;",
                         "nohup fasterq-dump", run, 
-                        "-O",  download_dir)
-    print("my command:", my_command)
+                        "-O", download_dir)
+    print(paste("my command:", my_command))
     system2(command = my_command, wait = TRUE)
-    
   }else{
     print(paste(run, "was already there!"))
   }
   Sys.sleep(1)  
 }  
-  
+
+print("Script completed.")
 # bash download commands:
 # module load sra-tools
 # nohup fasterq-dump $SRR -O ../../downloaded_seqs
