@@ -35,10 +35,10 @@ for (run in my_accessions) {
   if (!my_file %in% downloaded_files){
     print(paste("attempting download of:", run))
     my_command <- paste("module load sra-tools ;",
-                        "nohup fasterq-dump", run, 
+                        "nohup fasterq-dump -S", run, 
                         "-O", download_dir)
     print(paste("my command:", my_command))
-    system2(command = my_command, wait = TRUE)
+    system(command = my_command, wait = TRUE)
   }else{
     print(paste(run, "was already there!"))
   }
