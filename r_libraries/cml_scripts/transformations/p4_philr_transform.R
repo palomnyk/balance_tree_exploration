@@ -71,6 +71,15 @@ con <- gzfile(file.path( output_dir, "r_objects", opt$phyloseq_obj))
 ps <- readRDS(con)
 close(con)
 
+seq_depth_df <- read.table(file.path(output_dir, "tables", "total_seq_depth.csv"),
+                        sep = ",",
+                        header = T)
+print(length(row.names(seq_depth_df)))
+print(dim(seq_depth_df))
+seq_depth_df <- seq_depth_df[seq_depth_df[,1] > as.numeric(opt$filter_level),]
+print(dim(seq_depth_df))
+print(seq_depth_df[,1] > as.numeric(opt$filter_level))
+
 # con <- gzfile(file.path( output_dir, "r_objects", "ref_tree_phyloseq_obj.rds"))
 # ps <- readRDS(con)
 # close(con)
@@ -80,7 +89,7 @@ ps <- filter_taxa(ps, function(x) sum(x > 3) > (0.2*length(x)), TRUE)
 ps <- filter_taxa(ps, function(x) sd(x)/mean(x) > 3.0, TRUE)
 
 if (opt$filter_level > 0){
-  ps <- prune_samples(sample_sums(ps) >= opt$filter_level, ps)
+  ps <- phyloseq::prune_samples(row.names(seq_depth_df), ps)
 }
 
 ps <- transform_sample_counts(ps, function(x) x+1)
@@ -92,7 +101,7 @@ print('All multichotomies resolved?')
 is.binary.tree(phy_tree(ps)) # All multichotomies resolved?
 
 ## ---- message=FALSE, warning=FALSE-----------------------------------------
-phy_tree(ps) <- makeNodeLabel(phy_tree(ps), method="number", prefix='n')
+phy_tree(ps) <- ape::makeNodeLabel(phy_tree(ps), method="number", prefix='n')
 
 name.balance(phy_tree(ps), tax_table(ps), 'n1')
 
@@ -106,11 +115,11 @@ print("philR transform complete, next step is saving output")
 ##-Saving output----------------------------------------------------##
 # commented out to activate ref_tree_philr
 saveRDS(ps,
-        file.path(output_dir, "r_objects", paste0("ps_denovo_tree_UPGMA_phyloseq_obj", opt$outputfilesuffix, ".rds")))
+        file.path(output_dir, "r_objects", paste0("phyloseq_obj", opt$outputfilesuffix, ".rds")))
 saveRDS(ps.philr,
-        file.path(output_dir, "r_objects", paste0("philr_denovo_tree_UPGMA_phyloseq_obj", opt$outputfilesuffix, ".rds")))
+        file.path(output_dir, "r_objects", paste0("philr_phyloseq_obj", opt$outputfilesuffix, ".rds")))
 write.table(ps.philr,
-            file.path(output_dir, "tables", paste0("philr_denovo_tree_UPGMA", opt$outputfilesuffix, ".csv")),
+            file.path(output_dir, "tables", paste0("philr", opt$outputfilesuffix, ".csv")),
             sep = ",")
 
 # commented out to activate denovo tree
