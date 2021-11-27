@@ -10,7 +10,6 @@ makeTaxaTable <- function(no, tax, tax_lev_int){
   #tax is taxonomic table (dataframe)
   #tax_lev_int is the columns of the tax table usually 1-6
   
-  
   otu_labels = vector(length = ncol(no), mode = "character")
   #assign otus to the asvs
   for (i in 1:ncol(no)){
@@ -95,7 +94,6 @@ dFrame <- dFrame [order(dFrame$pval),]
 dFrame$adj_pval <- p.adjust( dFrame$pval, method = "BH" )	
 write.table(dFrame, file=file.path(output_dir, "tables", "Vanderbilt_pValuesUnivariate_taxaVmetadata.tsv"), 
             sep="\t", 
-            row.names=FALSE)
 
 
 
