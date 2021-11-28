@@ -18,7 +18,7 @@ echo Job: $SLURM_JOB_NAME with ID $SLURM_JOB_ID
 echo Running on host: `hostname`
 echo Using $SLURM_NTASKS processors across $SLURM_NNODES nodes
 
-module load R/3.6.0
+module load R
 
 srun Rscript ~/git/balance_tree_exploration/r_libraries/cml_scripts/data_preprocessing/p1_dada2_rd1.R \
 -d ~/git/balance_tree_exploration \
