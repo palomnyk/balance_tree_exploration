@@ -11,6 +11,7 @@ blastn -query dada2seqs.fasta \
   -out output.txt \
   -outfmt "6 qseqid sseqid pident length evalue bitscore score ppos"
 
+echo "Reached end of script"
  # 1.	 qseqid	 query (e.g., unknown gene) sequence id
  # 2.	 sseqid	 subject (e.g., reference genome) sequence id
  # 3.	 pident	 percentage of identical matches
