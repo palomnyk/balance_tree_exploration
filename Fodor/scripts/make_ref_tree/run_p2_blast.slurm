@@ -20,9 +20,7 @@ echo Using $SLURM_NTASKS processors across $SLURM_NNODES nodes
 
 module load R/3.6.0
 
-srun bash ~/git/balance_tree_exploration/r_libraries/cml_scripts/make_ref_tree/p2_blast.sh \
--d ~/git/balance_tree_exploration \
--p Fodor
+srun bash ~/git/balance_tree_exploration/r_libraries/cml_scripts/make_ref_tree/p2_blast.sh ~/git/balance_tree_exploration Fodor
 
 echo ""
 echo "======================================================"
