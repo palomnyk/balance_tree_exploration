@@ -12,13 +12,14 @@ option_list <- list(
               help="dataset dir path", metavar="character"),
   make_option(c("-p", "--project"), type="character", default=NULL, 
               help="project folder name in homedir", metavar="character")
+  # make_option(c("-o", "--output"), type="character", default=NULL, 
+  #             help="project folder name in homedir", metavar="character")
 ); 
 
 opt_parser <- OptionParser(option_list=option_list);
 opt <- parse_args(opt_parser);
 
 print(opt)
-
 
 #creating fasta for blasting from DADA2 results
 home_dir <- opt$homedir
