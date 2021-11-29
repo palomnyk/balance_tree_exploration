@@ -36,6 +36,8 @@ rsconnect/
 /Western_gut
 */logs
 */log
+*/Untitled
+*untitled
 #don't want to add data
 *.fasta
 *.fasta.gz
