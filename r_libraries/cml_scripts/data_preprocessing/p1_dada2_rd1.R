@@ -53,7 +53,7 @@ if (!requireNamespace("dada2", quietly = TRUE)) BiocManager::install("dada2",typ
 library("dada2")
 library("DECIPHER")
 
-##-Establish directory layout---------------------------------------##
+print("Establish directory layout.")
 home_dir <- opt$homedir
 project <- opt$project
 output_dir <- file.path(home_dir, project, 'output')
@@ -72,12 +72,11 @@ completed_filtFs <- list.files(filt_path, full.names = TRUE)
 # uncompleted_filtFs <- setdiff.Vector(filtFs, completed_filtFs)
 # uncompleted_fnFs <- tail(fnFs, length(uncompleted_filtFs))
 
-if (! length(completed_filtFs) == length(filtFs)){
-  #Filter
-  out <- dada2::filterAndTrim(fnFs, filtFs,truncLen=opt$trunLen,
-                              maxN=0, maxEE=c(2), truncQ=2, rm.phix=TRUE,
-                              compress=FALSE, multithread=FALSE)
-}
+
+print("Attempting filter.")
+out <- dada2::filterAndTrim(fnFs, filtFs,truncLen=opt$trunLen,
+                            maxN=0, maxEE=c(2), truncQ=2, rm.phix=TRUE,
+                            compress=FALSE, multithread=FALSE)
 print("Completed filter and trim")
 
 if (file.exists(file.path(output_dir,"r_objects", "dada2_dds.rds"))) {
