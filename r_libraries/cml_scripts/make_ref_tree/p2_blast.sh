@@ -1,11 +1,18 @@
-module load blast/2.9.0+
 #Author: Aaron Yerke (aaronyerke@gmail.com)
+echo "Loading blast module"
+module load blast/2.9.0+
+
 home_dir=$1 #first comandline argument is the project name
-project=$2 
+project=$2
+echo "Found arguments ${home_dir} and ${project}."
 
 db_path=${home_dir}/ref_tree_objs/db/tree
-cd ~/git/balance_tree_exploration/${project}/output/tree_process_blast
 
+echo "Cd to ~/git/balance_tree_exploration/${project}/output/tree_process_blast."
+cd ~/git/balance_tree_exploration/${project}/output/tree_process_blast
+# cd ~/git/balance_tree_exploration/Fodor/output/tree_process_blast
+
+echo "Attempting to blastn."
 blastn -query dada2seqs.fasta \
   -db ${db_path} \
   -out output.txt \
