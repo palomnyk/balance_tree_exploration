@@ -18,9 +18,9 @@ echo Job: $SLURM_JOB_NAME with ID $SLURM_JOB_ID
 echo Running on host: `hostname`
 echo Using $SLURM_NTASKS processors across $SLURM_NNODES nodes
 
-module load R/3.6.0
+module load R
 
-srun Rscript ~/git/balance_tree_exploration/r_libraries/cml_scripts/make_ref_tree/p3_parse_blast.R ~/git/balance_tree_exploration Fodor
+srun Rscript ~/git/balance_tree_exploration/r_libraries/cml_scripts/make_ref_tree/p3_parse_blast.R -d ~/git/balance_tree_exploration -p Fodor
 
 echo ""
 echo "======================================================"
