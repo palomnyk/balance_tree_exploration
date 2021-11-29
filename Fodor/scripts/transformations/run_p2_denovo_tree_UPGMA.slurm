@@ -20,7 +20,7 @@ echo Using $SLURM_NTASKS processors across $SLURM_NNODES nodes
 
 module load R
 
-srun bash ~/git/balance_tree_exploration/r_libraries/cml_scripts/transformations/p2_denovo_tree_UPGMA.R \
+srun Rscript ~/git/balance_tree_exploration/r_libraries/cml_scripts/transformations/p2_denovo_tree_UPGMA.R \
   -d ~/git/balance_tree_exploration \
   -p Fodor \
   -m ~/git/balance_tree_exploration/Fodor/SraRunTable.txt \

@@ -48,7 +48,7 @@ my_args <- paste(
 # Show this help message and exit
 
 ##-Make and run command---------------------------------------------##
-sys_command <- paste(r_script, my_args)
+sys_command <- paste("Rscript", r_script, my_args)
 tryCatch(
   { 
     system(sys_command,
