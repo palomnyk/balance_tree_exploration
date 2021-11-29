@@ -14,7 +14,7 @@
 # 8.  ppos      Percentage of positive-scoring matches
 # Comparison stategy: compare ppos (if tie, go with biggest alignment length)
 
-  ##-cml argument processing------------------------------------------##
+print("Begining cml argument processing.")
 if (!requireNamespace("optparse", quietly = TRUE)){
   install.packages("optparse")
 }
@@ -33,7 +33,7 @@ opt <- parse_args(opt_parser);
 
 print(opt)
 
-##-Establish directory layout---------------------------------------##
+print("Establishing directory layout.")
 home_dir <- opt$homedir
 project <- opt$project
 output_dir <- file.path(home_dir, project, 'output')
@@ -48,6 +48,7 @@ df <- data.frame(#qseqid=character(),
                  count_matched=integer(),
                  stringsAsFactors=FALSE)
 
+print("Parsing blast output.")
 con <- file(input_file, "r")
 while ( TRUE ) {
   line = readLines(con, n = 1)
