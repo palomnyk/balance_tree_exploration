@@ -10,7 +10,7 @@ rm(list = ls()) #clear workspace
 home_dir <- file.path('~','git','balance_tree_exploration')
 project <- "Fodor"
 download_dir <- file.path(home_dir, project, "downloaded_seqs")
-sra_run_table <- read.table(file.path(home_dir, project, "SRR_Acc_List.txt"),
+sra_run_table <- read.table(file.path(home_dir, project, "SraRunTable.txt"),
                             sep = ",",
                             header = TRUE)
 
