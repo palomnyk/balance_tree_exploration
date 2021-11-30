@@ -44,6 +44,8 @@ for (run in my_accessions) {
 downloaded_files <- list.files(path = download_dir)
 print(paste("number of files after running:", length(downloaded_files)))
 
+print("Script completed.")
+
 # bash download commands:
 # module load sra-tools
 # nohup fasterq-dump $SRR -O ../../downloaded_seqs
