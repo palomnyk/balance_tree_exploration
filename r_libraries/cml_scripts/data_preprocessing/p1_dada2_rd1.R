@@ -88,7 +88,7 @@ if (file.exists(file.path(output_dir,"r_objects", "dada2_dds.rds"))) {
 }
 
 for (i in index:length(filtFs)){
-  if (index < length(filtFs)){
+  if (index <= length(filtFs)){
     print(paste0("On run", i, " of ", length(filtFs), "for dada2::dada"))
     f <- filtFs[i]
     errF <- dada2::learnErrors(f, multithread = FALSE)
