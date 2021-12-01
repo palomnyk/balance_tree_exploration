@@ -281,7 +281,7 @@ dFrame <- data.frame(perma_pval, perma_r2, part_weight, ilr_weight,
 dFrame$adj_pval <- p.adjust(dFrame$perma_pval, method = "BH" )	
 dFrame <- dFrame [order(dFrame$adj_pval),]
 
-write.table(dFrame, file=file.path(output_dir, "tables", paste0(main_output_label, "_", dist_metric, ".tsv")), 
+write.table(dFrame, file=file.path(output_dir, "tables", paste0(main_output_label, "_", dist_metric, ".csv")), 
             sep=",", 
             row.names=FALSE)
 
