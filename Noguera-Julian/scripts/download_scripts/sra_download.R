@@ -35,7 +35,7 @@ for (run in my_accessions) {
   if (!my_file %in% downloaded_files){
     print(paste("attempting download of:", run))
     my_command <- paste("module load sra-tools ;",
-                        "fasterq-dump --gzip -S", run)
+                        "fasterq-dump -S", run)
     print(paste("my command:", my_command))
     system(command = my_command, wait = TRUE)
   }else{
