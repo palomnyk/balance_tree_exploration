@@ -22,6 +22,31 @@ my_args <- paste(
   "-s", "_1000_sd_filtered"
 )
 
+# Options:
+#   -d CHARACTER, --homedir=CHARACTER
+# dataset dir path
+# 
+# -p CHARACTER, --project=CHARACTER
+# project folder
+# 
+# -m CHARACTER, --metadata=CHARACTER
+# metadata file path with filename
+# 
+# -l CHARACTER, --metadata_delim=CHARACTER
+# metadata file deliminator
+# 
+# -r CHARACTER, --metadata_rowname=CHARACTER
+# metadata file row to use for row names
+# 
+# -s CHARACTER, --outputfilesuffix=CHARACTER
+# output_file_suffix
+# 
+# -f NUMERIC, --filter_level=NUMERIC
+# taxonimic level for making otu table 1-6
+# 
+# -h, --help
+# Show this help message and exit
+
 ##-Make and run command---------------------------------------------##
 sys_command <- paste(r_script, my_args)
 tryCatch(
