@@ -1,5 +1,5 @@
 #!/usr/bin/env Rscript
-# Running the p2.1_ps_w_ref_tree.R with command line args
+# Running the p4_ps_w_ref_tree.R with command line args
 
 rm(list = ls()) #clear workspace
 
@@ -7,7 +7,7 @@ rm(list = ls()) #clear workspace
 home_dir <- file.path('~','git','balance_tree_exploration')
 project <- "Vanderbilt"
 cml_scripts <- file.path(home_dir, "r_libraries", "cml_scripts")
-r_script <- file.path(cml_scripts, "transformations", "p2.1_ps_w_ref_tree.R")
+r_script <- file.path(cml_scripts, "make_ref_tree", "p4_ps_w_ref_tree.R")
 
 metad <- file.path(home_dir,project, "SraRunTable.txt")
 
