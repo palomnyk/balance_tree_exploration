@@ -35,7 +35,7 @@ for (run in my_accessions) {
   if (!my_file %in% downloaded_files){
     print(paste("attempting download of:", run))
     my_command <- paste("module load sra-tools ;",
-                        "fasterq-dump -S", run)
+                        "fasterq-dump --gzip -S", run)
     print(paste("my command:", my_command))
     system(command = my_command, wait = TRUE)
   }else{
@@ -43,6 +43,9 @@ for (run in my_accessions) {
   }
   Sys.sleep(1)  
 }  
+
+downloaded_files <- list.files(path = download_dir)
+print(paste("number of files after running:", length(downloaded_files)))
 
 print("Script completed.")
 # bash download commands:
