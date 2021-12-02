@@ -91,8 +91,10 @@ myT <- table(df[,"sseqid"])
 
 print(paste("ave seq/node:", mean(myT), "\nmax seq/node:", max(myT)))
 
+pdf(file = file.path(output_dir, "graphics", "p3_parse_blast.pdf"))
 hist(myT, breaks = 150, xlab = "Sequences per node tip", main = "Histogram of seqs per node tip")
 barplot(myT, las = 2, xlab = "Sequences per node tip", main = "Histogram of seqs per node tip")
+dev.off()
 
 # df = df[!duplicated(df),]
 # 
