@@ -25,7 +25,6 @@ srun Rscript ~/git/balance_tree_exploration/r_libraries/cml_scripts/make_ref_tre
   -m ~/git/balance_tree_exploration/Noguera-Julian/SraRunTable.txt \
   -l , \
   -r Run
-)
 
 echo ""
 echo "======================================================"
