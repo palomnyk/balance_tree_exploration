@@ -42,10 +42,13 @@ library("dada2")
 library("phyloseq")
 print("external libraries loaded")
 
-##-Establish directory layout---------------------------------------##
+print("Establishing directory layout and other constants.")
 home_dir <- opt$homedir
 project <- opt$project
-output_dir = file.path(home_dir, project, 'output')
+output_dir <- file.path(home_dir, project, 'output')
+silva_outf <- file.path(output_dir, "graphics", "silva_ref_tree.pdf")
+silva_tree_plot_path <- file.path(output_dir, "graphics", paste0(project, "_ref_tree.pdf"))
+silva_ps_robj <- file.path(output_dir, "r_objects","ref_tree_phyloseq_obj.rds")
 
 ##-import tables----------------------------------------------------##
 myMeta = read.table(opt$metadata,
@@ -73,7 +76,8 @@ print("Imported R objects")
 ##-Build tree------------------------------------------------------##
 tree <- phyloseq::read_tree(file.path(home_dir, "taxonomy" , "silva","viFy10M5J2nvIBpCLM-QMQ_newick.txt"))
 
-pdf(file = file.path(output_dir, "graphics", "silva_ref_tree.pdf"))
+print(paste("outputting file to", silva_outf))
+pdf(file = silva_outf)
 phyloseq::plot_tree(tree, nodelabf=nodeplotblank, label.tips="taxa_names", ladderize="left")
 dev.off()
 
@@ -125,7 +129,6 @@ for (i in 1:length(tree$tip.label)){
 }
 
 print(paste("unmatched ids:", length(unmatched_ids)))
-plot_tree(tree)
 
 print(paste("num tree tips pre pruning:", length(tree$tip.label)))
   
@@ -133,11 +136,11 @@ tree <- phyloseq::prune_taxa(row.names(tree_key), tree)
 
 print(paste("num tree tip.label post pruning:", length(tree$tip.label)))
 
-pdf(file = file.path(output_dir, "graphics", paste0(project, "_ref_tree.pdf")))
-plot_tree(tree, nodelabf=nodeplotblank, label.tips="taxa_names", ladderize="left")
+pdf(file = silva_tree_plot_path)
+phyloseq::plot_tree(tree, nodelabf=nodeplotblank, label.tips="taxa_names", ladderize="left")
 dev.off()
 
-print("tree plotted")
+print(paste("tree plotted to", silva_tree_plot_path))
 
 print(paste("num duplicated tips:", sum(duplicated(tree$tip.label))))
 
@@ -159,4 +162,7 @@ ps <- phyloseq::phyloseq(otu_table(seqtab, taxa_are_rows=FALSE),
                phy_tree(tree)
 )
 
-saveRDS(ps, file.path(output_dir, "r_objects","ref_tree_phyloseq_obj.rds"))
+print(paste("outputing Silva ref phyloseq object to:", silva_ps_robj))
+saveRDS(ps, file = silva_ps_robj)
+
+print("Rscript complete.")
