@@ -66,7 +66,7 @@ print("Established directory layout")
 
 ##-Import R objects and data preprocessing--------------------------##
 con <- gzfile(file.path( output_dir, "r_objects", "ForwardReads_DADA2.rds"))
-seqtab = readRDS(con)
+seqtab <- readRDS(con)
 close(con)
 
 con <- gzfile(file.path( output_dir, "r_objects", "ForwardReads_DADA2_alignment.rds"))
@@ -117,3 +117,6 @@ plot_tree(ps, "treeonly", nodeplotblank, ladderize="left")
 dev.off()
 
 saveRDS(ps, file.path(output_dir, "r_objects","denovo_tree_UPGMA_phyloseq_obj.rds"))
+
+print("script complete")
+
