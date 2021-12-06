@@ -7,7 +7,7 @@
 #     https://github.com/spholmes/F1000_workflow/blob/master/MicrobiomeWorkflow/MicrobiomeWorkflowII.Rmd
 #     or (in article format)
 #     https://f1000research.com/articles/5-1492/v2
-
+rm(list = ls()) #clear workspace
 ##-cml argument processing------------------------------------------##
 if (!requireNamespace("optparse", quietly = TRUE)){
   install.packages("optparse")
@@ -65,20 +65,12 @@ output_dir <- file.path(home_dir, project, 'output')
 print("Established directory layout")
 
 ##-Import R objects and data preprocessing--------------------------##
-con <- gzfile(file.path( output_dir, "r_objects", "ForwardReads_DADA2.rds"))
-seqtab <- readRDS(con)
-close(con)
-
-con <- gzfile(file.path( output_dir, "r_objects", "ForwardReads_DADA2_alignment.rds"))
-alignment <- readRDS(con)
-close(con)
-
-con <- gzfile(file.path( output_dir, "r_objects", "ForwardReads_DADA2_taxonomy.rds"))
-taxTab <- readRDS(con)
-close(con)
-
+seqtab <- readRDS(file.path( output_dir, "r_objects", "ForwardReads_DADA2.rds"))
+print(paste("Loaded seqtab."))
+alignment <- readRDS(file.path( output_dir, "r_objects", "ForwardReads_DADA2_alignment.rds"))
+print(paste("Loaded alignment."))
+taxTab <- readRDS(file.path( output_dir, "r_objects", "ForwardReads_DADA2_taxonomy.rds"))
 print("Imported R objects")
-
 
 ##-import tables----------------------------------------------------##
 myMeta <- read.table(opt$metadata,
