@@ -23,8 +23,8 @@ module load R
 srun Rscript ~/git/balance_tree_exploration/r_libraries/cml_scripts/data_preprocessing/p1_dada2_rd1.R \
 -d ~/git/balance_tree_exploration \
 -p Fodor \
--f _1.fastq.gz \
--r _2.fastq.gz \
+-f _1.fastq \
+-r _2.fastq \
 -t 130
 
 echo ""
