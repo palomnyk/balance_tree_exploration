@@ -167,7 +167,10 @@ source(file.path(home_dir, "r_libraries", "table_manipulations.R"))
 rf_cols <- 1:16
 num_cycles <- 20
 if(num_cycles < 2) stop("num_cycles should be 2 or more")
-main_output_label <- paste0("auc_rand_v_ref_v_upgma_v_raw_vert_", num_cycles)
+main_output_label <- paste0("auc_rand_v_ref_v_upgma_v_raw_", num_cycles)
+#for making different philr weights
+philr_taxa_weights <- c("uniform","gm.counts","anorm","anorm.x.gm.counts","enorm","enorm.x.gm.counts")
+philr_ilr_weights <- c("uniform","blw","blw.sqrt","mean.descendants")
 
 ##-Import tables and data preprocessing-----------------------------##
 asv_table <- data.frame(readRDS(file.path(output_dir, "r_objects", "ForwardReads_DADA2.rds")))
@@ -280,10 +283,6 @@ wanted_cols <- unlist(strsplit(wanted_cols, "\t"))
 metadata <- metadata[,wanted_cols]
 metadata <- metadata[row.names(metadata) %in% row.names(clean_otu), ]
 # apply(metadata, 2, factor)
-
-#for making different philr weights
-philr_taxa_weights <- c("uniform","gm.counts","anorm","anorm.x.gm.counts","enorm","enorm.x.gm.counts")
-philr_ilr_weights <- c("uniform","blw","blw.sqrt","mean.descendants")
 
 ##-Random num seed--------------------------------------------------##
 set.seed(36)
@@ -530,9 +529,9 @@ write.table(all_plot_data,
             sep = ",",
             row.names = FALSE)
 
-all_plot_data <- read.table(file = file.path(output_dir, "tables", 
-                                             paste0(main_output_label, ".csv")),
-                            sep = ",", header = TRUE)
+all_plot_data <- data.frame(read.table(file = file.path(output_dir, "tables", 
+                                                        paste0(main_output_label, ".csv")),
+                                       sep = ",", header = TRUE))
 
 weight_table <- data.frame(tree_type = c(F),
                            metadata = c(F),
@@ -608,7 +607,7 @@ for (mta in 1:length(unique(all_plot_data$metadata_col))){
   non_philr_ds_pd <- subset(plot_data, trans_group %in% non_philr_ds)
   philr_ds_pd <- subset(plot_data, trans_group %in% philr_ds)
   
-  new_pd <- rbind(non_philr_ds_pd, philr_ds_pd)
+  # new_pd <- rbind(non_philr_ds_pd, philr_ds_pd)
   
   for(tw in unique(plot_data$taxa_weight)){
     my_phil_ds_pd <- philr_ds_pd[philr_ds_pd$taxa_weight == tw,]
@@ -647,7 +646,17 @@ for (mta in 1:length(unique(all_plot_data$metadata_col))){
 
 dev.off()
 
+print(paste("Making empty vectors to fill during plot building"))
+pval <- c()
+pw_name <- c()
+iw_name <- c()
+metadata_col <- c()
+transformation <- c()
+distance_metric <- c()
+pg_num <- c()
+
 pdf(file = file.path(output_dir, "graphics", paste0("new_bp_", main_output_label, ".pdf")))
+index <- 1
 for (mta in 1:length(unique(all_plot_data$metadata_col))){
   my_meta <- as.character(unique(all_plot_data$metadata_col)[mta])
   message(my_meta)
@@ -659,11 +668,8 @@ for (mta in 1:length(unique(all_plot_data$metadata_col))){
   philr_ds <- unique(plot_data$trans_group[c(not_uniform_tw,not_uniform_iw)] ) #pulls out philr only data
   non_philr_ds <- unique(plot_data$trans_group[ !(plot_data$trans_group %in% philr_ds)])
   non_philr_ds_pd <- subset(plot_data, trans_group %in% non_philr_ds)
-  philr_ds_pd <- subset(plot_data, trans_group %in% philr_ds)
-  
-  new_pd <- rbind(non_philr_ds_pd, philr_ds_pd)
-  new_pd$trans_group <- factor(new_pd$trans_group, levels = c(non_philr_ds, philr_ds))
-  
+  philr_ds_pd <- data.frame(subset(plot_data, trans_group %in% philr_ds))
+  rownames(philr_ds_pd) <- seq(length=nrow(philr_ds_pd))
   # my_means <- c()
   # for (tg in 1:length(unique(new_pd$trans_group))){
   #   trans_g <- new_pd$trans_group[tg]
@@ -671,6 +677,9 @@ for (mta in 1:length(unique(all_plot_data$metadata_col))){
   #   my_means <- c(my_means, mean(new_pd$all_auc[my_vals]))
   #   names(my_means)[tg] <- trans_g
   # }
+  new_pd <- rbind(non_philr_ds_pd, philr_ds_pd)
+  new_pd$trans_group <- factor(new_pd$trans_group, levels = c(non_philr_ds, philr_ds))
+  
   
   for(tw in unique(plot_data$taxa_weight)){
     for(iw in unique(plot_data$ilr_weight)){
@@ -679,8 +688,12 @@ for (mta in 1:length(unique(all_plot_data$metadata_col))){
       jitter_pd$trans_group <- factor(jitter_pd$trans_group, levels = c(non_philr_ds, philr_ds))
       #need to show means from new_pd, but show jitter of tw and iw
       #or could just show selected points but show overal mean for each tw and iw
+      back_ground_points <- subset(philr_ds_pd, taxa_weight != tw & ilr_weight != iw)
+      # bg_jitter <- rbind(non_philr_ds_pd, back_ground_points)
       g <- ggplot2::ggplot(new_pd, aes(y = all_auc, x = trans_group)) + 
         ggplot2::geom_boxplot() +
+        # ggplot2::geom_jitter(data = bg_jitter, color = "red", size = 0.7,
+        #                      width = 0.2, height = 0.001) +
         ggplot2::geom_jitter(data = jitter_pd, color = "blue", size = 0.7,
                              width = 0.2, height = 0.001) +
         ggplot2::ggtitle(label = paste(project, my_meta, "taxa weight:", tw, "ilr_weight:", iw)) +
@@ -690,19 +703,33 @@ for (mta in 1:length(unique(all_plot_data$metadata_col))){
         ggplot2::ylab("AUC") +
         ggplot2::xlab("Tree type")
       print(g)
-      
-      # g <- ggplot2::ggplot(plot_data, aes(y = all_auc, x = trans_group)) + 
-      #   ggplot2::geom_boxplot() +
-      #   ggplot2::geom_jitter( color = "red", size = 0.7) +
-      #   ggplot2::ggtitle(label = paste(project, my_meta, "taxa weight:", tw, "ilr_weight:", iw)) +
-      #   # ggplot2::ggtitle( label = paste("num_tg:", length(unique(new_pd$trans_group)))) +
-      #   ggplot2::theme_classic() +
-      #   ggplot2::scale_x_discrete(guide = guide_axis(angle = 90)) +
-      #   ggplot2::ylab("AUC") +
-      #   ggplot2::xlab("Tree type")
-      # print(g)
-    }
-  }
+      #build vectors for table
+      for (grp in unique(philr_pd_tw_iw$trans_group)){
+        # print(grp)
+        my_case <- philr_pd_tw_iw[philr_pd_tw_iw$trans_group == grp, ]$all_auc
+        my_control <- back_ground_points[back_ground_points$trans_group == grp, ]$all_auc
+        my_test <- t.test(my_case, my_control)
+        my_pval <- my_test$p.value
+        pval <- c(pval, my_pval)
+        pw_name <- c(pw_name, tw)
+        iw_name <- c(iw_name, iw)
+        metadata_col <- c(metadata_col, my_meta)
+        transformation <- c(transformation, grp)
+        pg_num <- c(pg_num, index)
+      }
+      index <- index + 1
+    }#end for iw
+  }#end for tw
 }
 
 dev.off()
+
+dFrame <- data.frame( pval, pw_name, iw_name, metadata_col, transformation, pg_num)
+dFrame$adj_pval <- p.adjust(dFrame$pval, method = "BH" )	
+dFrame <- dFrame [order(dFrame$adj_pval),]
+
+write.table(dFrame, file=file.path(output_dir, "tables", paste0("new_bp_", main_output_label, ".csv")), 
+            sep=",", 
+            row.names=FALSE)
+
+print(paste("completed"))
