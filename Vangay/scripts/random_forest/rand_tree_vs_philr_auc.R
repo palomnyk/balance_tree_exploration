@@ -167,7 +167,7 @@ source(file.path(home_dir, "r_libraries", "table_manipulations.R"))
 rf_cols <- 1:16
 num_cycles <- 20
 if(num_cycles < 2) stop("num_cycles should be 2 or more")
-main_output_label <- paste0("auc_rand_v_ref_v_upgma_v_raw_vert", num_cycles)
+main_output_label <- paste0("auc_rand_v_ref_v_upgma_v_raw_vert_", num_cycles)
 #for making different philr weights
 philr_taxa_weights <- c("uniform","gm.counts","anorm","anorm.x.gm.counts","enorm","enorm.x.gm.counts")
 philr_ilr_weights <- c("uniform","blw","blw.sqrt","mean.descendants")
@@ -733,3 +733,4 @@ write.table(dFrame, file=file.path(output_dir, "tables", paste0("new_bp_", main_
             row.names=FALSE)
 
 print(paste("completed"))
+
