@@ -139,8 +139,11 @@ total_seqs <- rowSums(asv_table)
 total_seqs <- data.frame("total_seqs"=total_seqs, "duplicate" = total_seqs,
                          row.names = row.names(asv_table))
 
+pdf(file = file.path(output_dir, "graphics", paste0("trees_", main_output_label, ".pdf")))
 print("Cleaning Ref tree otu with philr tutorial normalization")
 ref_ps <- readRDS(file.path(output_dir, "r_objects", "ref_tree_phyloseq_obj.rds"))
+phyloseq::plot_tree(ref_ps, method = "treeonly", title = paste0("orig_ref"))
+
 clean_otu <- data.frame(ref_ps@otu_table@.Data)
 clean_otu <- philr_tutorial_normalization(clean_otu)
 print(paste("nrow orginal ref:", nrow(ref_ps@otu_table), "nrow clean ref: ", nrow(clean_otu)))
@@ -150,17 +153,20 @@ ref_ps_clean <- phyloseq::phyloseq( otu_table(clean_otu, taxa_are_rows = F),
                                     phy_tree(ref_ps@phy_tree),
                                     tax_table(ref_ps@tax_table), 
                                     sample_data(ref_ps@sam_data))
+phyloseq::plot_tree(ref_ps_clean, method = "treeonly", method = "treeonly", title = paste0("cln_ref"))
 print("Cleaning UPGMA tree otu with philr tutorial normalization")
 denovo_tree_ps <- readRDS(file.path(output_dir, "r_objects", "denovo_tree_UPGMA_phyloseq_obj.rds"))
+phyloseq::plot_tree(denovo_tree_ps, method = "treeonly", title = paste0("orig_upgma"))
 clean_den_otu <- philr_tutorial_normalization(data.frame(denovo_tree_ps@otu_table@.Data))
 print(paste("nrow orginal denovo:", nrow(denovo_tree_ps@otu_table), "nrow clean denovo otu: ", nrow(clean_den_otu)))
 cln_denovo_tree_ps <- phyloseq::phyloseq( otu_table(clean_den_otu, taxa_are_rows = F),
-                                      phy_tree(ape::makeNodeLabel(phy_tree(denovo_tree_ps@phy_tree))),
-                                      tax_table(denovo_tree_ps@tax_table), 
-                                      sample_data(denovo_tree_ps@sam_data))
+                                          phy_tree(ape::makeNodeLabel(phy_tree(denovo_tree_ps@phy_tree))),
+                                          tax_table(denovo_tree_ps@tax_table), 
+                                          sample_data(denovo_tree_ps@sam_data))
 denovo_tree_ps <- transform_sample_counts(denovo_tree_ps, function(x) x + 1 )
 phy_tree(ref_ps_clean) <- makeNodeLabel(phy_tree(ref_ps_clean), method="number", prefix='n')
 phy_tree(cln_denovo_tree_ps) <- makeNodeLabel(phy_tree(cln_denovo_tree_ps), method="number", prefix='n')
+phyloseq::plot_tree(cln_denovo_tree_ps, method = "treeonly", title = paste0("cln_upgma"))
 
 ##-Random num seed--------------------------------------------------##
 set.seed(36)
@@ -174,6 +180,7 @@ for (rand in 1:10){
                                       tax_table(ref_ps@tax_table),
                                       sample_data(ref_ps@sam_data))
   phy_tree(rand_tree_ps) <- ape::makeNodeLabel(phy_tree(rand_tree_ps), method="number", prefix='n')
+  phyloseq::plot_tree(rand_tree_ps,  method = "treeonly", title = paste0("orig_ref_rand_", rand))
   orig_ref_rand_list[[rand]] <- rand_tree_ps
 }
 
@@ -187,6 +194,7 @@ for (rand in 1:10){
                                       tax_table(cln_denovo_tree_ps@tax_table),
                                       sample_data(cln_denovo_tree_ps@sam_data))
   phy_tree(rand_tree_ps) <- ape::makeNodeLabel(phy_tree(rand_tree_ps), method="number", prefix='n')
+  phyloseq::plot_tree(rand_tree_ps, title = paste0("cln_upgma_rand_", rand))
   cln_upgma_rand_list[[rand]] <- rand_tree_ps
 }
 
@@ -200,8 +208,10 @@ for (rand in 1:10){
                                      tax_table(ref_ps_clean@tax_table),
                                      sample_data(ref_ps_clean@sam_data))
   phy_tree(rand_tree_ps) <- ape::makeNodeLabel(phy_tree(rand_tree_ps), method="number", prefix='n')
+  phyloseq::plot_tree(rand_tree_ps, method = "treeonly", title = paste0("cln_ref_rand_", rand))
   cln_ref_rand_list[[rand]] <- rand_tree_ps
 }
+dev.off()
 
 print("creating lognorm, ALR and CLR")
 if (dir.exists(file.path(output_dir,"r_objects", "lognorm_asv.rds"))) {
@@ -276,7 +286,7 @@ while (counter < num_cycles & skips < 5){
                                              test_index = test_index,
                                              philr_ilr_weights = philr_ilr_weights,
                                              philr_taxa_weights = philr_taxa_weights)
-      rand_plot_data$trans_group <- rep("cln_ref_rand", nrow(rand_plot_data))
+      rand_plot_data$trans_group <- rep(paste0("cln_ref_rand_", rand_ps), nrow(rand_plot_data))
       rand_plot_data$random_batch <- rep(rand_ps, nrow(rand_plot_data))
       all_plot_data <- rbind(all_plot_data, rand_plot_data)
     }
@@ -291,7 +301,7 @@ while (counter < num_cycles & skips < 5){
                                              test_index = test_index,
                                              philr_ilr_weights = philr_ilr_weights,
                                              philr_taxa_weights = philr_taxa_weights)
-      rand_plot_data$trans_group <- rep("orig_ref_rand", nrow(rand_plot_data))
+      rand_plot_data$trans_group <- rep(paste0("orig_ref_rand_", rand_ps), nrow(rand_plot_data))
       rand_plot_data$random_batch <- rep(rand_ps, nrow(rand_plot_data))
       all_plot_data <- rbind(all_plot_data, rand_plot_data)
     }
@@ -305,7 +315,7 @@ while (counter < num_cycles & skips < 5){
                                              test_index = test_index,
                                              philr_ilr_weights = philr_ilr_weights,
                                              philr_taxa_weights = philr_taxa_weights)
-      rand_plot_data$trans_group <- rep("clean_upgma_rand", nrow(rand_plot_data))
+      rand_plot_data$trans_group <- rep(paste0("clean_upgma_rand_", rand_ps), nrow(rand_plot_data))
       rand_plot_data$random_batch <- rep(rand_ps, nrow(rand_plot_data))
       all_plot_data <- rbind(all_plot_data, rand_plot_data)
     }
@@ -618,7 +628,7 @@ for (mta in 1:length(unique(all_plot_data$metadata_col))){
   message(my_meta)
   
   plot_data <- all_plot_data[all_plot_data$metadata_col == my_meta,]
-
+  
   not_uniform_tw <- which(plot_data$taxa_weight != "uniform" )
   not_uniform_iw <- which(plot_data$ilr_weight != "uniform" )
   philr_ds <- unique(plot_data$trans_group[c(not_uniform_tw,not_uniform_iw)] ) #pulls out philr only data
@@ -645,13 +655,11 @@ for (mta in 1:length(unique(all_plot_data$metadata_col))){
       #need to show means from new_pd, but show jitter of tw and iw
       #or could just show selected points but show overal mean for each tw and iw
       back_ground_points <- subset(philr_ds_pd, taxa_weight != tw & ilr_weight != iw)
-      # bg_jitter <- rbind(non_philr_ds_pd, back_ground_points)
+      bg_jitter <- rbind(non_philr_ds_pd, back_ground_points)
+      bg_jitter$trans_group <- factor(bg_jitter$trans_group, levels = c(non_philr_ds, philr_ds))
       g <- ggplot2::ggplot(new_pd, aes(y = all_auc, x = trans_group)) + 
-        ggplot2::geom_boxplot() +
-        # ggplot2::geom_jitter(data = bg_jitter, color = "red", size = 0.7,
-        #                      width = 0.2, height = 0.001) +
-        ggplot2::geom_jitter(data = jitter_pd, color = "blue", size = 0.7,
-                             width = 0.2, height = 0.001) +
+        ggplot2::geom_boxplot(data = jitter_pd, color = "blue", alpha = 0.1) +
+        ggplot2::geom_boxplot(data = bg_jitter, color = "red", alpha = 0.9) +
         ggplot2::ggtitle(label = paste(project, my_meta, "taxa weight:", tw, "ilr_weight:", iw)) +
         # ggplot2::ggtitle( label = paste("num_tg:", length(unique(new_pd$trans_group)))) +
         ggplot2::theme_classic() +
