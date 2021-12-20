@@ -193,7 +193,7 @@ ref_ps_clean <- phyloseq::phyloseq( otu_table(clean_otu, taxa_are_rows = F),
                                     phy_tree(ref_ps@phy_tree),
                                     tax_table(ref_ps@tax_table), 
                                     sample_data(ref_ps@sam_data))
-phyloseq::plot_tree(ref_ps_clean, method = "treeonly", method = "treeonly", title = paste0("cln_ref"))
+phyloseq::plot_tree(ref_ps_clean, method = "treeonly", title = paste0("cln_ref"))
 print("Cleaning UPGMA tree otu with philr tutorial normalization")
 denovo_tree_ps <- readRDS(file.path(output_dir, "r_objects", "denovo_tree_phyloseq_obj.rds"))
 phyloseq::plot_tree(denovo_tree_ps, method = "treeonly", title = paste0("orig_upgma"))
