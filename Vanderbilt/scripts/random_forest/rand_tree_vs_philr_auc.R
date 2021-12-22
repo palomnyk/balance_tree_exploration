@@ -142,7 +142,7 @@ total_seqs <- data.frame("total_seqs"=total_seqs, "duplicate" = total_seqs,
 pdf(file = file.path(output_dir, "graphics", paste0("trees_", main_output_label, ".pdf")))
 print("Cleaning Ref tree otu with philr tutorial normalization")
 ref_ps <- readRDS(file.path(output_dir, "r_objects", "ref_tree_phyloseq_obj.rds"))
-phyloseq::plot_tree(ref_ps, method = "treeonly", title = paste0("orig_ref"))
+phyloseq::plot_tree(ref_ps, method = "treeonly", nodelabf=nodeplotblank, title = paste0("orig_ref"))
 
 clean_otu <- data.frame(ref_ps@otu_table@.Data)
 clean_otu <- philr_tutorial_normalization(clean_otu)
@@ -153,10 +153,10 @@ ref_ps_clean <- phyloseq::phyloseq( otu_table(clean_otu, taxa_are_rows = F),
                                     phy_tree(ref_ps@phy_tree),
                                     tax_table(ref_ps@tax_table), 
                                     sample_data(ref_ps@sam_data))
-phyloseq::plot_tree(ref_ps_clean, method = "treeonly", title = paste0("cln_ref"))
+phyloseq::plot_tree(ref_ps_clean, method = "treeonly", nodelabf=nodeplotblank, title = paste0("cln_ref"))
 print("Cleaning UPGMA tree otu with philr tutorial normalization")
 denovo_tree_ps <- readRDS(file.path(output_dir, "r_objects", "denovo_tree_UPGMA_phyloseq_obj.rds"))
-phyloseq::plot_tree(denovo_tree_ps, method = "treeonly", title = paste0("orig_upgma"))
+phyloseq::plot_tree(denovo_tree_ps, method = "treeonly", nodelabf=nodeplotblank, title = paste0("orig_upgma"))
 clean_den_otu <- philr_tutorial_normalization(data.frame(denovo_tree_ps@otu_table@.Data))
 print(paste("nrow orginal denovo:", nrow(denovo_tree_ps@otu_table), "nrow clean denovo otu: ", nrow(clean_den_otu)))
 cln_denovo_tree_ps <- phyloseq::phyloseq( otu_table(clean_den_otu, taxa_are_rows = F),
@@ -166,7 +166,7 @@ cln_denovo_tree_ps <- phyloseq::phyloseq( otu_table(clean_den_otu, taxa_are_rows
 denovo_tree_ps <- transform_sample_counts(denovo_tree_ps, function(x) x + 1 )
 phy_tree(ref_ps_clean) <- makeNodeLabel(phy_tree(ref_ps_clean), method="number", prefix='n')
 phy_tree(cln_denovo_tree_ps) <- makeNodeLabel(phy_tree(cln_denovo_tree_ps), method="number", prefix='n')
-phyloseq::plot_tree(cln_denovo_tree_ps, method = "treeonly", title = paste0("cln_upgma"))
+phyloseq::plot_tree(cln_denovo_tree_ps, method = "treeonly", nodelabf=nodeplotblank, title = paste0("cln_upgma"))
 
 ##-Random num seed--------------------------------------------------##
 set.seed(36)
@@ -180,7 +180,7 @@ for (rand in 1:10){
                                       tax_table(ref_ps@tax_table),
                                       sample_data(ref_ps@sam_data))
   phy_tree(rand_tree_ps) <- ape::makeNodeLabel(phy_tree(rand_tree_ps), method="number", prefix='n')
-  phyloseq::plot_tree(rand_tree_ps,  method = "treeonly", title = paste0("orig_ref_rand_", rand))
+  phyloseq::plot_tree(rand_tree_ps,  method = "treeonly", nodelabf=nodeplotblank, title = paste0("orig_ref_rand_", rand))
   orig_ref_rand_list[[rand]] <- rand_tree_ps
 }
 
@@ -201,14 +201,14 @@ for (rand in 1:10){
 print("make random trees for clean ref taxa")
 cln_ref_rand_list <- list()
 for (rand in 1:10){
-  rand_tree <- rtree(n = length(ref_ps_clean@phy_tree$tip.label), tip.label = denovo_tree_ps@phy_tree$tip.label)
+  rand_tree <- rtree(n = length(ref_ps_clean@phy_tree$tip.label), tip.label = ref_ps_clean@phy_tree$tip.label)
   #put int in philr
   rand_tree_ps <- phyloseq::phyloseq(otu_table(ref_ps_clean, taxa_are_rows = F),
                                      phy_tree(rand_tree),
                                      tax_table(ref_ps_clean@tax_table),
                                      sample_data(ref_ps_clean@sam_data))
   phy_tree(rand_tree_ps) <- ape::makeNodeLabel(phy_tree(rand_tree_ps), method="number", prefix='n')
-  phyloseq::plot_tree(rand_tree_ps, method = "treeonly", title = paste0("cln_ref_rand_", rand))
+  phyloseq::plot_tree(rand_tree_ps, method = "treeonly", nodelabf=nodeplotblank, title = paste0("cln_ref_rand_", rand))
   cln_ref_rand_list[[rand]] <- rand_tree_ps
 }
 dev.off()
@@ -658,9 +658,9 @@ for (mta in 1:length(unique(all_plot_data$metadata_col))){
       bg_jitter <- rbind(non_philr_ds_pd, back_ground_points)
       bg_jitter$trans_group <- factor(bg_jitter$trans_group, levels = c(non_philr_ds, philr_ds))
       g <- ggplot2::ggplot(new_pd, aes(y = all_auc, x = trans_group)) + 
-        ggplot2::geom_boxplot(data = jitter_pd, color = "blue", alpha = 0.1) +
-        ggplot2::geom_boxplot(data = bg_jitter, color = "red", alpha = 0.9) +
-        ggplot2::ggtitle(label = paste(project, my_meta, "taxa weight:", tw, "ilr_weight:", iw)) +
+        ggplot2::geom_boxplot(data = jitter_pd, color = "blue", alpha = 0.5) +
+        ggplot2::geom_boxplot(data = bg_jitter, color = "red", alpha = 0.5) +
+        ggplot2::ggtitle(label = paste(project, my_meta, ", part_weight:", tw, ", ilr_weight:", iw)) +
         # ggplot2::ggtitle( label = paste("num_tg:", length(unique(new_pd$trans_group)))) +
         ggplot2::theme_classic() +
         ggplot2::scale_x_discrete(guide = guide_axis(angle = 90)) +
