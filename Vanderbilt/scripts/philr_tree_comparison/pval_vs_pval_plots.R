@@ -226,16 +226,30 @@ hist(cln_denovo_pvals, breaks = 50)
 #Are these pvals reasonable?
 #check against other metadata columns
 #run the other dataset
+pval <- round(stats::ks.test(ref_ps_clean_pvals, ref_ps_orig_pvals)$p.value, 3)
 stats::qqplot(ref_ps_clean_pvals, ref_ps_orig_pvals,
-              main = paste("qqplot", "ref_ps_clean_pvals", "ref_ps_orig_philr"))
+              main = paste("qqplot", "ref_ps_clean_pvals", "ref_ps_orig_philr", "ks:", pval))
+stats::qqline(ref_ps_clean_pvals, col = "red")
+stats::qqline(ref_ps_orig_pvals, col = "blue")
+
 log10_pval_pval_plot(ref_ps_orig_pvals, "ref_ps_orig_pvals",
                      ref_ps_clean_pvals, "ref_ps_clean_pvals", metad_col, metad_nam)
+
+pval <- round(stats::ks.test(ref_ps_clean_pvals, cln_denovo_pvals)$p.value, 3)
 stats::qqplot(ref_ps_clean_pvals, cln_denovo_pvals,
-              main = paste("qqplot", "ref_ps_clean_pvals", "cln_denovo_pvals"))
+              main = paste("qqplot", "ref_ps_clean_pvals", "cln_denovo_pvals", "ks:", pval))
+stats::qqline(ref_ps_clean_pvals, col = "red")
+stats::qqline(cln_denovo_pvals, col = "blue")
+
 log10_pval_pval_plot(ref_ps_clean_pvals, "ref_ps_clean_pvals",
                      cln_denovo_pvals, "cln_denovo_pvals", metad_col, metad_nam)
+
+pval <- round(stats::ks.test(ref_ps_orig_pvals, cln_denovo_pvals)$p.value, 3)
 stats::qqplot(ref_ps_orig_pvals, cln_denovo_pvals,
-              main = paste("qqplot", "ref_ps_clean_pvals", "cln_denovo_pvals"))
+              main = paste("qqplot", "ref_ps_clean_pvals", "cln_denovo_pvals", "ks:", pval))
+stats::qqline(ref_ps_orig_pvals, col = "red")
+stats::qqline(cln_denovo_pvals, col = "blue")
+
 log10_pval_pval_plot(cln_denovo_pvals, "cln_denovo_pvals",
                      ref_ps_clean_pvals, "ref_ps_clean_pvals", metad_col, metad_nam)
 
@@ -318,7 +332,7 @@ plot_data <- data.frame(bp_labels, cor_vals)
 
 g <- ggplot2::ggplot(data = plot_data, aes(y = bp_labels, x = cor_vals)) +  
   ggplot2::geom_boxplot() +
-  ggplot2::ggtitle(paste(project, "Random trees vs non-random-trees, metad:", metad_name)) +
+  ggplot2::ggtitle(paste(project, "Random trees vs non-random-trees, metad:", metad_nam)) +
   # ggplot2::geom_hline(yintercept = 0) +
   ggplot2::theme(axis.text.x = element_text(angle = 45),
                  axis.text.y = element_text(angle = 45)) +
