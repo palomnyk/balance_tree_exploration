@@ -241,7 +241,7 @@ for (rand in 1:10){
 print("make random trees for clean ref taxa")
 cln_ref_rand_list <- list()
 for (rand in 1:10){
-  rand_tree <- rtree(n = length(ref_ps_clean@phy_tree$tip.label), tip.label = denovo_tree_ps@phy_tree$tip.label)
+  rand_tree <- rtree(n = length(ref_ps_clean@phy_tree$tip.label), tip.label = ref_ps_clean@phy_tree$tip.label)
   #put int in philr
   rand_tree_ps <- phyloseq::phyloseq(otu_table(ref_ps_clean, taxa_are_rows = F),
                                      phy_tree(rand_tree),
@@ -701,9 +701,9 @@ for (mta in 1:length(unique(all_plot_data$metadata_col))){
       bg_jitter <- rbind(non_philr_ds_pd, back_ground_points)
       bg_jitter$trans_group <- factor(bg_jitter$trans_group, levels = c(non_philr_ds, philr_ds))
       g <- ggplot2::ggplot(new_pd, aes(y = all_auc, x = trans_group)) + 
-        ggplot2::geom_boxplot(data = jitter_pd, color = "blue", alpha = 0.1) +
-        ggplot2::geom_boxplot(data = bg_jitter, color = "red", alpha = 0.9) +
-        ggplot2::ggtitle(label = paste(project, my_meta, "taxa weight:", tw, "ilr_weight:", iw)) +
+        ggplot2::geom_boxplot(data = jitter_pd, color = "blue", alpha = 0.5) +
+        ggplot2::geom_boxplot(data = bg_jitter, color = "red", alpha = 0.5) +
+        ggplot2::ggtitle(label = paste(project, my_meta, ", part_weight:", tw, ", ilr_weight:", iw)) +
         # ggplot2::ggtitle( label = paste("num_tg:", length(unique(new_pd$trans_group)))) +
         ggplot2::theme_classic() +
         ggplot2::scale_x_discrete(guide = guide_axis(angle = 90)) +
