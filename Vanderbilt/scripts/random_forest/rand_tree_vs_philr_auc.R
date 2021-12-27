@@ -286,7 +286,7 @@ while (counter < num_cycles & skips < 5){
                                              test_index = test_index,
                                              philr_ilr_weights = philr_ilr_weights,
                                              philr_taxa_weights = philr_taxa_weights)
-      rand_plot_data$trans_group <- rep(paste0("cln_ref_rand_", rand_ps), nrow(rand_plot_data))
+      rand_plot_data$trans_group <- rep(paste0("Culled_filtered_random_Silva_PhILR_", rand_ps), nrow(rand_plot_data))
       rand_plot_data$random_batch <- rep(rand_ps, nrow(rand_plot_data))
       all_plot_data <- rbind(all_plot_data, rand_plot_data)
     }
@@ -301,7 +301,7 @@ while (counter < num_cycles & skips < 5){
                                              test_index = test_index,
                                              philr_ilr_weights = philr_ilr_weights,
                                              philr_taxa_weights = philr_taxa_weights)
-      rand_plot_data$trans_group <- rep(paste0("orig_ref_rand_", rand_ps), nrow(rand_plot_data))
+      rand_plot_data$trans_group <- rep(paste0("Culled_random_Silva_PhILR_", rand_ps), nrow(rand_plot_data))
       rand_plot_data$random_batch <- rep(rand_ps, nrow(rand_plot_data))
       all_plot_data <- rbind(all_plot_data, rand_plot_data)
     }
@@ -315,7 +315,7 @@ while (counter < num_cycles & skips < 5){
                                              test_index = test_index,
                                              philr_ilr_weights = philr_ilr_weights,
                                              philr_taxa_weights = philr_taxa_weights)
-      rand_plot_data$trans_group <- rep(paste0("clean_upgma_rand_", rand_ps), nrow(rand_plot_data))
+      rand_plot_data$trans_group <- rep(paste0("Filtered_random_UPGMA PhILR_", rand_ps), nrow(rand_plot_data))
       rand_plot_data$random_batch <- rep(rand_ps, nrow(rand_plot_data))
       all_plot_data <- rbind(all_plot_data, rand_plot_data)
     }
@@ -327,7 +327,7 @@ while (counter < num_cycles & skips < 5){
                                           test_index = test_index,
                                           philr_ilr_weights = philr_ilr_weights,
                                           philr_taxa_weights = philr_taxa_weights)
-    my_plot_data$trans_group <- rep("Silva_ref_cln_philr", nrow(my_plot_data))
+    my_plot_data$trans_group <- rep("Culled_filtered_Silva_PhILR", nrow(my_plot_data))
     my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
     all_plot_data <- rbind(all_plot_data, my_plot_data)
     
@@ -339,7 +339,7 @@ while (counter < num_cycles & skips < 5){
                                          test_index = test_index,
                                          philr_ilr_weights = philr_ilr_weights,
                                          philr_taxa_weights = philr_taxa_weights)
-    my_plot_data$trans_group <- rep("Silva_ref_orig_philr", nrow(my_plot_data))
+    my_plot_data$trans_group <- rep("Culled_Silva_PhILR", nrow(my_plot_data))
     my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
     all_plot_data <- rbind(all_plot_data, my_plot_data)
     
@@ -352,7 +352,7 @@ while (counter < num_cycles & skips < 5){
                                          philr_ilr_weights = philr_ilr_weights,
                                          philr_taxa_weights = philr_taxa_weights,
                                          just_otu = TRUE)
-    my_plot_data$trans_group <- rep("Silva_ref_orig_taxa_only", nrow(my_plot_data))
+    my_plot_data$trans_group <- rep("Culled_Silva_counts_table", nrow(my_plot_data))
     my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
     all_plot_data <- rbind(all_plot_data, my_plot_data)
     
@@ -365,7 +365,7 @@ while (counter < num_cycles & skips < 5){
                                           philr_ilr_weights = philr_ilr_weights,
                                           philr_taxa_weights = philr_taxa_weights,
                                           just_otu = TRUE)
-    my_plot_data$trans_group <- rep("Silva_ref_cln_taxa_only", nrow(my_plot_data))
+    my_plot_data$trans_group <- rep("Culled_Filtered_Silva_counts_table", nrow(my_plot_data))
     my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
     all_plot_data <- rbind(all_plot_data, my_plot_data)
     
@@ -378,7 +378,7 @@ while (counter < num_cycles & skips < 5){
                                           philr_ilr_weights = philr_ilr_weights,
                                           philr_taxa_weights = philr_taxa_weights,
                                           just_otu = TRUE)
-    my_plot_data$trans_group <- rep("cln_upgma_taxa_only", nrow(my_plot_data))
+    my_plot_data$trans_group <- rep("Filtered_UPGMA_counts_table", nrow(my_plot_data))
     my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
     all_plot_data <- rbind(all_plot_data, my_plot_data)
 
@@ -402,7 +402,7 @@ while (counter < num_cycles & skips < 5){
                                               philr_ilr_weights = philr_ilr_weights,
                                               philr_taxa_weights = philr_taxa_weights)
     my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
-    my_plot_data$trans_group <- rep("clean_UPGMA_philr", nrow(my_plot_data))
+    my_plot_data$trans_group <- rep("Filtered_UPGMA_PhILR", nrow(my_plot_data))
     all_plot_data <- rbind(all_plot_data, my_plot_data)
     
     print(paste("counter:", counter, " making seq only orig ref (no trees) AUC"))
@@ -415,7 +415,7 @@ while (counter < num_cycles & skips < 5){
                                           philr_taxa_weights = philr_taxa_weights,
                                           just_otu = TRUE)
     my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
-    my_plot_data$trans_group <- rep("orig_ref_taxa_only", nrow(my_plot_data))
+    my_plot_data$trans_group <- rep("Culled_Silva_counts_table", nrow(my_plot_data))
     all_plot_data <- rbind(all_plot_data, my_plot_data)
 
     print(paste("counter:", counter, " generate ", "'raw data' data"))
@@ -428,7 +428,7 @@ while (counter < num_cycles & skips < 5){
                                           philr_taxa_weights = philr_taxa_weights,
                                           just_otu = TRUE )
     my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
-    my_plot_data$trans_group <- rep("raw_data", nrow(my_plot_data))
+    my_plot_data$trans_group <- rep("Raw_Dada2_counts_table", nrow(my_plot_data))
     all_plot_data <- rbind(all_plot_data, my_plot_data)
     
     # print(paste("counter:", counter, " generate ", "read depth data"))
