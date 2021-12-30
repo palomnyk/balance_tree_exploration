@@ -37,9 +37,12 @@ metadata <- read.table(file.path(home_dir, project, "patient_metadata.tsv"),
 
 ##-Visualize sparcity-----------------------------------------------##
 
-hist(unlist(asv_table), breaks=200,
-     main = paste(project, "histogram of raw ASV count data"),
-     xlab="Count data")
+my_hist <- hist(unlist(asv_table), breaks=200, plot = F)
+plot(my_hist$counts, log="y", 
+     main = paste("Jones dataset:", "histogram of raw Dada2 count table at log scale"),
+     xlab="Value",
+     ylab="Log scale of frequency",
+     type='h')
 
 zeros_col_sum <- rowSums(asv_table == 0)
 cor(zeros_col_sum, total_seqs, method = "kendall")
