@@ -18,7 +18,9 @@ munge_ref_ps <- function(ps){
 ##-Load Depencencies------------------------------------------------##
 if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
 if (!requireNamespace("ALDEx2", quietly = TRUE)) BiocManager::install("ALDEx2")
-library("compositions")
+if (!requireNamespace("DESeq2", quietly = TRUE)) BiocManager::install("DESeq2")
+if (!requireNamespace("rgr", quietly = TRUE)) install.packages("rgr")
+library("rgr")
 library("phyloseq")
 library("vegan")
 library("DESeq2")
@@ -51,9 +53,8 @@ metadata <- read.table(file.path(home_dir, project, "patient_metadata.tsv"),
                        check.names = FALSE,
                        stringsAsFactors=TRUE)
 
-#Plot shannon diversity against log10(total_seqs)
 #Plot other normalization methods: otu log 100 and alr and clr 
-my_ds_names <- c( "raw seqs", "clr(raw seqs)", "lognorm raw seqs", "philr ref", "DESeq2", "ALDEx2.clr", "Shannon Diversity")
+my_ds_names <- c( "raw seqs", "clr", "lognorm raw seqs", "philr ref", "DESeq2", "ALDEx2.clr")
 min_seq_depths <- c(0, 500, 1000, 5000, 10000, 20000, 40000)
 mds_depth <- 5
 
@@ -80,7 +81,8 @@ for(s in 1:length(min_seq_depths)){
   print(paste("sd_filtered dim:", paste(dim(sd_filt_asv))))
   safe_rns <- intersect(row.names(ref_ps@otu_table), row.names(sd_filt_asv)) #rows for this iterate
   ts <- rowSums(sd_filt_asv[safe_rns,])
-  my_clr <- compositions::clr(sd_filt_asv)#dataset 2
+  my_clr <- as.data.frame(rgr::clr(as.matrix(sd_filt_asv + 1)))#dataset 2
+  # my_alr <- as.data.frame(rgr::alr(as.matrix(asv_table + 1), j = as.numeric(alr_col)))
   new_tree <- phyloseq::prune_taxa(colnames(sd_filt_asv), ref_ps@phy_tree)#update tree for new phyloseq obj
   new_ref_ps <- phyloseq::prune_samples(safe_rns, ref_ps) #remove non-safe rows from ps
   new_ref_ps <- munge_ref_ps(new_ref_ps)
@@ -104,9 +106,7 @@ for(s in 1:length(min_seq_depths)){
   print(paste("size of ald:", object.size(ald)))
   print(paste("ald dim:", paste(dim(ald))))
   
-  my_sd <- vegan::diversity(sd_filt_asv)
-  
-  my_datasets <- list(sd_filt_asv, my_clr,  ln_asv, ref_philr, new_DESeq2, ald, my_sd)
+  my_datasets <- list(sd_filt_asv, my_clr,  ln_asv, ref_philr, new_DESeq2, ald)
   
   print(paste("finished seq depth filter:", s))
   
@@ -183,10 +183,10 @@ for (i in 1:max(result_df$mds_lev)){
                        aes(x=seq_depth, y=spear_cor^2, group = ds_nam)) +
     ggplot2::geom_point(aes(color = factor(ds_nam))) +
     ggplot2::geom_line(aes(color = factor(ds_nam))) +
-    # ggplot2::annotate("text", x = head(pca_only$seq_depth, n = length(my_ds_names)), 
-    #                   y = head(c(pca_only$spear_cor^2), n = length(my_ds_names)), 
-    #                   label = head(pca_only$ds_nam, n = length(my_ds_names)),
-    #                   hjust = -0.1) +
+    ggplot2::annotate("text", x = head(pca_only$seq_depth, n = length(my_ds_names)),
+                      y = head(c(pca_only$spear_cor^2), n = length(my_ds_names)),
+                      label = head(pca_only$ds_nam, n = length(my_ds_names)),
+                      hjust = -0.1) +
     ggplot2::ggtitle(paste0(project, ": PCA",  i, " vs total sequences per sample")) +
     ggplot2::xlab("Min sequence depth per sample") +
     ggplot2::ylab("R squared") + 
