@@ -20,7 +20,15 @@ else
     printf "${RED}$my_fasta does not exist,\nrun your sequences through Dada2 and create the fastq with p1 and p2${NC}"
 fi
 
-cd $home_dir/$project/output/trees
+#check if $home_dir/$project/output/trees/ exists and if not, create it and go to it
+if [ -f "$home_dir/$project/output/trees" ]; then
+    echo " $home_dir/$project/output/trees exists."
+else 
+    printf "${RED}$home_dir/$project/output/trees does not exist,\ncreating it now${NC}"
+    cd $home_dir/$project/output
+    mkdir trees
+fi
+cd $home_dir/$project/output/trees/
 
 #align the sequences with clustal omega
 module load clustal-omega
