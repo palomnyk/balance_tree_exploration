@@ -21,7 +21,7 @@ fi
 
 #align the sequences with clustal omega
 module load clustal-omega
-clustal-omega -in $my_fasta -out aligned_dada2seqs.fasta -fasta
+clustalo -in $my_fasta -out aligned_dada2seqs.fasta -fasta
 
 
 
