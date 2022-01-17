@@ -10,7 +10,7 @@
 #SBATCH --mail-user=amyerke@uncc.edu                            	# Specified email address
 #SBATCH --output=/users/amyerke/slurmLogs/vand_%x.%j.out     # Set directory for standard output
 #SBATCH --error=/users/amyerke/slurmLogs/vand_%x.%j.err      # Set directory for error log
-#SBATCH --uid=amyerke
+##SBATCH --uid=amyerke
 #SBATCH --get-user-env
 
 ### Display the job context
@@ -20,7 +20,7 @@ echo Using $SLURM_NTASKS processors across $SLURM_NNODES nodes
 
 module load R
 
-srun Rscript ~/git/balance_tree_exploration/Vanderbilt/scripts/random_forest/rand_tree_vs_philr_auc.R
+srun Rscript ~/git/balance_tree_exploration/Jones/scripts/random_forest/rand_tree_vs_philr_auc.R
 
 echo ""
 echo "======================================================"
