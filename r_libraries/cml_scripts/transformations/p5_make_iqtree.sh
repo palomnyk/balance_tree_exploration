@@ -21,12 +21,11 @@ else
 fi
 
 #check if $home_dir/$project/output/trees/ exists and if not, create it and go to it
-if [ -f "$home_dir/$project/output/trees" ]; then
-    echo " $home_dir/$project/output/trees exists."
+if [ -f "$home_dir/$project/output/trees/" ]; then
+    echo " $home_dir/$project/output/trees/ exists."
 else 
-    printf "${RED}$home_dir/$project/output/trees does not exist,\ncreating it now${NC}"
-    cd $home_dir/$project/output
-    mkdir trees
+    printf "${RED} $home_dir/$project/output/trees/ does not exist, creating it now${NC}"
+    mkdir  $home_dir/$project/output/trees/
 fi
 cd $home_dir/$project/output/trees/
 
@@ -38,7 +37,7 @@ printf "${RED}Clustalo has run.${NC} Attempting to run iqtree"
 module unload clustal-omega
 module load iqtree
 
-iqtree -s $clust_out -T AUTO
+iqtree2 -s $clust_out -T AUTO
 
 printf "${RED}Reached end of script.${NC}"
 
