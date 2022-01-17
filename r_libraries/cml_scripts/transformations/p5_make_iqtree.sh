@@ -11,6 +11,7 @@ echo "Found arguments ${home_dir} and ${project}."
 
 #my_fasta is made from 
 my_fasta=$home_dir/$project/output/tree_process_blast/dada2seqs.fasta
+clust_out=$home_dir/$project/output/tree_process_blast/aligned_dada2seqs.fasta
 
 #check for fastq file that is our starting point
 if [ -f "$my_fasta" ]; then
@@ -21,7 +22,7 @@ fi
 
 #align the sequences with clustal omega
 module load clustal-omega
-clustalo -in $my_fasta -out aligned_dada2seqs.fasta -fasta
+clustalo --in=$my_fasta --out=$clust_out
 
 
 
