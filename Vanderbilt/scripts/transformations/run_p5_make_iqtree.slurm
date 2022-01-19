@@ -2,8 +2,8 @@
 
 #SBATCH --partition=Orion                                    		# Partition/queue requested on server
 #SBATCH --job-name=clustalo_iqtree                                   		# Job name
-#SBATCH --time=25:00:00                                      		# Time limit (hrs:min:sec)
-#SBATCH --nodes=1                                         			# Number of nodes requested
+#SBATCH --time=48:00:00                                      		# Time limit (hrs:min:sec)
+#SBATCH --nodes=5                                         			# Number of nodes requested
 #SBATCH --ntasks-per-node=1                          			# Number of CPUs (processor cores/tasks)
 #SBATCH --mem=50gb                                          		# Memory limit
 #SBATCH --mail-type=BEGIN,END,FAIL                              	# Mail events (NONE, BEGIN, END, FAIL, ALL)
