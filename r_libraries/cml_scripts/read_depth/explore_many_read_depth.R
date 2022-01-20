@@ -86,7 +86,7 @@ var_exp <- vector(mode = "integer", length = length(my_ds_names) * length(min_se
 spear_cor <- vector(mode = "integer", length = length(my_ds_names) * length(min_seq_depths) * mds_depth)
 samples_left <- vector(mode = "integer", length = length(my_ds_names) * length(min_seq_depths) * mds_depth)
 taxa_left <- vector(mode = "integer", length = length(my_ds_names) * length(min_seq_depths) * mds_depth)
-zero_count <- vector(mode = "integer", length = length(my_ds_names) * length(min_seq_depths) * mds_depth)d
+zero_count <- vector(mode = "integer", length = length(my_ds_names) * length(min_seq_depths) * mds_depth)
 
 pdf(file = file.path(output_dir, "graphics", "seq_depth_artifact_PCA12345_scatter.pdf"))
 counter <- 1
