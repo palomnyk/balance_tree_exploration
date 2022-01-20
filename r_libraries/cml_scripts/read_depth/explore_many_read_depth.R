@@ -69,7 +69,7 @@ asv_table <- readRDS(file.path(output_dir, "r_objects", "ForwardReads_DADA2.rds"
 
 ref_ps <- readRDS(file.path(output_dir, "r_objects", "ref_tree_phyloseq_obj.rds"))
 
-my_ds_names <- c( "raw counts table", "clr", "alr", "lognorm", "philr ref", "DESeq2", "ALDEx2.clr")
+my_ds_names <- c( "raw counts table", "clr", "alr", "lognorm", "PhILR Silva Tree", "DESeq2", "ALDEx2.clr")
 min_seq_depths <- c(0, 500, 1000, 5000, 10000, 20000, 30000, 50000, 70000, 90000, 10000)
 mds_depth <- 5
 
@@ -148,7 +148,6 @@ for(s in 1:length(min_seq_depths)){
       ##-Extract PCA matrix and convert to dataframe----------------------##
       myPCA <- data.frame(my_prcmp$x)
       my_var_exp <- my_prcmp$sdev^2/sum(my_prcmp$sdev^2)
-      print(paste("finished ds:", ds))
       for (md in 1:mds_depth){
         kend[counter] <- cor.test(log10(total_seqs[total_seqs > seq_d]), myPCA[,md], method = "kendall")$estimate
         ds_num[counter] <- ds
@@ -162,6 +161,7 @@ for(s in 1:length(min_seq_depths)){
         zero_count[counter] <- zeros
         counter <- counter + 1
       }
+      print(paste("finished ds:", my_ds_names[ds], "read depth:", seq_d))
     }
   }else{
     print(paste(seq_d, "is too low of a read depth filter, not enough samples left, breaking loop"))
