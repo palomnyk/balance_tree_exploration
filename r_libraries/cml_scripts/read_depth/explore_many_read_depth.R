@@ -147,6 +147,8 @@ for(s in 1:length(min_seq_depths)){
       print(paste("Extracting PCA matrix", my_ds_names[ds]))
       ##-Extract PCA matrix and convert to dataframe----------------------##
       myPCA <- data.frame(my_prcmp$x)
+      print(paste("Dim of myPCA:", nrow(myPCA), ncol(myPCA)))
+      print("Creating proportion of variance explained")
       my_var_exp <- my_prcmp$sdev^2/sum(my_prcmp$sdev^2)
       for (md in 1:mds_depth){
         print(paste("Updating result holding vectors for MDS", md))
