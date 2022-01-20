@@ -149,7 +149,8 @@ for(s in 1:length(min_seq_depths)){
       myPCA <- data.frame(my_prcmp$x)
       my_var_exp <- my_prcmp$sdev^2/sum(my_prcmp$sdev^2)
       for (md in 1:mds_depth){
-        kend[counter] <- cor.test(log10(total_seqs[total_seqs > seq_d]), myPCA[,md], method = "kendall")$estimate
+        print(paste("Updating result holding vectors for MDS", md))
+        # kend[counter] <- cor.test(log10(total_seqs[total_seqs > seq_d]), myPCA[,md], method = "kendall")$estimate
         ds_num[counter] <- ds
         ds_nam[counter] <- my_ds_names[ds]
         mds_lev[counter] <- md
