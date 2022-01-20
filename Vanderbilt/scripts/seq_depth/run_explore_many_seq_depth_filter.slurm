@@ -20,7 +20,7 @@ echo Using $SLURM_NTASKS processors across $SLURM_NNODES nodes
 
 module load R
 
-srun Rscript ~/git/balance_tree_exploration/r_libraries/read_depth/explore_many_read_depth.R \
+srun Rscript ~/git/balance_tree_exploration/r_libraries/cml_scripts/read_depth/explore_many_read_depth.R \
 -p Vanderbilt \
 -d ~/git/balance_tree_exploration/
 
