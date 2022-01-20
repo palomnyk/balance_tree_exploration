@@ -97,7 +97,7 @@ for(s in 1:length(min_seq_depths)){
   if (nrow(rd_filt_asv > 2)){
     safe_rns <- intersect(row.names(ref_ps@otu_table), row.names(rd_filt_asv)) #rows for this iterate
     ts <- rowSums(rd_filt_asv[safe_rns,]) #sample read depths
-    my_clr <- as.data.frame(rgr::clr(as.matrix(asv_table)))#dataset 2
+    my_clr <- as.data.frame(rgr::clr(as.matrix(rd_filt_asv + 1)))#dataset 2
     ##-Find best col for alr denominator--------------------------------##
     my_zeros <- apply(rd_filt_asv, 2, function(x) {
       return(sum(x == 0))
@@ -158,7 +158,7 @@ for(s in 1:length(min_seq_depths)){
         mds_lev[counter] <- md
         seq_depth[counter] <- seq_d
         var_exp[counter] <- my_var_exp[md]
-        spear_cor[counter] <- cor(total_seqs[total_seqs >= seq_d], myPCA[,md], method = "spearman")$estimate
+        spear_cor[counter] <- cor(total_seqs[total_seqs >= seq_d], myPCA[,md], method = "spearman")
         samples_left[counter] <- nrow(my_table)
         taxa_left[counter] <- ncol(my_table)
         zero_count[counter] <- zeros
