@@ -96,7 +96,7 @@ for(s in 1:length(min_seq_depths)){
   print(paste("rd_filt_asv dim:", paste(dim(rd_filt_asv))))
   if (nrow(rd_filt_asv > 2)){
     safe_rns <- intersect(row.names(ref_ps@otu_table), row.names(rd_filt_asv)) #rows for this iterate
-    ts <- rowSums(rd_filt_asv[safe_rns,])
+    ts <- rowSums(rd_filt_asv[safe_rns,]) #sample read depths
     my_clr <- as.data.frame(rgr::clr(as.matrix(asv_table)))#dataset 2
     ##-Find best col for alr denominator--------------------------------##
     my_zeros <- apply(rd_filt_asv, 2, function(x) {
@@ -139,34 +139,24 @@ for(s in 1:length(min_seq_depths)){
       my_table <- as.data.frame(my_datasets[ds])
       zeros <- sum(my_table == 0)
       print(dim(my_table))
-      ##-Create a PCA-----------------------------------------------------##
-      my_prcmp <- prcomp(my_table, 
+      print(paste("Creating PCA for", my_ds_names[ds]))
+      my_prcmp <- stats::prcomp(my_table, 
                          center = TRUE,
-                         rank = mds_depth)#,
+                         rank = mds_depth)#, (scale causes it to fail)
       # scale = TRUE)
+      print(paste("Extracting PCA matrix", my_ds_names[ds]))
       ##-Extract PCA matrix and convert to dataframe----------------------##
       myPCA <- data.frame(my_prcmp$x)
       my_var_exp <- my_prcmp$sdev^2/sum(my_prcmp$sdev^2)
       print(paste("finished ds:", ds))
       for (md in 1:mds_depth){
-        # kend[counter] <- cor.test(log10(total_seqs[total_seqs > seq_d]), myPCA[,md], method = "kendall")$estimate
-        # perma_r2[counter] <- adonis2(log10(total_seqs[total_seqs > seq_d]) ~ myPCA[,md])$R2[1]
-        if (md == 1){
-          my_spear <- cor.test(ts, myPCA[,md],
-                               method = "spearman")
-          plot(log10(ts), myPCA[,2],
-               main = paste0( project, my_datasets[ds], ", PCA", md,"\nr_sq: ", my_spear$estimate^2),
-               sub = paste0("spear: ", my_spear$estimate),
-               xlab = paste0("Read depth threshold"),
-               ylab = paste0("PCA", md)
-          )
-        }
+        kend[counter] <- cor.test(log10(total_seqs[total_seqs > seq_d]), myPCA[,md], method = "kendall")$estimate
         ds_num[counter] <- ds
         ds_nam[counter] <- my_ds_names[ds]
         mds_lev[counter] <- md
         seq_depth[counter] <- seq_d
         var_exp[counter] <- my_var_exp[md]
-        spear_cor[counter] <- cor(total_seqs[total_seqs >= seq_d], myPCA[,md], method = "spearman")
+        spear_cor[counter] <- cor(total_seqs[total_seqs >= seq_d], myPCA[,md], method = "spearman")$estimate
         samples_left[counter] <- nrow(my_table)
         taxa_left[counter] <- ncol(my_table)
         zero_count[counter] <- zeros
