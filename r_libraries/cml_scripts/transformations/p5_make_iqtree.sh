@@ -23,7 +23,7 @@ cd $home_dir/$project/output/trees/
 
 module load iqtree
 
-iqtree2 -s $aligned -T AUTO
+iqtree2 -s $aligned -T AUTO -m GTR+F+R5 
 
 printf "${RED}Reached end of script.${NC}"
 
