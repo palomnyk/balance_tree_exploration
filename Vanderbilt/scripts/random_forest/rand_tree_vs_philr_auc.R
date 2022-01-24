@@ -84,7 +84,6 @@ make_ilr_taxa_auc_df <- function(ps_obj,
             rf_imp_seq = c(rf_imp_seq, row.names(my_df)[maxRow])
             rf_type = c(rf_type, rf$type)
             rf_ntree = c(rf_ntree, rf$ntree)
-            rf_inbag = c(rf_inbag, rf$inbag)
             ##------------------------------------------------------------------##
           },
           error=function(cond) {
@@ -103,19 +102,13 @@ make_ilr_taxa_auc_df <- function(ps_obj,
     }#taxa
     if (just_otu == TRUE) break
   }#ilr
-  print(paste("length all_auc:", length(all_auc)))
-  print(paste("length rf_imp_seq:", length(rf_imp_seq)))
-  print(paste("length rf_type:", length(rf_type)))
-  print(paste("length rf_ntree:", length(rf_ntree)))
-  print(paste("length rf_inbag:", length(rf_inbag)))
   return(data.frame(all_auc,
                     metadata_col,
                     taxa_weight,
                     ilr_weight,
                     rf_imp_seq,
                     rf_type,
-                    rf_ntree,
-                    rf_inbag))
+                    rf_ntree))
 }#end function
 
 ##-Load Depencencies------------------------------------------------##
@@ -283,8 +276,7 @@ all_plot_data <- data.frame(all_auc = c(),
                             trans_group = c(),
                             rf_imp_seq = c(),
                             rf_type = c(),
-                            rf_ntree = c(),
-                            rf_inbag = c())
+                            rf_ntree = c())
 skips <- 0
 counter <- 0
 
