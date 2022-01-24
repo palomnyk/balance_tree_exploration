@@ -20,6 +20,10 @@ make_ilr_taxa_auc_df <- function(ps_obj,
   metadata_col <- c()
   taxa_weight <- c()
   ilr_weight <- c()
+  rf_imp_seq = c()
+  rf_type = c()
+  rf_ntree = c()
+  rf_inbag = c()
   for (ilr_w in 1:length(philr_ilr_weights)){
     for (tax_w in 1:length(philr_taxa_weights)){
       tryCatch({
@@ -54,10 +58,20 @@ make_ilr_taxa_auc_df <- function(ps_obj,
             #rf requires rownames on resp var
             names(resp_var_test) <- row.names(my_table_test)
             rf <- randomForest::randomForest(my_table_train, resp_var_train)
+            ##-Section for saving random forest parameters----------------------##
+            my_df <- rf$importance
+            maxImp <- max(rf$importance)
+            maxRow <- which(rf$importance == maxImp)
+            rf_imp_seq = c(rf_imp_seq,row.names(my_df)[maxRow])
+            rf_type = c(rf_type, rf$type)
+            rf_ntree = c(rf_ntree, rf$ntree)
+            rf_inbag = c(rf_inbag, rf$inbag)
+            ##------------------------------------------------------------------##
             pred <- predict(rf, my_table_test)
             # print(paste("pred:", pred))
             # print(paste("num factors", nlevels(resp_var_test)))
             roc_data <- data.frame(pred = pred, resp_var_test = resp_var_test)
+            
             if (nlevels(resp_var_test) > 2){
               print("multilevels")
             }else{
@@ -92,7 +106,11 @@ make_ilr_taxa_auc_df <- function(ps_obj,
   return(data.frame(all_auc,
                     metadata_col,
                     taxa_weight,
-                    ilr_weight))
+                    ilr_weight,
+                    rf_imp_seq,
+                    rf_type,
+                    rf_ntree,
+                    rf_inbag))
 }#end function
 
 ##-Load Depencencies------------------------------------------------##
@@ -173,7 +191,7 @@ set.seed(36)
 print("making random trees")
 orig_ref_rand_list <- list()
 for (rand in 1:10){
-  rand_tree <- rtree(n = length(ref_ps@phy_tree$tip.label), tip.label = ref_ps@phy_tree$tip.label)
+  rand_tree <- ape::rtree(n = length(ref_ps@phy_tree$tip.label), tip.label = ref_ps@phy_tree$tip.label)
   #put int in philr
   rand_tree_ps <- phyloseq::phyloseq( otu_table(clean_otu, taxa_are_rows = F),
                                       phy_tree(rand_tree),
@@ -187,7 +205,7 @@ for (rand in 1:10){
 print("make random trees for cln upgma taxa")
 cln_upgma_rand_list <- list()
 for (rand in 1:10){
-  rand_tree <- rtree(n = length(cln_denovo_tree_ps@phy_tree$tip.label), tip.label = cln_denovo_tree_ps@phy_tree$tip.label)
+  rand_tree <- ape::rtree(n = length(cln_denovo_tree_ps@phy_tree$tip.label), tip.label = cln_denovo_tree_ps@phy_tree$tip.label)
   #put int in philr
   rand_tree_ps <- phyloseq::phyloseq( otu_table(cln_denovo_tree_ps, taxa_are_rows = F),
                                       phy_tree(rand_tree),
@@ -201,7 +219,7 @@ for (rand in 1:10){
 print("make random trees for clean ref taxa")
 cln_ref_rand_list <- list()
 for (rand in 1:10){
-  rand_tree <- rtree(n = length(ref_ps_clean@phy_tree$tip.label), tip.label = ref_ps_clean@phy_tree$tip.label)
+  rand_tree <- ape::rtree(n = length(ref_ps_clean@phy_tree$tip.label), tip.label = ref_ps_clean@phy_tree$tip.label)
   #put int in philr
   rand_tree_ps <- phyloseq::phyloseq(otu_table(ref_ps_clean, taxa_are_rows = F),
                                      phy_tree(rand_tree),
@@ -257,7 +275,12 @@ all_plot_data <- data.frame(all_auc = c(),
                             taxa_weight = c(),
                             ilr_weight = c(),
                             random_batch = c(),
-                            trans_group = c())
+                            trans_group = c(),
+                            rf_imp_seq = c(),
+                            rf_type = c(),
+                            rf_ntree = c(),
+                            rf_inbag = c(),
+                            )
 skips <- 0
 counter <- 0
 
@@ -660,7 +683,7 @@ for (mta in 1:length(unique(all_plot_data$metadata_col))){
       g <- ggplot2::ggplot(new_pd, aes(y = all_auc, x = trans_group)) + 
         ggplot2::geom_boxplot(data = jitter_pd, color = "blue", alpha = 0.5) +
         ggplot2::geom_boxplot(data = bg_jitter, color = "red", alpha = 0.5) +
-        ggplot2::ggtitle(label = paste(project, my_meta, ", part_weight:", tw, ", ilr_weight:", iw)) +
+        ggplot2::ggtitle(label = paste("Jones", my_meta, ", part_weight:", tw, ", ilr_weight:", iw)) +
         # ggplot2::ggtitle( label = paste("num_tg:", length(unique(new_pd$trans_group)))) +
         ggplot2::theme_classic() +
         ggplot2::scale_x_discrete(guide = guide_axis(angle = 90)) +
@@ -697,4 +720,64 @@ write.table(dFrame, file=file.path(output_dir, "tables", paste0("new_bp_", main_
             row.names=FALSE)
 
 print(paste("completed"))
+
+pdf(file = file.path(output_dir, "graphics", paste0("new_bp_NO_WEIGHT", main_output_label, ".pdf")))
+for (mta in 1:length(unique(all_plot_data$metadata_col))){
+  my_meta <- as.character(unique(all_plot_data$metadata_col)[mta])
+  message(my_meta)
+  
+  plot_data <- all_plot_data[all_plot_data$metadata_col == my_meta,]
+  
+  not_uniform_tw <- which(plot_data$taxa_weight != "uniform" )
+  not_uniform_iw <- which(plot_data$ilr_weight != "uniform" )
+  philr_ds <- unique(plot_data$trans_group[c(not_uniform_tw,not_uniform_iw)] ) #pulls out philr only data
+  non_philr_ds <- unique(plot_data$trans_group[ !(plot_data$trans_group %in% philr_ds)])
+  non_philr_ds_pd <- subset(plot_data, trans_group %in% non_philr_ds)
+  philr_ds_pd <- data.frame(subset(plot_data, trans_group %in% philr_ds))
+  rownames(philr_ds_pd) <- seq(length=nrow(philr_ds_pd))
+
+  new_pd <- rbind(non_philr_ds_pd, philr_ds_pd)
+  new_pd$trans_group <- factor(new_pd$trans_group, levels = c(non_philr_ds, philr_ds))
+  
+  
+  for(tw in unique(plot_data$taxa_weight)){
+    for(iw in unique(plot_data$ilr_weight)){
+      philr_pd_tw_iw <- subset(philr_ds_pd, taxa_weight == tw & ilr_weight == iw)
+      jitter_pd <- rbind(non_philr_ds_pd, philr_pd_tw_iw)
+      jitter_pd$trans_group <- factor(jitter_pd$trans_group, levels = c(non_philr_ds, philr_ds))
+      #need to show means from new_pd, but show jitter of tw and iw
+      #or could just show selected points but show overal mean for each tw and iw
+      back_ground_points <- subset(philr_ds_pd, taxa_weight != tw & ilr_weight != iw)
+      bg_jitter <- rbind(non_philr_ds_pd, back_ground_points)
+      bg_jitter$trans_group <- factor(bg_jitter$trans_group, levels = c(non_philr_ds, philr_ds))
+      g <- ggplot2::ggplot(new_pd, aes(y = all_auc, x = trans_group)) + 
+        ggplot2::geom_boxplot( color = "red",) +
+        ggplot2::ggtitle(label = paste("Jones", my_meta)) +
+        # ggplot2::ggtitle( label = paste("num_tg:", length(unique(new_pd$trans_group)))) +
+        ggplot2::theme_classic() +
+        ggplot2::scale_x_discrete(guide = guide_axis(angle = 90)) +
+        ggplot2::ylab("AUC") +
+        ggplot2::xlab("Tree type")
+      print(g)
+      #build vectors for table
+      for (grp in unique(philr_pd_tw_iw$trans_group)){
+        # print(grp)
+        my_case <- philr_pd_tw_iw[philr_pd_tw_iw$trans_group == grp, ]$all_auc
+        my_control <- back_ground_points[back_ground_points$trans_group == grp, ]$all_auc
+        my_test <- t.test(my_case, my_control)
+        my_pval <- my_test$p.value
+        pval <- c(pval, my_pval)
+        pw_name <- c(pw_name, tw)
+        iw_name <- c(iw_name, iw)
+        metadata_col <- c(metadata_col, my_meta)
+        transformation <- c(transformation, grp)
+        pg_num <- c(pg_num, index)
+      }
+      index <- index + 1
+    }#end for iw
+  }#end for tw
+}
+
+dev.off()
+
 
