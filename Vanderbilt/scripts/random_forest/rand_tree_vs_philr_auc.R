@@ -103,6 +103,11 @@ make_ilr_taxa_auc_df <- function(ps_obj,
     }#taxa
     if (just_otu == TRUE) break
   }#ilr
+  print(paste("length all_auc:", length(all_auc)))
+  print(paste("length rf_imp_seq:", length(rf_imp_seq)))
+  print(paste("length rf_type:", length(rf_type)))
+  print(paste("length rf_ntree:", length(rf_ntree)))
+  print(paste("length rf_inbag:", length(rf_inbag)))
   return(data.frame(all_auc,
                     metadata_col,
                     taxa_weight,
