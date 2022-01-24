@@ -279,8 +279,7 @@ all_plot_data <- data.frame(all_auc = c(),
                             rf_imp_seq = c(),
                             rf_type = c(),
                             rf_ntree = c(),
-                            rf_inbag = c(),
-                            )
+                            rf_inbag = c())
 skips <- 0
 counter <- 0
 
