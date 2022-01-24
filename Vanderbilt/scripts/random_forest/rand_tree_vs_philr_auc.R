@@ -58,15 +58,6 @@ make_ilr_taxa_auc_df <- function(ps_obj,
             #rf requires rownames on resp var
             names(resp_var_test) <- row.names(my_table_test)
             rf <- randomForest::randomForest(my_table_train, resp_var_train)
-            ##-Section for saving random forest parameters----------------------##
-            my_df <- rf$importance
-            maxImp <- max(rf$importance)
-            maxRow <- which(rf$importance == maxImp)
-            rf_imp_seq = c(rf_imp_seq,row.names(my_df)[maxRow])
-            rf_type = c(rf_type, rf$type)
-            rf_ntree = c(rf_ntree, rf$ntree)
-            rf_inbag = c(rf_inbag, rf$inbag)
-            ##------------------------------------------------------------------##
             pred <- predict(rf, my_table_test)
             # print(paste("pred:", pred))
             # print(paste("num factors", nlevels(resp_var_test)))
@@ -86,6 +77,15 @@ make_ilr_taxa_auc_df <- function(ps_obj,
             all_auc <- append(all_auc, auc)
             taxa_weight <- c(taxa_weight, philr_taxa_weights[tax_w])
             ilr_weight <- c(ilr_weight, philr_ilr_weights[ilr_w])
+            ##-Section for saving random forest parameters----------------------##
+            my_df <- rf$importance
+            maxImp <- max(rf$importance)
+            maxRow <- which(rf$importance == maxImp)
+            rf_imp_seq = c(rf_imp_seq, row.names(my_df)[maxRow])
+            rf_type = c(rf_type, rf$type)
+            rf_ntree = c(rf_ntree, rf$ntree)
+            rf_inbag = c(rf_inbag, rf$inbag)
+            ##------------------------------------------------------------------##
           },
           error=function(cond) {
             print('Opps, an error is thrown')
