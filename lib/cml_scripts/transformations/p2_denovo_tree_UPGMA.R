@@ -63,6 +63,11 @@ output_dir <- file.path(home_dir, project, 'output')
 # setwd(file.path(home_dir))
 
 print("Established directory layout")
+##-Establish directory layout---------------------------------------##
+home_dir <- file.path('~','git','balance_tree_exploration')
+project <- "Noguera-Julian"
+output_dir <- file.path(home_dir, project, 'output')
+setwd(file.path(home_dir))
 
 ##-Import R objects and data preprocessing--------------------------##
 seqtab <- readRDS(file.path( output_dir, "r_objects", "ForwardReads_DADA2.rds"))
@@ -79,6 +84,13 @@ myMeta <- read.table(opt$metadata,
                     row.names = opt$metadata_rowname,
                     check.names = FALSE,
                     stringsAsFactors=FALSE)
+
+myMeta <- read.table("~/git/balance_tree_exploration/Noguera-Julian/SraRunTable.txt",
+                     sep=",",
+                     header=TRUE,
+                     row.names = "Run",
+                     check.names = FALSE,
+                     stringsAsFactors=FALSE)
 
 print("Imported tables")
 

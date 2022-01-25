@@ -131,5 +131,9 @@ write.table(taxTab,
             file = file.path(output_dir, "tables", "ForwardReads_DADA2_taxonomy.csv"),
             sep = ",")
 saveRDS(alignment, file.path(output_dir, "r_objects","ForwardReads_DADA2_alignment.rds"))
+write.table(alignment, 
+            file = file.path(output_dir, "tables", "ForwardReads_DADA2_taxonomy.aln"),
+            sep = ",")
+
 
 print("Alignment completed")
