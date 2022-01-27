@@ -42,16 +42,16 @@ print(opt)
 # ‘ape’, ‘dplyr’, ‘reshape2’, ‘plyr’
 # .cran_packages <- c("ggplot2", "gridExtra")
 if (!requireNamespace("BiocManager", quietly = TRUE)){
-  install.packages("BiocManager", type = "source", repos = "http://archive.linux.duke.edu/cran/")
-  if (!requireNamespace("phangorn", quietly = TRUE))
-    install.packages("phangorn",type = "source", repos = "http://archive.linux.duke.edu/cran/")
-  BiocManager::install("phyloseq")
-  BiocManager::install("DECIPHER")
-}
-
-library("DECIPHER")
+  install.packages("BiocManager", type = "source", 
+                   repos = "http://archive.linux.duke.edu/cran/")}
+if (!requireNamespace("phangorn", quietly = TRUE)){
+  install.packages("phangorn",type = "source", 
+                   repos = "http://archive.linux.duke.edu/cran/")}
 library("phangorn")
+if (!requireNamespace("phyloseq", quietly = TRUE)){BiocManager::install("phyloseq")}
 library("phyloseq")
+if (!requireNamespace("DECIPHER", quietly = TRUE)){BiocManager::install("DECIPHER")}
+library("DECIPHER")
 
 print("external libraries loaded")
 
@@ -60,20 +60,11 @@ home_dir <- opt$homedir
 project <- opt$project
 output_dir <- file.path(home_dir, project, 'output')
 
-# setwd(file.path(home_dir))
-
 print("Established directory layout")
-##-Establish directory layout---------------------------------------##
-home_dir <- file.path('~','git','balance_tree_exploration')
-project <- "Noguera-Julian"
-output_dir <- file.path(home_dir, project, 'output')
-setwd(file.path(home_dir))
 
 ##-Import R objects and data preprocessing--------------------------##
 seqtab <- readRDS(file.path( output_dir, "r_objects", "ForwardReads_DADA2.rds"))
 print(paste("Loaded seqtab."))
-alignment <- readRDS(file.path( output_dir, "r_objects", "ForwardReads_DADA2_alignment.rds"))
-print(paste("Loaded alignment."))
 taxTab <- readRDS(file.path( output_dir, "r_objects", "ForwardReads_DADA2_taxonomy.rds"))
 print("Imported R objects")
 
@@ -84,13 +75,6 @@ myMeta <- read.table(opt$metadata,
                     row.names = opt$metadata_rowname,
                     check.names = FALSE,
                     stringsAsFactors=FALSE)
-
-myMeta <- read.table("~/git/balance_tree_exploration/Noguera-Julian/SraRunTable.txt",
-                     sep=",",
-                     header=TRUE,
-                     row.names = "Run",
-                     check.names = FALSE,
-                     stringsAsFactors=FALSE)
 
 print("Imported tables")
 
