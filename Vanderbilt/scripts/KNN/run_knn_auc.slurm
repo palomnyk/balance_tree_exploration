@@ -2,7 +2,7 @@
 
 #SBATCH --partition=Orion                                    		# Partition/queue requested on server
 #SBATCH --job-name=Jones_knn_rand_tree_vs_philr_auc                                   		# Job name
-#SBATCH --time=100:00:00                                      		# Time limit (hrs:min:sec)
+#SBATCH --time=168:00:00                                      		# Time limit (hrs:min:sec)
 #SBATCH --nodes=1                                         			# Number of nodes requested
 #SBATCH --ntasks-per-node=1                          			# Number of CPUs (processor cores/tasks)
 #SBATCH --mem=50gb                                          		# Memory limit

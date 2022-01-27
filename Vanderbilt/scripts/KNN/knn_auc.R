@@ -128,12 +128,12 @@ output_dir <- file.path(home_dir, project, 'output')
 setwd(file.path(home_dir))
 
 ##-Functions--------------------------------------------------------##
-source(file.path(home_dir, "r_libraries", "statistical_functions.R"))
-source(file.path(home_dir, "r_libraries", "table_manipulations.R"))
+source(file.path(home_dir, "lib", "statistical_functions.R"))
+source(file.path(home_dir, "lib", "table_manipulations.R"))
 
 ##-Set up constants-------------------------------------------------##
 rf_cols <- 3:7
-num_cycles <- 20
+num_cycles <- 5
 if(num_cycles < 3) stop("num_cycles should be 3 or more")
 main_output_label <- paste0("knn_auc_rand_v_ref_v_upgma_v_raw_vert_", num_cycles)
 philr_taxa_weights <- c("uniform","gm.counts","anorm","anorm.x.gm.counts","enorm","enorm.x.gm.counts")
