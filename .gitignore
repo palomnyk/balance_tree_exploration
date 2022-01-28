@@ -38,7 +38,9 @@ rsconnect/
 */log
 */Untitled
 *untitled
-#don't want to add data
+# don't want to add data - users can download that themselves
 *.fasta
 *.fasta.gz
 *.fastq
+# Output should not be added either
+*/output/*
