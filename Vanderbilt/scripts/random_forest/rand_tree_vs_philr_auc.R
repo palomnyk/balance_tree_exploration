@@ -285,7 +285,7 @@ metadata <- read.table(file.path(home_dir, project, "patient_metadata.tsv"),
                        row.names = "Run", 
                        check.names = FALSE,
                        stringsAsFactors=TRUE)
-metadata <- metadata[row.names(metadata) %in% row.names(clean_otu), ]
+metadata <- metadata[row.names(metadata) %in% row.names(data.frame(ref_ps@otu_table)), ]
 metadata$type <- droplevels(metadata$type)
 metadata$type <- factor(metadata$type)
 
