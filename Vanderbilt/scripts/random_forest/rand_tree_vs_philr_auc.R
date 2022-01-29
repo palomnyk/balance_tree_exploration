@@ -191,7 +191,6 @@ phyloseq::plot_tree(iqtree_orig_ps, method = "treeonly", nodelabf=nodeplotblank,
 
 cln_iqtree_ps <- raw_ps_to_clean_ps(iqtree_orig_ps)
 phyloseq::plot_tree(cln_iqtree_ps, method = "treeonly", nodelabf=nodeplotblank, title = paste0("cln_iqtree"))
-dev.off()
 
 ##-Random num seed--------------------------------------------------##
 print(paste("Setting random seed to:", random_seed))
