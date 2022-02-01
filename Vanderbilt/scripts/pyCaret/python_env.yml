@@ -9,8 +9,10 @@ dependencies:
   - numpy
   - matplotlib
   - bokeh
-  - sklearn
+  - scikit-learn
   - scipy
   - statsmodels
-  - pycaret
-  
+  - pip
+  - pip:
+    - pycaret
+    
