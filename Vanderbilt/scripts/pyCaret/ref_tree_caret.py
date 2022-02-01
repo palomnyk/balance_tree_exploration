@@ -15,6 +15,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import pycaret as pC
+from pycaret.classification import *
 
 print("Establishing directory layout.")
 home_dir = os.path.join("~", "git", "balance_tree_exploration")
