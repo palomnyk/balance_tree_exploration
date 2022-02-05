@@ -63,7 +63,7 @@ for name, model in models:
 	cv_results = model_selection.cross_val_score(model, my_df, spetz_var, cv=kfold, scoring=scoring)
 	results.append(cv_results)
 	names.append(name)
-	msg = "%s: %f (%f)" % (name, cv_results.mean(), cv_results.std())
+	msg = f"{name}: {cv_results.mean()} {cv_results.std()}")
 	print(msg)
 # boxplot algorithm comparison
 fig = plt.figure()
@@ -71,7 +71,7 @@ fig.suptitle('Algorithm Comparison')
 ax = fig.add_subplot(111)
 plt.boxplot(results)
 ax.set_xticklabels(names)
-plt.savefig(fname=os.path.join(output_dir, "graphics", "ml_sklearn_" + scoring + ".png"),\
+plt.savefig(fname=os.path.join(output_dir, "graphics", f"ml_sklearn_{scoring}.png"),\
    format = "png")
 
 print("Python script completed.")
