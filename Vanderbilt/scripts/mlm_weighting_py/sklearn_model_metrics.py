@@ -63,7 +63,7 @@ for name, model in models:
 	cv_results = model_selection.cross_val_score(model, my_df, spetz_var, cv=kfold, scoring=scoring)
 	results.append(cv_results)
 	names.append(name)
-	msg = f"{name}: {cv_results.mean()} {cv_results.std()}")
+	msg = f"{name}: {cv_results.mean()} {cv_results.std()}"
 	print(msg)
 # boxplot algorithm comparison
 fig = plt.figure()

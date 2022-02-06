@@ -45,9 +45,8 @@ print("made models")
 
 best = pC.compare_models(include = ["lr", "svm", "rt", "knn"])
 print("compared models")
-best_df = pd.DataFrame(best)
 print(best)
-
+best_df = pd.DataFrame(best)
 best_df.dataFrame.to_csv(os.path.join(output_dir, "tables", main_output_label + ".csv"))
 
 print("Exiting python script")

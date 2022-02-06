@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --partition=Orion                                    		# Partition/queue requested on server
-#SBATCH --job-name=testing_pyCaret                                   		# Job name
+#SBATCH --job-name=model_metrics                                   		# Job name
 #SBATCH --time=25:00:00                                      		# Time limit (hrs:min:sec)
 #SBATCH --nodes=1                                         			# Number of nodes requested
 #SBATCH --ntasks-per-node=1                          			# Number of CPUs (processor cores/tasks)
@@ -20,8 +20,9 @@ echo Using $SLURM_NTASKS processors across $SLURM_NNODES nodes
 
 module load anaconda3/2020.11
 conda activate testing_pyCaret
-
-srun python ~/git/balance_tree_exploration/Vanderbilt/scripts/pyCaret/ref_tree_caret.py
+srun python ~/git/balance_tree_exploration/Vanderbilt/scripts/mlm_weighting_py/sklearn_model_metrics.py
+conda deactivate
+module unload anaconda3/2020.11
 
 echo ""
 echo "======================================================"
