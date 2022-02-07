@@ -12,11 +12,12 @@ print("Loading external libraries.")
 # --------------------------------------------------------------------------
 from cgi import print_directory
 from importlib.resources import path
-import os, os.path
+import os, sys
 from posixpath import split
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib.backends.backend_pdf
 from sklearn import model_selection
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
@@ -27,10 +28,10 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
 
 print("Establishing directory layout.")
-home_dir = os.path.expanduser(os.path.join("~", "git", "balance_tree_exploration"))
+home_dir = os.path.expanduser(os.path.join("~", "git", "balance_tree_exploration"))#expanduser allows tilda (~) to work
 project = "Vanderbilt"
 output_dir = os.path.join(home_dir, project, "output")
-silva_philr_dir = os.path.join(home_dir, project, "output")
+silva_philr_dir = os.path.join(output_dir, "tables", "silva_philr_weights")
 
 print("Establishing other constants.")
 main_output_label = "sklearn_ml_test"
@@ -38,13 +39,7 @@ philr_part_weights = ["uniform","gm.counts","anorm","anorm.x.gm.counts","enorm",
 philr_ilr_weights = ["uniform","blw","blw.sqrt","mean.descendants"]
 
 print("Importing data to working env.")
-my_df = pd.read_csv(os.path.join(output_dir, "tables", "philref_tree_1000_sd_filtered.csv"), sep=',', header=0, index_col=0)
 meta_df = pd.read_csv(os.path.join(home_dir, project, "patient_metadata.tsv"), sep='\t', header=0, index_col=0)
-
-print("Dropping any extra values from metadata. Did it work?")
-meta_df = meta_df.loc[list(my_df.index.values)]
-list(my_df.index.values) == list(meta_df.index.values)
-spetz_var = meta_df["type"]
 
 # prepare configuration for cross validation test harness
 seed = 7
@@ -58,38 +53,58 @@ models.append(('RF', RandomForestClassifier()))
 models.append(('NB', GaussianNB()))
 models.append(('SVM', SVC()))
 
-print("cwd:", os.getcwd())
-
 col_names = ["ilr_weight", "part_weight", "model", "split1", "split2", "split3", "split4", "split5", "split6", "split7", "split8", "split9", "split10"]
 result_fpath = os.path.join(output_dir, "tables", "sklearn_model_metrics.csv")
 # os.chdir(os.path.join(output_dir, "tables"))
 with open(result_fpath, "w+") as f:
 	f.write(",".join(col_names))
-
+	f.write("\n")
 	for pw in philr_part_weights:
 		for iw in philr_ilr_weights:
 			table_fn = f"ref_tree_cln_{iw}_{pw}.csv"
-			my_df = pd.read_csv(os.path.join(output_dir, "tables", "philref_tree_1000_sd_filtered.csv"), sep=',', header=0, index_col=0)
-
-			# evaluate each model in turn
-			results = []
-			names = []
+			my_df = pd.read_csv(os.path.join(silva_philr_dir, table_fn), sep=',', header=0, index_col=0)
+			print("Dropping any extra values from metadata. Did it work?")
+			meta_df = meta_df.loc[list(my_df.index.values)]
+			print(list(my_df.index.values) == list(meta_df.index.values))
+			spetz_var = meta_df["type"]
+			print("evaluate each model in turn.")
 			scoring = 'accuracy'
 			for name, model in models:
 				kfold = model_selection.KFold(n_splits=10, random_state=seed, shuffle=True)
 				cv_results = model_selection.cross_val_score(model, my_df, spetz_var, cv=kfold, scoring=scoring)
-				results.append(cv_results)
-				names.append(name)
-				msg = f"{name}: {cv_results.mean()} {cv_results.std()}"
-				print(msg)
+				# result_str = np.array2string(cv_results, separator=",",suffix="/n")
+				result_str = ",".join(map(str, cv_results.tolist()))
+				msg = f"{iw},{pw},{name},{result_str}\n"
+				f.write(msg)
 			# boxplot algorithm comparison
-			fig = plt.figure()
-			fig.suptitle("Algorithm Comparison")
-			ax = fig.add_subplot(111)
-			plt.boxplot(results)
-			ax.set_xticklabels(names)
-			fig_path = os.path.join(output_dir, "graphics", f"{main_output_label}_{scoring}")
-			plt.show()
-			plt.savefig(fig_path)
+print("Finished recording accuracy.")
+
+result_df = pd.read_csv(result_fpath, sep=',', header=0)
+print(result_df.head())
+# print(" ".join(result_df.index))
+
+pdf = matplotlib.backends.backend_pdf.PdfPages(os.path.join(output_dir, "graphics", main_output_label))
+for algo in set(result_df.loc[:,"model"]):
+	print(algo)
+	fig_df = result_df[result_df["model"] == algo]
+	print(f"df shape: {fig_df.shape[0]} {fig_df.shape[1]}")
+	# boxplot algorithm comparison
+	fig = plt.figure()
+	fig.suptitle(f"Weight comp {algo}")
+	ax = fig.add_subplot(111)
+	# print(fig_df.iloc[:,3:].head())
+	plt.boxplot(fig_df.iloc[:,3:].transpose())
+	print(fig_df.loc[:,"ilr_weight"].values)
+	new_labs = [f"{x}\n{y}" for x,y in zip(fig_df.loc[:,"ilr_weight"].values, fig_df.loc[:,"part_weight"].values)]
+	fig.tight_layout()
+	fig.subplots_adjust(bottom=0.4)
+	# ax.set_xticklabels(fig_df.loc[:,"ilr_weight"].tolist(), rotation=90)
+	ax.set_xticklabels(new_labs, rotation=90)
+	ax.tick_params(axis='x', which='major', labelsize=6)
+	pdf.savefig( fig )
+
+pdf.close()
 
 print("Python script completed.")
+
+
