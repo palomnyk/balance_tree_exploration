@@ -13,8 +13,9 @@ download_dir <- file.path(home_dir, project, "downloaded_seqs")
 print(paste("Download destination:", download_dir))
 
 sra_run_table <- read.table(file.path(home_dir, project, "SraRunTable.txt"),
-                            sep = ",",
+                            sep = "\t",
                             header = TRUE)
+print(paste("There are", nrow(sra_run_table), "rows and", ncol(sra_run_table), "columns in SraRunTable.txt"))
 
 print("Creating SRR list.")
 my_rows <- sra_run_table$Assay.Type == "AMPLICON"
