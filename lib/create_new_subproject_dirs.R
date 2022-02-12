@@ -12,8 +12,8 @@ if (length(args)==0) {
 }
 
 home_dir <- file.path('~','git','balance_tree_exploration')
-project <- "Noguera-Julian"
-# project <- args[1]
+#project <- "Noguera-Julian"
+project <- args[1]
 
 new_dir <- file.path(home_dir, project)
 main_dirs <- c("downloaded_seqs", "output", "scripts")
