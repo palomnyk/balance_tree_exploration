@@ -14,6 +14,7 @@ from cgi import print_directory
 from importlib.resources import path
 import os, sys
 from posixpath import split
+from tkinter.ttk import Style
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -48,7 +49,7 @@ models = []
 models.append(('LR', LogisticRegression()))
 models.append(('LDA', LinearDiscriminantAnalysis()))
 models.append(('KNN', KNeighborsClassifier()))
-models.append(('CART', DecisionTreeClassifier()))
+models.append(('DTREE', DecisionTreeClassifier()))
 models.append(('RF', RandomForestClassifier()))
 models.append(('NB', GaussianNB()))
 models.append(('SVM', SVC()))
@@ -83,27 +84,42 @@ result_df = pd.read_csv(result_fpath, sep=',', header=0)
 print(result_df.head())
 # print(" ".join(result_df.index))
 
-pdf = matplotlib.backends.backend_pdf.PdfPages(os.path.join(output_dir, "graphics", main_output_label))
-for algo in set(result_df.loc[:,"model"]):
+# pdf = matplotlib.backends.backend_pdf.PdfPages(os.path.join(output_dir, "graphics", main_output_label))
+
+algos = list(set(result_df.loc[:,"model"]))
+print(algos)
+num_cols = 2
+num_rows = abs(-len(algos)//num_cols)
+print(result_df.head())
+overall_mean = np.nanmean(result_df.iloc[:,3:])
+fig = plt.figure(figsize=(11,11))
+
+# plt.subplots_adjust(bottom=0.8)
+for al in range(len(algos)):
+	algo = algos[al]
 	print(algo)
-	fig_df = result_df[result_df["model"] == algo]
+	fig_df = pd.DataFrame(result_df[result_df["model"] == algo])
+	plot_data = fig_df.iloc[:,3:].transpose()
 	print(f"df shape: {fig_df.shape[0]} {fig_df.shape[1]}")
 	# boxplot algorithm comparison
-	fig = plt.figure()
-	fig.suptitle(f"Weight comp {algo}")
-	ax = fig.add_subplot(111)
+	fig.suptitle(f"{project} PhILR weighting machine learning accuracy")
+	ax = fig.add_subplot(num_rows,num_cols, al +1)
+	ax.boxplot(plot_data)
+	ax.title.set_text(f"{algo} by weighting scheme")
+	ax.axhline(np.nanmean(plot_data), c="r", linestyle="dashed")
+	ax.axhline(overall_mean, c="g", linestyle = ("-."))
+	ax.locator_params(axis='y', tight=True, nbins=4)
 	# print(fig_df.iloc[:,3:].head())
-	plt.boxplot(fig_df.iloc[:,3:].transpose())
-	print(fig_df.loc[:,"ilr_weight"].values)
+	# print(fig_df.loc[:,"ilr_weight"].values)
 	new_labs = [f"{x}\n{y}" for x,y in zip(fig_df.loc[:,"ilr_weight"].values, fig_df.loc[:,"part_weight"].values)]
-	fig.tight_layout()
-	fig.subplots_adjust(bottom=0.4)
 	# ax.set_xticklabels(fig_df.loc[:,"ilr_weight"].tolist(), rotation=90)
 	ax.set_xticklabels(new_labs, rotation=90)
 	ax.tick_params(axis='x', which='major', labelsize=6)
-	pdf.savefig( fig )
 
-pdf.close()
+fig.tight_layout()
+
+fig.savefig(os.path.join(output_dir, "graphics", f"bp_{main_output_label}.png"))
+# pdf.close()
 
 print("Python script completed.")
 
