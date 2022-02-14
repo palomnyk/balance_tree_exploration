@@ -42,6 +42,9 @@ parser.add_option("-d", "--homedir",
                   help="dataset dir path", dest="homedir", metavar="homedir")
 parser.add_option("-p", "--project", default="string",
                   help="project folder", metavar="project")
+parser.add_option("-a", "--use_all_meta", default=False,
+                  help="use all metadata", metavar="use_all_meta")
+                  
 (options, args) = parser.parse_args()
 
 print("Establishing directory layout.")
@@ -58,13 +61,16 @@ main_output_label = "sklearn_ml_acc"
 philr_part_weights = ["uniform","gm.counts","anorm","anorm.x.gm.counts","enorm","enorm.x.gm.counts"]
 philr_ilr_weights = ["uniform","blw","blw.sqrt","mean.descendants"]
 scoring = "accuracy"
-metad_cols = [5,6]
 col_names = ["metadata", "ilr_weight", "part_weight", "model", "split1", "split2", "split3", "split4", "split5", "split6", "split7", "split8", "split9", "split10"]
 result_fpath = os.path.join(output_dir, "tables", f"{main_output_label}_data.csv")
 pdf_fpath = os.path.join(output_dir, "graphics", f"bp_{main_output_label}.pdf")
 
 print("Importing data to working env.")
 meta_df = pd.read_csv(os.path.join(home_dir, project, "patient_metadata.tsv"), sep='\t', header=0, index_col=0)
+if options.metadata_cols == True:
+  meta_cols = range(len(meta_df.columns))
+else:
+  metad_cols = options.metadata_cols
 
 # prepare configuration for cross validation test harness
 seed = 7
