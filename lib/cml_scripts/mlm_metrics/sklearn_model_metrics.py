@@ -31,18 +31,23 @@ from sklearn.svm import SVC
 import argparse
 
 print("Running optparse.")
+
+# parser = argparse.ArgumentParser()
+# parser.add_argument('-e','--entry', type=str, help='New entry')
+# parser.add_argument("-l", action="store_true", help='print logs')
+
 parser = argparse.ArgumentParser(description='Process some integers.')
 # parser.add_option("-f", "--file", dest="filename",
 #                   help="write report to FILE", metavar="FILE")
-parser.add_option("-m", "--metadata_cols",
-                  action="store_false", dest="meta_col", default="int",
-                  help="don't print status messages to stdout")
-parser.add_option("-d", "--homedir",
+parser.add_argument("-m", "--metadata_cols",
+                  action="store_false", dest="meta_col", type=int,
+                  help="Metadata columns to ")
+parser.add_argument("-d", "--homedir",
                   default=os.path.expanduser(os.path.join("~", "git", "balance_tree_exploration")), 
                   help="dataset dir path", dest="homedir", metavar="homedir")
-parser.add_option("-p", "--project", default="string",
+parser.add_argument("-p", "--project", default="string",
                   help="project folder", metavar="project")
-parser.add_option("-a", "--use_all_meta", default=False,
+parser.add_argument("-a", "--use_all_meta", default=False,
                   help="use all metadata", metavar="use_all_meta")
                   
 (options, args) = parser.parse_args()
@@ -99,14 +104,15 @@ with open(result_fpath, "w+") as fl:
 				m_c = list(meta_df.columns)[meta_c]
 				print(m_c)
 				spetz_var = meta_df[m_c]#metadata var to test
-				print("evaluate each model in turn.")
-				for name, model in models:
-					kfold = model_selection.KFold(n_splits=10, random_state=seed, shuffle=True)
-					cv_results = model_selection.cross_val_score(model, my_df, spetz_var, cv=kfold, scoring=scoring)
-					# result_str = np.array2string(cv_results, separator=",",suffix="/n")
-					result_str = ",".join(map(str, cv_results.tolist()))
-					msg = f"{m_c},{iw},{pw},{name},{result_str}\n"
-					fl.write(msg)
+				if spetz_var.dtype == 'category':
+					print("evaluate each model in turn.")
+					for name, model in models:
+						kfold = model_selection.KFold(n_splits=10, random_state=seed, shuffle=True)
+						cv_results = model_selection.cross_val_score(model, my_df, spetz_var, cv=kfold, scoring=scoring)
+						# result_str = np.array2string(cv_results, separator=",",suffix="/n")
+						result_str = ",".join(map(str, cv_results.tolist()))
+						msg = f"{m_c},{iw},{pw},{name},{result_str}\n"
+						fl.write(msg)
 print("Finished recording accuracy.")
 #Setup for building boxplots
 result_df = pd.read_csv(result_fpath, sep=',', header=0)
