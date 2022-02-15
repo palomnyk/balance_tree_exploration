@@ -8,8 +8,8 @@
 #SBATCH --mem=10gb                                          		# Memory limit
 #SBATCH --mail-type=BEGIN,END,FAIL                              	# Mail events (NONE, BEGIN, END, FAIL, ALL)
 #SBATCH --mail-user=amyerke@uncc.edu                            	# Specified email address
-#SBATCH --output=/users/amyerke/slurmLogs/vand_%x.%j.out     # Set directory for standard output
-#SBATCH --error=/users/amyerke/slurmLogs/vand_%x.%j.err      # Set directory for error log
+#SBATCH --output=/users/amyerke/slurmLogs/%x.%j.out     # Set directory for standard output
+#SBATCH --error=/users/amyerke/slurmLogs/%x.%j.err      # Set directory for error log
 ##SBATCH --uid=amyerke
 #SBATCH --get-user-env
 
@@ -21,7 +21,7 @@ echo Using $SLURM_NTASKS processors across $SLURM_NNODES nodes
 module load anaconda3/2020.11
 conda activate testing_pyCaret
 srun python ~/git/balance_tree_exploration/lib/cml_scripts/mlm_metrics/sklearn_model_metrics.py\
-  -m 6,7\
+  -m 7\
   -p Noguera-Julian\
   -a True
 

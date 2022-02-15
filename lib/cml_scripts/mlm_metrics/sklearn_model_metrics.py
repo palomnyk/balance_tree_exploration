@@ -32,16 +32,12 @@ import argparse
 
 print("Running optparse.")
 
-# parser = argparse.ArgumentParser()
-# parser.add_argument('-e','--entry', type=str, help='New entry')
-# parser.add_argument("-l", action="store_true", help='print logs')
-
 parser = argparse.ArgumentParser(description='Process some integers.')
 # parser.add_option("-f", "--file", dest="filename",
 #                   help="write report to FILE", metavar="FILE")
 parser.add_argument("-m", "--metadata_cols",
-                  action="store_false", dest="meta_col", type=int,
-                  help="Metadata columns to ")
+                  action="store_false", dest="meta_col",
+                  help="Metadata columns to analyse")
 parser.add_argument("-d", "--homedir",
                   default=os.path.expanduser(os.path.join("~", "git", "balance_tree_exploration")), 
                   help="dataset dir path", dest="homedir", metavar="homedir")
@@ -50,14 +46,14 @@ parser.add_argument("-p", "--project", default="string",
 parser.add_argument("-a", "--use_all_meta", default=False,
                   help="use all metadata", metavar="use_all_meta")
                   
-(options, args) = parser.parse_args()
+options, unknown = parser.parse_known_args()
 
 print("Establishing directory layout.")
 home_dir = options.homedir
 project = options.project
 output_dir = os.path.join(home_dir, project, "output")
 silva_philr_dir = os.path.join(output_dir, "tables", "silva_philr_weights")
-if not os.exists(silva_philr_dir):
+if not os.path.exists(silva_philr_dir):
   print(f"{silva_philr_dir} does not exist. Use silva_philr_weights.R to create it.")
   sys.exit()
 
