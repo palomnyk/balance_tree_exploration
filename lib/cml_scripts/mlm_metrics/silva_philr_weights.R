@@ -53,7 +53,7 @@ source(file.path(home_dir, "lib", "statistical_functions.R"))
 source(file.path(home_dir, "lib", "table_manipulations.R"))
 
 print("Setting up other constants.")
-main_output_label <- paste0("philr_weights_shuffled_", num_cycles)
+main_output_label <- paste0("philr_weights_shuffled")
 philr_taxa_weights <- c("uniform","gm.counts","anorm","anorm.x.gm.counts","enorm","enorm.x.gm.counts")
 philr_ilr_weights <- c("uniform","blw","blw.sqrt","mean.descendants")
 ref_tree_weights_data_dir_path <- file.path(output_dir, "tables", "silva_philr_weights")
