@@ -68,10 +68,10 @@ pdf_fpath = os.path.join(output_dir, "graphics", f"bp_{main_output_label}.pdf")
 
 print("Importing data to working env.")
 meta_df = pd.read_csv(os.path.join(home_dir, project, "patient_metadata.tsv"), sep='\t', header=0, index_col=0)
-if options.metadata_cols == True:
-  meta_cols = range(len(meta_df.columns))
+if options.use_all_meta == True:
+  metad_cols = range(len(meta_df.columns))
 else:
-  metad_cols = options.metadata_cols
+  metad_cols = options.meta_col
 
 # prepare configuration for cross validation test harness
 seed = 7
