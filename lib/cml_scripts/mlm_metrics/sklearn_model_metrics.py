@@ -10,12 +10,8 @@ Compare Algorithms
 # --------------------------------------------------------------------------
 print("Loading external libraries.")
 # --------------------------------------------------------------------------
-from cgi import print_directory
-from email.policy import default
-from importlib.resources import path
+
 import os, sys
-from posixpath import split
-from tkinter.ttk import Style
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -68,7 +64,7 @@ pdf_fpath = os.path.join(output_dir, "graphics", f"bp_{main_output_label}.pdf")
 
 print("Importing data to working env.")
 meta_df = pd.read_csv(os.path.join(home_dir, project, "patient_metadata.tsv"), sep='\t', header=0, index_col=0)
-if options.use_all_meta == True:
+if options.use_all_meta == "True":
   metad_cols = range(len(meta_df.columns))
 else:
   metad_cols = options.meta_col
@@ -100,7 +96,7 @@ with open(result_fpath, "w+") as fl:
 				m_c = list(meta_df.columns)[meta_c]
 				print(m_c)
 				spetz_var = meta_df[m_c]#metadata var to test
-				if spetz_var.dtype == 'category':
+				if spetz_var.dtype.name == "category":
 					print("evaluate each model in turn.")
 					for name, model in models:
 						kfold = model_selection.KFold(n_splits=10, random_state=seed, shuffle=True)
