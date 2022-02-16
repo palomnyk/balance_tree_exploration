@@ -16,6 +16,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.backends.backend_pdf
+from pandas.api.types import is_string_dtype
 from sklearn import model_selection
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
@@ -41,6 +42,9 @@ parser.add_argument("-p", "--project", default="string",
                   help="project folder", metavar="project")
 parser.add_argument("-a", "--use_all_meta", default=False,
                   help="use all metadata", metavar="use_all_meta")
+parser.add_argument("-i", "--meta_index_col", default=0,
+                  help="Name of column to use as row name for metadata", 
+									metavar="meta_index_col")
                   
 options, unknown = parser.parse_known_args()
 
@@ -63,8 +67,8 @@ result_fpath = os.path.join(output_dir, "tables", f"{main_output_label}_data.csv
 pdf_fpath = os.path.join(output_dir, "graphics", f"bp_{main_output_label}.pdf")
 
 print("Importing data to working env.")
-meta_df = pd.read_csv(os.path.join(home_dir, project, "patient_metadata.tsv"), sep='\t', header=0, index_col=0)
-if options.use_all_meta == "True":
+meta_df = pd.read_csv(os.path.join(home_dir, project, "patient_metadata.tsv"), sep='\t', header=0, index_col=options.meta_index_col)
+if options.use_all_meta.lower() == "true":
   metad_cols = range(len(meta_df.columns))
 else:
   metad_cols = options.meta_col
@@ -94,9 +98,12 @@ with open(result_fpath, "w+") as fl:
 			print(list(my_df.index.values) == list(meta_df.index.values))
 			for meta_c in metad_cols:
 				m_c = list(meta_df.columns)[meta_c]
-				print(m_c)
+				# print(m_c)
 				spetz_var = meta_df[m_c]#metadata var to test
-				if spetz_var.dtype.name == "category":
+				print(spetz_var.dtype)
+				print(is_string_dtype(spetz_var))
+				# if spetz_var.dtype.name == "object":
+				if is_string_dtype(spetz_var) == True and spetz_var.isnull().sum() < 5:
 					print("evaluate each model in turn.")
 					for name, model in models:
 						kfold = model_selection.KFold(n_splits=10, random_state=seed, shuffle=True)
@@ -126,24 +133,25 @@ for meta_c in metadata_cats:
 	plt.subplots_adjust(bottom=0.8)
 	meta_result_df = pd.DataFrame(result_df[result_df["metadata"] == meta_c])
 	overall_mean = np.nanmean(meta_result_df.iloc[:,5:])
-	for al in range(len(algos)):
-		algo = algos[al]
-		print(algo)
-		fig_df = pd.DataFrame(meta_result_df[meta_result_df["model"] == algo])
-		plot_data = fig_df.iloc[:,5:].transpose()
-		print(f"df shape: {fig_df.shape[0]} {fig_df.shape[1]}")
-		ax = fig.add_subplot(num_rows,num_cols, al +1)
-		ax.boxplot(plot_data)
-		ax.title.set_text(f"{algo} by weighting scheme")
-		ax.axhline(np.nanmean(plot_data), c="r", linestyle="dashed")
-		ax.axhline(overall_mean, c="g", linestyle = ("-."))
-		ax.locator_params(axis='y', tight=True, nbins=4)
-		new_labs = [f"{x}\n{y}" for x,y in zip(fig_df.loc[:,"ilr_weight"].values, fig_df.loc[:,"part_weight"].values)]
-		# ax.set_xticklabels(fig_df.loc[:,"ilr_weight"].tolist(), rotation=90)
-		ax.set_xticklabels(new_labs, rotation=90)
-		ax.tick_params(axis='x', which='major', labelsize=6)
-	fig.tight_layout()
-	pdf.savefig( fig )
+	if not pd.isna(overall_mean):
+		for al in range(len(algos)):
+			algo = algos[al]
+			print(algo)
+			fig_df = pd.DataFrame(meta_result_df[meta_result_df["model"] == algo])
+			plot_data = fig_df.iloc[:,5:].transpose()
+			print(f"df shape: {fig_df.shape[0]} {fig_df.shape[1]}")
+			ax = fig.add_subplot(num_rows,num_cols, al +1)
+			ax.boxplot(plot_data)
+			ax.title.set_text(f"{algo} by weighting scheme")
+			ax.axhline(np.nanmean(plot_data), c="r", linestyle="dashed")
+			ax.axhline(overall_mean, c="g", linestyle = ("-."))
+			ax.locator_params(axis='y', tight=True, nbins=4)
+			new_labs = [f"{x}\n{y}" for x,y in zip(fig_df.loc[:,"ilr_weight"].values, fig_df.loc[:,"part_weight"].values)]
+			# ax.set_xticklabels(fig_df.loc[:,"ilr_weight"].tolist(), rotation=90)
+			ax.set_xticklabels(new_labs, rotation=90)
+			ax.tick_params(axis='x', which='major', labelsize=6)
+		fig.tight_layout()
+		pdf.savefig( fig )
 
 pdf.close()
 
