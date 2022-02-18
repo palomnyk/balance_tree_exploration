@@ -4,7 +4,7 @@
 #SBATCH --job-name=Zeller_dada2                                   # Job name
 #SBATCH --time=100:00:00                                      # Time limit (hrs:min:sec)
 #SBATCH --nodes=1                                         # Number of nodes requested
-#SBATCH --ntasks-per-node=1                          			# Number of CPUs (processor cores/tasks)
+#SBATCH --ntasks-per-node=1                          # Number of CPUs (processor cores/tasks)
 #SBATCH --mem=30gb                                          # Memory limit
 #SBATCH --mail-type=BEGIN,END,FAIL                        # Mail events (NONE, BEGIN, END, FAIL, ALL)
 #SBATCH --mail-user=amyerke@uncc.edu                     # Specified email address

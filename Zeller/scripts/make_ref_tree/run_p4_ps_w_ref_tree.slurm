@@ -20,7 +20,7 @@ echo Using $SLURM_NTASKS processors across $SLURM_NNODES nodes
 
 module load R
 
-srun Rscript ~/git/balance_tree_exploration/r_libraries/cml_scripts/make_ref_tree/p4_ps_w_ref_tree.R -d ~/git/balance_tree_exploration \
+srun Rscript ~/git/balance_tree_exploration/lib/cml_scripts/make_ref_tree/p4_ps_w_ref_tree.R -d ~/git/balance_tree_exploration \
   -p Zeller \
   -m ~/git/balance_tree_exploration/Noguera-Julian/SraRunTable.txt \
   -l , \
