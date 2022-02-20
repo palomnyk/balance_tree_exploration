@@ -1,9 +1,9 @@
 #!/bin/bash
 
 #SBATCH --partition=Orion                                    		# Partition/queue requested on server
-#SBATCH --job-name=clustalo_iqtree                                   		# Job name
-#SBATCH --time=48:00:00                                      		# Time limit (hrs:min:sec)
-#SBATCH --nodes=6                                         			# Number of nodes requested
+#SBATCH --job-name=make_clustalo_iqtree_aln                                   		# Job name
+#SBATCH --time=1:00:00                                      		# Time limit (hrs:min:sec)
+#SBATCH --nodes=1                                         			# Number of nodes requested
 #SBATCH --ntasks-per-node=1                          			# Number of CPUs (processor cores/tasks)
 #SBATCH --mem=50gb                                          		# Memory limit
 #SBATCH --mail-type=BEGIN,END,FAIL                              	# Mail events (NONE, BEGIN, END, FAIL, ALL)
@@ -17,7 +17,8 @@ echo Job: $SLURM_JOB_NAME with ID $SLURM_JOB_ID
 echo Running on host: `hostname`
 echo Using $SLURM_NTASKS processors across $SLURM_NNODES nodes
 
-srun bash ~/git/balance_tree_exploration/lib/cml_scripts/transformations/convert_alignment_robjs_to_tables.R ~/git/balance_tree_exploration Zeller
+module load R
+srun Rscript ~/git/balance_tree_exploration/lib/cml_scripts/transformations/convert_alignment_robjs_to_tables.R ~/git/balance_tree_exploration Zeller
 
 echo ""
 echo "======================================================"
