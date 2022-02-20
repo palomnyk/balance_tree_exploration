@@ -33,7 +33,7 @@ project <- opt$project
 output_dir <- file.path(home_dir, project, 'output')
 setwd(file.path(home_dir))
 
-tree_dir <- file.path(output_dir, "trees", "ForwardReads_DADA2_taxonomy.aln")
+tree_dir <- file.path(output_dir, "trees")
 
 if (! file.exists(tree_dir)){
     dir.create( tree_dir )
