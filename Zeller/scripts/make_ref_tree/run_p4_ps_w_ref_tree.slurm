@@ -23,7 +23,7 @@ module load R
 srun Rscript ~/git/balance_tree_exploration/lib/cml_scripts/make_ref_tree/p4_ps_w_ref_tree.R -d ~/git/balance_tree_exploration \
   -p Zeller \
   -m ~/git/balance_tree_exploration/Zeller/SraRunTable.txt \
-  -l \t \
+  -l  \\t \
   -r Run
 
 echo ""
