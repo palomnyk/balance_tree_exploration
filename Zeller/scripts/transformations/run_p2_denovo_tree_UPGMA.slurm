@@ -23,7 +23,7 @@ module load R
 srun Rscript ~/git/balance_tree_exploration/lib/cml_scripts/transformations/p2_denovo_tree_UPGMA.R -d ~/git/balance_tree_exploration \
 -p Zeller \
 -m ~/git/balance_tree_exploration/Zeller/SraRunTable.txt \
--l \t \
+-l , \
 -r Run
 
 # Options:
