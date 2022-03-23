@@ -275,7 +275,6 @@ for (rand in 1:10){
   phyloseq::plot_tree(rand_tree_ps, method = "treeonly", nodelabf=nodeplotblank, title = paste0("iqtree_rand_", rand))
   iqtree_clean_rand_list[[rand]] <- rand_tree_ps
 }
-dev.off()
 
 print("creating lognorm, ALR and CLR")
 if (dir.exists(file.path(output_dir,"r_objects", "lognorm_asv.rds"))) {
