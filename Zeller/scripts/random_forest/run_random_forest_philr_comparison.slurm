@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --partition=Orion                                    		# Partition/queue requested on server
-#SBATCH --job-name=run_p4_ps_w_ref_tree.R                                   		# Job name
+#SBATCH --job-name=run_random_forest_philr_comparison.R                                   		# Job name
 #SBATCH --time=24:00:00                                      		# Time limit (hrs:min:sec)
 #SBATCH --nodes=1                                         			# Number of nodes requested
 #SBATCH --ntasks-per-node=1                          			# Number of CPUs (processor cores/tasks)
@@ -20,7 +20,7 @@ echo Using $SLURM_NTASKS processors across $SLURM_NNODES nodes
 
 module load R
 
-srun Rscript ~/git/balance_tree_exploration/lib/cml_scripts/make_ref_tree/p4_ps_w_ref_tree.R \
+srun Rscript ~/git/balance_tree_exploration/lib/cml_scripts/random_forest/random_forest_philr_comparison.R \
   -d ~/git/balance_tree_exploration \
   -p Zeller \
   -m ~/git/balance_tree_exploration/Zeller/patient_metadata.csv \
