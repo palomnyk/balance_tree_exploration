@@ -265,7 +265,7 @@ for (rand in 1:10){
 print("make random trees for iqtree clean")
 iqtree_clean_rand_list <- list()
 for (rand in 1:10){
-  rand_tree <- ape::rtree(n = length(cln_iqtree_ps@phy_tree$tip.label), tip.label = cln_iqtree_ps@phy_tree$tip.label@phy_tree$tip.label)
+  rand_tree <- ape::rtree(n = length(cln_iqtree_ps@phy_tree$tip.label), tip.label = cln_iqtree_ps@phy_tree$tip.label)
   #put int in philr
   rand_tree_ps <- phyloseq::phyloseq(otu_table(cln_iqtree_ps@otu_table, taxa_are_rows = F),
                                      phy_tree(rand_tree),
