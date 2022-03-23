@@ -179,7 +179,7 @@ source(file.path(home_dir, "lib", "statistical_functions.R"))
 source(file.path(home_dir, "lib", "table_manipulations.R"))
 
 ##-Set up constants-------------------------------------------------##
-num_cycles <- opt.num_cycles
+num_cycles <- opt$num_cycles
 if(num_cycles < 3) stop("num_cycles should be 3 or more")
 main_output_label <- paste0("auc_rand_v_ref_v_upgma_v_raw_vert_", num_cycles)
 philr_taxa_weights <- c("uniform","gm.counts","anorm","anorm.x.gm.counts","enorm","enorm.x.gm.counts")
