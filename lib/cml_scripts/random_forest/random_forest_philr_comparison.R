@@ -179,7 +179,6 @@ source(file.path(home_dir, "lib", "statistical_functions.R"))
 source(file.path(home_dir, "lib", "table_manipulations.R"))
 
 ##-Set up constants-------------------------------------------------##
-rf_cols <- 1:ncol(metadata)
 num_cycles <- opt.num_cycles
 if(num_cycles < 3) stop("num_cycles should be 3 or more")
 main_output_label <- paste0("auc_rand_v_ref_v_upgma_v_raw_vert_", num_cycles)
@@ -315,6 +314,7 @@ metadata <- read.table(file.path(home_dir, project, "patient_metadata.tsv"),
 metadata <- metadata[row.names(metadata) %in% row.names(clean_otu), ]
 metadata$type <- droplevels(metadata$type)
 metadata$type <- factor(metadata$type)
+rf_cols <- 1:ncol(metadata)
 
 ##-Create plot data-------------------------------------------------##
 all_plot_data <- data.frame(all_auc = c(),
