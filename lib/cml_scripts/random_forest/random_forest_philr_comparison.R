@@ -865,17 +865,9 @@ for (mta in 1:length(unique(all_plot_data$metadata_col))){
   
   for(tw in unique(plot_data$taxa_weight)){
     for(iw in unique(plot_data$ilr_weight)){
-      philr_pd_tw_iw <- subset(philr_ds_pd, taxa_weight == tw & ilr_weight == iw)
-      jitter_pd <- rbind(non_philr_ds_pd, philr_pd_tw_iw)
-      jitter_pd$trans_group <- factor(jitter_pd$trans_group, levels = c(non_philr_ds, philr_ds))
-      #need to show means from new_pd, but show jitter of tw and iw
-      #or could just show selected points but show overal mean for each tw and iw
-      back_ground_points <- subset(philr_ds_pd, taxa_weight != tw & ilr_weight != iw)
-      bg_jitter <- rbind(non_philr_ds_pd, back_ground_points)
-      bg_jitter$trans_group <- factor(bg_jitter$trans_group, levels = c(non_philr_ds, philr_ds))
       g <- ggplot2::ggplot(new_pd, aes(y = all_auc, x = trans_group)) + 
         ggplot2::geom_boxplot( color = "red",) +
-        ggplot2::ggtitle(label = paste("Jones", my_meta)) +
+        ggplot2::ggtitle(label = paste(project, my_meta)) +
         # ggplot2::ggtitle( label = paste("num_tg:", length(unique(new_pd$trans_group)))) +
         ggplot2::theme_classic() +
         ggplot2::scale_x_discrete(guide = guide_axis(angle = 90)) +
