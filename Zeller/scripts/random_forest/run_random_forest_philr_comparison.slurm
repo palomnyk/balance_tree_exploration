@@ -26,7 +26,6 @@ srun Rscript ~/git/balance_tree_exploration/lib/cml_scripts/random_forest/random
   -m ~/git/balance_tree_exploration/Zeller/patient_metadata.csv \
   -l , \
   -r Run \
-  -c 2 4 5 6\
   -n 20
 
   # optparse::make_option(c("-d", "--homedir"), type="character", 
@@ -40,8 +39,6 @@ srun Rscript ~/git/balance_tree_exploration/lib/cml_scripts/random_forest/random
   #                       help="metadata file deliminator", metavar="character"),
   # optparse::make_option(c("-r", "--metadata_rowname"), type="character", default=NULL,
   #                       help="metadata file row to use for row names", metavar="character"),
-  # optparse::make_option(c("-c", "--rf_cols"), type="numeric", default=NULL,
-  #                       help="metadata columns to test rf on", metavar="character"),
   # optparse::make_option(c("-n", "--num_cycles"), type="numeric", default=20,
   #                       help="Number of times to shuffle data and run loop again", 
   #                       metavar="character")
