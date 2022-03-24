@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --partition=Orion                                    		# Partition/queue requested on server
-#SBATCH --job-name=model_metrics                                   		# Job name
+#SBATCH --job-name=model_metrics_sklearn                                   		# Job name
 #SBATCH --time=0:10:00                                      		# Time limit (hrs:min:sec)
 #SBATCH --nodes=1                                         			# Number of nodes requested
 #SBATCH --ntasks-per-node=1                          			# Number of CPUs (processor cores/tasks)
