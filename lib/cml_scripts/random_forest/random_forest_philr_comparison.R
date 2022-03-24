@@ -158,7 +158,7 @@ option_list <- list(
                         help="metadata file deliminator", metavar="character"),
   optparse::make_option(c("-r", "--metadata_rowname"), type="character", default=NULL,
                         help="metadata file row to use for row names", metavar="character"),
-   optparse::make_option(c("-n", "--num_cycles"), type="numeric", default=20,
+  optparse::make_option(c("-n", "--num_cycles"), type="numeric", default=20,
                         help="Number of times to shuffle data and run loop again", 
                         metavar="character")
 ); 
@@ -304,15 +304,15 @@ if (dir.exists(file.path(output_dir,"r_objects", "clr_asv.rds"))) {
   saveRDS(my_clr, file = file.path(output_dir,"r_objects", "clr_asv.rds"))
 }
 print("loading and munging metadata")
-metadata <- read.table(file.path(home_dir, project, "patient_metadata.tsv"), 
-                       sep="\t", 
+metadata <- read.table(opt$metadata, 
+                       sep=opt$metadata_delim, 
                        header=TRUE, 
-                       row.names = "Run", 
+                       row.names = opt$metadata_rowname, 
                        check.names = FALSE,
                        stringsAsFactors=TRUE)
 metadata <- metadata[row.names(metadata) %in% row.names(data.frame(ref_ps_clean@otu_table@.Data)), ]
-metadata$type <- droplevels(metadata$type)
-metadata$type <- factor(metadata$type)
+# metadata$type <- droplevels(metadata$type)
+# metadata$type <- factor(metadata$type)
 rf_cols <- 1:ncol(metadata)
 
 ##-Create plot data-------------------------------------------------##
