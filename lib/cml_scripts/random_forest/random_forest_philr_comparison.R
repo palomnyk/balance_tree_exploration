@@ -334,14 +334,14 @@ while (counter < num_cycles & skips < 5){
   train_index <- sample(x = nrow(metadata), size = 0.75*nrow(metadata), replace=FALSE)
   test_index <- c(1:nrow(metadata))[!(1:nrow(metadata) %in% train_index)]
   should_break <- FALSE
-  for(mta in rf_cols){
-    if( length(unique(metadata[,mta][test_index])) != nlevels(metadata[,mta][test_index]) |
-        length(unique(metadata[,mta][train_index])) != nlevels(metadata[,mta][train_index])){
-      print("levels not equal")
-      should_break <- TRUE
-      skips = skips + 1
-    }
-  }
+  # for(mta in rf_cols){
+  #   if( length(unique(metadata[,mta][test_index])) != nlevels(metadata[,mta][test_index]) |
+  #       length(unique(metadata[,mta][train_index])) != nlevels(metadata[,mta][train_index])){
+  #     print("levels not equal")
+  #     should_break <- TRUE
+  #     skips = skips + 1
+  #   }
+  # }
   if (should_break == FALSE){
     print(paste("counter:", counter, " making ref cln random AUC"))
     for( rand_ps in 1:length(cln_ref_rand_list)){
