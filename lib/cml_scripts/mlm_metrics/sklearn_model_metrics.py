@@ -90,7 +90,7 @@ models.append(('RF', RandomForestClassifier()))
 models.append(('GausNB', GaussianNB()))
 models.append(('SVM', SVC()))
 
-os.chdir(os.path.join(output_dir, "tables"))
+# os.chdir(os.path.join(output_dir, "tables"))
 with open(result_fpath, "w+") as fl:
 	fl.write(",".join(col_names))
 	fl.write("\n")
@@ -132,18 +132,6 @@ num_cols = 2
 num_rows = abs(-len(algos)//num_cols)
 print(result_df.head())
 
-#For each metadata:
-	# f_header = "metadata, m_mean, sd, LR_mean, LDA_mean, KNN_mean, DTREE_mean, RF_mean, GausNB_mean, SVM_mean"
-	# f_header2 = "metadata, m_mean, m_sd, top_w, 2nd_w, 3rd_w"
-	# metdata ave, st
-	# for each w combo,
-	#  	metada_weight_mean, metadata_weight_st, metadata_weight_rank 
-	# for each algo: 
-	# 	algo_mean, algo_std, algo_rank, mean for each w combo 
-	# LR, LDA, KNN, DTREE, RF, GausNB, SVM
-
-# LR, LDA, KNN, DTREE, RF, GausNB, SVM
-
 # f_header = "metadata, mean, sd, top_algo, 2nd_algo, 3rd_algo"
 # sample_header = f"{meta_c},{meta_mean},{meta_sd},{top_algo}"
 print("Setup for table output")
@@ -155,8 +143,8 @@ print(type(f_header))
 print(f_header)
 algo_table  = pd.DataFrame(columns = f_header)
 
-with open(algo_table_fpath, "w+") as fl:
-	fl.write(f"{f_header}{algo_header}\n")
+# with open(algo_table_fpath, "w+") as fl:
+# 	fl.write(f"{f_header}{algo_header}\n")
 for meta_c in metadata_cats:
 	f_mean = np.nanmean(result_df.iloc[:,4:])
 	meta_result_df = pd.DataFrame(result_df[result_df["metadata"] == meta_c])
@@ -214,16 +202,14 @@ for meta_c in metadata_cats:
 		# 		algo_table_line.append(str(algo_means.get(algo)))
 			# fl.write(",".join(algo_table_line))
 
-# print("Saving pdf")
-# pdf.close()
+print("Saving pdf")
+pdf.close()
 
-# print(f_header)
-# algo_table = algo_table.reindex(columns=f_header)
-# algo_table = algo_table.round(decimals = 3)
-# print("saving algo table")
-# algo_table.to_csv(algo_table_fpath, index = False)
-
-
+print(f_header)
+algo_table = algo_table.reindex(columns=f_header)
+algo_table = algo_table.round(decimals = 3)
+print("saving algo table")
+algo_table.to_csv(algo_table_fpath, index = False)
 
 # w_header = ["feature", "f_mean", "f_sd", "algo", "algo_mean", "algo_sd", "top_pw", "top_ilr"]
 
