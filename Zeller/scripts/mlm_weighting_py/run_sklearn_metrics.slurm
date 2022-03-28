@@ -21,23 +21,37 @@ echo Using $SLURM_NTASKS processors across $SLURM_NNODES nodes
 module load anaconda3/2020.11
 conda activate testing_pyCaret
 srun python ~/git/balance_tree_exploration/lib/cml_scripts/mlm_metrics/sklearn_model_metrics.py\
-  -m 7\
   -p Zeller \
-  -a True
+  -a True \
+  -f patient_metadata.csv \
+  -l , \
+  -i Run
 
 conda deactivate
 module unload anaconda3/2020.11
 
-# parser.add_option("-m", "--metadata_cols",
-#                   action="store_false", dest="meta_col", default="int",
-#                   help="don't print status messages to stdout")
-# parser.add_option("-d", "--homedir",
-#                   default=os.path.expanduser(os.path.join("~", "git", "balance_tree_exploration")), 
-#                   help="dataset dir path", dest="homedir", metavar="homedir")
-# parser.add_option("-p", "--project", default="string",
-#                   help="project folder", metavar="project")
-# parser.add_option("-a", "--use_all_meta", default=False,
-#                   help="use all metadata", metavar="use_all_meta")
+# usage: sklearn_model_metrics.py [-h] [-m] [-d homedir] [-p project]
+#                                 [-a use_all_meta] [-f meta_fn] [-l delim]
+#                                 [-i meta_index_col]
+
+# Process some integers.
+
+# optional arguments:
+#   -h, --help            show this help message and exit
+#   -m, --metadata_cols   Metadata columns to analyse
+#   -d homedir, --homedir homedir
+#                         dataset dir path
+#   -p project, --project project
+#                         project folder
+#   -a use_all_meta, --use_all_meta use_all_meta
+#                         use all metadata
+#   -f meta_fn, --metada-fn meta_fn
+#                         Name of file at the top of the project folder to use
+#                         as metadata.
+#   -l delim, --delimiter delim
+#                         File delimiting symbol for metadata.
+#   -i meta_index_col, --meta_index_col meta_index_col
+#                         Name of column to use as row name for metadata
 
 echo ""
 echo "======================================================"
