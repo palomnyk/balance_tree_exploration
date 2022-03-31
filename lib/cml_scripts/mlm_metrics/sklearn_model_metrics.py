@@ -11,7 +11,7 @@ Compare Algorithms
 print("Loading external libraries.")
 # --------------------------------------------------------------------------
 
-from email.policy import default
+import math
 import os, sys
 from matplotlib import markers
 import numpy as np
@@ -114,21 +114,21 @@ with open(result_fpath, "w+") as fl:
 			meta_df = meta_df.loc[list(my_df.index.values)]#drops rows from metadata that aren't in my_df
 			print(list(my_df.index.values) == list(meta_df.index.values))
 			for meta_c in metad_cols:
-							m_c = list(meta_df.columns)[meta_c]
-							# print(m_c)
-							spetz_var = meta_df[m_c]#metadata var to test
-							print(spetz_var.dtype)
-							print(is_string_dtype(spetz_var))
-							# if spetz_var.dtype.name == "object":
-							if is_string_dtype(spetz_var) == True and spetz_var.isnull().sum() < 5:
-											print("evaluate each model in turn.")
-											for name, model in models:
-															kfold = model_selection.KFold(n_splits=10, random_state=seed, shuffle=True)
-															cv_results = model_selection.cross_val_score(model, my_df, spetz_var, cv=kfold, scoring=scoring)
-															# result_str = np.array2string(cv_results, separator=",",suffix="/n")
-															result_str = ",".join(map(str, cv_results.tolist()))
-															msg = f"{m_c},{iw},{pw},{name},{result_str}\n"
-															fl.write(msg)
+				m_c = list(meta_df.columns)[meta_c]
+				# print(m_c)
+				spetz_var = meta_df[m_c]#metadata var to test
+				print(spetz_var.dtype)
+				print(is_string_dtype(spetz_var))
+				# if spetz_var.dtype.name == "object":
+				if is_string_dtype(spetz_var) == True and spetz_var.isnull().sum() < 5:
+					print("evaluate each model in turn.")
+					for name, model in models:
+						kfold = model_selection.KFold(n_splits=10, random_state=seed, shuffle=True)
+						cv_results = model_selection.cross_val_score(model, my_df, spetz_var, cv=kfold, scoring=scoring)
+						# result_str = np.array2string(cv_results, separator=",",suffix="/n")
+						result_str = ",".join(map(str, cv_results.tolist()))
+						msg = f"{m_c},{iw},{pw},{name},{result_str}\n"
+						fl.write(msg)
 print("Finished recording accuracy.")
 #Setup for building boxplots
 result_df = pd.read_csv(result_fpath, sep=',', header=0)
@@ -285,7 +285,7 @@ weight_table = pd.DataFrame(weight_dict)
 weight_table.to_csv(weight_fpath, index = False)
 
 #for summary scatter plot
-num_rows = abs(-len(metadata_cats)//num_cols)
+num_rows = 5
 max_plots_per_page = 8
 pdf = matplotlib.backends.backend_pdf.PdfPages(sum_pdf_fpath)
 fig = plt.figure(figsize=(11,12))
@@ -299,8 +299,10 @@ for met in range(0,len(metadata_cats)):
 	meta_result_df = pd.DataFrame(result_df[result_df["metadata"] == meta_c])
 	fig_means = dict() #to hold data for summary boxplot figure
 	flat_num_only = pd.DataFrame(meta_result_df.iloc[:,5:]).to_numpy().flatten()
-	f_mean = np.nanmean(flat_num_only)
-	f_sd = np.std(flat_num_only)
+	f_mean = float(np.nanmean(flat_num_only))
+	f_sd = float(np.std(flat_num_only))
+	y_tick_interval = ((1.5 * f_sd) * 2) / 4
+	my_range = np.arange(round(f_mean - (1.5 * f_sd),1), round(f_mean + (1.5 * f_sd),1), round(y_tick_interval, 2))
 	if not pd.isna(f_mean) and f_mean > 0.5:#don't proced if the data for the metadata is wonky
 		sub_plot_counter += 1
 		if sub_plot_counter % max_plots_per_page == 0:
@@ -327,7 +329,7 @@ for met in range(0,len(metadata_cats)):
 		ax.set_xticks(ticks=range(0,my_means.shape[0]), labels=fig_df.loc[:,"ilr_weight"].tolist(), rotation=90)
 		ax.set_xticklabels(new_labs, rotation=90)
 		ax.tick_params(axis='x', which='major', labelsize=6)
-		ax.set_ylim([f_mean - (1.5 * f_sd), f_mean + (1.5 * f_sd)])
+		ax.set_yticks(ticks=my_range)
 
 ax = fig.add_subplot(num_rows, num_cols, sub_plot_counter + 1)
 for co in range(0,my_means.shape[1]):
