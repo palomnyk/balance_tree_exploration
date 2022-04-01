@@ -20,7 +20,7 @@ echo Using $SLURM_NTASKS processors across $SLURM_NNODES nodes
 
 module load R
 srun Rscript ~/git/balance_tree_exploration/lib/cml_scripts/mlm_metrics/silva_philr_weights.R\
-  -p Vangay \
+  -p Vanderbilt \
   -d ~/git/balance_tree_exploration/
 
 echo ""
