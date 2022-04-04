@@ -354,9 +354,23 @@ metadata <- read.table(opt$metadata,
                        row.names = opt$metadata_rowname, 
                        check.names = FALSE,
                        stringsAsFactors=TRUE)
+print(metadata)
 print(paste("nrow(metadata):", nrow(metadata)))
+print(paste("ncol(metadata):", ncol(metadata)))
+
+print(paste("nrow(data.frame(ref_ps_clean@otu_table@.Data)):",nrow(data.frame(ref_ps_clean@otu_table@.Data))))
+# print(paste("row.names(data.frame(ref_ps_clean@otu_table@.Data)):",row.names(data.frame(ref_ps_clean@otu_table@.Data))))
+my_rows <- row.names(metadata) %in% row.names(data.frame(ref_ps_clean@otu_table@.Data))
+print(paste("my_rows:", length(which(my_rows))))
+print(paste("row.names(metadata)[1:5]", row.names(metadata)[1:5]))
+print(paste("head(metadata):", head(metadata)))
+print(paste(head(metadata)))
 print("attempting to equalize metadata rows to seq data rows")
-metadata <- metadata[row.names(metadata) %in% row.names(data.frame(ref_ps_clean@otu_table@.Data)), ]
+metadata <- data.frame(metadata[my_rows, ])
+print(paste("head(metadata):", head(metadata)))
+print(paste(head(metadata)))
+print(paste("row.names(metadata)[1:5]", row.names(metadata)[1:5]))
+print(paste("ncol(metadata):", ncol(metadata)))
 print(paste("nrow(metadata):", nrow(metadata)))
 # metadata$type <- droplevels(metadata$type)
 # metadata$type <- factor(metadata$type)
