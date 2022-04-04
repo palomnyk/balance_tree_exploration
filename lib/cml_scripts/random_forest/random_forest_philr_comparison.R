@@ -6,110 +6,152 @@ rm(list = ls()) #clear workspace
 
 ##-functions--------------------------------------------------------##
 make_ilr_taxa_auc_df <- function(ps_obj,
-                                 metadata = metadata,
-                                 metadata_cols,
-                                 train_index = train_index,
-                                 test_index = test_index,
-                                 philr_ilr_weights = philr_ilr_weights,  
-                                 philr_taxa_weights = philr_taxa_weights,
-                                 just_otu = FALSE){
-  #Function for making random forest AUC values
-  if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
-  if (!requireNamespace("ROCR", quietly = TRUE)) BiocManager::install("ROCR")
-  library("ROCR")
-  all_auc <- c()
-  metadata_col <- c()
-  taxa_weight <- c()
-  ilr_weight <- c()
-  rf_imp_seq = c()
-  rf_type = c()
-  rf_ntree = c()
-  rf_inbag = c()
-  for (ilr_w in 1:length(philr_ilr_weights)){
-    for (tax_w in 1:length(philr_taxa_weights)){
-      tryCatch({
-        if (just_otu == TRUE){
-          my_table <- ps_obj
-        }else{
-          my_table <- philr::philr(ps_obj@otu_table, ps_obj@phy_tree, 
-                                   part.weights = philr_taxa_weights[tax_w],
-                                   ilr.weights = philr_ilr_weights[ilr_w])
-        }
-        my_table_train <- data.frame(my_table[train_index,])
-        my_table_test <- data.frame(my_table[test_index,])
-        },
-        error=function(cond) {
-          print('Opps, an error is thrown')
-          message(cond)
-          print(message(cond))
-        },
-        warning=function(cond) {
-          print('Opps, a warning is thrown')
-          message(cond)
-          print(message(cond))
-        }
-      )
-      for(mta in metadata_cols){
-        tryCatch(
-          { 
-            print(paste("starting metadata col:", mta, colnames(metadata)[mta]))
-            if (any(is.na(my_table))) break
-            resp_var_test <- metadata[,mta][test_index]
-            resp_var_train <- metadata[,mta][train_index]
-            #rf requires rownames on resp var
-            names(resp_var_test) <- row.names(my_table_test)
-            rf <- randomForest::randomForest(my_table_train, resp_var_train)
-            pred <- predict(rf, my_table_test)
-            # print(paste("pred:", pred))
-            # print(paste("num factors", nlevels(resp_var_test)))
-            roc_data <- data.frame(pred = pred, resp_var_test = resp_var_test)
-            
-            if (nlevels(resp_var_test) > 2){
-              print("multilevels")
-            }else{
-              preds <- ROCR::prediction(as.numeric(pred), as.numeric(resp_var_test))
-              auc <- ROCR::performance(preds, "auc")@y.values[[1]]
-            }
-            print("ROC made")
-            # auc <- pROC::auc(my_roc)
-            # print(paste("auc: ")
-            #update all output
-            metadata_col <- append(metadata_col, colnames(metadata)[mta])
-            all_auc <- append(all_auc, auc)
-            taxa_weight <- c(taxa_weight, philr_taxa_weights[tax_w])
-            ilr_weight <- c(ilr_weight, philr_ilr_weights[ilr_w])
-            ##-Section for saving random forest parameters----------------------##
-            my_df <- rf$importance
-            maxImp <- max(rf$importance)
-            maxRow <- which(rf$importance == maxImp)
-            rf_imp_seq = c(rf_imp_seq, row.names(my_df)[maxRow])
-            rf_type = c(rf_type, rf$type)
-            rf_ntree = c(rf_ntree, rf$ntree)
-            ##------------------------------------------------------------------##
-          },
-          error=function(cond) {
-            print('Opps, an error is thrown')
-            message(cond)
-            print(message(cond))
-          },
-          warning=function(cond) {
-            print('Opps, a warning is thrown')
-            message(cond)
-            print(message(cond))
-            }
-        )
-      }#for mta
-      if (just_otu == TRUE) break
-    }#taxa
-    if (just_otu == TRUE) break
-  }#ilr
-  return(data.frame(all_auc,
-                    metadata_col,
-                    taxa_weight,
-                    ilr_weight,
-                    rf_imp_seq,
-                    rf_type,
-                    rf_ntree))
+																	metadata = metadata,
+																	metadata_cols,
+																	train_index = train_index,
+																	test_index = test_index,
+																	philr_ilr_weights = philr_ilr_weights,  
+																	philr_taxa_weights = philr_taxa_weights,
+																	just_otu = FALSE){
+	#Function for making random forest AUC values
+	if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
+	if (!requireNamespace("ROCR", quietly = TRUE)) BiocManager::install("ROCR")
+	library("ROCR")
+	all_auc <- c()
+	metadata_col <- c()
+	taxa_weight <- c()
+	ilr_weight <- c()
+	rf_imp_seq = c()
+	rf_type = c()
+	rf_ntree = c()
+	rf_inbag = c()
+	for (ilr_w in 1:length(philr_ilr_weights)){
+		for (tax_w in 1:length(philr_taxa_weights)){
+			tryCatch({
+				if (just_otu == TRUE){
+					my_table <- ps_obj
+				}else{
+					my_table <- philr::philr(ps_obj@otu_table, ps_obj@phy_tree, 
+																		part.weights = philr_taxa_weights[tax_w],
+																		ilr.weights = philr_ilr_weights[ilr_w])
+				}
+				my_table_train <- data.frame(my_table[train_index,])
+				my_table_test <- data.frame(my_table[test_index,])
+				},
+				error=function(cond) {
+					print('Opps, an error1 is thrown')
+					message(cond)
+					print(message(cond))
+				},
+				warning=function(cond) {
+					print('Opps, a warning1 is thrown')
+					message(cond)
+					print(message(cond))
+				}
+			)
+			# print("head(my_table_train)")
+			# print(head(my_table_train))
+			for(mta in metadata_cols){
+				tryCatch(
+					{ 
+						print(paste("starting metadata col:", mta, colnames(metadata)[mta]))
+						if (any(is.na(my_table))) {
+							print("There are NA's - breaking loop.")
+							break
+						}
+						resp_var_test <- metadata[,mta][test_index]
+						resp_var_train <- metadata[,mta][train_index]
+						print("Unique resp var test/ resp var train")
+						print(paste(unique(resp_var_test)))
+						print(paste(unique(resp_var_train)))
+						#rf requires rownames on resp var
+						names(resp_var_test) <- row.names(my_table_test)
+						rf <- randomForest::randomForest(my_table_train, resp_var_train)
+						print("made rf")
+						pred <- predict(rf, my_table_test)
+						# print(paste("pred:", pred))
+						print(paste("num factors", length(unique(resp_var_test))))
+						print(paste("levels resp_var_train", nlevels(as.factor(resp_var_train))))
+						# print()
+						roc_data <- data.frame(pred = pred, resp_var_test = resp_var_test)
+						
+						if (length(unique(unlist(resp_var_test))) > 2){
+							print("multilevels")
+							mult_auc <- c()
+							for (fact in 1:length(unique(resp_var_test))){#only need to test resp_test
+								try({
+									my_fact <- as.character(levels(resp_var_test)[fact])
+									print(paste("my_fact:", my_fact))
+									dumb_resp_test <- as.factor(replace(as.character(resp_var_test), as.character(resp_var_test) != my_fact, "dumb_var"))
+									print("dumb_resp")
+									print(paste(dumb_resp_test))
+									dumb_pred <- as.factor(replace(as.character(pred), as.character(pred) != my_fact, "dumb_var"))
+									print("dumb_pred")
+									print(paste(dumb_resp_test))
+									my_roc <- pROC::roc(as.numeric(dumb_pred), as.numeric(dumb_resp_test))
+									print("my_roc")
+									mult_auc <- c(mult_auc, pROC::auc(my_roc))
+									print(mult_auc)
+								})
+							}
+							if (length(mult_auc) > 0 ) {
+								print("in 'if (length(mult_auc) > 0 )' statement")
+								auc <- mean(mult_auc)
+							}else{
+								break
+							}
+						}else{
+              my_roc <- pROC::roc(as.numeric(pred), as.numeric(resp_var_test))
+              print("ROC made")
+              auc <- pROC::auc(my_roc)
+						}
+						# auc <- pROC::auc(my_roc)
+						# print(paste("auc: ")
+						print("update all output")
+						metadata_col <- append(metadata_col, colnames(metadata)[mta])
+						all_auc <- append(all_auc, auc)
+						taxa_weight <- c(taxa_weight, philr_taxa_weights[tax_w])
+						ilr_weight <- c(ilr_weight, philr_ilr_weights[ilr_w])
+						##-Section for saving random forest parameters----------------------##
+						my_df <- rf$importance
+						maxImp <- max(rf$importance)
+						maxRow <- which(rf$importance == maxImp)
+						rf_imp_seq = c(rf_imp_seq, row.names(my_df)[maxRow])
+						rf_type = c(rf_type, rf$type)
+						rf_ntree = c(rf_ntree, rf$ntree)
+						##------------------------------------------------------------------##
+					},
+					error=function(cond) {
+						print('Opps, an error2 is thrown')
+						message(cond)
+						print(message(cond))
+					},
+					warning=function(cond) {
+						print('Opps, a warning2 is thrown')
+						message(cond)
+						print(message(cond))
+						}
+				)
+			}#for mta
+			if (just_otu == TRUE) break
+		}#taxa
+		if (just_otu == TRUE) break
+	}#ilr
+	print("My output:")
+	print(data.frame(all_auc,
+										metadata_col,
+										taxa_weight,
+										ilr_weight,
+										rf_imp_seq,
+										rf_type,
+										rf_ntree))
+	return(data.frame(all_auc,
+										metadata_col,
+										taxa_weight,
+										ilr_weight,
+										rf_imp_seq,
+										rf_type,
+										rf_ntree))
 }#end function
 raw_ps_to_clean_ps <- function(ps) {
   #requires ape, phyloseq and philr_tutorial_normalization 
@@ -140,6 +182,8 @@ if (!requireNamespace("ggplot2", quietly = TRUE)) BiocManager::install("ggplot2"
 library("ggplot2")
 if (!requireNamespace("rgr", quietly = TRUE)) install.packages("rgr")
 library("rgr")
+if (!requireNamespace("pROC", quietly = TRUE)) BiocManager::install("pROC")
+library("pROC")
 if (!requireNamespace("optparse", quietly = TRUE)){
   install.packages("optparse")
 }
@@ -310,7 +354,10 @@ metadata <- read.table(opt$metadata,
                        row.names = opt$metadata_rowname, 
                        check.names = FALSE,
                        stringsAsFactors=TRUE)
+print(paste("nrow(metadata):", nrow(metadata)))
+print("attempting to equalize metadata rows to seq data rows")
 metadata <- metadata[row.names(metadata) %in% row.names(data.frame(ref_ps_clean@otu_table@.Data)), ]
+print(paste("nrow(metadata):", nrow(metadata)))
 # metadata$type <- droplevels(metadata$type)
 # metadata$type <- factor(metadata$type)
 rf_cols <- 1:ncol(metadata)
@@ -348,213 +395,200 @@ while (counter < num_cycles & skips < 5){
     all_plot_data <- rbind(all_plot_data, rand_plot_data)
   }
   
-  print(paste("counter:", counter, " making orig ref random AUC"))
-  for( rand_ps in 1:length(orig_ref_rand_list)){
-    rand_tree_ps <- orig_ref_rand_list[[rand_ps]]
-    rand_plot_data <- make_ilr_taxa_auc_df(ps_obj = rand_tree_ps,
-                                            metadata_cols = rf_cols,
-                                            metadata = metadata,
-                                            train_index = train_index,
-                                            test_index = test_index,
-                                            philr_ilr_weights = philr_ilr_weights,
-                                            philr_taxa_weights = philr_taxa_weights)
-    rand_plot_data$trans_group <- rep(paste0("Culled_random_Silva_PhILR_", rand_ps), nrow(rand_plot_data))
-    rand_plot_data$random_batch <- rep(rand_ps, nrow(rand_plot_data))
-    all_plot_data <- rbind(all_plot_data, rand_plot_data)
-  }
-  print(paste("counter:", counter, " making random cleaned upgma AUC"))
-  for( rand_ps in 1:length(cln_upgma_rand_list)){
-    rand_tree_ps <- cln_upgma_rand_list[[rand_ps]]
-    rand_plot_data <- make_ilr_taxa_auc_df(ps_obj = rand_tree_ps,
-                                            metadata_cols = rf_cols,
-                                            metadata = metadata,
-                                            train_index = train_index,
-                                            test_index = test_index,
-                                            philr_ilr_weights = philr_ilr_weights,
-                                            philr_taxa_weights = philr_taxa_weights)
-    rand_plot_data$trans_group <- rep(paste0("Filtered_random_UPGMA_PhILR_", rand_ps), nrow(rand_plot_data))
-    rand_plot_data$random_batch <- rep(rand_ps, nrow(rand_plot_data))
-    all_plot_data <- rbind(all_plot_data, rand_plot_data)
-  }
-  print(paste("counter:", counter, " making random cleaned iqtree AUC"))
-  for( rand_ps in 1:length(iqtree_clean_rand_list)){
-    rand_tree_ps <- iqtree_clean_rand_list[[rand_ps]]
-    rand_plot_data <- make_ilr_taxa_auc_df(ps_obj = rand_tree_ps,
-                                            metadata_cols = rf_cols,
-                                            metadata = metadata,
-                                            train_index = train_index,
-                                            test_index = test_index,
-                                            philr_ilr_weights = philr_ilr_weights,
-                                            philr_taxa_weights = philr_taxa_weights)
-    rand_plot_data$trans_group <- rep(paste0("Filtered_random_IQTree_PhILR_", rand_ps), nrow(rand_plot_data))
-    rand_plot_data$random_batch <- rep(rand_ps, nrow(rand_plot_data))
-    all_plot_data <- rbind(all_plot_data, rand_plot_data)
-  }
-  
-  print(paste("counter:", counter, " making ref cln tree philr AUC"))
-  my_plot_data <- make_ilr_taxa_auc_df(ps_obj = ref_ps_clean,
-                                        metadata_cols = rf_cols,
-                                        metadata = metadata,
-                                        train_index = train_index,
-                                        test_index = test_index,
-                                        philr_ilr_weights = philr_ilr_weights,
-                                        philr_taxa_weights = philr_taxa_weights)
-  my_plot_data$trans_group <- rep("Culled_filtered_Silva_PhILR", nrow(my_plot_data))
-  my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
-  all_plot_data <- rbind(all_plot_data, my_plot_data)
-  
-  print(paste("counter:", counter, " making ref orig tree philr AUC"))
-  my_plot_data <- make_ilr_taxa_auc_df(ps_obj = ref_ps_clean,
-                                        metadata_cols = rf_cols,
-                                        metadata = metadata,
-                                        train_index = train_index,
-                                        test_index = test_index,
-                                        philr_ilr_weights = philr_ilr_weights,
-                                        philr_taxa_weights = philr_taxa_weights)
-  my_plot_data$trans_group <- rep("Culled_Silva_PhILR", nrow(my_plot_data))
-  my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
-  all_plot_data <- rbind(all_plot_data, my_plot_data)
-  
-  print(paste("counter:", counter, " making orig ref no trees AUC"))
-  my_plot_data <- make_ilr_taxa_auc_df(ps_obj = as.data.frame(ref_ps@otu_table),
-                                        metadata_cols = rf_cols,
-                                        metadata = metadata,
-                                        train_index = train_index,
-                                        test_index = test_index,
-                                        philr_ilr_weights = philr_ilr_weights,
-                                        philr_taxa_weights = philr_taxa_weights,
-                                        just_otu = TRUE)
-  my_plot_data$trans_group <- rep("Culled_Silva_counts_table", nrow(my_plot_data))
-  my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
-  all_plot_data <- rbind(all_plot_data, my_plot_data)
-  
-  print(paste("counter:", counter, " making clean ref no trees AUC"))
-  my_plot_data <- make_ilr_taxa_auc_df(ps_obj = as.data.frame(ref_ps_clean@otu_table),
-                                        metadata_cols = rf_cols,
-                                        metadata = metadata,
-                                        train_index = train_index,
-                                        test_index = test_index,
-                                        philr_ilr_weights = philr_ilr_weights,
-                                        philr_taxa_weights = philr_taxa_weights,
-                                        just_otu = TRUE)
-  my_plot_data$trans_group <- rep("Culled_Filtered_Silva_counts_table", nrow(my_plot_data))
-  my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
-  all_plot_data <- rbind(all_plot_data, my_plot_data)
-  
-  print(paste("counter:", counter, " making seq only clean UPGMA (no trees) AUC"))
-  my_plot_data <- make_ilr_taxa_auc_df(ps_obj = as.data.frame(cln_denovo_tree_ps@otu_table),
-                                        metadata_cols = rf_cols,
-                                        metadata = metadata,
-                                        train_index = train_index,
-                                        test_index = test_index,
-                                        philr_ilr_weights = philr_ilr_weights,
-                                        philr_taxa_weights = philr_taxa_weights,
-                                        just_otu = TRUE)
-  my_plot_data$trans_group <- rep("Filtered_UPGMA_counts_table", nrow(my_plot_data))
-  my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
-  all_plot_data <- rbind(all_plot_data, my_plot_data)
-  
-  print(paste("counter:", counter, " making iqtree cln tree philr AUC"))
-  my_plot_data <- make_ilr_taxa_auc_df(ps_obj = cln_iqtree_ps,
-                                        metadata_cols = rf_cols,
-                                        metadata = metadata,
-                                        train_index = train_index,
-                                        test_index = test_index,
-                                        philr_ilr_weights = philr_ilr_weights,
-                                        philr_taxa_weights = philr_taxa_weights)
-  my_plot_data$trans_group <- rep("Filtered_IQTree_PhILR", nrow(my_plot_data))
-  my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
-  all_plot_data <- rbind(all_plot_data, my_plot_data)
-  
-  print(paste("counter:", counter, " making iqtree orig tree philr AUC"))
-  my_plot_data <- make_ilr_taxa_auc_df(ps_obj = iqtree_orig_ps,
-                                        metadata_cols = rf_cols,
-                                        metadata = metadata,
-                                        train_index = train_index,
-                                        test_index = test_index,
-                                        philr_ilr_weights = philr_ilr_weights,
-                                        philr_taxa_weights = philr_taxa_weights)
-  my_plot_data$trans_group <- rep("IQTREE_Orig_PhILR", nrow(my_plot_data))
-  my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
-  all_plot_data <- rbind(all_plot_data, my_plot_data)
-  
-  print(paste("counter:", counter, " making orig ref no trees AUC"))
-  my_plot_data <- make_ilr_taxa_auc_df(ps_obj = as.data.frame(iqtree_orig_ps@otu_table),
-                                        metadata_cols = rf_cols,
-                                        metadata = metadata,
-                                        train_index = train_index,
-                                        test_index = test_index,
-                                        philr_ilr_weights = philr_ilr_weights,
-                                        philr_taxa_weights = philr_taxa_weights,
-                                        just_otu = TRUE)
-  my_plot_data$trans_group <- rep("Orig_IQTree_counts_table", nrow(my_plot_data))
-  my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
-  all_plot_data <- rbind(all_plot_data, my_plot_data)
-  
-  print(paste("counter:", counter, " making clean iqtree no trees AUC"))
-  my_plot_data <- make_ilr_taxa_auc_df(ps_obj = as.data.frame(cln_iqtree_ps@otu_table),
-                                        metadata_cols = rf_cols,
-                                        metadata = metadata,
-                                        train_index = train_index,
-                                        test_index = test_index,
-                                        philr_ilr_weights = philr_ilr_weights,
-                                        philr_taxa_weights = philr_taxa_weights,
-                                        just_otu = TRUE)
-  my_plot_data$trans_group <- rep("Filtered_IQTree_counts_table", nrow(my_plot_data))
-  my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
-  all_plot_data <- rbind(all_plot_data, my_plot_data)
-
-  # print("making UPGMA AUC")
-  # my_plot_data <- make_ilr_taxa_auc_df( ps_obj = denovo_tree_ps,
+  # print(paste("counter:", counter, " making orig ref random AUC"))
+  # for( rand_ps in 1:length(orig_ref_rand_list)){
+  #   rand_tree_ps <- orig_ref_rand_list[[rand_ps]]
+  #   rand_plot_data <- make_ilr_taxa_auc_df(ps_obj = rand_tree_ps,
   #                                           metadata_cols = rf_cols,
   #                                           metadata = metadata,
   #                                           train_index = train_index,
   #                                           test_index = test_index,
   #                                           philr_ilr_weights = philr_ilr_weights,
   #                                           philr_taxa_weights = philr_taxa_weights)
-  # my_plot_data$trans_group <- rep("UPGMA", nrow(my_plot_data))
+  #   rand_plot_data$trans_group <- rep(paste0("Culled_random_Silva_PhILR_", rand_ps), nrow(rand_plot_data))
+  #   rand_plot_data$random_batch <- rep(rand_ps, nrow(rand_plot_data))
+  #   all_plot_data <- rbind(all_plot_data, rand_plot_data)
+  # }
+  # print(paste("counter:", counter, " making random cleaned upgma AUC"))
+  # for( rand_ps in 1:length(cln_upgma_rand_list)){
+  #   rand_tree_ps <- cln_upgma_rand_list[[rand_ps]]
+  #   rand_plot_data <- make_ilr_taxa_auc_df(ps_obj = rand_tree_ps,
+  #                                           metadata_cols = rf_cols,
+  #                                           metadata = metadata,
+  #                                           train_index = train_index,
+  #                                           test_index = test_index,
+  #                                           philr_ilr_weights = philr_ilr_weights,
+  #                                           philr_taxa_weights = philr_taxa_weights)
+  #   rand_plot_data$trans_group <- rep(paste0("Filtered_random_UPGMA_PhILR_", rand_ps), nrow(rand_plot_data))
+  #   rand_plot_data$random_batch <- rep(rand_ps, nrow(rand_plot_data))
+  #   all_plot_data <- rbind(all_plot_data, rand_plot_data)
+  # }
+  # print(paste("counter:", counter, " making random cleaned iqtree AUC"))
+  # for( rand_ps in 1:length(iqtree_clean_rand_list)){
+  #   rand_tree_ps <- iqtree_clean_rand_list[[rand_ps]]
+  #   rand_plot_data <- make_ilr_taxa_auc_df(ps_obj = rand_tree_ps,
+  #                                           metadata_cols = rf_cols,
+  #                                           metadata = metadata,
+  #                                           train_index = train_index,
+  #                                           test_index = test_index,
+  #                                           philr_ilr_weights = philr_ilr_weights,
+  #                                           philr_taxa_weights = philr_taxa_weights)
+  #   rand_plot_data$trans_group <- rep(paste0("Filtered_random_IQTree_PhILR_", rand_ps), nrow(rand_plot_data))
+  #   rand_plot_data$random_batch <- rep(rand_ps, nrow(rand_plot_data))
+  #   all_plot_data <- rbind(all_plot_data, rand_plot_data)
+  # }
+  
+  # print(paste("counter:", counter, " making ref cln tree philr AUC"))
+  # my_plot_data <- make_ilr_taxa_auc_df(ps_obj = ref_ps_clean,
+  #                                       metadata_cols = rf_cols,
+  #                                       metadata = metadata,
+  #                                       train_index = train_index,
+  #                                       test_index = test_index,
+  #                                       philr_ilr_weights = philr_ilr_weights,
+  #                                       philr_taxa_weights = philr_taxa_weights)
+  # my_plot_data$trans_group <- rep("Culled_filtered_Silva_PhILR", nrow(my_plot_data))
+  # my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
+  # all_plot_data <- rbind(all_plot_data, my_plot_data)
+  
+  # print(paste("counter:", counter, " making ref orig tree philr AUC"))
+  # my_plot_data <- make_ilr_taxa_auc_df(ps_obj = ref_ps_clean,
+  #                                       metadata_cols = rf_cols,
+  #                                       metadata = metadata,
+  #                                       train_index = train_index,
+  #                                       test_index = test_index,
+  #                                       philr_ilr_weights = philr_ilr_weights,
+  #                                       philr_taxa_weights = philr_taxa_weights)
+  # my_plot_data$trans_group <- rep("Culled_Silva_PhILR", nrow(my_plot_data))
+  # my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
+  # all_plot_data <- rbind(all_plot_data, my_plot_data)
+  
+  # print(paste("counter:", counter, " making orig ref no trees AUC"))
+  # my_plot_data <- make_ilr_taxa_auc_df(ps_obj = as.data.frame(ref_ps@otu_table),
+  #                                       metadata_cols = rf_cols,
+  #                                       metadata = metadata,
+  #                                       train_index = train_index,
+  #                                       test_index = test_index,
+  #                                       philr_ilr_weights = philr_ilr_weights,
+  #                                       philr_taxa_weights = philr_taxa_weights,
+  #                                       just_otu = TRUE)
+  # my_plot_data$trans_group <- rep("Culled_Silva_counts_table", nrow(my_plot_data))
+  # my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
+  # all_plot_data <- rbind(all_plot_data, my_plot_data)
+  
+  # print(paste("counter:", counter, " making clean ref no trees AUC"))
+  # my_plot_data <- make_ilr_taxa_auc_df(ps_obj = as.data.frame(ref_ps_clean@otu_table),
+  #                                       metadata_cols = rf_cols,
+  #                                       metadata = metadata,
+  #                                       train_index = train_index,
+  #                                       test_index = test_index,
+  #                                       philr_ilr_weights = philr_ilr_weights,
+  #                                       philr_taxa_weights = philr_taxa_weights,
+  #                                       just_otu = TRUE)
+  # my_plot_data$trans_group <- rep("Culled_Filtered_Silva_counts_table", nrow(my_plot_data))
+  # my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
+  # all_plot_data <- rbind(all_plot_data, my_plot_data)
+  
+  # print(paste("counter:", counter, " making seq only clean UPGMA (no trees) AUC"))
+  # my_plot_data <- make_ilr_taxa_auc_df(ps_obj = as.data.frame(cln_denovo_tree_ps@otu_table),
+  #                                       metadata_cols = rf_cols,
+  #                                       metadata = metadata,
+  #                                       train_index = train_index,
+  #                                       test_index = test_index,
+  #                                       philr_ilr_weights = philr_ilr_weights,
+  #                                       philr_taxa_weights = philr_taxa_weights,
+  #                                       just_otu = TRUE)
+  # my_plot_data$trans_group <- rep("Filtered_UPGMA_counts_table", nrow(my_plot_data))
+  # my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
+  # all_plot_data <- rbind(all_plot_data, my_plot_data)
+  
+  # print(paste("counter:", counter, " making iqtree cln tree philr AUC"))
+  # my_plot_data <- make_ilr_taxa_auc_df(ps_obj = cln_iqtree_ps,
+  #                                       metadata_cols = rf_cols,
+  #                                       metadata = metadata,
+  #                                       train_index = train_index,
+  #                                       test_index = test_index,
+  #                                       philr_ilr_weights = philr_ilr_weights,
+  #                                       philr_taxa_weights = philr_taxa_weights)
+  # my_plot_data$trans_group <- rep("Filtered_IQTree_PhILR", nrow(my_plot_data))
+  # my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
+  # all_plot_data <- rbind(all_plot_data, my_plot_data)
+  
+  # print(paste("counter:", counter, " making iqtree orig tree philr AUC"))
+  # my_plot_data <- make_ilr_taxa_auc_df(ps_obj = iqtree_orig_ps,
+  #                                       metadata_cols = rf_cols,
+  #                                       metadata = metadata,
+  #                                       train_index = train_index,
+  #                                       test_index = test_index,
+  #                                       philr_ilr_weights = philr_ilr_weights,
+  #                                       philr_taxa_weights = philr_taxa_weights)
+  # my_plot_data$trans_group <- rep("IQTREE_Orig_PhILR", nrow(my_plot_data))
+  # my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
+  # all_plot_data <- rbind(all_plot_data, my_plot_data)
+  
+  # print(paste("counter:", counter, " making orig ref no trees AUC"))
+  # my_plot_data <- make_ilr_taxa_auc_df(ps_obj = as.data.frame(iqtree_orig_ps@otu_table),
+  #                                       metadata_cols = rf_cols,
+  #                                       metadata = metadata,
+  #                                       train_index = train_index,
+  #                                       test_index = test_index,
+  #                                       philr_ilr_weights = philr_ilr_weights,
+  #                                       philr_taxa_weights = philr_taxa_weights,
+  #                                       just_otu = TRUE)
+  # my_plot_data$trans_group <- rep("Orig_IQTree_counts_table", nrow(my_plot_data))
+  # my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
+  # all_plot_data <- rbind(all_plot_data, my_plot_data)
+  
+  # print(paste("counter:", counter, " making clean iqtree no trees AUC"))
+  # my_plot_data <- make_ilr_taxa_auc_df(ps_obj = as.data.frame(cln_iqtree_ps@otu_table),
+  #                                       metadata_cols = rf_cols,
+  #                                       metadata = metadata,
+  #                                       train_index = train_index,
+  #                                       test_index = test_index,
+  #                                       philr_ilr_weights = philr_ilr_weights,
+  #                                       philr_taxa_weights = philr_taxa_weights,
+  #                                       just_otu = TRUE)
+  # my_plot_data$trans_group <- rep("Filtered_IQTree_counts_table", nrow(my_plot_data))
+  # my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
   # all_plot_data <- rbind(all_plot_data, my_plot_data)
 
-  print(paste("counter:", counter, "making clean upgma AUC"))
-  my_plot_data <- make_ilr_taxa_auc_df( ps_obj = cln_denovo_tree_ps,
-                                            metadata_cols = rf_cols,
-                                            metadata = metadata,
-                                            train_index = train_index,
-                                            test_index = test_index,
-                                            philr_ilr_weights = philr_ilr_weights,
-                                            philr_taxa_weights = philr_taxa_weights)
-  my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
-  my_plot_data$trans_group <- rep("Filtered_UPGMA_PhILR", nrow(my_plot_data))
-  all_plot_data <- rbind(all_plot_data, my_plot_data)
-  
-  print(paste("counter:", counter, " making seq only orig ref (no trees) AUC"))
-  my_plot_data <- make_ilr_taxa_auc_df( ps_obj = as.data.frame(ref_ps@otu_table),
-                                        metadata_cols = rf_cols,
-                                        metadata = metadata,
-                                        train_index = train_index,
-                                        test_index = test_index,
-                                        philr_ilr_weights = philr_ilr_weights,
-                                        philr_taxa_weights = philr_taxa_weights,
-                                        just_otu = TRUE)
-  my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
-  my_plot_data$trans_group <- rep("Culled_Silva_counts_table", nrow(my_plot_data))
-  all_plot_data <- rbind(all_plot_data, my_plot_data)
+  # # print("making UPGMA AUC")
+  # # my_plot_data <- make_ilr_taxa_auc_df( ps_obj = denovo_tree_ps,
+  # #                                           metadata_cols = rf_cols,
+  # #                                           metadata = metadata,
+  # #                                           train_index = train_index,
+  # #                                           test_index = test_index,
+  # #                                           philr_ilr_weights = philr_ilr_weights,
+  # #                                           philr_taxa_weights = philr_taxa_weights)
+  # # my_plot_data$trans_group <- rep("UPGMA", nrow(my_plot_data))
+  # # all_plot_data <- rbind(all_plot_data, my_plot_data)
 
-  print(paste("counter:", counter, " generate ", "'raw data' data"))
-  my_plot_data <- make_ilr_taxa_auc_df(ps_obj = asv_table,
-                                        metadata_cols = rf_cols,
-                                        metadata = metadata,
-                                        train_index = train_index,
-                                        test_index = test_index,
-                                        philr_ilr_weights = philr_ilr_weights,
-                                        philr_taxa_weights = philr_taxa_weights,
-                                        just_otu = TRUE )
-  my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
-  my_plot_data$trans_group <- rep("Raw_Dada2_counts_table", nrow(my_plot_data))
-  all_plot_data <- rbind(all_plot_data, my_plot_data)
+  # print(paste("counter:", counter, "making clean upgma AUC"))
+  # my_plot_data <- make_ilr_taxa_auc_df( ps_obj = cln_denovo_tree_ps,
+  #                                           metadata_cols = rf_cols,
+  #                                           metadata = metadata,
+  #                                           train_index = train_index,
+  #                                           test_index = test_index,
+  #                                           philr_ilr_weights = philr_ilr_weights,
+  #                                           philr_taxa_weights = philr_taxa_weights)
+  # my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
+  # my_plot_data$trans_group <- rep("Filtered_UPGMA_PhILR", nrow(my_plot_data))
+  # all_plot_data <- rbind(all_plot_data, my_plot_data)
   
-  # print(paste("counter:", counter, " generate ", "read depth data"))
-  # my_plot_data <- make_ilr_taxa_auc_df(ps_obj = data.frame(total_seqs),
+  # print(paste("counter:", counter, " making seq only orig ref (no trees) AUC"))
+  # my_plot_data <- make_ilr_taxa_auc_df( ps_obj = as.data.frame(ref_ps@otu_table),
+  #                                       metadata_cols = rf_cols,
+  #                                       metadata = metadata,
+  #                                       train_index = train_index,
+  #                                       test_index = test_index,
+  #                                       philr_ilr_weights = philr_ilr_weights,
+  #                                       philr_taxa_weights = philr_taxa_weights,
+  #                                       just_otu = TRUE)
+  # my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
+  # my_plot_data$trans_group <- rep("Culled_Silva_counts_table", nrow(my_plot_data))
+  # all_plot_data <- rbind(all_plot_data, my_plot_data)
+
+  # print(paste("counter:", counter, " generate ", "'raw data' data"))
+  # my_plot_data <- make_ilr_taxa_auc_df(ps_obj = asv_table,
   #                                       metadata_cols = rf_cols,
   #                                       metadata = metadata,
   #                                       train_index = train_index,
@@ -562,34 +596,47 @@ while (counter < num_cycles & skips < 5){
   #                                       philr_ilr_weights = philr_ilr_weights,
   #                                       philr_taxa_weights = philr_taxa_weights,
   #                                       just_otu = TRUE )
-  # my_plot_data$trans_group <- rep("read_depth", nrow(my_plot_data))
+  # my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
+  # my_plot_data$trans_group <- rep("Raw_Dada2_counts_table", nrow(my_plot_data))
   # all_plot_data <- rbind(all_plot_data, my_plot_data)
   
-  print(paste("counter:", counter, " generate ", "lognorm data"))
-  my_plot_data <- make_ilr_taxa_auc_df(ps_obj = ln_asv_tab,
-                                        metadata_cols = rf_cols,
-                                        metadata = metadata,
-                                        train_index = train_index,
-                                        test_index = test_index,
-                                        philr_ilr_weights = philr_ilr_weights,
-                                        philr_taxa_weights = philr_taxa_weights,
-                                        just_otu = TRUE )
-  my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
-  my_plot_data$trans_group <- rep("lognorm", nrow(my_plot_data))
-  all_plot_data <- rbind(all_plot_data, my_plot_data)
+  # # print(paste("counter:", counter, " generate ", "read depth data"))
+  # # my_plot_data <- make_ilr_taxa_auc_df(ps_obj = data.frame(total_seqs),
+  # #                                       metadata_cols = rf_cols,
+  # #                                       metadata = metadata,
+  # #                                       train_index = train_index,
+  # #                                       test_index = test_index,
+  # #                                       philr_ilr_weights = philr_ilr_weights,
+  # #                                       philr_taxa_weights = philr_taxa_weights,
+  # #                                       just_otu = TRUE )
+  # # my_plot_data$trans_group <- rep("read_depth", nrow(my_plot_data))
+  # # all_plot_data <- rbind(all_plot_data, my_plot_data)
   
-  print(paste("counter:", counter, " generate alr data"))
-  my_plot_data <- make_ilr_taxa_auc_df(ps_obj = my_alr,
-                                        metadata_cols = rf_cols,
-                                        metadata = metadata,
-                                        train_index = train_index,
-                                        test_index = test_index,
-                                        philr_ilr_weights = philr_ilr_weights,
-                                        philr_taxa_weights = philr_taxa_weights,
-                                        just_otu = TRUE )
-  my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
-  my_plot_data$trans_group <- rep("alr", nrow(my_plot_data))
-  all_plot_data <- rbind(all_plot_data, my_plot_data)
+  # print(paste("counter:", counter, " generate ", "lognorm data"))
+  # my_plot_data <- make_ilr_taxa_auc_df(ps_obj = ln_asv_tab,
+  #                                       metadata_cols = rf_cols,
+  #                                       metadata = metadata,
+  #                                       train_index = train_index,
+  #                                       test_index = test_index,
+  #                                       philr_ilr_weights = philr_ilr_weights,
+  #                                       philr_taxa_weights = philr_taxa_weights,
+  #                                       just_otu = TRUE )
+  # my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
+  # my_plot_data$trans_group <- rep("lognorm", nrow(my_plot_data))
+  # all_plot_data <- rbind(all_plot_data, my_plot_data)
+  
+  # print(paste("counter:", counter, " generate alr data"))
+  # my_plot_data <- make_ilr_taxa_auc_df(ps_obj = my_alr,
+  #                                       metadata_cols = rf_cols,
+  #                                       metadata = metadata,
+  #                                       train_index = train_index,
+  #                                       test_index = test_index,
+  #                                       philr_ilr_weights = philr_ilr_weights,
+  #                                       philr_taxa_weights = philr_taxa_weights,
+  #                                       just_otu = TRUE )
+  # my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
+  # my_plot_data$trans_group <- rep("alr", nrow(my_plot_data))
+  # all_plot_data <- rbind(all_plot_data, my_plot_data)
   
   print(paste("counter:", counter, " generate clr data"))
   my_plot_data <- make_ilr_taxa_auc_df(ps_obj = my_clr,
