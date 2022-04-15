@@ -20,7 +20,7 @@ echo Using $SLURM_NTASKS processors across $SLURM_NNODES nodes
 
 module load R
 
-srun Rscript ~/git/balance_tree_exploration/lib/cml_scripts/hashseq.R \
+srun Rscript ~/git/balance_tree_exploration/lib/cml_scripts/data_preprocessing/hashseq.R \
 	-i ~/git/balance_tree_exploration/Vanderbilt/download_seqs \
 	-o ~/git/balance_tree_exploration/Vanderbilt/output/hashseq
 
