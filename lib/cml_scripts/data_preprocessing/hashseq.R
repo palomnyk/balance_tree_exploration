@@ -31,10 +31,15 @@ opt <- parse_args(opt_parser);
 
 print(opt)
 
+hash_in <- path.expand(opt$input_dir)
+file.exists(hash_in)
+hash_out <- path.expand(opt$output_dir)
+file.exists(hash_out)
+
 print("Running hashseq")
 
-HashSeq::inferTrueSequences(inputDir = path.expand(opt$input_dir), 
-                            outputDir = path.expand(opt$output_dir),
+HashSeq::inferTrueSequences(inputDir = hash_in, 
+                            outputDir = hash_out,
                             abundanceThreshold = opt$threshold)
 
 print("R Script complete.")
