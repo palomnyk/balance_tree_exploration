@@ -32,8 +32,9 @@ opt <- parse_args(opt_parser);
 print(opt)
 
 hash_in <- path.expand(opt$input_dir)
-file.exists(hash_in)
+print(paste(hash_in, "\nexists:", file.exists(hash_in)))
 hash_out <- path.expand(opt$output_dir)
+print(paste(hash_out, "\nexists:", file.exists(hash_in)))
 file.exists(hash_out)
 
 print("Running hashseq")
