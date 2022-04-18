@@ -23,7 +23,7 @@ option_list <- list(
               help="dataset dir path", metavar="home dir"),
   make_option(c("-o", "--output_dir"), type="character", default=NULL, 
               help="output_dir", metavar="project"),
-  make_option(c("-t", "--threshhold"), type="character", default=1000,
+  make_option(c("-t", "--threshold"), type="character", default=1000,
               help="hashseq threshold")); 
 
 opt_parser <- optparse::OptionParser(option_list=option_list);
