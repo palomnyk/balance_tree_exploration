@@ -253,6 +253,14 @@ cln_iqtree_ps <- raw_ps_to_clean_ps(iqtree_orig_ps)
 phyloseq::plot_tree(cln_iqtree_ps, method = "treeonly", nodelabf=nodeplotblank, title = paste0("cln_iqtree"))
 dev.off()
 
+print("Attempting to reading HashSeq count table")
+hashseq <- read.table(file = file.path(output_dir,"hashseq", "SvTable.txt"), 
+                       sep="\t",
+                       header=TRUE,
+                       row.names = 1,
+                       check.names = FALSE,
+                       stringsAsFactors=TRUE)
+
 ##-Random num seed--------------------------------------------------##
 print(paste("Setting random seed to:", random_seed))
 set.seed(random_seed)
@@ -640,6 +648,19 @@ while (counter < num_cycles & skips < 5){
   my_plot_data$trans_group <- rep("clr", nrow(my_plot_data))
   all_plot_data <- rbind(all_plot_data, my_plot_data)
   
+  print(paste("counter:", counter, " generate hashseq data"))
+  my_plot_data <- make_ilr_taxa_auc_df(ps_obj = hashseq,
+                                       metadata_cols = rf_cols,
+                                       metadata = metadata,
+                                       train_index = train_index,
+                                       test_index = test_index,
+                                       philr_ilr_weights = philr_ilr_weights,
+                                       philr_taxa_weights = philr_taxa_weights,
+                                       just_otu = TRUE )
+  my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
+  my_plot_data$trans_group <- rep("HashSeq", nrow(my_plot_data))
+  all_plot_data <- rbind(all_plot_data, my_plot_data)
+  
   print(paste("completed loop:", counter))
   counter <- counter + 1
   skips <- 0
@@ -918,4 +939,4 @@ for (mta in 1:length(unique(all_plot_data$metadata_col))){
 
 dev.off()
 
-
+print("finished R script")
