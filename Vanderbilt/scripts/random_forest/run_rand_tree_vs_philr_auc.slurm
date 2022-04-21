@@ -2,7 +2,7 @@
 
 #SBATCH --partition=Orion                                    		# Partition/queue requested on server
 #SBATCH --job-name=rand_tree_vs_philr_auc                                   		# Job name
-#SBATCH --time=25:00:00                                      		# Time limit (hrs:min:sec)
+#SBATCH --time=50:00:00                                      		# Time limit (hrs:min:sec)
 #SBATCH --nodes=1                                         			# Number of nodes requested
 #SBATCH --ntasks-per-node=1                          			# Number of CPUs (processor cores/tasks)
 #SBATCH --mem=50gb                                          		# Memory limit
@@ -20,7 +20,14 @@ echo Using $SLURM_NTASKS processors across $SLURM_NNODES nodes
 
 module load R
 
-srun Rscript ~/git/balance_tree_exploration/Vanderbilt/scripts/random_forest/rand_tree_vs_philr_auc.R
+srun Rscript ~/git/balance_tree_exploration/module load R
+
+srun Rscript ~/git/balance_tree_exploration/lib/cml_scripts/random_forest/random_forest_philr_comparison.R \
+  -d ~/git/balance_tree_exploration \
+  -p Vanderbilt \
+  -m ~/git/balance_tree_exploration/Zeller/patient_metadata.tsv \
+  -r Run \
+  -n 20
 
 echo ""
 echo "======================================================"
