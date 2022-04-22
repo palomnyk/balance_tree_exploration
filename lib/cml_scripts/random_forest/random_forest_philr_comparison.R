@@ -253,13 +253,12 @@ cln_iqtree_ps <- raw_ps_to_clean_ps(iqtree_orig_ps)
 phyloseq::plot_tree(cln_iqtree_ps, method = "treeonly", nodelabf=nodeplotblank, title = paste0("cln_iqtree"))
 dev.off()
 
-print("Attempting to reading HashSeq count table")
-hashseq <- read.table(file = file.path(output_dir,"hashseq", "SvTable.txt"), 
+print("Attempting to read HashSeq count table")
+hashseq <- read.delim(file = file.path(output_dir,"hashseq", "SvTable.txt"), 
                        sep="\t",
                        header=TRUE,
                        row.names = 1,
-                       check.names = FALSE,
-                       stringsAsFactors=TRUE)
+                       check.names = FALSE)
 
 ##-Random num seed--------------------------------------------------##
 print(paste("Setting random seed to:", random_seed))
@@ -391,7 +390,7 @@ while (counter < num_cycles & skips < 5){
     rand_plot_data$random_batch <- rep(rand_ps, nrow(rand_plot_data))
     all_plot_data <- rbind(all_plot_data, rand_plot_data)
   }
-  
+
   print(paste("counter:", counter, " making orig ref random AUC"))
   for( rand_ps in 1:length(orig_ref_rand_list)){
     rand_tree_ps <- orig_ref_rand_list[[rand_ps]]
@@ -434,7 +433,7 @@ while (counter < num_cycles & skips < 5){
     rand_plot_data$random_batch <- rep(rand_ps, nrow(rand_plot_data))
     all_plot_data <- rbind(all_plot_data, rand_plot_data)
   }
-  
+
   print(paste("counter:", counter, " making ref cln tree philr AUC"))
   my_plot_data <- make_ilr_taxa_auc_df(ps_obj = ref_ps_clean,
                                         metadata_cols = rf_cols,
@@ -446,7 +445,7 @@ while (counter < num_cycles & skips < 5){
   my_plot_data$trans_group <- rep("Culled_filtered_Silva_PhILR", nrow(my_plot_data))
   my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
   all_plot_data <- rbind(all_plot_data, my_plot_data)
-  
+
   print(paste("counter:", counter, " making ref orig tree philr AUC"))
   my_plot_data <- make_ilr_taxa_auc_df(ps_obj = ref_ps_clean,
                                         metadata_cols = rf_cols,
@@ -458,7 +457,7 @@ while (counter < num_cycles & skips < 5){
   my_plot_data$trans_group <- rep("Culled_Silva_PhILR", nrow(my_plot_data))
   my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
   all_plot_data <- rbind(all_plot_data, my_plot_data)
-  
+
   print(paste("counter:", counter, " making orig ref no trees AUC"))
   my_plot_data <- make_ilr_taxa_auc_df(ps_obj = as.data.frame(ref_ps@otu_table),
                                         metadata_cols = rf_cols,
@@ -471,7 +470,7 @@ while (counter < num_cycles & skips < 5){
   my_plot_data$trans_group <- rep("Culled_Silva_counts_table", nrow(my_plot_data))
   my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
   all_plot_data <- rbind(all_plot_data, my_plot_data)
-  
+
   print(paste("counter:", counter, " making clean ref no trees AUC"))
   my_plot_data <- make_ilr_taxa_auc_df(ps_obj = as.data.frame(ref_ps_clean@otu_table),
                                         metadata_cols = rf_cols,
@@ -484,7 +483,7 @@ while (counter < num_cycles & skips < 5){
   my_plot_data$trans_group <- rep("Culled_Filtered_Silva_counts_table", nrow(my_plot_data))
   my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
   all_plot_data <- rbind(all_plot_data, my_plot_data)
-  
+
   print(paste("counter:", counter, " making seq only clean UPGMA (no trees) AUC"))
   my_plot_data <- make_ilr_taxa_auc_df(ps_obj = as.data.frame(cln_denovo_tree_ps@otu_table),
                                         metadata_cols = rf_cols,
@@ -497,7 +496,7 @@ while (counter < num_cycles & skips < 5){
   my_plot_data$trans_group <- rep("Filtered_UPGMA_counts_table", nrow(my_plot_data))
   my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
   all_plot_data <- rbind(all_plot_data, my_plot_data)
-  
+
   print(paste("counter:", counter, " making iqtree cln tree philr AUC"))
   my_plot_data <- make_ilr_taxa_auc_df(ps_obj = cln_iqtree_ps,
                                         metadata_cols = rf_cols,
@@ -509,7 +508,7 @@ while (counter < num_cycles & skips < 5){
   my_plot_data$trans_group <- rep("Filtered_IQTree_PhILR", nrow(my_plot_data))
   my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
   all_plot_data <- rbind(all_plot_data, my_plot_data)
-  
+
   print(paste("counter:", counter, " making iqtree orig tree philr AUC"))
   my_plot_data <- make_ilr_taxa_auc_df(ps_obj = iqtree_orig_ps,
                                         metadata_cols = rf_cols,
@@ -521,7 +520,7 @@ while (counter < num_cycles & skips < 5){
   my_plot_data$trans_group <- rep("IQTREE_Orig_PhILR", nrow(my_plot_data))
   my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
   all_plot_data <- rbind(all_plot_data, my_plot_data)
-  
+
   print(paste("counter:", counter, " making orig ref no trees AUC"))
   my_plot_data <- make_ilr_taxa_auc_df(ps_obj = as.data.frame(iqtree_orig_ps@otu_table),
                                         metadata_cols = rf_cols,
@@ -534,7 +533,7 @@ while (counter < num_cycles & skips < 5){
   my_plot_data$trans_group <- rep("Orig_IQTree_counts_table", nrow(my_plot_data))
   my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
   all_plot_data <- rbind(all_plot_data, my_plot_data)
-  
+
   print(paste("counter:", counter, " making clean iqtree no trees AUC"))
   my_plot_data <- make_ilr_taxa_auc_df(ps_obj = as.data.frame(cln_iqtree_ps@otu_table),
                                         metadata_cols = rf_cols,
@@ -570,7 +569,7 @@ while (counter < num_cycles & skips < 5){
   my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
   my_plot_data$trans_group <- rep("Filtered_UPGMA_PhILR", nrow(my_plot_data))
   all_plot_data <- rbind(all_plot_data, my_plot_data)
-  
+
   print(paste("counter:", counter, " making seq only orig ref (no trees) AUC"))
   my_plot_data <- make_ilr_taxa_auc_df( ps_obj = as.data.frame(ref_ps@otu_table),
                                         metadata_cols = rf_cols,
@@ -596,7 +595,7 @@ while (counter < num_cycles & skips < 5){
   my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
   my_plot_data$trans_group <- rep("Raw_Dada2_counts_table", nrow(my_plot_data))
   all_plot_data <- rbind(all_plot_data, my_plot_data)
-  
+
   # print(paste("counter:", counter, " generate ", "read depth data"))
   # my_plot_data <- make_ilr_taxa_auc_df(ps_obj = data.frame(total_seqs),
   #                                       metadata_cols = rf_cols,
@@ -608,7 +607,7 @@ while (counter < num_cycles & skips < 5){
   #                                       just_otu = TRUE )
   # my_plot_data$trans_group <- rep("read_depth", nrow(my_plot_data))
   # all_plot_data <- rbind(all_plot_data, my_plot_data)
-  
+
   print(paste("counter:", counter, " generate ", "lognorm data"))
   my_plot_data <- make_ilr_taxa_auc_df(ps_obj = ln_asv_tab,
                                         metadata_cols = rf_cols,
@@ -621,7 +620,7 @@ while (counter < num_cycles & skips < 5){
   my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
   my_plot_data$trans_group <- rep("lognorm", nrow(my_plot_data))
   all_plot_data <- rbind(all_plot_data, my_plot_data)
-  
+
   print(paste("counter:", counter, " generate alr data"))
   my_plot_data <- make_ilr_taxa_auc_df(ps_obj = my_alr,
                                         metadata_cols = rf_cols,
@@ -634,7 +633,7 @@ while (counter < num_cycles & skips < 5){
   my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
   my_plot_data$trans_group <- rep("alr", nrow(my_plot_data))
   all_plot_data <- rbind(all_plot_data, my_plot_data)
-  
+
   print(paste("counter:", counter, " generate clr data"))
   my_plot_data <- make_ilr_taxa_auc_df(ps_obj = my_clr,
                                         metadata_cols = rf_cols,
