@@ -63,17 +63,16 @@ make_ilr_taxa_auc_df <- function(ps_obj,
 						resp_var_test <- factor(metadata[,mta][test_index])
 						resp_var_train <- factor(metadata[,mta][train_index])
 						print("Unique resp var test/ resp var train")
-						print(paste(unique(resp_var_test)))
-						print(paste(unique(resp_var_train)))
+						# print(paste(unique(resp_var_test)))
+						# print(paste(unique(resp_var_train)))
 						#rf requires rownames on resp var
 						names(resp_var_test) <- row.names(my_table_test)
 						rf <- randomForest::randomForest(my_table_train, resp_var_train)
 						print("made rf")
 						pred <- predict(rf, my_table_test)
 						# print(paste("pred:", pred))
-						print(paste("num factors", length(unique(resp_var_test))))
-						print(paste("levels resp_var_train", nlevels(as.factor(resp_var_train))))
-						# print()
+						# print(paste("num factors", length(unique(resp_var_test))))
+						# print(paste("levels resp_var_train", nlevels(as.factor(resp_var_train))))
 						roc_data <- data.frame(pred = pred, resp_var_test = resp_var_test)
 						
 						if (length(unique(unlist(resp_var_test))) > 2){
@@ -82,15 +81,15 @@ make_ilr_taxa_auc_df <- function(ps_obj,
 							for (fact in 1:length(unique(resp_var_test))){#only need to test resp_test
 								try({
 									my_fact <- as.character(levels(resp_var_test)[fact])
-									print(paste("my_fact:", my_fact))
+									# print(paste("my_fact:", my_fact))
 									dumb_resp_test <- as.factor(replace(as.character(resp_var_test), as.character(resp_var_test) != my_fact, "dumb_var"))
-									print("dumb_resp")
+									# print("dumb_resp")
 									print(paste(dumb_resp_test))
 									dumb_pred <- as.factor(replace(as.character(pred), as.character(pred) != my_fact, "dumb_var"))
-									print("dumb_pred")
+									# print("dumb_pred")
 									print(paste(dumb_resp_test))
 									my_roc <- pROC::roc(as.numeric(dumb_pred), as.numeric(dumb_resp_test))
-									print("my_roc")
+									# print("my_roc")
 									mult_auc <- c(mult_auc, pROC::auc(my_roc))
 									print(mult_auc)
 								})
@@ -255,9 +254,36 @@ cln_iqtree_ps <- raw_ps_to_clean_ps(iqtree_orig_ps)
 phyloseq::plot_tree(cln_iqtree_ps, method = "treeonly", nodelabf=nodeplotblank, title = paste0("cln_iqtree"))
 dev.off()
 
+print("loading and munging metadata")
+metadata <- read.table(opt$metadata, 
+                       sep=opt$metadata_delim, 
+                       header=TRUE, 
+                       row.names = opt$metadata_rowname, 
+                       check.names = FALSE,
+                       stringsAsFactors=TRUE)
+print("attempting to equalize metadata rows to seq data rows")
+my_rows <- row.names(metadata) %in% row.names(data.frame(ref_ps@otu_table@.Data))
+metadata <- data.frame(metadata[my_rows, ])
+rf_cols <- 1:ncol(metadata)
+
 print("Attempting to read HashSeq count table")
 hashseq <- data.frame(data.table::fread(file = file.path(output_dir,"hashseq", "SvTable.txt"),
-                      header=TRUE, data.table=FALSE), row.names = 1)
+                                        header=TRUE, data.table=FALSE), row.names = 1)
+my_names <- sapply(as.character(row.names(hashseq)), function(x) {
+  my_val = strsplit(x,"_")[[1]][1]
+  return(my_val)
+  })
+
+row.names(hashseq) <- my_names
+or_abund <- apply(hashseq, 2, function(c){
+  sum(c!=0) >= 0.10*nrow(hashseq)})
+print("attempting to equalize hashseq rows to seq data rows")
+hashseq <- data.frame(hashseq[my_rows, or_abund])
+
+if (!row.names(hashseq) == row.names(metadata)){
+  print("Problem with hashseq rownames.")
+  quit_due_row_names()
+}
 
 ##-Random num seed--------------------------------------------------##
 print(paste("Setting random seed to:", random_seed))
@@ -344,18 +370,6 @@ if (dir.exists(file.path(output_dir,"r_objects", "clr_asv.rds"))) {
   my_clr <- as.data.frame(rgr::clr(as.matrix(asv_table + 1)))
   saveRDS(my_clr, file = file.path(output_dir,"r_objects", "clr_asv.rds"))
 }
-print("loading and munging metadata")
-metadata <- read.table(opt$metadata, 
-                       sep=opt$metadata_delim, 
-                       header=TRUE, 
-                       row.names = opt$metadata_rowname, 
-                       check.names = FALSE,
-                       stringsAsFactors=TRUE)
-print(metadata)
-my_rows <- row.names(metadata) %in% row.names(data.frame(ref_ps_clean@otu_table@.Data))
-print("attempting to equalize metadata rows to seq data rows")
-metadata <- data.frame(metadata[my_rows, ])
-rf_cols <- 1:ncol(metadata)
 
 ##-Create plot data-------------------------------------------------##
 all_plot_data <- data.frame(all_auc = c(),
