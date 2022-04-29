@@ -277,7 +277,7 @@ my_names <- sapply(as.character(row.names(hashseq)), function(x) {
   })
 row.names(hashseq) <- my_names
 
-if (base::identical(row.names(hashseq), row.names(metadata))){
+if (!base::identical(row.names(hashseq), row.names(metadata))){
   print("Problem with hashseq rownames.")
   quit_due_row_names()
 }
