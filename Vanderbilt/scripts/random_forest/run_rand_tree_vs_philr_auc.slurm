@@ -1,15 +1,15 @@
 #!/bin/bash
 
 #SBATCH --partition=Orion                                    		# Partition/queue requested on server
-#SBATCH --job-name=rand_tree_vs_philr_auc                                   		# Job name
+#SBATCH --job-name=Vanderbilt_rand_tree_vs_philr_auc                                   		# Job name
 #SBATCH --time=100:00:00                                      		# Time limit (hrs:min:sec)
-#SBATCH --nodes=4                                         			# Number of nodes requested
+#SBATCH --nodes=1                                         			# Number of nodes requested
 #SBATCH --ntasks-per-node=1                          			# Number of CPUs (processor cores/tasks)
 #SBATCH --mem=50gb                                          		# Memory limit
 #SBATCH --mail-type=BEGIN,END,FAIL                              	# Mail events (NONE, BEGIN, END, FAIL, ALL)
 #SBATCH --mail-user=amyerke@uncc.edu                            	# Specified email address
-#SBATCH --output=/users/amyerke/slurmLogs/vand_%x.%j.out     # Set directory for standard output
-#SBATCH --error=/users/amyerke/slurmLogs/vand_%x.%j.err      # Set directory for error log
+#SBATCH --output=/users/amyerke/slurmLogs/%x.%j.out     # Set directory for standard output
+#SBATCH --error=/users/amyerke/slurmLogs/%x.%j.err      # Set directory for error log
 ##SBATCH --uid=amyerke
 #SBATCH --get-user-env
 

@@ -1,9 +1,9 @@
 #!/bin/bash
 
 #SBATCH --partition=Orion                                    		# Partition/queue requested on server
-#SBATCH --job-name=run_random_forest_philr_comparison.R                                   		# Job name
-#SBATCH --time=24:00:00                                      		# Time limit (hrs:min:sec)
-#SBATCH --nodes=4                                         			# Number of nodes requested
+#SBATCH --job-name=Zeller_run_random_forest_philr_comparison.R                                   		# Job name
+#SBATCH --time=50:00:00                                      		# Time limit (hrs:min:sec)
+#SBATCH --nodes=1                                         			# Number of nodes requested
 #SBATCH --ntasks-per-node=1                          			# Number of CPUs (processor cores/tasks)
 #SBATCH --mem=50gb                                          		# Memory limit
 #SBATCH --mail-type=BEGIN,END,FAIL                              	# Mail events (NONE, BEGIN, END, FAIL, ALL)
