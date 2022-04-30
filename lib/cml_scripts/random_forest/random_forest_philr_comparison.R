@@ -262,8 +262,10 @@ metadata <- read.table(opt$metadata,
                        check.names = FALSE,
                        stringsAsFactors=TRUE)
 print("attempting to equalize metadata rows to seq data rows")
-my_rows <- row.names(metadata) %in% row.names(data.frame(ref_ps@otu_table@.Data))
+needed_rows <- row.names(data.frame(ref_ps@otu_table@.Data))
+my_rows <- row.names(metadata) %in% needed_rows
 metadata <- data.frame(metadata[my_rows, ])
+# metadata <- metadata[match(needed_rows, row.names(needed_rows)),]
 rf_cols <- 1:ncol(metadata)
 
 print("Attempting to read HashSeq count table")
@@ -271,16 +273,22 @@ hashseq <- data.frame(data.table::fread(file = file.path(output_dir,"hashseq", "
                                         header=TRUE, data.table=FALSE), row.names = 1)
 hashseq <- hashseq[, colSums(hashseq != 0) > 0.1*nrow(hashseq)]
 print("attempting to equalize hashseq rows to seq data rows")
-my_names <- sapply(as.character(row.names(hashseq)), function(x) {
-  my_val = strsplit(x,"_")[[1]][1]
-  return(my_val)
-  })
+my_names <- c()
+for (x in row.names(hashseq)){
+	my_name <- strsplit(x,"_")[[1]][1]
+	# print(my_name)
+	my_names <- c(my_name, my_names)
+}
+# my_names <- sapply(as.character(row.names(hashseq)), function(x) {
+#   strsplit(x,"_")[[1]][1]
+#   })
 row.names(hashseq) <- my_names
-print
-hashseq <- hashseq[my_rows,]
+hashseq <- hashseq[match(row.names(metadata), row.names(hashseq)),]
 
-if (!base::identical(row.names(hashseq), row.names(metadata))){
-  print("Problem with hashseq rownames.")
+if (base::identical(row.names(hashseq), row.names(metadata))){
+	print("Rownames of hashseq and metadata are the same.")
+}else{
+	print("Problem with hashseq rownames - quitting.")
   quit_due_row_names()
 }
 
