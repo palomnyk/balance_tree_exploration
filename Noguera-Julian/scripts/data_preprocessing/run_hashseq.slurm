@@ -5,7 +5,7 @@
 #SBATCH --time=5:00:00                                      		# Time limit (hrs:min:sec)
 #SBATCH --nodes=4                                         			# Number of nodes requested
 #SBATCH --ntasks-per-node=1                          			# Number of CPUs (processor cores/tasks)
-#SBATCH --mem=300gb                                          		# Memory limit
+#SBATCH --mem=500gb                                          		# Memory limit
 #SBATCH --mail-type=BEGIN,END,FAIL                              	# Mail events (NONE, BEGIN, END, FAIL, ALL)
 #SBATCH --mail-user=amyerke@uncc.edu                            	# Specified email address
 #SBATCH --output=/users/amyerke/slurmLogs/Noguera-Julian_%x.%j.out     # Set directory for standard output
