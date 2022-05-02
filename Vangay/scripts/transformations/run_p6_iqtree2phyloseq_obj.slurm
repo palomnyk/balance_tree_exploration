@@ -23,9 +23,8 @@ module load R
 srun Rscript ~/git/balance_tree_exploration/lib/cml_scripts/transformations/p6_iqtree2phyloseq_obj.R \
 -d ~/git/balance_tree_exploration \
 -p Vangay \
--m ~/git/balance_tree_exploration/Vangay/patient_metadata.csv \
--l , \
--r Run
+-m ~/git/balance_tree_exploration/Vangay/patient_metadata.tsv \
+-r run_accession
 
 # Options:
 #   -d CHARACTER, --homedir=CHARACTER
