@@ -13,7 +13,7 @@ option_list <- list(
               default=file.path('~','git','balance_tree_exploration'), 
               help="dataset dir path", metavar="home dir"),
   make_option(c("-p", "--project"), type="character", default=NULL, 
-              help="project folder", metavar="project"),
+              help="project folder", metavar="project")
 ); 
 
 opt_parser <- optparse::OptionParser(option_list=option_list);
