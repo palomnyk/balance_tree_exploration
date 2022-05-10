@@ -280,7 +280,7 @@ hashseq <- data.frame(data.table::fread(file = file.path(output_dir,"hashseq", "
 ##-Random num seed--------------------------------------------------##
 print(paste("Setting random seed to:", random_seed))
 set.seed(random_seed)
-print("making random trees")
+print("Making random trees")
 orig_ref_rand_list <- list()
 for (rand in 1:10){
   rand_tree <- ape::rtree(n = length(ref_ps@phy_tree$tip.label), tip.label = ref_ps@phy_tree$tip.label)
@@ -370,7 +370,7 @@ print("Building lists of objects to loop over in main loop.")
 phyloseq_objects <- list(ref_ps, ref_ps_clean, cln_denovo_tree_ps,
                          cln_iqtree_ps, iqtree_orig_ps, cln_iqtree_ps)
 po_names <- c("Silva_DADA2", "Filtered_Silva_DADA2", "Filtered_UPGMA",
-              "Filtered_IQTree", "IQTREE_Orig", "Filtered_IQTree",)
+              "Filtered_IQTree", "IQTREE_Orig", "Filtered_IQTree")
 table_objects <- list(asv_table, ln_asv_tab, my_alr, my_clr, hashseq)
 to_names <- c("Raw_DADA2_counts_table", "lognorm_DADA2", "alr_DADA2",
               "clr_DADA2", "HashSeq" )
@@ -514,6 +514,7 @@ while (counter < num_cycles & skips < 5){
   
 }
 
+print("Reading in data from file.")
 all_plot_data <- data.frame(read.table(file = file.path(output_dir, "tables", 
                                              paste0(main_output_label, ".csv")),
             sep = ",", header = TRUE))
