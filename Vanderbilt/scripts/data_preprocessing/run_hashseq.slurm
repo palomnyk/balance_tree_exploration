@@ -5,7 +5,7 @@
 #SBATCH --time=5:00:00                                      		# Time limit (hrs:min:sec)
 #SBATCH --nodes=1                                         			# Number of nodes requested
 #SBATCH --ntasks-per-node=1                          			# Number of CPUs (processor cores/tasks)
-#SBATCH --mem=500gb                                          		# Memory limit
+#SBATCH --mem=350gb                                          		# Memory limit
 #SBATCH --mail-type=BEGIN,END,FAIL                              	# Mail events (NONE, BEGIN, END, FAIL, ALL)
 #SBATCH --mail-user=amyerke@uncc.edu                            	# Specified email address
 #SBATCH --output=/users/amyerke/slurmLogs/vand_%x.%j.out     # Set directory for standard output
@@ -22,7 +22,8 @@ module load R
 
 srun Rscript ~/git/balance_tree_exploration/lib/cml_scripts/data_preprocessing/hashseq.R \
 	-i ~/git/balance_tree_exploration/Vanderbilt/downloaded_seqs \
-	-o ~/git/balance_tree_exploration/Vanderbilt/output/hashseq
+	-o ~/git/balance_tree_exploration/Vanderbilt/output/hashseq \
+	-t 0
 
 echo ""
 echo "======================================================"
