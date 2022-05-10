@@ -36,8 +36,9 @@ make_ilr_taxa_auc_df <- function(ps_obj,
 																		part.weights = philr_taxa_weights[tax_w],
 																		ilr.weights = philr_ilr_weights[ilr_w])
 				}
-				my_table_train <- data.frame(my_table[train_index,])
-				my_table_test <- data.frame(my_table[test_index,])
+				my_table_train <- my_table[row.names(my_table) %in% train_index,]
+				my_table_test <- my_table[row.names(my_table) %in% test_index,]
+				print(paste("dim my_table_train:", dim(my_table_test)))
 				},
 				error=function(cond) {
 					print('Opps, an error1 is thrown')
@@ -60,8 +61,11 @@ make_ilr_taxa_auc_df <- function(ps_obj,
 							print("There are NA's - breaking loop.")
 							break
 						}
-						resp_var_test <- factor(metadata[,mta][test_index])
-						resp_var_train <- factor(metadata[,mta][train_index])
+						resp_var_test <- metadata[row.names(metadata) %in% test_index,mta]
+						print(resp_var_test)
+						print(paste("Length of resp_var_test:", length(resp_var_test)))
+						resp_var_train <- metadata[row.names(metadata) %in% train_index,mta]
+						print(resp_var_train)
 						print("Unique resp var test/ resp var train")
 						# print(paste(unique(resp_var_test)))
 						# print(paste(unique(resp_var_train)))
@@ -217,7 +221,8 @@ source(file.path(home_dir, "lib", "table_manipulations.R"))
 ##-Set up constants-------------------------------------------------##
 num_cycles <- opt$num_cycles
 if(num_cycles < 3) stop("num_cycles should be 3 or more")
-main_output_label <- paste0("auc_rand_v_ref_v_upgma_v_raw_vert_", num_cycles)
+main_output_text <- "auc_rand_v_ref_v_upgma_v_raw_vert_"
+main_output_label <- paste0(main_output_text, "_", num_cycles)
 philr_taxa_weights <- c("uniform","gm.counts","anorm","anorm.x.gm.counts","enorm","enorm.x.gm.counts")
 philr_ilr_weights <- c("uniform","blw","blw.sqrt","mean.descendants")
 random_seed <- 36
@@ -262,35 +267,15 @@ metadata <- read.table(opt$metadata,
                        check.names = FALSE,
                        stringsAsFactors=TRUE)
 print("attempting to equalize metadata rows to seq data rows")
-needed_rows <- row.names(data.frame(ref_ps@otu_table@.Data))
-my_rows <- row.names(metadata) %in% needed_rows
-metadata <- data.frame(metadata[my_rows, ])
-# metadata <- metadata[match(needed_rows, row.names(needed_rows)),]
-rf_cols <- 1:ncol(metadata)
+rf_cols <- 1:ncol(metadata)#hack so I don't have to fix this in the function
 
 print("Attempting to read HashSeq count table")
-hashseq <- data.frame(data.table::fread(file = file.path(output_dir,"hashseq", "SvTable.txt"),
+hashseq <- data.frame(data.table::fread(file = file.path(output_dir,"hashseq", "hashseq.csv"),
                                         header=TRUE, data.table=FALSE), row.names = 1)
-hashseq <- hashseq[, colSums(hashseq != 0) > 0.1*nrow(hashseq)]
-print("attempting to equalize hashseq rows to seq data rows")
-my_names <- c()
-for (x in row.names(hashseq)){
-	my_name <- strsplit(x,"_")[[1]][1]
-	# print(my_name)
-	my_names <- c(my_name, my_names)
-}
-# my_names <- sapply(as.character(row.names(hashseq)), function(x) {
-#   strsplit(x,"_")[[1]][1]
-#   })
-row.names(hashseq) <- my_names
-hashseq <- hashseq[match(row.names(metadata), row.names(hashseq)),]
+# hashseq <- hashseq[, colSums(hashseq != 0) > 0.01*nrow(hashseq)]#remove columns that don't have at least 10%
+# print(paste("HashSeq has", ncol(hashseq), "columns after column reduction."))
 
-if (base::identical(row.names(hashseq), row.names(metadata))){
-	print("Rownames of hashseq and metadata are the same.")
-}else{
-	print("Problem with hashseq rownames - quitting.")
-  quit_due_row_names()
-}
+# metadata <- metadata[ order(row.names(metadata)),]#order the rows in alphanumeric order by rowname
 
 ##-Random num seed--------------------------------------------------##
 print(paste("Setting random seed to:", random_seed))
@@ -356,6 +341,7 @@ if (dir.exists(file.path(output_dir,"r_objects", "lognorm_asv.rds"))) {
 }else{
   ln_asv_tab <- lognorm(asv_table)
   saveRDS(ln_asv_tab, file = file.path(output_dir,"r_objects", "lognorm_asv.rds"))
+  write.csv(ln_asv_tab, file = file.path(output_dir,"tables", "lognorm_dada2.csv"))
 }
 
 my_zeros <- apply(asv_table, 2, function(x) {
@@ -369,6 +355,7 @@ if (file.exists(file.path(output_dir,"r_objects", "alr_asv.rds"))) {
 }else{
   my_alr <- as.data.frame(rgr::alr(as.matrix(asv_table + 1), j = as.numeric(alr_col)))
   saveRDS(my_alr, file = file.path(output_dir,"r_objects", "alr_asv.rds"))
+  write.csv(my_alr, file = file.path(output_dir,"tables", "alr_asv.csv"))
 }
 print("creating CLR")
 if (dir.exists(file.path(output_dir,"r_objects", "clr_asv.rds"))) {
@@ -376,6 +363,7 @@ if (dir.exists(file.path(output_dir,"r_objects", "clr_asv.rds"))) {
 }else{
   my_clr <- as.data.frame(rgr::clr(as.matrix(asv_table + 1)))
   saveRDS(my_clr, file = file.path(output_dir,"r_objects", "clr_asv.rds"))
+  write.csv(my_clr, file = file.path(output_dir,"tables", "clr_asv.csv"))
 }
 
 ##-Create plot data-------------------------------------------------##
@@ -394,8 +382,8 @@ counter <- 0
 print(paste("counter:", counter, " entering while loop"))
 while (counter < num_cycles & skips < 5){
   ##-Create training/testing sets-------------------------------------##
-  train_index <- sample(x = nrow(metadata), size = 0.75*nrow(metadata), replace=FALSE)
-  test_index <- c(1:nrow(metadata))[!(1:nrow(metadata) %in% train_index)]
+  train_index <- row.names(hashseq)[sample(x = nrow(hashseq), size = 0.75*nrow(hashseq), replace=FALSE)]
+  test_index <- row.names(hashseq)[c(1:nrow(hashseq))[!(1:nrow(hashseq) %in% train_index)]]
   print(paste("counter:", counter, " making ref cln random AUC"))
   for( rand_ps in 1:length(cln_ref_rand_list)){
     rand_tree_ps <- cln_ref_rand_list[[rand_ps]]
@@ -683,14 +671,24 @@ while (counter < num_cycles & skips < 5){
   print(paste("completed loop:", counter))
   counter <- counter + 1
   skips <- 0
+  
+  
+  new_table_file <- file.path(output_dir, "tables", paste0(main_output_text, "_", counter, ".csv"))
+  old_table_file <- file.path(output_dir, "tables", paste0(main_output_text, "_", counter - 1, ".csv"))
+  print(paste0("saving plot data to hardrive:\n",
+               as.character(new_table_file)))
+  write.table(all_plot_data,
+              file = file.path(new_table_file),
+              sep = ",",
+              row.names = FALSE)
+  
+  #Check its existence
+  if (file.exists(new_table_file) & file.exists(old_table_file)) {
+    #Delete file if it exists
+    file.remove(old_table_file)
+  }
+  
 }
-
-print(paste0("saving plot data to hardrive:\n",
-             as.character(file.path(output_dir, "tables", paste0(main_output_label, ".csv")))))
-write.table(all_plot_data,
-            file = file.path(output_dir, "tables", paste0(main_output_label, ".csv")),
-            sep = ",",
-            row.names = FALSE)
 
 all_plot_data <- data.frame(read.table(file = file.path(output_dir, "tables", 
                                              paste0(main_output_label, ".csv")),
