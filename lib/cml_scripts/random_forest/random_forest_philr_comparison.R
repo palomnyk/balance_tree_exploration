@@ -62,7 +62,7 @@ make_ilr_taxa_auc_df <- function(ps_obj,
 							break
 						}
 						resp_var_test <- metadata[row.names(metadata) %in% test_index,mta]
-						print(resp_var_test)
+						# print(resp_var_test)
 						# print(paste("Length of resp_var_test:", length(resp_var_test)))
 						resp_var_train <- metadata[row.names(metadata) %in% train_index,mta]
 						# print(resp_var_train)
