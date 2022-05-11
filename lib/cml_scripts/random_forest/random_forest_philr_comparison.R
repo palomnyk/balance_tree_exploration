@@ -88,10 +88,10 @@ make_ilr_taxa_auc_df <- function(ps_obj,
 									# print(paste("my_fact:", my_fact))
 									dumb_resp_test <- as.factor(replace(as.character(resp_var_test), as.character(resp_var_test) != my_fact, "dumb_var"))
 									# print("dumb_resp")
-									print(paste(dumb_resp_test))
+									# print(paste(dumb_resp_test))
 									dumb_pred <- as.factor(replace(as.character(pred), as.character(pred) != my_fact, "dumb_var"))
 									# print("dumb_pred")
-									print(paste(dumb_resp_test))
+									# print(paste(dumb_resp_test))
 									my_roc <- pROC::roc(as.numeric(dumb_pred), as.numeric(dumb_resp_test))
 									# print("my_roc")
 									mult_auc <- c(mult_auc, pROC::auc(my_roc))
@@ -275,8 +275,6 @@ hashseq <- data.frame(data.table::fread(file = file.path(output_dir,"hashseq", "
 # hashseq <- hashseq[, colSums(hashseq != 0) > 0.01*nrow(hashseq)]#remove columns that don't have at least 10%
 # print(paste("HashSeq has", ncol(hashseq), "columns after column reduction."))
 
-# metadata <- metadata[ order(row.names(metadata)),]#order the rows in alphanumeric order by rowname
-
 ##-Random num seed--------------------------------------------------##
 print(paste("Setting random seed to:", random_seed))
 set.seed(random_seed)
@@ -407,7 +405,6 @@ while (counter < num_cycles & skips < 5){
     rand_plot_data$random_batch <- rep(rand_ps, nrow(rand_plot_data))
     all_plot_data <- rbind(all_plot_data, rand_plot_data)
   }
-
   print(paste("counter:", counter, " making orig ref random AUC"))
   for( rand_ps in 1:length(orig_ref_rand_list)){
     rand_tree_ps <- orig_ref_rand_list[[rand_ps]]
@@ -450,8 +447,8 @@ while (counter < num_cycles & skips < 5){
     rand_plot_data$random_batch <- rep(rand_ps, nrow(rand_plot_data))
     all_plot_data <- rbind(all_plot_data, rand_plot_data)
   }
-  
-  for (pso in 1:lenght(phyloseq_objects)) {
+
+  for (pso in 1:length(phyloseq_objects)) {
     my_pso <- phyloseq_objects[[pso]]
     po_name <- po_names[pso]
     print(paste("Counter:", counter, "| making", pso_name, "philr AUCs."))
@@ -481,7 +478,7 @@ while (counter < num_cycles & skips < 5){
   for (to in 1:length(table_objects)) {
     my_table <- table_objects[[to]]
     to_name <- to_names[to]
-    print(paste("Counter:", counter, "| making", pso_name, "count table AUCs."))
+    print(paste("Counter:", counter, "| making", to_name, "count table AUCs."))
     my_plot_data <- make_ilr_taxa_auc_df(ps_obj = my_table,
                                          metadata_cols = rf_cols,
                                          metadata = metadata,
@@ -500,8 +497,8 @@ while (counter < num_cycles & skips < 5){
   
   new_table_file <- file.path(output_dir, "tables", paste0(main_output_text, counter, ".csv"))
   old_table_file <- file.path(output_dir, "tables", paste0(main_output_text, counter - 1, ".csv"))
-  print(paste0("saving plot data to hardrive:\n",
-               as.character(new_table_file)))
+  print(paste("saving plot data to hardrive:",
+               as.character(new_table_file), sep = "\n"))
   write.table(all_plot_data,
               file = file.path(new_table_file),
               sep = ",",
