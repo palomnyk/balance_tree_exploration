@@ -221,7 +221,7 @@ source(file.path(home_dir, "lib", "table_manipulations.R"))
 ##-Set up constants-------------------------------------------------##
 num_cycles <- opt$num_cycles
 if(num_cycles < 3) stop("num_cycles should be 3 or more")
-main_output_text <- "auc_rand_v_ref_v_upgma_v_raw_vert_"
+main_output_text <- "random_forest_auc_R_"
 main_output_label <- paste0(main_output_text, "_", num_cycles)
 philr_taxa_weights <- c("uniform","gm.counts","anorm","anorm.x.gm.counts","enorm","enorm.x.gm.counts")
 philr_ilr_weights <- c("uniform","blw","blw.sqrt","mean.descendants")
@@ -389,8 +389,8 @@ counter <- 0
 print(paste("Counter:", counter, " entering main while loop"))
 while (counter < num_cycles & skips < 5){
   ##-Create training/testing sets-------------------------------------##
-  train_index <- row.names(hashseq)[sample(x = nrow(hashseq), size = 0.75*nrow(hashseq), replace=FALSE)]
-  test_index <- row.names(hashseq)[c(1:nrow(hashseq))[!(1:nrow(hashseq) %in% train_index)]]
+  train_index <- row.names(asv_table)[sample(x = nrow(asv_table), size = 0.75*nrow(asv_table), replace=FALSE)]
+  test_index <- row.names(asv_table)[c(1:nrow(asv_table))[!(1:nrow(asv_table) %in% train_index)]]
   print(paste("counter:", counter, " making ref cln random AUC"))
   for( rand_ps in 1:length(cln_ref_rand_list)){
     rand_tree_ps <- cln_ref_rand_list[[rand_ps]]
