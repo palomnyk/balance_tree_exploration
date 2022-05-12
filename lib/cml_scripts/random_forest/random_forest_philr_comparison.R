@@ -462,7 +462,7 @@ while (counter < num_cycles & skips < 5){
     my_plot_data$trans_group <- rep(paste0(po_name, "_PhILR"), nrow(my_plot_data))
     my_plot_data$random_batch <- rep("None", nrow(my_plot_data))
     all_plot_data <- rbind(all_plot_data, my_plot_data)
-    print(paste("Counter:", counter, "| making", pso_name, "count table AUCs."))
+    print(paste("Counter:", counter, "| making", po_name, "count table AUCs."))
     my_plot_data <- make_ilr_taxa_auc_df(ps_obj = as.data.frame(my_pso@otu_table),
                                           metadata_cols = rf_cols,
                                           metadata = metadata,
