@@ -451,7 +451,7 @@ while (counter < num_cycles & skips < 5){
   for (pso in 1:length(phyloseq_objects)) {
     my_pso <- phyloseq_objects[[pso]]
     po_name <- po_names[pso]
-    print(paste("Counter:", counter, "| making", pso_name, "philr AUCs."))
+    print(paste("Counter:", counter, "| making", po_name, "philr AUCs."))
     my_plot_data <- make_ilr_taxa_auc_df(ps_obj = my_pso,
                                          metadata_cols = rf_cols,
                                          metadata = metadata,
