@@ -298,7 +298,11 @@ if (file.exists(file.path(output_dir,"r_objects", "alr_asv.rds"))) {
   saveRDS(DADA2_alr, file = file.path(output_dir,"r_objects", "alr_asv.rds"))
   write.csv(DADA2_alr, file = file.path(output_dir,"tables", "alr_asv.csv"))
 }
-HashSeq_alr <- as.data.frame(rgr::alr(as.matrix(hashseq + 1)))
+my_zeros <- apply(asv_table, 2, function(x) {
+  return(sum(x == 0))
+})
+alr_col <- which(my_zeros == min(my_zeros))[1]
+HashSeq_alr <- as.data.frame(rgr::alr(as.matrix(hashseq + 1), j = as.numeric(alr_col)))
 saveRDS(HashSeq_alr, file = file.path(output_dir,"r_objects", "alr_hashseq.rds"))
 write.csv(HashSeq_alr, file = file.path(output_dir,"tables", "alr_hashseq.csv"))
 print("creating CLR")
