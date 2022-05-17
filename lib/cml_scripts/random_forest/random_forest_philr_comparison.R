@@ -221,8 +221,7 @@ philr_taxa_weights <- c("uniform","gm.counts","anorm","anorm.x.gm.counts","enorm
 philr_ilr_weights <- c("uniform","blw","blw.sqrt","mean.descendants")
 random_seed <- 36
 main_header <- "all_auc, metadata_col, taxa_weight, ilr_weight, rf_imp_se, rf_type, rf_ntree, trans_group, random_batch, cycle"
-# main_header <- c("all_auc",	"metadata_col", "taxa_weight", "ilr_weight", "rf_imp_seq",	
-#                  "rf_type", "rf_ntree", "trans_group", "random_batch", "cycle")
+
 print(paste("Initilizing", main_output_fpath, "."))
 print(paste("File header: ", main_header))
 cat(main_header, 
@@ -373,10 +372,24 @@ for (rand in 1:5){
   po_names <- append(po_names,  paste0("Filtered_IQTREE_rand_",rand))
 }
 
-print("PhILR objects:")
+print("Phyloseq object names:")
 print(paste(po_names, collapse = " "))
+if (length(phyloseq_objects) == length(po_names)){
+  print("Length of Phyloseq objects is the same as phyloseq object names.")
+}else{
+  print("Length of Phyloseq objects is NOT the same as phyloseq object names. Breaking!")
+  names_not_same()
+  break
+}
 print("Table objects:")
 print(paste(to_names, collapse = " "))
+if (length(table_objects) == length(to_names)){
+  print("Length of table objects is the same as table object names.")
+}else{
+  print("Length of table objects is NOT the same as table object names. Breaking!")
+  names_not_same()
+  break
+}
 
 skips <- 0
 counter <- 0
