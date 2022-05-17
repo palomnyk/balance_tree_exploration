@@ -317,13 +317,19 @@ saveRDS(HashSeq_clr, file = file.path(output_dir,"r_objects", "clr_hashseq.rds")
 write.csv(HashSeq_clr, file = file.path(output_dir,"tables", "clr_hashseq.csv"))
 
 print("Building lists of objects to loop over in main loop.")
-phyloseq_objects <- list(ref_ps, ref_ps_clean, cln_denovo_tree_ps,
-                         cln_iqtree_ps, iqtree_orig_ps, cln_iqtree_ps)
-po_names <- c("Silva_DADA2", "Filtered_Silva_DADA2", "Filtered_UPGMA",
-              "Filtered_IQTree", "IQTREE_Orig", "Filtered_IQTree")
-table_objects <- list(asv_table, ln_asv_tab, DADA2_alr, DADA2_clr, hashseq, HashSeq_alr,HashSeq_clr)
-to_names <- c("Raw_DADA2", "lognorm_DADA2", "alr_DADA2",
-              "clr_DADA2", "Raw_HashSeq", "HashSeq_alr", "HashSeq_clr")
+phyloseq_objects <- list(list(ref_ps, "Silva_DADA2"), 
+                         list(ref_ps_clean, "Filtered_Silva_DADA2"),
+                         list(cln_denovo_tree_ps, "Filtered_UPGMA"), 
+                         list(cln_iqtree_ps,"Filtered_IQTree"),
+                         list(iqtree_orig_ps, "IQTREE_Orig"))
+
+table_objects <- list(list(asv_table, "Raw_DADA2"),
+                      list(ln_asv_tab, "lognorm_DADA2"),
+                      list(DADA2_alr, "alr_DADA2"),
+                      list(DADA2_clr, "clr_DADA2"),
+                      list(hashseq, "Raw_HashSeq"),
+                      list(HashSeq_alr, "HashSeq_alr"),
+                      list(HashSeq_clr,"HashSeq_clr"))
 
 ##-Random num seed--------------------------------------------------##
 print(paste("Setting random seed to:", random_seed))
@@ -338,8 +344,7 @@ for (rand in 1:5){
                                       sample_data(ref_ps@sam_data))
   phy_tree(rand_tree_ps) <- ape::makeNodeLabel(phy_tree(rand_tree_ps), method="number", prefix='n')
   phyloseq::plot_tree(rand_tree_ps,  method = "treeonly", nodelabf=nodeplotblank, title = paste0("orig_ref_rand_", rand))
-  phyloseq_objects <- append(phyloseq_objects, rand_tree_ps)
-  po_names <- append(po_names, paste0("Silva_rand_",rand))
+  phyloseq_objects <- append(phyloseq_objects, list(rand_tree_ps,paste0("Silva_rand_",rand)))
 
   rand_tree <- ape::rtree(n = length(cln_denovo_tree_ps@phy_tree$tip.label), tip.label = cln_denovo_tree_ps@phy_tree$tip.label)
   rand_tree_ps <- phyloseq::phyloseq( otu_table(cln_denovo_tree_ps@otu_table, taxa_are_rows = F),
@@ -348,8 +353,7 @@ for (rand in 1:5){
                                       sample_data(cln_denovo_tree_ps@sam_data))
   phy_tree(rand_tree_ps) <- ape::makeNodeLabel(phy_tree(rand_tree_ps), method="number", prefix='n')
   phyloseq::plot_tree(rand_tree_ps, title = paste0("Filtered_UPGMA_rand_", rand))
-  phyloseq_objects <- append(phyloseq_objects, rand_tree_ps)
-  po_names <- append(po_names,  paste0("Filtered_UPGMA_rand_",rand))
+  phyloseq_objects <- append(phyloseq_objects, list(rand_tree_ps,paste0("Filtered_UPGMA_rand_",rand)))
 
   rand_tree <- ape::rtree(n = length(ref_ps_clean@phy_tree$tip.label), tip.label = ref_ps_clean@phy_tree$tip.label)
   rand_tree_ps <- phyloseq::phyloseq(otu_table(ref_ps_clean@otu_table, taxa_are_rows = F),
@@ -358,8 +362,7 @@ for (rand in 1:5){
                                      sample_data(ref_ps_clean@sam_data))
   phy_tree(rand_tree_ps) <- ape::makeNodeLabel(phy_tree(rand_tree_ps), method="number", prefix='n')
   phyloseq::plot_tree(rand_tree_ps, method = "treeonly", nodelabf=nodeplotblank, title = paste0("Filtered_Silva_rand_", rand))
-  phyloseq_objects <- append(phyloseq_objects, rand_tree_ps)
-  po_names <- append(po_names,  paste0("Filtered_Silva_rand_",rand))
+  phyloseq_objects <- append(phyloseq_objects, list(rand_tree_ps,paste0("Filtered_Silva_rand_",rand)))
 
   rand_tree <- ape::rtree(n = length(cln_iqtree_ps@phy_tree$tip.label), tip.label = cln_iqtree_ps@phy_tree$tip.label)
   rand_tree_ps <- phyloseq::phyloseq(otu_table(cln_iqtree_ps@otu_table, taxa_are_rows = F),
@@ -368,27 +371,7 @@ for (rand in 1:5){
                                      sample_data(cln_iqtree_ps@sam_data))
   phy_tree(rand_tree_ps) <- ape::makeNodeLabel(phy_tree(rand_tree_ps), method="number", prefix='n')
   phyloseq::plot_tree(rand_tree_ps, method = "treeonly", nodelabf=nodeplotblank, title = paste0("Filtered_IQTREE_rand_", rand))
-  phyloseq_objects <- append(phyloseq_objects, rand_tree_ps)
-  po_names <- append(po_names,  paste0("Filtered_IQTREE_rand_",rand))
-}
-
-print("Phyloseq object names:")
-print(paste(po_names, collapse = " "))
-if (length(phyloseq_objects) == length(po_names)){
-  print("Length of Phyloseq objects is the same as phyloseq object names.")
-}else{
-  print("Length of Phyloseq objects is NOT the same as phyloseq object names. Breaking!")
-  names_not_same()
-  break
-}
-print("Table objects:")
-print(paste(to_names, collapse = " "))
-if (length(table_objects) == length(to_names)){
-  print("Length of table objects is the same as table object names.")
-}else{
-  print("Length of table objects is NOT the same as table object names. Breaking!")
-  names_not_same()
-  break
+  phyloseq_objects <- append(phyloseq_objects, list(rand_tree_ps,paste0("Filtered_IQTREE_rand_",rand)))
 }
 
 skips <- 0
@@ -401,8 +384,8 @@ while (counter < num_cycles & skips < 5){
   test_index <- row.names(asv_table)[c(1:nrow(asv_table))[!(1:nrow(asv_table) %in% train_index)]]
   
   for (to in 1:length(table_objects)) {
-    my_table <- table_objects[[to]]
-    to_name <- to_names[to]
+    my_table <- table_objects[[to]][[1]]
+    to_name <- table_objects[[to]][[2]]
     print(paste("Counter:", counter, "| making", to_name, "count table AUCs."))
     make_ilr_taxa_auc_df(ps_obj = my_table,
                          metadata_cols = rf_cols,
@@ -417,8 +400,8 @@ while (counter < num_cycles & skips < 5){
   }#End for (to in 1:length(table_objects)) 
   
   for (pso in 1:length(phyloseq_objects)) {
-    my_pso <- phyloseq_objects[[pso]]
-    po_name <- po_names[pso]
+    my_pso <- phyloseq_objects[[pso]][[1]]
+    po_name <- phyloseq_objects[[pso]][[2]]
     print(paste("Counter:", counter, "| making", po_name, "philr AUCs."))
     make_ilr_taxa_auc_df(ps_obj = my_pso,
                          metadata_cols = rf_cols,
