@@ -330,7 +330,7 @@ to_names <- c("Raw_DADA2", "lognorm_DADA2", "alr_DADA2",
 print(paste("Setting random seed to:", random_seed))
 set.seed(random_seed)
 print("Making random trees")
-for (rand in 1:10){
+for (rand in 1:5){
   rand_tree <- ape::rtree(n = length(ref_ps@phy_tree$tip.label), tip.label = ref_ps@phy_tree$tip.label)
   #put int in philr
   rand_tree_ps <- phyloseq::phyloseq( otu_table(ref_ps_clean@otu_table, taxa_are_rows = F),
@@ -340,7 +340,7 @@ for (rand in 1:10){
   phy_tree(rand_tree_ps) <- ape::makeNodeLabel(phy_tree(rand_tree_ps), method="number", prefix='n')
   phyloseq::plot_tree(rand_tree_ps,  method = "treeonly", nodelabf=nodeplotblank, title = paste0("orig_ref_rand_", rand))
   phyloseq_objects <- append(phyloseq_objects, rand_tree_ps)
-  po_names <- append(po_names, "Silva_rand")
+  po_names <- append(po_names, paste0("Silva_rand_",rand))
 
   rand_tree <- ape::rtree(n = length(cln_denovo_tree_ps@phy_tree$tip.label), tip.label = cln_denovo_tree_ps@phy_tree$tip.label)
   rand_tree_ps <- phyloseq::phyloseq( otu_table(cln_denovo_tree_ps@otu_table, taxa_are_rows = F),
@@ -350,7 +350,7 @@ for (rand in 1:10){
   phy_tree(rand_tree_ps) <- ape::makeNodeLabel(phy_tree(rand_tree_ps), method="number", prefix='n')
   phyloseq::plot_tree(rand_tree_ps, title = paste0("Filtered_UPGMA_rand_", rand))
   phyloseq_objects <- append(phyloseq_objects, rand_tree_ps)
-  po_names <- append(po_names, "Filtered_UPGMA_rand")
+  po_names <- append(po_names,  paste0("Filtered_UPGMA_rand_",rand))
 
   rand_tree <- ape::rtree(n = length(ref_ps_clean@phy_tree$tip.label), tip.label = ref_ps_clean@phy_tree$tip.label)
   rand_tree_ps <- phyloseq::phyloseq(otu_table(ref_ps_clean@otu_table, taxa_are_rows = F),
@@ -360,7 +360,7 @@ for (rand in 1:10){
   phy_tree(rand_tree_ps) <- ape::makeNodeLabel(phy_tree(rand_tree_ps), method="number", prefix='n')
   phyloseq::plot_tree(rand_tree_ps, method = "treeonly", nodelabf=nodeplotblank, title = paste0("Filtered_Silva_rand_", rand))
   phyloseq_objects <- append(phyloseq_objects, rand_tree_ps)
-  po_names <- append(po_names, "Filtered_Silva_rand")
+  po_names <- append(po_names,  paste0("Filtered_Silva_rand_",rand))
 
   rand_tree <- ape::rtree(n = length(cln_iqtree_ps@phy_tree$tip.label), tip.label = cln_iqtree_ps@phy_tree$tip.label)
   rand_tree_ps <- phyloseq::phyloseq(otu_table(cln_iqtree_ps@otu_table, taxa_are_rows = F),
@@ -370,8 +370,13 @@ for (rand in 1:10){
   phy_tree(rand_tree_ps) <- ape::makeNodeLabel(phy_tree(rand_tree_ps), method="number", prefix='n')
   phyloseq::plot_tree(rand_tree_ps, method = "treeonly", nodelabf=nodeplotblank, title = paste0("Filtered_IQTREE_rand_", rand))
   phyloseq_objects <- append(phyloseq_objects, rand_tree_ps)
-  po_names <- append(po_names, "Filtered_IQTREE_rand")
+  po_names <- append(po_names,  paste0("Filtered_IQTREE_rand_",rand))
 }
+
+print("PhILR objects:")
+print(paste(po_names, collapse = " "))
+print("Table objects:")
+print(paste(to_names, collapse = " "))
 
 skips <- 0
 counter <- 0
@@ -422,7 +427,7 @@ while (counter < num_cycles & skips < 5){
                          philr_taxa_weights = philr_taxa_weights,
                          just_otu = TRUE,
                          cycle = counter,
-                         transf_label = paste0(po_name, "_Counts_Table"))
+                         transf_label = paste0(po_name, ""))
   }#end for (pso in 1:length(phyloseq_objects))
 
   print(paste("completed loop:", counter))
