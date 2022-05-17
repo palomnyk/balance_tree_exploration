@@ -115,10 +115,10 @@ make_ilr_taxa_auc_df <- function(ps_obj,
 						if (file.exists(output_fpath)) {
 						  print(paste0("Writing output to ", output_fpath, " ."))
 						  # main_header <- "all_auc,	metadata_col, taxa_weight,	ilr_weight,	rf_imp_se, rf_type, rf_ntree, trans_group, random_batch, cycle"
-						  cat(paste(auc, colnames(metadata)[mta], philr_taxa_weights[tax_w],#all_auc,	metadata_col, taxa_weight
+						  cat(paste("\n", auc, colnames(metadata)[mta], philr_taxa_weights[tax_w],#all_auc,	metadata_col, taxa_weight
 						            philr_ilr_weights[ilr_w], row.names(my_df)[maxRow], rf$type, #ilr_weight,	rf_imp_se, rf_type,
 						            rf$ntree, transf_label, random_label, cycle, #rf_ntree, trans_group, random_batch, cycle
-						            "\n", sep = ","), 
+						            sep = ","), 
 						      file = output_fpath, 
 						      append=TRUE)
 						}
@@ -214,7 +214,7 @@ source(file.path(home_dir, "lib", "table_manipulations.R"))
 num_cycles <- opt$num_cycles
 if(num_cycles < 3) stop("num_cycles should be 3 or more")
 main_output_text <- "random_forest_auc_R_"
-main_output_label <- paste0(main_output_text, "_", num_cycles)
+main_output_label <- paste0(main_output_text, num_cycles)
 main_output_fn <- paste0(main_output_label, ".csv")
 main_output_fpath <- file.path(output_dir, "tables", main_output_fn)
 philr_taxa_weights <- c("uniform","gm.counts","anorm","anorm.x.gm.counts","enorm","enorm.x.gm.counts")
