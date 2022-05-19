@@ -40,7 +40,9 @@ asv_table = pd.read_csv(os.path.join(output_dir, "tables", "ForwardReads_DADA2.t
 clr_table = pd.read_csv(os.path.join(output_dir, "tables", "clr_asv.csv"), sep=",", header=0, index_col=0)
 alr_table = pd.read_csv(os.path.join(output_dir, "tables", "alr_asv.csv"), sep=",", header=0, index_col=0)
 ln_table = pd.read_csv(os.path.join(output_dir, "tables", "lognorm_asv.csv"), sep=",", header=0, index_col=0)
-
+ln_hs_tab = pd.read_csv(os.path.join(output_dir,"tables", "lognorm_hashseq.csv"))
+HashSeq_clr = pd.read_csv(os.path.join(output_dir,"r_objects", "clr_hashseq.csv"))
+HashSeq_alr = pd.read_csv(os.path.join(output_dir,"tables", "alr_hashseq.csv"))
 
 # meta_df = meta_df.loc[list(asv_table.index.values)]#drops rows from metadata that aren't in asv_table
 # if all(meta_df.index == hashseq_df.index):
@@ -49,7 +51,6 @@ ln_table = pd.read_csv(os.path.join(output_dir, "tables", "lognorm_asv.csv"), se
 # --------------------------------------------------------------------------
 print("Establishing other constants")
 # --------------------------------------------------------------------------
-
 metad_cols = range(len(meta_df.columns))
 seed = 7
 scoring = "accuracy"
@@ -59,11 +60,12 @@ col_names = ["dataset", "metadata", "split1", "split2", "split3", "split4", "spl
 pdf_fpath = os.path.join(output_dir, "graphics", f"bp_{main_output_label}_{project}.pdf")
 num_rf_iterations = 10
 
-# --------------------------------------------------------------------------
+# ----------------------------------------------------------------------------
 print("Setting up tables to feed the random forest model.")
 # # --------------------------------------------------------------------------
-tables = [asv_table, hashseq_df, ln_table, alr_table, clr_table]
-table_names = ["DaDa2", "HashSeq", "lognorm_DADA2", "alr_DADA2", "clr_DADA2"]
+
+tables = [asv_table, hashseq_df, ln_table, ln_hs_tab, alr_table, HashSeq_alr, clr_table, HashSeq_clr]
+table_names = ["DaDa2", "HashSeq", "lognorm_DADA2", "lognorm_HashSeq", "alr_DADA2", "alr_HashSeq", "clr_DADA2", "clr_HashSeq"]
 
 # tables = [asv_table, hashseq_df]#, ln_table, alr_table, clr_table]
 # table_names = ["DaDa2", "HashSeq"]#, "lognorm_DADA2", "alr_DADA2", "clr_DADA2"]
