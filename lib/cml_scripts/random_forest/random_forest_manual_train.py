@@ -63,12 +63,16 @@ num_rf_iterations = 10
 # ----------------------------------------------------------------------------
 print("Setting up tables to feed the random forest model.")
 # # --------------------------------------------------------------------------
+tables = []
+tables.append(("DaDa2", asv_table))
+tables.append(("HashSeq", hashseq_df))
+tables.append(("lognorm_DADA2", ln_table))
+tables.append(("lognorm_HashSeq", ln_hs_tab))
+tables.append(("alr_DADA2", alr_table))
+tables.append(("alr_HashSeq", HashSeq_alr))
+tables.append(("clr_DADA2", clr_table))
+tables.append(("clr_HashSeq", HashSeq_clr))
 
-tables = [asv_table, hashseq_df, ln_table, ln_hs_tab, alr_table, HashSeq_alr, clr_table, HashSeq_clr]
-table_names = ["DaDa2", "HashSeq", "lognorm_DADA2", "lognorm_HashSeq", "alr_DADA2", "alr_HashSeq", "clr_DADA2", "clr_HashSeq"]
-
-# tables = [asv_table, hashseq_df]#, ln_table, alr_table, clr_table]
-# table_names = ["DaDa2", "HashSeq"]#, "lognorm_DADA2", "alr_DADA2", "clr_DADA2"]
 print(len(tables))
 philr_part_weights = ["anorm","enorm"]
 philr_ilr_weights = ["blw.sqrt","mean.descendants"]
@@ -81,8 +85,7 @@ for pw in philr_part_weights:
 		table_fn = f"ref_tree_cln_{iw}_{pw}.csv"
 		my_df = pd.read_csv(os.path.join(silva_philr_dir, table_fn), sep=',', header=0, index_col=0)
 		my_label = f"ref_tree_philr_{iw}_{pw}"
-		tables.append(my_df)
-		table_names.append(my_label)
+		tables.append((my_label, my_df))
 
 # meta_df.head
 # meta_df = meta_df.sample(frac=1)
@@ -97,10 +100,7 @@ with open(result_fpath, "w+") as fl:
 	for meta_c in metad_cols:
 		m_c = list(meta_df.columns)[meta_c]
 		# meta_df = meta_df.loc[list(my_table.index.values)
-		for table in range(0, len(tables)):
-			my_table = tables[table]
-			print([table])
-			print(table_names[table])
+		for name, my_table in tables:
 			my_accuracy = [0] * num_rf_iterations
 			random.seed(10)
 			for i in range(num_rf_iterations):
@@ -114,10 +114,10 @@ with open(result_fpath, "w+") as fl:
 					my_accuracy[i] = accuracy_score(resp_test, resp_pred)
 			final_acc = ",".join(map(str, my_accuracy))
 			print(final_acc)
-			msg = f"{table_names[table]},{m_c},{final_acc}\n"
+			msg = f"{name},{m_c},{final_acc}\n"
 			print(msg)
 			fl.write(msg)
-		print(f"{table_names[table]}, {m_c} mean is: {mean(my_accuracy)}")
+		print(f"{name}, {m_c} mean is: {mean(my_accuracy)}")
 print("Finished recording accuracy.")
 
 # --------------------------------------------------------------------------
