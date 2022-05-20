@@ -129,7 +129,7 @@ if (dir.exists(file.path(output_dir,"r_objects", "lognorm_asv.rds"))) {
 }
 HashSeq_clr <- as.data.frame(rgr::clr(as.matrix(hashseq + 1)))
 saveRDS(HashSeq_clr, file = file.path(output_dir,"r_objects", "clr_hashseq.rds"))
-write.csv(HashSeq_clr, file = file.path(output_dir,"r_objects", "clr_hashseq.csv"))
+write.csv(HashSeq_clr, file = file.path(output_dir,"tables", "clr_hashseq.csv"))
 my_zeros <- apply(asv_table, 2, function(x) {
   return(sum(x == 0))
 })
