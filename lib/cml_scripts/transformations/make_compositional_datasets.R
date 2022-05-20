@@ -85,121 +85,8 @@ random_seed <- 36
 
 print("Importing and preprocessing tables.")
 asv_table <- data.frame(readRDS(file.path(output_dir, "r_objects", "ForwardReads_DADA2.rds")))
-
-# print("Cleaning Ref tree otu with philr tutorial normalization")
-# ref_ps <- readRDS(file.path(output_dir, "r_objects", "ref_tree_phyloseq_obj.rds"))
-# phy_tree(ref_ps) <- ape::makeNodeLabel(phy_tree(ref_ps), method="number", prefix='n')
-# phyloseq::plot_tree(ref_ps, method = "treeonly", nodelabf=nodeplotblank, title = paste0("orig_ref"))
-
-# ref_ps_clean <- raw_ps_to_clean_ps(ref_ps)
-# phyloseq::plot_tree(ref_ps_clean, method = "treeonly", nodelabf=nodeplotblank, title = paste0("cln_ref"))
-# print("Cleaning UPGMA tree otu with philr tutorial normalization")
-
-# denovo_tree_ps <- readRDS(file.path(output_dir, "r_objects", "denovo_tree_UPGMA_phyloseq_obj.rds"))
-# phy_tree(denovo_tree_ps) <- ape::makeNodeLabel(phy_tree(denovo_tree_ps), method="number", prefix='n')
-# phyloseq::plot_tree(denovo_tree_ps, method = "treeonly", nodelabf=nodeplotblank, title = paste0("orig_upgma"))
-
-# cln_denovo_tree_ps <- raw_ps_to_clean_ps(denovo_tree_ps)
-# denovo_tree_ps <- phyloseq::transform_sample_counts(denovo_tree_ps, function(x) x + 1 )
-# phyloseq::plot_tree(cln_denovo_tree_ps, method = "treeonly", nodelabf=nodeplotblank, title = paste0("cln_upgma"))
-
-# iqtree_orig_ps <- readRDS(file.path(output_dir, "r_objects", "denovo_tree_iqtree_phyloseq_obj.rds"))
-# phy_tree(iqtree_orig_ps) <- ape::makeNodeLabel(phy_tree(iqtree_orig_ps), method="number", prefix='n')
-# phyloseq::plot_tree(iqtree_orig_ps, method = "treeonly", nodelabf=nodeplotblank, title = paste0("orig_iqtree"))
-
-# cln_iqtree_ps <- raw_ps_to_clean_ps(iqtree_orig_ps)
-# phyloseq::plot_tree(cln_iqtree_ps, method = "treeonly", nodelabf=nodeplotblank, title = paste0("cln_iqtree"))
-# dev.off()
-
-# print("loading and munging metadata")
-# metadata <- read.table(opt$metadata,
-#                        sep=opt$metadata_delim,
-#                        header=TRUE,
-#                        row.names = opt$metadata_rowname,
-#                        check.names = FALSE,
-#                        stringsAsFactors=TRUE)
-# print("Attempting to equalize metadata rows to seq data rows")
-# # needed_rows <- row.names(data.frame(ref_ps@otu_table@.Data))
-# # metadata <- data.frame(metadata[my_rows, ])
-# # metadata <- metadata[ order(row.names(metadata)),]#order the rows in alphanumeric order by rowname
-# # metadata <- metadata[match(needed_rows, row.names(needed_rows)),]
-# rf_cols <- 1:ncol(metadata)#hack so I don't have to fix this in the function
-
-# print("Attempting to read HashSeq count table")
-# hashseq <- data.frame(data.table::fread(file = file.path(output_dir,"hashseq", "hashseq.csv"),
-#                                         header=TRUE, data.table=FALSE), row.names = 1)
-# # hashseq <- hashseq[, colSums(hashseq != 0) > 0.01*nrow(hashseq)]#remove columns that don't have at least 10%
-# # print(paste("HashSeq has", ncol(hashseq), "columns after column reduction."))
-
-# # needed_rows <- row.names(data.frame(ref_ps@otu_table@.Data))
-# metadata <- data.frame(metadata[row.names(hashseq), ])
-# metadata <- metadata[ order(row.names(metadata)),]#order the rows in alphanumeric order by rowname
-
-
-# if (base::identical(row.names(hashseq), row.names(metadata))){
-#   print("Rownames of hashseq and metadata are the same.")
-# }else{
-#   print("Problem with hashseq rownames - quitting.")
-#   quit_due_row_names()
-# }
-
-# ##-Random num seed--------------------------------------------------##
-# print(paste("Setting random seed to:", random_seed))
-# set.seed(random_seed)
-# print("making random trees")
-# orig_ref_rand_list <- list()
-# for (rand in 1:10){
-#   rand_tree <- ape::rtree(n = length(ref_ps@phy_tree$tip.label), tip.label = ref_ps@phy_tree$tip.label)
-#   #put int in philr
-#   rand_tree_ps <- phyloseq::phyloseq( otu_table(ref_ps_clean@otu_table, taxa_are_rows = F),
-#                                       phy_tree(rand_tree),
-#                                       tax_table(ref_ps@tax_table),
-#                                       sample_data(ref_ps@sam_data))
-#   phy_tree(rand_tree_ps) <- ape::makeNodeLabel(phy_tree(rand_tree_ps), method="number", prefix='n')
-#   phyloseq::plot_tree(rand_tree_ps,  method = "treeonly", nodelabf=nodeplotblank, title = paste0("orig_ref_rand_", rand))
-#   orig_ref_rand_list[[rand]] <- rand_tree_ps
-# }
-
-# print("make random trees for cln upgma taxa")
-# cln_upgma_rand_list <- list()
-# for (rand in 1:10){
-#   rand_tree <- ape::rtree(n = length(cln_denovo_tree_ps@phy_tree$tip.label), tip.label = cln_denovo_tree_ps@phy_tree$tip.label)
-#   #put int in philr
-#   rand_tree_ps <- phyloseq::phyloseq( otu_table(cln_denovo_tree_ps@otu_table, taxa_are_rows = F),
-#                                       phy_tree(rand_tree),
-#                                       tax_table(cln_denovo_tree_ps@tax_table),
-#                                       sample_data(cln_denovo_tree_ps@sam_data))
-#   phy_tree(rand_tree_ps) <- ape::makeNodeLabel(phy_tree(rand_tree_ps), method="number", prefix='n')
-#   phyloseq::plot_tree(rand_tree_ps, title = paste0("cln_upgma_rand_", rand))
-#   cln_upgma_rand_list[[rand]] <- rand_tree_ps
-# }
-
-# print("make random trees for clean ref taxa")
-# cln_ref_rand_list <- list()
-# for (rand in 1:10){
-#   rand_tree <- ape::rtree(n = length(ref_ps_clean@phy_tree$tip.label), tip.label = ref_ps_clean@phy_tree$tip.label)
-#   #put int in philr
-#   rand_tree_ps <- phyloseq::phyloseq(otu_table(ref_ps_clean@otu_table, taxa_are_rows = F),
-#                                      phy_tree(rand_tree),
-#                                      tax_table(ref_ps_clean@tax_table),
-#                                      sample_data(ref_ps_clean@sam_data))
-#   phy_tree(rand_tree_ps) <- ape::makeNodeLabel(phy_tree(rand_tree_ps), method="number", prefix='n')
-#   phyloseq::plot_tree(rand_tree_ps, method = "treeonly", nodelabf=nodeplotblank, title = paste0("cln_ref_rand_", rand))
-#   cln_ref_rand_list[[rand]] <- rand_tree_ps
-# }
-# print("make random trees for iqtree clean")
-# iqtree_clean_rand_list <- list()
-# for (rand in 1:10){
-#   rand_tree <- ape::rtree(n = length(cln_iqtree_ps@phy_tree$tip.label), tip.label = cln_iqtree_ps@phy_tree$tip.label)
-#   #put int in philr
-#   rand_tree_ps <- phyloseq::phyloseq(otu_table(cln_iqtree_ps@otu_table, taxa_are_rows = F),
-#                                      phy_tree(rand_tree),
-#                                      tax_table(cln_iqtree_ps@tax_table),
-#                                      sample_data(cln_iqtree_ps@sam_data))
-#   phy_tree(rand_tree_ps) <- ape::makeNodeLabel(phy_tree(rand_tree_ps), method="number", prefix='n')
-#   phyloseq::plot_tree(rand_tree_ps, method = "treeonly", nodelabf=nodeplotblank, title = paste0("iqtree_rand_", rand))
-#   iqtree_clean_rand_list[[rand]] <- rand_tree_ps
-# }
+hashseq <- data.frame(data.table::fread(file = file.path(output_dir,"hashseq", "hashseq.csv"),
+                                        header="auto", data.table=FALSE), row.names = 1)
 
 print("creating lognorm, ALR and CLR")
 if (dir.exists(file.path(output_dir,"r_objects", "lognorm_asv.rds"))) {
@@ -231,9 +118,6 @@ if (dir.exists(file.path(output_dir,"r_objects", "clr_asv.rds"))) {
   saveRDS(DADA2_clr, file = file.path(output_dir,"r_objects", "clr_asv.rds"))
   write.csv(DADA2_clr, file = file.path(output_dir,"tables", "clr_asv.csv"))
 }
-
-hashseq <- data.frame(data.table::fread(file = file.path(output_dir,"hashseq", "hashseq.csv"),
-                                        header=TRUE, data.table=FALSE), row.names = 1)
 
 print("creating hashseq lognorm, ALR and CLR")
 if (dir.exists(file.path(output_dir,"r_objects", "lognorm_asv.rds"))) {
