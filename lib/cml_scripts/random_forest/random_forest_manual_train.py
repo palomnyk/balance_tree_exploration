@@ -41,7 +41,7 @@ clr_table = pd.read_csv(os.path.join(output_dir, "tables", "clr_asv.csv"), sep="
 alr_table = pd.read_csv(os.path.join(output_dir, "tables", "alr_asv.csv"), sep=",", header=0, index_col=0)
 ln_table = pd.read_csv(os.path.join(output_dir, "tables", "lognorm_asv.csv"), sep=",", header=0, index_col=0)
 ln_hs_tab = pd.read_csv(os.path.join(output_dir,"tables", "lognorm_hashseq.csv"))
-HashSeq_clr = pd.read_csv(os.path.join(output_dir,"r_objects", "clr_hashseq.csv"))
+HashSeq_clr = pd.read_csv(os.path.join(output_dir,"tables", "clr_hashseq.csv"))
 HashSeq_alr = pd.read_csv(os.path.join(output_dir,"tables", "alr_hashseq.csv"))
 
 # meta_df = meta_df.loc[list(asv_table.index.values)]#drops rows from metadata that aren't in asv_table
@@ -127,7 +127,7 @@ print(f"Building boxplot PDF.")
 result_df = pd.read_csv(result_fpath, sep=',', header=0)
 metadata_cats = list(set(result_df["metadata"]))
 num_cols = 2
-num_rows = abs(-len(table_names)//num_cols)
+num_rows = abs(-len(tables)//num_cols)
 
 pdf = matplotlib.backends.backend_pdf.PdfPages(pdf_fpath)
 for meta_c in metadata_cats:
