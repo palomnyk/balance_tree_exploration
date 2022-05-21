@@ -40,9 +40,9 @@ asv_table = pd.read_csv(os.path.join(output_dir, "tables", "ForwardReads_DADA2.t
 clr_table = pd.read_csv(os.path.join(output_dir, "tables", "clr_asv.csv"), sep=",", header=0, index_col=0)
 alr_table = pd.read_csv(os.path.join(output_dir, "tables", "alr_asv.csv"), sep=",", header=0, index_col=0)
 ln_table = pd.read_csv(os.path.join(output_dir, "tables", "lognorm_asv.csv"), sep=",", header=0, index_col=0)
-ln_hs_tab = pd.read_csv(os.path.join(output_dir,"tables", "lognorm_hashseq.csv"))
-HashSeq_clr = pd.read_csv(os.path.join(output_dir,"tables", "clr_hashseq.csv"))
-HashSeq_alr = pd.read_csv(os.path.join(output_dir,"tables", "alr_hashseq.csv"))
+ln_hs_tab = pd.read_csv(os.path.join(output_dir,"tables", "lognorm_hashseq.csv"), sep=",", header=0, index_col=0)
+HashSeq_clr = pd.read_csv(os.path.join(output_dir,"tables", "clr_hashseq.csv"), sep=",", header=0, index_col=0)
+HashSeq_alr = pd.read_csv(os.path.join(output_dir,"tables", "alr_hashseq.csv"), sep=",", header=0, index_col=0)
 
 # meta_df = meta_df.loc[list(asv_table.index.values)]#drops rows from metadata that aren't in asv_table
 # if all(meta_df.index == hashseq_df.index):
