@@ -20,7 +20,7 @@ echo Using $SLURM_NTASKS processors across $SLURM_NNODES nodes
 
 module load anaconda3/2020.11
 conda activate testing_pyCaret
-srun python ~/git/balance_tree_exploration/lib/cml_scripts/random_forest/python_random_forest_manual_train.py
+srun python ~/git/balance_tree_exploration/lib/cml_scripts/random_forest/random_forest_manual_train.py
 
 conda deactivate
 module unload anaconda3/2020.11
