@@ -20,11 +20,14 @@ echo Using $SLURM_NTASKS processors across $SLURM_NNODES nodes
 
 module load anaconda3/2020.11
 conda activate testing_pyCaret
-srun python ~/git/balance_tree_exploration/lib/cml_scripts/random_forest/random_forest_manual_train.py
-
+srun python ~/git/balance_tree_exploration/lib/cml_scripts/mlm_metrics/sklearn_model_metrics.py\
+  -p Vanderbilt \
+  -a True \
+  -f patient_metadata.tsv \
+  -i Run \
+	-t 0.9
 conda deactivate
 module unload anaconda3/2020.11
-
 # usage: sklearn_model_metrics.py [-h] [-m] [-d homedir] [-p project]
 #                                 [-a use_all_meta] [-f meta_fn] [-l delim]
 #                                 [-i meta_index_col]

@@ -24,17 +24,49 @@ import argparse
 import random
 
 # --------------------------------------------------------------------------
+print("Reading commmandline input with optparse.")
+# --------------------------------------------------------------------------
+
+parser = argparse.ArgumentParser(description='Process some integers.')
+# parser.add_option("-f", "--file", dest="filename",
+#                   help="write report to FILE", metavar="FILE")
+parser.add_argument("-m", "--metadata_cols",
+                  action="store_false", dest="meta_col",
+                  help="Metadata columns to analyse")
+parser.add_argument("-d", "--homedir",
+                  default=os.path.expanduser(os.path.join("~", "git", "balance_tree_exploration")),
+                  help="path to git balance treee exploration git repository", dest="homedir", metavar="homedir")
+parser.add_argument("-p", "--project", default="string",
+                  help="project folder", metavar="project")
+parser.add_argument("-a", "--use_all_meta", default=False,
+                  help="use all metadata", metavar="use_all_meta")
+parser.add_argument("-f", "--metada_fn", default=False, dest="meta_fn",
+                  help="Name of file at the top of the project folder to use as metadata.", 
+									metavar="meta_fn")
+parser.add_argument("-l", "--delimiter", default="\t",
+                  help="File delimiting symbol for metadata. Default is tab.",
+									metavar="delim", dest="delim")
+parser.add_argument("-i", "--meta_index_col", default=0,
+                  help="Name of column to use as row name for metadata",
+                  metavar="meta_index_col", dest="meta_index_col")
+parser.add_argument("-t", "--training", default=0.9,
+                  help="Percentating of table to use for training. The rest will be used for testing.",
+                  metavar="training_percent", dest="training_percent")
+
+options, unknown = parser.parse_known_args()
+
+# --------------------------------------------------------------------------
 print("Establishing directory layout.")
 # --------------------------------------------------------------------------
-home_dir = os.path.expanduser(os.path.join("~", "git", "balance_tree_exploration"))
-project = "Vanderbilt"
+home_dir = os.path.expanduser(options.homedir)
+project = options.project
 output_dir = os.path.join(home_dir, project, "output")
 
 # --------------------------------------------------------------------------
 print("Importing data to working env.")
 # --------------------------------------------------------------------------
-meta_df = pd.read_csv(os.path.join(home_dir, project, "patient_metadata.tsv"), \
-	sep="\t", header=0, index_col="Run")
+meta_df = pd.read_csv(os.path.expanduser(os.path.join(home_dir, project, options.meta_fn), \
+	sep=options.delim, header=0, index_col=options.meta_index_col))
 hashseq_df = pd.read_csv(os.path.join(output_dir, "hashseq", "hashseq.csv"), sep=",", header=0, index_col=0)
 asv_table = pd.read_csv(os.path.join(output_dir, "tables", "ForwardReads_DADA2.txt"), sep="\t", header=0, index_col=0)
 clr_table = pd.read_csv(os.path.join(output_dir, "tables", "clr_asv.csv"), sep=",", header=0, index_col=0)
@@ -54,11 +86,13 @@ print("Establishing other constants")
 metad_cols = range(len(meta_df.columns))
 seed = 7
 scoring = "accuracy"
+train_percent = options.training
 main_output_label = "sklearn_random_forest_manual"
-result_fpath = os.path.join(output_dir, "tables", f"{main_output_label}_{project}_data.csv")
+result_fpath = os.path.join(output_dir, "tables", f"{main_output_label}_{train_percent}train_{project}_data.csv")
 col_names = ["dataset", "metadata", "split1", "split2", "split3", "split4", "split5", "split6", "split7", "split8", "split9", "split10"]
 pdf_fpath = os.path.join(output_dir, "graphics", f"bp_{main_output_label}_{project}.pdf")
-num_rf_iterations = 10
+num_rf_iterations = 10#it must be ten because of the col_names
+
 
 # ----------------------------------------------------------------------------
 print("Setting up tables to feed the random forest model.")
@@ -106,7 +140,7 @@ with open(result_fpath, "w+") as fl:
 			for i in range(num_rf_iterations):
 				rand_int = random.randint(0, 1000)
 				spetz_var = meta_df.loc[list(my_table.index.values),m_c]#metadata var to test
-				pred_train, pred_test, resp_train, resp_test = model_selection.train_test_split(my_table, spetz_var, test_size=0.75, random_state=rand_int, shuffle=True) 
+				pred_train, pred_test, resp_train, resp_test = model_selection.train_test_split(my_table, spetz_var, test_size=train_percent, random_state=rand_int, shuffle=True) 
 				if is_string_dtype(spetz_var) == True and spetz_var.isnull().sum() < 5:
 					clf = RandomForestClassifier(max_depth=2, random_state=0)
 					clf.fit(pred_train, resp_train)
@@ -132,7 +166,7 @@ num_rows = abs(-len(tables)//num_cols)
 pdf = matplotlib.backends.backend_pdf.PdfPages(pdf_fpath)
 for meta_c in metadata_cats:
 	fig = plt.figure(figsize=(11,11))
-	fig.suptitle(f"{project} random forest manual split 4-fold {scoring} {meta_c}")
+	fig.suptitle(f"{project} random forest manual {train_percent}training {scoring} {meta_c}")
 	plt.subplots_adjust(bottom=0.8)
 	meta_result_df = pd.DataFrame(result_df[result_df["metadata"] == meta_c])
 	# flat_num_only = pd.DataFrame(meta_result_df.iloc[:,5:]).to_numpy().flatten()
