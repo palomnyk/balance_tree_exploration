@@ -87,12 +87,11 @@ metad_cols = range(len(meta_df.columns))
 seed = 7
 scoring = "accuracy"
 train_percent = options.training
-main_output_label = "sklearn_random_forest_manual"
+main_output_label = f"sklearn_random_forest_manual_{train_percent}training"
 result_fpath = os.path.join(output_dir, "tables", f"{main_output_label}_{train_percent}train_{project}_data.csv")
 col_names = ["dataset", "metadata", "split1", "split2", "split3", "split4", "split5", "split6", "split7", "split8", "split9", "split10"]
 pdf_fpath = os.path.join(output_dir, "graphics", f"bp_{main_output_label}_{project}.pdf")
 num_rf_iterations = 10#it must be ten because of the col_names
-
 
 # ----------------------------------------------------------------------------
 print("Setting up tables to feed the random forest model.")
