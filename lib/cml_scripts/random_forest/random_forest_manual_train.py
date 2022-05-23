@@ -65,8 +65,8 @@ output_dir = os.path.join(home_dir, project, "output")
 # --------------------------------------------------------------------------
 print("Importing data to working env.")
 # --------------------------------------------------------------------------
-meta_df = pd.read_csv(os.path.expanduser(os.path.join(home_dir, project, options.meta_fn), \
-	sep=options.delim, header=0, index_col=options.meta_index_col))
+meta_df = pd.read_csv(os.path.expanduser(os.path.join(home_dir, project, options.meta_fn)), \
+	sep=options.delim, header=0, index_col=options.meta_index_col)
 hashseq_df = pd.read_csv(os.path.join(output_dir, "hashseq", "hashseq.csv"), sep=",", header=0, index_col=0)
 asv_table = pd.read_csv(os.path.join(output_dir, "tables", "ForwardReads_DADA2.txt"), sep="\t", header=0, index_col=0)
 clr_table = pd.read_csv(os.path.join(output_dir, "tables", "clr_asv.csv"), sep=",", header=0, index_col=0)
