@@ -27,7 +27,7 @@ import random
 print("Reading commmandline input with optparse.")
 # --------------------------------------------------------------------------
 
-parser = argparse.ArgumentParser(description='Process some integers.')
+parser = argparse.ArgumentParser(description="This script runs a random forest test on various datasets.")
 # parser.add_option("-f", "--file", dest="filename",
 #                   help="write report to FILE", metavar="FILE")
 parser.add_argument("-m", "--metadata_cols",
@@ -40,7 +40,7 @@ parser.add_argument("-p", "--project", default="string",
                   help="project folder", metavar="project")
 parser.add_argument("-a", "--use_all_meta", default=False,
                   help="use all metadata", metavar="use_all_meta")
-parser.add_argument("-f", "--metada_fn", default=False, dest="meta_fn",
+parser.add_argument("-f", "--metada_fn", default="string", dest="meta_fn",
                   help="Name of file at the top of the project folder to use as metadata.", 
 									metavar="meta_fn")
 parser.add_argument("-l", "--delimiter", default="\t",
@@ -65,7 +65,7 @@ output_dir = os.path.join(home_dir, project, "output")
 # --------------------------------------------------------------------------
 print("Importing data to working env.")
 # --------------------------------------------------------------------------
-meta_df = pd.read_csv(os.path.expanduser(os.path.join(home_dir, project, options.meta_fn)), \
+meta_df = pd.read_csv(os.path.expanduser(os.path.join(home_dir, project, str(options.meta_fn))), \
 	sep=options.delim, header=0, index_col=options.meta_index_col)
 hashseq_df = pd.read_csv(os.path.join(output_dir, "hashseq", "hashseq.csv"), sep=",", header=0, index_col=0)
 asv_table = pd.read_csv(os.path.join(output_dir, "tables", "ForwardReads_DADA2.txt"), sep="\t", header=0, index_col=0)
@@ -98,8 +98,8 @@ num_rf_iterations = 10#it must be ten because of the col_names
 print("Setting up tables to feed the random forest model.")
 # # --------------------------------------------------------------------------
 tables = []
-tables.append(("DaDa2", asv_table))
 tables.append(("HashSeq", hashseq_df))
+tables.append(("DaDa2", asv_table))
 tables.append(("lognorm_DADA2", ln_table))
 tables.append(("lognorm_HashSeq", ln_hs_tab))
 tables.append(("alr_DADA2", alr_table))
@@ -140,7 +140,7 @@ with open(result_fpath, "w+") as fl:
 			for i in range(num_rf_iterations):
 				rand_int = random.randint(0, 1000)
 				spetz_var = meta_df.loc[list(my_table.index.values),m_c]#metadata var to test
-				pred_train, pred_test, resp_train, resp_test = model_selection.train_test_split(my_table, spetz_var, test_size=train_percent, random_state=rand_int, shuffle=True) 
+				pred_train, pred_test, resp_train, resp_test = model_selection.train_test_split(my_table, spetz_var, test_size=float(train_percent), random_state=rand_int, shuffle=True) 
 				if is_string_dtype(spetz_var) == True and spetz_var.isnull().sum() < 5:
 					clf = RandomForestClassifier(max_depth=2, random_state=0)
 					clf.fit(pred_train, resp_train)
