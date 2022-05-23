@@ -51,7 +51,7 @@ parser.add_argument("-i", "--meta_index_col", default=0,
                   metavar="meta_index_col", dest="meta_index_col")
 parser.add_argument("-t", "--training", default=0.9,
                   help="Percentating of table to use for training. The rest will be used for testing.",
-                  metavar="training_percent", dest="training_percent")
+                  metavar="training", dest="training")
 
 options, unknown = parser.parse_known_args()
 
