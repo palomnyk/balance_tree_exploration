@@ -217,8 +217,10 @@ main_output_text <- "random_forest_auc_R_"
 main_output_label <- paste0(main_output_text, num_cycles)
 main_output_fn <- paste0(main_output_label, ".csv")
 main_output_fpath <- file.path(output_dir, "tables", main_output_fn)
-philr_taxa_weights <- c("uniform","gm.counts","anorm","anorm.x.gm.counts","enorm","enorm.x.gm.counts")
-philr_ilr_weights <- c("uniform","blw","blw.sqrt","mean.descendants")
+# philr_taxa_weights <- c("uniform","gm.counts","anorm","anorm.x.gm.counts","enorm","enorm.x.gm.counts")
+# philr_ilr_weights <- c("uniform","blw","blw.sqrt","mean.descendants")
+philr_taxa_weights <- c("enorm")
+philr_ilr_weights <- c("blw")
 random_seed <- 36
 main_header <- "all_auc, metadata_col, taxa_weight, ilr_weight, rf_imp_se, rf_type, rf_ntree, trans_group, random_batch, cycle"
 
@@ -272,8 +274,7 @@ rf_cols <- 1:ncol(metadata)#hack so I don't have to fix this in the function
 
 print("Attempting to read HashSeq count table")
 hashseq <- data.frame(data.table::fread(file = file.path(output_dir,"hashseq", "hashseq.csv"),
-                                        header=TRUE, data.table=FALSE), row.names = 1)
-# hashseq <- hashseq[, colSums(hashseq != 0) > 0.01*nrow(hashseq)]#remove columns that don't have at least 10%
+                                        header="auto", data.table=FALSE), row.names = 1)# hashseq <- hashseq[, colSums(hashseq != 0) > 0.01*nrow(hashseq)]#remove columns that don't have at least 10%
 # print(paste("HashSeq has", ncol(hashseq), "columns after column reduction."))
 print("creating lognorm, ALR and CLR")
 if (dir.exists(file.path(output_dir,"r_objects", "lognorm_asv.rds"))) {
@@ -283,7 +284,13 @@ if (dir.exists(file.path(output_dir,"r_objects", "lognorm_asv.rds"))) {
   saveRDS(ln_asv_tab, file = file.path(output_dir,"r_objects", "lognorm_asv.rds"))
   write.csv(ln_asv_tab, file = file.path(output_dir,"tables", "lognorm_dada2.csv"))
 }
-
+if (dir.exists(file.path(output_dir,"r_objects", "lognorm_hashseq.rds"))) {
+  ln_asv_tab <- readRDS(file.path(output_dir,"r_objects", "lognorm_asv.rds"))
+}else{
+  ln_asv_tab <- lognorm(asv_table)
+  saveRDS(ln_asv_tab, file = file.path(output_dir,"r_objects", "lognorm_asv.rds"))
+  write.csv(ln_asv_tab, file = file.path(output_dir,"tables", "lognorm_dada2.csv"))
+}
 my_zeros <- apply(asv_table, 2, function(x) {
   return(sum(x == 0))
 })
@@ -323,6 +330,7 @@ phyloseq_objects <- list(list(ref_ps, "Silva_DADA2"),
                          list(cln_iqtree_ps,"Filtered_IQTree"),
                          list(iqtree_orig_ps, "IQTREE_Orig"))
 
+
 table_objects <- list(list(asv_table, "Raw_DADA2"),
                       list(ln_asv_tab, "lognorm_DADA2"),
                       list(DADA2_alr, "alr_DADA2"),
@@ -335,43 +343,21 @@ table_objects <- list(list(asv_table, "Raw_DADA2"),
 print(paste("Setting random seed to:", random_seed))
 set.seed(random_seed)
 print("Making random trees")
-for (rand in 1:5){
-  rand_tree <- ape::rtree(n = length(ref_ps@phy_tree$tip.label), tip.label = ref_ps@phy_tree$tip.label)
-  #put int in philr
-  rand_tree_ps <- phyloseq::phyloseq( otu_table(ref_ps_clean@otu_table, taxa_are_rows = F),
-                                      phy_tree(rand_tree),
-                                      tax_table(ref_ps@tax_table),
-                                      sample_data(ref_ps@sam_data))
-  phy_tree(rand_tree_ps) <- ape::makeNodeLabel(phy_tree(rand_tree_ps), method="number", prefix='n')
-  phyloseq::plot_tree(rand_tree_ps,  method = "treeonly", nodelabf=nodeplotblank, title = paste0("orig_ref_rand_", rand))
-  phyloseq_objects <- append(phyloseq_objects, list(rand_tree_ps,paste0("Silva_rand_",rand)))
-
-  rand_tree <- ape::rtree(n = length(cln_denovo_tree_ps@phy_tree$tip.label), tip.label = cln_denovo_tree_ps@phy_tree$tip.label)
-  rand_tree_ps <- phyloseq::phyloseq( otu_table(cln_denovo_tree_ps@otu_table, taxa_are_rows = F),
-                                      phy_tree(rand_tree),
-                                      tax_table(cln_denovo_tree_ps@tax_table),
-                                      sample_data(cln_denovo_tree_ps@sam_data))
-  phy_tree(rand_tree_ps) <- ape::makeNodeLabel(phy_tree(rand_tree_ps), method="number", prefix='n')
-  phyloseq::plot_tree(rand_tree_ps, title = paste0("Filtered_UPGMA_rand_", rand))
-  phyloseq_objects <- append(phyloseq_objects, list(rand_tree_ps,paste0("Filtered_UPGMA_rand_",rand)))
-
-  rand_tree <- ape::rtree(n = length(ref_ps_clean@phy_tree$tip.label), tip.label = ref_ps_clean@phy_tree$tip.label)
-  rand_tree_ps <- phyloseq::phyloseq(otu_table(ref_ps_clean@otu_table, taxa_are_rows = F),
-                                     phy_tree(rand_tree),
-                                     tax_table(ref_ps_clean@tax_table),
-                                     sample_data(ref_ps_clean@sam_data))
-  phy_tree(rand_tree_ps) <- ape::makeNodeLabel(phy_tree(rand_tree_ps), method="number", prefix='n')
-  phyloseq::plot_tree(rand_tree_ps, method = "treeonly", nodelabf=nodeplotblank, title = paste0("Filtered_Silva_rand_", rand))
-  phyloseq_objects <- append(phyloseq_objects, list(rand_tree_ps,paste0("Filtered_Silva_rand_",rand)))
-
-  rand_tree <- ape::rtree(n = length(cln_iqtree_ps@phy_tree$tip.label), tip.label = cln_iqtree_ps@phy_tree$tip.label)
-  rand_tree_ps <- phyloseq::phyloseq(otu_table(cln_iqtree_ps@otu_table, taxa_are_rows = F),
-                                     phy_tree(rand_tree),
-                                     tax_table(cln_iqtree_ps@tax_table),
-                                     sample_data(cln_iqtree_ps@sam_data))
-  phy_tree(rand_tree_ps) <- ape::makeNodeLabel(phy_tree(rand_tree_ps), method="number", prefix='n')
-  phyloseq::plot_tree(rand_tree_ps, method = "treeonly", nodelabf=nodeplotblank, title = paste0("Filtered_IQTREE_rand_", rand))
-  phyloseq_objects <- append(phyloseq_objects, list(rand_tree_ps,paste0("Filtered_IQTREE_rand_",rand)))
+for (po in list(list(ref_ps, "Silva_rand_"),
+                list(cln_denovo_tree_ps, "Filtered_UPGMA_rand_"),
+                list(ref_ps_clean, "Filtered_Silva_rand_"),
+                list(cln_iqtree_ps, "Filtered_IQTREE_rand_"))
+){
+  for (rand in 1:5){
+    rand_tree <- ape::rtree(n = length(po[[1]]@phy_tree$tip.label), tip.label = po[[1]]@phy_tree$tip.label)
+    rand_tree_ps <- phyloseq::phyloseq(otu_table(po[[1]]@otu_table, taxa_are_rows = F),
+                                       phy_tree(rand_tree),
+                                       tax_table(po[[1]]@tax_table),
+                                       sample_data(po[[1]]@sam_data))
+    phy_tree(rand_tree_ps) <- ape::makeNodeLabel(phy_tree(rand_tree_ps), method="number", prefix='n')
+    phyloseq::plot_tree(rand_tree_ps, method = "treeonly", nodelabf=nodeplotblank, title = paste0(po[[2]], rand))
+    phyloseq_objects[[length(phyloseq_objects)+1]] <- list(rand_tree_ps,paste0(po[[2]],rand))
+  }
 }
 
 skips <- 0
@@ -382,22 +368,6 @@ while (counter < num_cycles & skips < 5){
   ##-Create training/testing sets-------------------------------------##
   train_index <- row.names(asv_table)[sample(x = nrow(asv_table), size = 0.75*nrow(asv_table), replace=FALSE)]
   test_index <- row.names(asv_table)[c(1:nrow(asv_table))[!(1:nrow(asv_table) %in% train_index)]]
-  
-  for (to in 1:length(table_objects)) {
-    my_table <- table_objects[[to]][[1]]
-    to_name <- table_objects[[to]][[2]]
-    print(paste("Counter:", counter, "| making", to_name, "count table AUCs."))
-    make_ilr_taxa_auc_df(ps_obj = my_table,
-                         metadata_cols = rf_cols,
-                         metadata = metadata,
-                         train_index = train_index,
-                         test_index = test_index,
-                         philr_ilr_weights = philr_ilr_weights,
-                         philr_taxa_weights = philr_taxa_weights,
-                         just_otu = TRUE,
-                         cycle = counter,
-                         transf_label = paste0(to_name, "_Counts_Table"))
-  }#End for (to in 1:length(table_objects)) 
   
   for (pso in 1:length(phyloseq_objects)) {
     my_pso <- phyloseq_objects[[pso]][[1]]
@@ -423,8 +393,24 @@ while (counter < num_cycles & skips < 5){
                          philr_taxa_weights = philr_taxa_weights,
                          just_otu = TRUE,
                          cycle = counter,
-                         transf_label = paste0(po_name, ""))
+                         transf_label = paste0(po_name, "_Counts_Table"))
   }#end for (pso in 1:length(phyloseq_objects))
+  
+  for (to in 1:length(table_objects)) {
+    my_table <- table_objects[[to]][[1]]
+    to_name <- table_objects[[to]][[2]]
+    print(paste("Counter:", counter, "| making", to_name, "count table AUCs."))
+    make_ilr_taxa_auc_df(ps_obj = my_table,
+                         metadata_cols = rf_cols,
+                         metadata = metadata,
+                         train_index = train_index,
+                         test_index = test_index,
+                         philr_ilr_weights = philr_ilr_weights,
+                         philr_taxa_weights = philr_taxa_weights,
+                         just_otu = TRUE,
+                         cycle = counter,
+                         transf_label = paste0(to_name, ""))
+  }#End for (to in 1:length(table_objects)) 
 
   print(paste("completed loop:", counter))
   counter <- counter + 1
@@ -593,3 +579,6 @@ for (mta in 1:length(unique(all_plot_data$metadata_col))){
 dev.off()
 
 print("finished R script")
+
+
+
