@@ -39,6 +39,9 @@ asv_table = pd.read_csv(os.path.join(output_dir, "tables", "ForwardReads_DADA2.t
 clr_table = pd.read_csv(os.path.join(output_dir, "tables", "clr_asv.csv"), sep=",", header=0, index_col=0)
 alr_table = pd.read_csv(os.path.join(output_dir, "tables", "alr_asv.csv"), sep=",", header=0, index_col=0)
 ln_table = pd.read_csv(os.path.join(output_dir, "tables", "lognorm_asv.csv"), sep=",", header=0, index_col=0)
+ln_hs_tab = pd.read_csv(os.path.join(output_dir,"tables", "lognorm_hashseq.csv"), sep=",", header=0, index_col=0)
+HashSeq_clr = pd.read_csv(os.path.join(output_dir,"tables", "clr_hashseq.csv"), sep=",", header=0, index_col=0)
+HashSeq_alr = pd.read_csv(os.path.join(output_dir,"tables", "alr_hashseq.csv"), sep=",", header=0, index_col=0)
 
 
 meta_df = meta_df.loc[list(asv_table.index.values)]#drops rows from metadata that aren't in asv_table
@@ -52,7 +55,7 @@ print("Establishing other constants")
 metad_cols = range(len(meta_df.columns))
 seed = 7
 scoring = "roc_auc"
-main_output_label = "sklearn_random_forest_"
+main_output_label = "sklearn_random_forest_cross_val_10fold"
 result_fpath = os.path.join(output_dir, "tables", f"{main_output_label}_{project}_data.csv")
 col_names = ["dataset", "metadata", "split1", "split2", "split3", "split4", "split5", "split6", "split7", "split8", "split9", "split10"]
 pdf_fpath = os.path.join(output_dir, "graphics", f"bp_{main_output_label}_{project}.pdf")
@@ -60,8 +63,15 @@ pdf_fpath = os.path.join(output_dir, "graphics", f"bp_{main_output_label}_{proje
 # --------------------------------------------------------------------------
 print("Setting up tables to feed the random forest model.")
 # --------------------------------------------------------------------------
-tables = [asv_table, hashseq_df, ln_table, alr_table, clr_table]
-table_names = ["HashSeq", "DaDa2", "lognorm_DADA2", "alr_DADA2", "clr_DADA2"]
+tables = []
+tables.append(("HashSeq", hashseq_df))
+tables.append(("DaDa2", asv_table))
+tables.append(("lognorm_DADA2", ln_table))
+tables.append(("lognorm_HashSeq", ln_hs_tab))
+tables.append(("alr_DADA2", alr_table))
+tables.append(("alr_HashSeq", HashSeq_alr))
+tables.append(("clr_DADA2", clr_table))
+tables.append(("clr_HashSeq", HashSeq_clr))
 
 philr_part_weights = ["anorm","enorm"]
 philr_ilr_weights = ["blw.sqrt","mean.descendants"]
@@ -76,8 +86,7 @@ for pw in philr_part_weights:
 		table_fn = f"ref_tree_cln_{iw}_{pw}.csv"
 		my_df = pd.read_csv(os.path.join(silva_philr_dir, table_fn), sep=',', header=0, index_col=0)
 		my_label = f"ref_tree_philr_{iw}_{pw}"
-		tables.append(my_df)
-		table_names.append(my_label)
+		tables.append((my_label, my_df))
 
 # meta_df.head
 # meta_df = meta_df.sample(frac=1)
@@ -89,8 +98,7 @@ print(f"Running random forest model to find {scoring}.")
 with open(result_fpath, "w+") as fl:
 	fl.write(",".join(col_names))
 	fl.write("\n")
-	for table in range(0,len(tables)):
-		my_table = tables[table]
+	for name, my_table in tables:
 		for meta_c in metad_cols:
 			m_c = list(meta_df.columns)[meta_c]
 			spetz_var = meta_df[m_c]#metadata var to test
@@ -99,9 +107,9 @@ with open(result_fpath, "w+") as fl:
 				cv_results = model_selection.cross_val_score(RandomForestClassifier(), my_table, spetz_var, cv=kfold, scoring=scoring)
 				# result_str = np.array2string(cv_results, separator=",",suffix="/n")
 				result_str = ",".join(map(str, cv_results.tolist()))
-				msg = f"{table_names[table]},{m_c},{result_str}\n"
+				msg = f"{name},{m_c},{result_str}\n"
 				fl.write(msg)
-				print(f"{table_names[table]}, {m_c} mean is: {mean(cv_results)}")
+				print(f"{name}, {m_c} mean is: {mean(cv_results)}")
 print("Finished recording accuracy.")
 
 # --------------------------------------------------------------------------
