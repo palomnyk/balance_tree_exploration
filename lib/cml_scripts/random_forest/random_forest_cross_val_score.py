@@ -30,10 +30,24 @@ project = "Vanderbilt"
 output_dir = os.path.join(home_dir, project, "output")
 
 # --------------------------------------------------------------------------
+print("Establishing other constants")
+# --------------------------------------------------------------------------
+seed = 7
+scoring = "accuracy"
+main_output_label = "sklearn_random_forest_cross_val_10fold"
+result_fpath = os.path.join(output_dir, "tables", f"{main_output_label}_{project}_data.csv")
+num_iterations = 10
+col_names = ["dataset", "metadata"]
+col_names = col_names + [f"split{x}" for x in range(num_iterations)]
+print(col_names)
+pdf_fpath = os.path.join(output_dir, "graphics", f"bp_{main_output_label}_{project}.pdf")
+
+# --------------------------------------------------------------------------
 print("Importing data to working env.")
 # --------------------------------------------------------------------------
 meta_df = pd.read_csv(os.path.join(home_dir, project, "patient_metadata.tsv"), \
 	sep="\t", header=0, index_col="Run")
+metad_cols = range(len(meta_df.columns))
 hashseq_df = pd.read_csv(os.path.join(output_dir, "hashseq", "hashseq.csv"), sep=",", header=0, index_col=0)
 asv_table = pd.read_csv(os.path.join(output_dir, "tables", "ForwardReads_DADA2.txt"), sep="\t", header=0, index_col=0)
 clr_table = pd.read_csv(os.path.join(output_dir, "tables", "clr_asv.csv"), sep=",", header=0, index_col=0)
@@ -43,22 +57,9 @@ ln_hs_tab = pd.read_csv(os.path.join(output_dir,"tables", "lognorm_hashseq.csv")
 HashSeq_clr = pd.read_csv(os.path.join(output_dir,"tables", "clr_hashseq.csv"), sep=",", header=0, index_col=0)
 HashSeq_alr = pd.read_csv(os.path.join(output_dir,"tables", "alr_hashseq.csv"), sep=",", header=0, index_col=0)
 
-
-meta_df = meta_df.loc[list(asv_table.index.values)]#drops rows from metadata that aren't in asv_table
-if all(meta_df.index == hashseq_df.index):
-	print("dataframes are the same.")
-
-# --------------------------------------------------------------------------
-print("Establishing other constants")
-# --------------------------------------------------------------------------
-
-metad_cols = range(len(meta_df.columns))
-seed = 7
-scoring = "roc_auc"
-main_output_label = "sklearn_random_forest_cross_val_10fold"
-result_fpath = os.path.join(output_dir, "tables", f"{main_output_label}_{project}_data.csv")
-col_names = ["dataset", "metadata", "split1", "split2", "split3", "split4", "split5", "split6", "split7", "split8", "split9", "split10"]
-pdf_fpath = os.path.join(output_dir, "graphics", f"bp_{main_output_label}_{project}.pdf")
+# meta_df = meta_df.loc[list(asv_table.index.values)]#drops rows from metadata that aren't in asv_table
+# if all(meta_df.index == hashseq_df.index):
+# 	print("dataframes are the same.")
 
 # --------------------------------------------------------------------------
 print("Setting up tables to feed the random forest model.")
@@ -79,8 +80,6 @@ silva_philr_dir = os.path.join(output_dir, "tables", "silva_philr_weights")
 if not os.path.exists(silva_philr_dir):
   print(f"{silva_philr_dir} does not exist. Use silva_philr_weights.R to create it.")
   sys.exit()
-philr_tables = []
-philr_names = []
 for pw in philr_part_weights:
 	for iw in philr_ilr_weights:
 		table_fn = f"ref_tree_cln_{iw}_{pw}.csv"
@@ -101,10 +100,10 @@ with open(result_fpath, "w+") as fl:
 	for name, my_table in tables:
 		for meta_c in metad_cols:
 			m_c = list(meta_df.columns)[meta_c]
-			spetz_var = meta_df[m_c]#metadata var to test
-			if is_string_dtype(spetz_var) == True and spetz_var.isnull().sum() < 5:
+			respns_var = meta_df.loc[list(my_table.index.values),m_c]#metadata var to test
+			if is_string_dtype(respns_var) == True and respns_var.isnull().sum() < 5:
 				kfold = model_selection.KFold(n_splits=10, random_state=seed, shuffle=True)
-				cv_results = model_selection.cross_val_score(RandomForestClassifier(), my_table, spetz_var, cv=kfold, scoring=scoring)
+				cv_results = model_selection.cross_val_score(RandomForestClassifier(), my_table, respns_var, cv=kfold, scoring=scoring)
 				# result_str = np.array2string(cv_results, separator=",",suffix="/n")
 				result_str = ",".join(map(str, cv_results.tolist()))
 				msg = f"{name},{m_c},{result_str}\n"
@@ -119,7 +118,7 @@ print(f"Building boxplot PDF.")
 result_df = pd.read_csv(result_fpath, sep=',', header=0)
 metadata_cats = list(set(result_df["metadata"]))
 num_cols = 2
-num_rows = abs(-len(table_names)//num_cols)
+num_rows = abs(-len(result_df.dataset.unique())//num_cols)
 
 pdf = matplotlib.backends.backend_pdf.PdfPages(pdf_fpath)
 for meta_c in metadata_cats:
@@ -129,7 +128,6 @@ for meta_c in metadata_cats:
 	meta_result_df = pd.DataFrame(result_df[result_df["metadata"] == meta_c])
 	flat_num_only = pd.DataFrame(meta_result_df.iloc[:,5:]).to_numpy().flatten()
 	f_mean = np.nanmean(flat_num_only)
-		# print(fig_df.head())
 	plot_data = meta_result_df.iloc[:,2:].transpose()
 	ax = fig.add_subplot(1,1, 1)
 	# print(head(plot_data))

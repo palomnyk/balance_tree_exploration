@@ -63,10 +63,25 @@ project = options.project
 output_dir = os.path.join(home_dir, project, "output")
 
 # --------------------------------------------------------------------------
+print("Establishing other constants")
+# --------------------------------------------------------------------------
+seed = 7
+scoring = "accuracy"
+train_percent = options.training
+main_output_label = f"sklearn_random_forest_manual_{train_percent}training"
+result_fpath = os.path.join(output_dir, "tables", f"{main_output_label}_{train_percent}train_{project}_data.csv")
+col_names = ["dataset", "metadata"]
+num_iterations = 10
+col_names = col_names + [f"split{x}" for x in range(num_iterations)]
+print(col_names)
+pdf_fpath = os.path.join(output_dir, "graphics", f"bp_{main_output_label}_{project}.pdf")
+
+# --------------------------------------------------------------------------
 print("Importing data to working env.")
 # --------------------------------------------------------------------------
 meta_df = pd.read_csv(os.path.expanduser(os.path.join(home_dir, project, str(options.meta_fn))), \
 	sep=options.delim, header=0, index_col=options.meta_index_col)
+metad_cols = range(len(meta_df.columns))
 hashseq_df = pd.read_csv(os.path.join(output_dir, "hashseq", "hashseq.csv"), sep=",", header=0, index_col=0)
 asv_table = pd.read_csv(os.path.join(output_dir, "tables", "ForwardReads_DADA2.txt"), sep="\t", header=0, index_col=0)
 clr_table = pd.read_csv(os.path.join(output_dir, "tables", "clr_asv.csv"), sep=",", header=0, index_col=0)
@@ -79,20 +94,6 @@ HashSeq_alr = pd.read_csv(os.path.join(output_dir,"tables", "alr_hashseq.csv"), 
 # meta_df = meta_df.loc[list(asv_table.index.values)]#drops rows from metadata that aren't in asv_table
 # if all(meta_df.index == hashseq_df.index):
 # 	print("dataframes are the same.")
-
-# --------------------------------------------------------------------------
-print("Establishing other constants")
-# --------------------------------------------------------------------------
-metad_cols = range(len(meta_df.columns))
-seed = 7
-scoring = "accuracy"
-train_percent = options.training
-main_output_label = f"sklearn_random_forest_manual_{train_percent}training"
-result_fpath = os.path.join(output_dir, "tables", f"{main_output_label}_{train_percent}train_{project}_data.csv")
-col_names = ["dataset", "metadata", "split1", "split2", "split3", "split4", "split5", "split6", "split7", "split8", "split9", "split10"]
-pdf_fpath = os.path.join(output_dir, "graphics", f"bp_{main_output_label}_{project}.pdf")
-num_rf_iterations = 10#it must be ten because of the col_names
-
 # ----------------------------------------------------------------------------
 print("Setting up tables to feed the random forest model.")
 # # --------------------------------------------------------------------------
@@ -134,13 +135,13 @@ with open(result_fpath, "w+") as fl:
 		m_c = list(meta_df.columns)[meta_c]
 		# meta_df = meta_df.loc[list(my_table.index.values)
 		for name, my_table in tables:
-			my_accuracy = [0] * num_rf_iterations
+			my_accuracy = [0] * num_iterations
 			random.seed(10)
-			for i in range(num_rf_iterations):
+			for i in range(num_iterations):
 				rand_int = random.randint(0, 1000)
-				spetz_var = meta_df.loc[list(my_table.index.values),m_c]#metadata var to test
-				pred_train, pred_test, resp_train, resp_test = model_selection.train_test_split(my_table, spetz_var, test_size=float(train_percent), random_state=rand_int, shuffle=True) 
-				if is_string_dtype(spetz_var) == True and spetz_var.isnull().sum() < 5:
+				respns_var = meta_df.loc[list(my_table.index.values),m_c]#metadata var to test
+				pred_train, pred_test, resp_train, resp_test = model_selection.train_test_split(my_table, respns_var, test_size=float(train_percent), random_state=rand_int, shuffle=True) 
+				if is_string_dtype(respns_var) == True and respns_var.isnull().sum() < 5:
 					clf = RandomForestClassifier(max_depth=2, random_state=0)
 					clf.fit(pred_train, resp_train)
 					resp_pred = clf.predict(pred_test)
