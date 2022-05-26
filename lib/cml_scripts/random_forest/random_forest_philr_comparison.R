@@ -29,6 +29,7 @@ make_ilr_taxa_auc_df <- function(ps_obj,
 					my_table <- ps_obj
 				}else{
 				  if (any(ps_obj@otu_table == 0)){
+				    print("adding pseudocount to before PhILR transform")
 				    ps_obj <- transform_sample_counts(ps_obj, function(x) x+1)
 				  }
 					my_table <- philr::philr(ps_obj@otu_table, ps_obj@phy_tree, 
@@ -37,7 +38,7 @@ make_ilr_taxa_auc_df <- function(ps_obj,
 				}
 				my_table_train <- my_table[row.names(my_table) %in% train_index,]
 				my_table_test <- my_table[row.names(my_table) %in% test_index,]
-				print(paste("dim my_table_train:", dim(my_table_test)))
+				# print(paste("dim my_table_train:", dim(my_table_test)))
 				},
 				error=function(cond) {
 					print('Opps, an error1 is thrown')
