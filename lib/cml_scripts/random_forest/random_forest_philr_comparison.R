@@ -115,7 +115,7 @@ make_ilr_taxa_auc_df <- function(ps_obj,
 						if (file.exists(output_fpath)) {
 						  print(paste0("Writing output to ", output_fpath, " ."))
 						  # main_header <- "all_auc,	metadata_col, taxa_weight,	ilr_weight,	rf_imp_se, rf_type, rf_ntree, trans_group, random_batch, cycle"
-						  cat(paste("\n", auc, colnames(metadata)[mta], philr_taxa_weights[tax_w],#all_auc,	metadata_col, taxa_weight
+						  cat(paste(paste0("\n", auc), colnames(metadata)[mta], philr_taxa_weights[tax_w],#all_auc,	metadata_col, taxa_weight
 						            philr_ilr_weights[ilr_w], row.names(my_df)[maxRow], rf$type, #ilr_weight,	rf_imp_se, rf_type,
 						            rf$ntree, transf_label, random_label, cycle, #rf_ntree, trans_group, random_batch, cycle
 						            sep = ","), 
