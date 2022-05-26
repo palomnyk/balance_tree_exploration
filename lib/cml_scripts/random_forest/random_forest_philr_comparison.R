@@ -41,14 +41,12 @@ make_ilr_taxa_auc_df <- function(ps_obj,
 				# print(paste("dim my_table_train:", dim(my_table_test)))
 				},
 				error=function(cond) {
-					print('Opps, an error1 is thrown')
-					message(cond)
-					print(message(cond))
+					print(paste("Opps, an error1 is thrown with", transf_label))
+					message(paste(transf_label, cond))
 				},
 				warning=function(cond) {
-					print('Opps, a warning1 is thrown')
-					message(cond)
-					print(message(cond))
+					print(paste("Opps, a warning1 is thrown with", transf_label))
+				  message(paste(transf_label, cond))
 				}
 			)
 			# print("head(my_table_train)")
@@ -128,15 +126,13 @@ make_ilr_taxa_auc_df <- function(ps_obj,
 						}
 					},
 					error=function(cond) {
-						print('Opps, an error2 is thrown')
-						message(cond)
-						print(message(cond))
+					  print(paste("Opps, an error2 is thrown with", transf_label))
+					  message(paste(transf_label, cond))
 					},
 					warning=function(cond) {
-						print('Opps, a warning2 is thrown')
-						message(cond)
-						print(message(cond))
-						}
+					  print(paste("Opps, a warning2 is thrown with", transf_label))
+					  message(paste(transf_label, cond))
+					}
 				)
 			}#for mta
 			if (just_otu == TRUE) break
@@ -155,9 +151,7 @@ raw_ps_to_clean_ps <- function(ps) {
                                  sample_data(ps@sam_data))
   return(ps_clean)
 }
-psuedocount_ps_if_no_zeros <- function(ps){
-  
-}
+
 ##-Load Depencencies------------------------------------------------##
 if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
 if (!requireNamespace("ape", quietly = TRUE)) BiocManager::install("ape")
@@ -335,7 +329,6 @@ phyloseq_objects <- list(list(ref_ps, "Silva_DADA2"),
                          list(cln_denovo_tree_ps, "Filtered_UPGMA"), 
                          list(cln_iqtree_ps,"Filtered_IQTree"),
                          list(iqtree_orig_ps, "IQTREE_Orig"))
-
 
 table_objects <- list(list(asv_table, "Raw_DADA2"),
                       list(ln_asv_tab, "lognorm_DADA2"),
