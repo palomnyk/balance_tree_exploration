@@ -28,6 +28,9 @@ make_ilr_taxa_auc_df <- function(ps_obj,
 					print("In just otu")
 					my_table <- ps_obj
 				}else{
+				  if (any(ps_obj@otu_table == 0)){
+				    ps_obj <- transform_sample_counts(ps_obj, function(x) x+1)
+				  }
 					my_table <- philr::philr(ps_obj@otu_table, ps_obj@phy_tree, 
 																		part.weights = philr_taxa_weights[tax_w],
 																		ilr.weights = philr_ilr_weights[ilr_w])
@@ -151,7 +154,9 @@ raw_ps_to_clean_ps <- function(ps) {
                                  sample_data(ps@sam_data))
   return(ps_clean)
 }
-
+psuedocount_ps_if_no_zeros <- function(ps){
+  
+}
 ##-Load Depencencies------------------------------------------------##
 if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
 if (!requireNamespace("ape", quietly = TRUE)) BiocManager::install("ape")
