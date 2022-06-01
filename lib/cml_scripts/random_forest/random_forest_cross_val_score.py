@@ -28,6 +28,7 @@ print("Establishing directory layout.")
 home_dir = os.path.expanduser(os.path.join("~", "git", "balance_tree_exploration"))
 project = "Vanderbilt"
 output_dir = os.path.join(home_dir, project, "output")
+assert os.path.exists(output_dir)
 
 # --------------------------------------------------------------------------
 print("Establishing other constants")

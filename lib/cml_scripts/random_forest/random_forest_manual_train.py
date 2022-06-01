@@ -1,4 +1,6 @@
-
+# Author: Aaron Yerke, aaronyerke@gmail.com
+# This is a script for assessing the various compositional data 
+# transformations against the random forest
 # --------------------------------------------------------------------------
 print("Loading external libraries.")
 # --------------------------------------------------------------------------
@@ -61,6 +63,7 @@ print("Establishing directory layout.")
 home_dir = os.path.expanduser(options.homedir)
 project = options.project
 output_dir = os.path.join(home_dir, project, "output")
+assert os.path.exists(output_dir)
 
 # --------------------------------------------------------------------------
 print("Establishing other constants")
