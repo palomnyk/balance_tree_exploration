@@ -5,6 +5,11 @@ Author: Aaron Yerke (aaronyerke@gmail.com)
 For determining if PhILR weighting schemes improve any ML techniques.
 This was useful: https://machinelearningmastery.com/compare-machine-learning-algorithms-python-scikit-learn/
 Compare Algorithms
+This script creates several plots and tables.
+The first boxplot shows each algorithm by PhILR weighting scheme.
+Then, this information is condensed into a table.
+Another table is created to summerize the data in another way.
+Finally, line plots of the means of the first plot are created to further condense the data.
 """
 
 # --------------------------------------------------------------------------
@@ -30,7 +35,9 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
 import argparse
 
+# --------------------------------------------------------------------------
 print("Running optparse.")
+# --------------------------------------------------------------------------
 
 parser = argparse.ArgumentParser(description='Process some integers.')
 # parser.add_option("-f", "--file", dest="filename",
@@ -57,16 +64,23 @@ parser.add_argument("-i", "--meta_index_col", default=0,
 
 options, unknown = parser.parse_known_args()
 
+# --------------------------------------------------------------------------
 print("Establishing directory layout.")
+# --------------------------------------------------------------------------
+
 home_dir = options.homedir
 project = options.project
 output_dir = os.path.join(home_dir, project, "output")
+assert os.path.exists(output_dir)
 silva_philr_dir = os.path.join(output_dir, "tables", "silva_philr_weights")
 if not os.path.exists(silva_philr_dir):
   print(f"{silva_philr_dir} does not exist. Use silva_philr_weights.R to create it.")
   sys.exit()
 
+# --------------------------------------------------------------------------
 print("Establishing other constants.")
+# --------------------------------------------------------------------------
+
 main_output_label = "sklearn_ml_acc"
 philr_part_weights = ["uniform","gm.counts","anorm","anorm.x.gm.counts","enorm","enorm.x.gm.counts"]
 philr_ilr_weights = ["uniform","blw","blw.sqrt","mean.descendants"]
@@ -82,7 +96,10 @@ partw_fpath = os.path.join(output_dir, "graphics", f"pw_{main_output_label}_{pro
 ilrw_fpath = os.path.join(output_dir, "graphics", f"iw_{main_output_label}_{project}.png")
 comb_weights_fpath = os.path.join(output_dir, "graphics", f"comb_weights_{main_output_label}_{project}.png")
 
+# --------------------------------------------------------------------------
 print("Importing data to working env.")
+# --------------------------------------------------------------------------
+
 meta_df = pd.read_csv(os.path.join(home_dir, project, options.meta_fn), \
 	sep=options.delim, header=0, index_col=options.meta_index_col)
 
@@ -93,16 +110,22 @@ else:
 
 # prepare configuration for cross validation test harness
 seed = 7
+# --------------------------------------------------------------------------
 print("Preparing models.")
-models = []
-models.append(('LR', LogisticRegression(max_iter=1000)))
-models.append(('LDA', LinearDiscriminantAnalysis()))
-models.append(('KNN', KNeighborsClassifier()))
-models.append(('DTREE', DecisionTreeClassifier()))
-models.append(('RF', RandomForestClassifier()))
-models.append(('GausNB', GaussianNB()))
-models.append(('SVM', SVC()))
+# --------------------------------------------------------------------------
+# models = []
+# models.append(('LR', LogisticRegression(max_iter=1000)))
+# models.append(('LDA', LinearDiscriminantAnalysis()))
+# models.append(('KNN', KNeighborsClassifier()))
+# models.append(('DTREE', DecisionTreeClassifier()))
+# models.append(('RF', RandomForestClassifier()))
+# models.append(('GausNB', GaussianNB()))
+# models.append(('SVM', SVC()))
 
+# # --------------------------------------------------------------------------
+# print(f"Building {scoring} scores for each weighing scheme.\
+# 	Results found at {result_fpath}.")
+# # --------------------------------------------------------------------------
 with open(result_fpath, "w+") as fl:
 	fl.write(",".join(col_names))
 	fl.write("\n")
@@ -110,15 +133,14 @@ with open(result_fpath, "w+") as fl:
 		for iw in philr_ilr_weights:
 			table_fn = f"ref_tree_cln_{iw}_{pw}.csv"
 			my_df = pd.read_csv(os.path.join(silva_philr_dir, table_fn), sep=',', header=0, index_col=0)
-			print("Dropping any extra values from metadata. Did it work?")
 			meta_df = meta_df.loc[list(my_df.index.values)]#drops rows from metadata that aren't in my_df
-			print(list(my_df.index.values) == list(meta_df.index.values))
+			assert list(my_df.index.values) == list(meta_df.index.values) #making sure I'm indexing correctly
 			for meta_c in metad_cols:
 				m_c = list(meta_df.columns)[meta_c]
 				# print(m_c)
 				spetz_var = meta_df[m_c]#metadata var to test
-				print(spetz_var.dtype)
-				print(is_string_dtype(spetz_var))
+				# print(spetz_var.dtype)
+				# assert is_string_dtype(spetz_var)
 				# if spetz_var.dtype.name == "object":
 				if is_string_dtype(spetz_var) == True and spetz_var.isnull().sum() < 5:
 					print("evaluate each model in turn.")
@@ -129,10 +151,12 @@ with open(result_fpath, "w+") as fl:
 						result_str = ",".join(map(str, cv_results.tolist()))
 						msg = f"{m_c},{iw},{pw},{name},{result_str}\n"
 						fl.write(msg)
-print("Finished recording accuracy.")
-#Setup for building boxplots
+# #Setup for building boxplots
 result_df = pd.read_csv(result_fpath, sep=',', header=0)
 print(result_df.head())
+# --------------------------------------------------------------------------
+print("Finished recording accuracy. Heading towards boxplot creation.")
+# --------------------------------------------------------------------------
 algos = list(set(result_df.loc[:,"model"]))
 algos.sort()
 print(algos)
@@ -143,21 +167,12 @@ num_cols = 2
 num_rows = abs(-len(algos)//num_cols)
 print(result_df.head())
 
-# f_header = "metadata, mean, sd, top_algo, 2nd_algo, 3rd_algo"
-# sample_header = f"{meta_c},{meta_mean},{meta_sd},{top_algo}"
-print("Setup for table output")
-# f_header = "metadata, m_mean, sd, LR_mean, LDA_mean, KNN_mean, DTREE_mean, RF_mean, GausNB_mean, SVM_mean"
-
 f_header = ["feature", "f_mean","f_sd", "top_algo"]
-f_header = f_header + algos
-print(type(f_header))
-print(f_header)
 algo_table  = pd.DataFrame(columns = f_header)
 
 pdf = matplotlib.backends.backend_pdf.PdfPages(pdf_fpath)
 # sub_plot_counter = 0
 for meta_c in metadata_cats:
-	f_mean = np.nanmean(result_df.iloc[:,4:])
 	meta_result_df = pd.DataFrame(result_df[result_df["metadata"] == meta_c])
 	flat_num_only = pd.DataFrame(meta_result_df.iloc[:,5:]).to_numpy().flatten()
 	f_mean = np.nanmean(flat_num_only)
@@ -217,24 +232,19 @@ for meta_c in metadata_cats:
 		algo_means["f_mean"] = f_mean
 		algo_means["f_sd"] = f_sd
 		algo_table = algo_table.append(algo_means, ignore_index=True)
-		# max_algo = max(algo_means)
-		# for algo in algos:
-		#       algo_table_line.append(algo_means.get(algo))
-		#       if algo == max_algo:
-		#               algo_table_line.append(f"{str(algo_means.get(algo))}^")
-		#       else:
-		#               algo_table_line.append(str(algo_means.get(algo)))
-						# fl.write(",".join(algo_table_line))
 
 print("Saving pdf")
 pdf.close()
 
-# print(f_header)
 algo_table = algo_table.reindex(columns=f_header)
 algo_table = algo_table.round(decimals = 3)
 print("saving algo table")
 algo_table.to_csv(algo_table_fpath, index = False)
 
+
+# --------------------------------------------------------------------------
+print("Building another summary table to show best weights for each feature and algo.")
+# --------------------------------------------------------------------------
 w_header = ["feature", "algo", "algo_mean", "algo_sd", "top_pw", "top_ilr"]
 # For each feature, for each algo, top_pw, top_ilr
 weight_dict = dict(
@@ -247,7 +257,6 @@ weight_dict = dict(
         top_ilr = [])
 
 summary_fig_data = { "feature" : [], "algo" : [], "weigh_scheme": [], "mean":[]}
-
 for meta_c in metadata_cats:
 	f_mean = np.nanmean(result_df.iloc[:,4:])
 	meta_result_df = pd.DataFrame(result_df[result_df["metadata"] == meta_c])
@@ -283,13 +292,18 @@ for meta_c in metadata_cats:
 
 weight_table = pd.DataFrame(weight_dict)
 weight_table.to_csv(weight_fpath, index = False)
+# --------------------------------------------------------------------------
+print(f"Summary table to be found at: {weight_fpath}.")
+# --------------------------------------------------------------------------
 
-#for summary scatter plot
+# --------------------------------------------------------------------------
+print(f"Building summary scatterplot.")
+# --------------------------------------------------------------------------
 num_rows = 5
 max_plots_per_page = 8
 pdf = matplotlib.backends.backend_pdf.PdfPages(sum_pdf_fpath)
 fig = plt.figure(figsize=(11,12))
-fig.suptitle(f"{project} PhILR weighting machine learning accuracy")
+fig.suptitle(f"{project} Algorithm by PhILR weighting {scoring} mean")
 # plt.subplots_adjust(bottom=0.8)
 sub_plot_counter = 0
 page_counter = 1
@@ -302,13 +316,13 @@ for met in range(0,len(metadata_cats)):
 	f_mean = float(np.nanmean(flat_num_only))
 	f_sd = float(np.std(flat_num_only))
 	y_tick_interval = ((1.5 * f_sd) * 2) / 4
-	my_range = np.arange(round(f_mean - (1.5 * f_sd),1), round(f_mean + (1.5 * f_sd),1), round(y_tick_interval, 2))
 	if not pd.isna(f_mean) and f_mean > 0.5:#don't proced if the data for the metadata is wonky
+		my_range = np.arange(round(f_mean - (1.5 * f_sd),1), round(f_mean + (1.5 * f_sd),1), round(y_tick_interval, 2))
 		sub_plot_counter += 1
 		if sub_plot_counter % max_plots_per_page == 0:
 			pdf.savefig( fig )
 			fig = plt.figure(figsize=(11,12))
-			fig.suptitle(f"{project} PhILR weighting machine learning accuracy")
+			fig.suptitle(f"{project}, Algorithm by PhILR weighting {scoring}")
 		for al in range(len(algos)):
 			algo = algos[al]
 			# print(algo)
@@ -324,25 +338,37 @@ for met in range(0,len(metadata_cats)):
 		# ax.scatter(range(0,my_means.shape[0]), my_means.iloc[:,0], label=my_means.columns[0])
 		for co in range(0,my_means.shape[1]):
 			# ax.scatter(range(0,my_means.shape[0]), my_means.iloc[:,co], label=my_means.columns[co], marker=model_symbols[co])
-			ax.plot(range(0,my_means.shape[0]), my_means.iloc[:,co], marker=model_symbols[co], label=my_means.columns[co])
-		ax.title.set_text(f"{meta_c} algo means")
+			ax.plot(range(0,my_means.shape[0]), 
+							my_means.iloc[:,co], 
+							marker=model_symbols[co], 
+							label=my_means.columns[co], 
+							linewidth=1, 
+							markersize=2)
+		ax.title.set_text(f"Algorithm by weight, {scoring} mean, {meta_c}")
 		ax.set_xticks(ticks=range(0,my_means.shape[0]), labels=fig_df.loc[:,"ilr_weight"].tolist(), rotation=90)
 		ax.set_xticklabels(new_labs, rotation=90)
 		ax.tick_params(axis='x', which='major', labelsize=6)
-		ax.set_yticks(ticks=my_range)
+		# ax.set_yticks(ticks=my_range)
+		ax.set_yticks(ticks=[0.55,0.65,0.75,0.85,0.95])
 
+# --------------------------------------------------------------------------
+print(f"Creating legend for {sum_pdf_fpath}.")
+# --------------------------------------------------------------------------
 ax = fig.add_subplot(num_rows, num_cols, sub_plot_counter + 1)
 for co in range(0,my_means.shape[1]):
 	# ax.scatter(0,0, label=my_means.columns[co], marker=model_symbols[co],)
-	ax.plot(0,0, label=my_means.columns[co], marker=model_symbols[co],)
+	ax.plot(0,0, label=my_means.columns[co], marker=model_symbols[co])
 ax.get_xaxis().set_visible(False)
 ax.get_yaxis().set_visible(False)
-ax.legend(title="Algorthm", loc="center", framealpha=1, mode = "expand", markerscale=2)
+ax.legend(title="Algorithm", loc="center", framealpha=1, mode = "expand", markerscale=2)
 fig.tight_layout()
 pdf.savefig( fig )
 
-print("Saving pdf")
+# --------------------------------------------------------------------------
+print(f"Saved summary scatterplot to {sum_pdf_fpath}.")
+# --------------------------------------------------------------------------
 pdf.close()
 
+# --------------------------------------------------------------------------
 print("Python script completed.")
-
+# --------------------------------------------------------------------------
