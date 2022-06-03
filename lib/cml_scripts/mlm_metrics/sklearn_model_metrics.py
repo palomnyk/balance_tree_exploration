@@ -16,6 +16,7 @@ Finally, line plots of the means of the first plot are created to further conden
 print("Loading external libraries.")
 # --------------------------------------------------------------------------
 
+from cProfile import label
 import math
 import os, sys
 from matplotlib import markers
@@ -113,19 +114,19 @@ seed = 7
 # --------------------------------------------------------------------------
 print("Preparing models.")
 # --------------------------------------------------------------------------
-# models = []
-# models.append(('LR', LogisticRegression(max_iter=1000)))
-# models.append(('LDA', LinearDiscriminantAnalysis()))
-# models.append(('KNN', KNeighborsClassifier()))
-# models.append(('DTREE', DecisionTreeClassifier()))
-# models.append(('RF', RandomForestClassifier()))
-# models.append(('GausNB', GaussianNB()))
-# models.append(('SVM', SVC()))
+models = []
+models.append(('LR', LogisticRegression(max_iter=1000)))
+models.append(('LDA', LinearDiscriminantAnalysis()))
+models.append(('KNN', KNeighborsClassifier()))
+models.append(('DTREE', DecisionTreeClassifier()))
+models.append(('RF', RandomForestClassifier()))
+models.append(('GausNB', GaussianNB()))
+models.append(('SVM', SVC()))
 
-# # --------------------------------------------------------------------------
-# print(f"Building {scoring} scores for each weighing scheme.\
-# 	Results found at {result_fpath}.")
-# # --------------------------------------------------------------------------
+# --------------------------------------------------------------------------
+print(f"Building {scoring} scores for each weighing scheme.\
+	Results found at {result_fpath}.")
+# --------------------------------------------------------------------------
 with open(result_fpath, "w+") as fl:
 	fl.write(",".join(col_names))
 	fl.write("\n")
@@ -151,12 +152,12 @@ with open(result_fpath, "w+") as fl:
 						result_str = ",".join(map(str, cv_results.tolist()))
 						msg = f"{m_c},{iw},{pw},{name},{result_str}\n"
 						fl.write(msg)
-# #Setup for building boxplots
-result_df = pd.read_csv(result_fpath, sep=',', header=0)
-print(result_df.head())
 # --------------------------------------------------------------------------
 print("Finished recording accuracy. Heading towards boxplot creation.")
 # --------------------------------------------------------------------------
+#Setup for building boxplots
+result_df = pd.read_csv(result_fpath, sep=',', header=0)
+print(result_df.head())
 algos = list(set(result_df.loc[:,"model"]))
 algos.sort()
 print(algos)
@@ -186,7 +187,7 @@ for meta_c in metadata_cats:
 	f_q3 = np.quantile(flat_num_only, .75)
 	#for boxplot
 	fig = plt.figure(figsize=(11,11))
-	fig.suptitle(f"{project} PhILR weighting machine learning accuracy {meta_c}")
+	fig.suptitle(f"{project} PhILR weighting machine learning accuracy {meta_c}", fontsize=20)
 	plt.subplots_adjust(bottom=0.8)
 
 	# for algo table
@@ -207,18 +208,26 @@ for meta_c in metadata_cats:
 			fig_means[algo] = list(plot_data.mean(axis=0))
 			#for boxplot
 			ax = fig.add_subplot(num_rows,num_cols, al +1)
+			ax.set_ylabel(scoring)
 			ax.boxplot(plot_data)
 			ax.title.set_text(f"{algo} by weighting scheme")
-			ax.axhline(np.nanmean(plot_data), c="r", linestyle="dashed")
-			ax.axhline(f_mean, c="g", linestyle = ("-."))
+			ax.axhline(np.nanmean(plot_data), c="r", linestyle="dashed", label="Metadata mean")
+			ax.axhline(f_mean, c="g", linestyle = ("-."), label = "Algorithm mean", marker = "_")
 			ax.locator_params(axis='y', tight=True, nbins=4)
 			new_labs = [f"{x}\n{y}" for x,y in zip(fig_df.loc[:,"ilr_weight"].values, fig_df.loc[:,"part_weight"].values)]
 			# ax.set_xticklabels(fig_df.loc[:,"ilr_weight"].tolist(), rotation=90)
 			ax.set_xticklabels(new_labs, rotation=90)
 			ax.tick_params(axis='x', which='major', labelsize=6)
-			ax.set_ylim([f_mean - (1.5 * f_sd), f_mean + (1.5 * f_sd)])
+			ax.set_ylim([0.5, 1])#ax.set_ylim([f_mean - (1.5 * f_sd), 1])
 			#for algo table
 			algo_means[algo] = np.nanmean(plot_data) - f_mean
+
+		ax = fig.add_subplot(num_rows,num_cols, al +2)
+		ax.get_xaxis().set_visible(False)
+		ax.get_yaxis().set_visible(False)
+		ax.axhline(0, c="r", linestyle="dashed", label="Algorithm mean")
+		ax.axhline(0, c="g", linestyle = ("-."), label = "Metadata mean", marker = "_")
+		ax.legend(title="Legend", loc="center", framealpha=1, mode = "expand", markerscale=2)
 
 		#for boxplot
 		fig.tight_layout()
@@ -303,7 +312,7 @@ num_rows = 5
 max_plots_per_page = 8
 pdf = matplotlib.backends.backend_pdf.PdfPages(sum_pdf_fpath)
 fig = plt.figure(figsize=(11,12))
-fig.suptitle(f"{project} Algorithm by PhILR weighting {scoring} mean")
+fig.suptitle(f"{project} Algorithm by PhILR weighting {scoring} mean", fontsize = 20)
 # plt.subplots_adjust(bottom=0.8)
 sub_plot_counter = 0
 page_counter = 1
@@ -335,6 +344,7 @@ for met in range(0,len(metadata_cats)):
 		my_means = pd.DataFrame.from_dict(fig_means)
 		new_labs = [f"{x}\n{y}" for x,y in zip(fig_df.loc[:,"ilr_weight"].values, fig_df.loc[:,"part_weight"].values)]
 		ax = fig.add_subplot(num_rows, num_cols, sub_plot_counter)
+		ax.set_ylabel(scoring)
 		# ax.scatter(range(0,my_means.shape[0]), my_means.iloc[:,0], label=my_means.columns[0])
 		for co in range(0,my_means.shape[1]):
 			# ax.scatter(range(0,my_means.shape[0]), my_means.iloc[:,co], label=my_means.columns[co], marker=model_symbols[co])
@@ -344,7 +354,8 @@ for met in range(0,len(metadata_cats)):
 							label=my_means.columns[co], 
 							linewidth=1, 
 							markersize=2)
-		ax.title.set_text(f"Algorithm by weight, {scoring} mean, {meta_c}")
+		# ax.title.set_text(f"Algorithm by weight, {scoring} mean, {meta_c}")
+		ax.set_title(f"Algorithm by weight, {scoring} mean, {meta_c}", fontsize=10)
 		ax.set_xticks(ticks=range(0,my_means.shape[0]), labels=fig_df.loc[:,"ilr_weight"].tolist(), rotation=90)
 		ax.set_xticklabels(new_labs, rotation=90)
 		ax.tick_params(axis='x', which='major', labelsize=6)
