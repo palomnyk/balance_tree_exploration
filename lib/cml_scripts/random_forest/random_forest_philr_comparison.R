@@ -220,7 +220,7 @@ main_output_fpath <- file.path(output_dir, "tables", main_output_fn)
 # philr_taxa_weights <- c("uniform","gm.counts","anorm","anorm.x.gm.counts","enorm","enorm.x.gm.counts")
 # philr_ilr_weights <- c("uniform","blw","blw.sqrt","mean.descendants")
 philr_taxa_weights <- c("enorm")
-philr_ilr_weights <- c("blw")
+philr_ilr_weights <- c("mean.descendants")
 random_seed <- 36
 main_header <- "all_auc, metadata_col, taxa_weight, ilr_weight, rf_imp_se, rf_type, rf_ntree, trans_group, random_batch, cycle"
 
@@ -276,15 +276,8 @@ print("Attempting to read HashSeq count table")
 hashseq <- data.frame(data.table::fread(file = file.path(output_dir,"hashseq", "hashseq.csv"),
                                         header="auto", data.table=FALSE), row.names = 1)# hashseq <- hashseq[, colSums(hashseq != 0) > 0.01*nrow(hashseq)]#remove columns that don't have at least 10%
 # print(paste("HashSeq has", ncol(hashseq), "columns after column reduction."))
-print("creating lognorm, ALR and CLR")
+print("creating DADA2 lognorm, ALR and CLR")
 if (dir.exists(file.path(output_dir,"r_objects", "lognorm_asv.rds"))) {
-  ln_asv_tab <- readRDS(file.path(output_dir,"r_objects", "lognorm_asv.rds"))
-}else{
-  ln_asv_tab <- lognorm(asv_table)
-  saveRDS(ln_asv_tab, file = file.path(output_dir,"r_objects", "lognorm_asv.rds"))
-  write.csv(ln_asv_tab, file = file.path(output_dir,"tables", "lognorm_dada2.csv"))
-}
-if (dir.exists(file.path(output_dir,"r_objects", "lognorm_hashseq.rds"))) {
   ln_asv_tab <- readRDS(file.path(output_dir,"r_objects", "lognorm_asv.rds"))
 }else{
   ln_asv_tab <- lognorm(asv_table)
@@ -296,7 +289,7 @@ my_zeros <- apply(asv_table, 2, function(x) {
 })
 alr_col <- which(my_zeros == min(my_zeros))[1]
 # alr_col_num <- grep(alr_col, colnames(asv_table))
-print("creating ALR")
+print("creating DADA2 ALR")
 if (file.exists(file.path(output_dir,"r_objects", "alr_asv.rds"))) {
   DADA2_alr <- readRDS(file.path(output_dir,"r_objects", "alr_asv.rds"))
 }else{
@@ -304,14 +297,7 @@ if (file.exists(file.path(output_dir,"r_objects", "alr_asv.rds"))) {
   saveRDS(DADA2_alr, file = file.path(output_dir,"r_objects", "alr_asv.rds"))
   write.csv(DADA2_alr, file = file.path(output_dir,"tables", "alr_asv.csv"))
 }
-my_zeros <- apply(asv_table, 2, function(x) {
-  return(sum(x == 0))
-})
-alr_col <- which(my_zeros == min(my_zeros))[1]
-HashSeq_alr <- as.data.frame(rgr::alr(as.matrix(hashseq + 1), j = as.numeric(alr_col)))
-saveRDS(HashSeq_alr, file = file.path(output_dir,"r_objects", "alr_hashseq.rds"))
-write.csv(HashSeq_alr, file = file.path(output_dir,"tables", "alr_hashseq.csv"))
-print("creating CLR")
+print("creating DADA2 CLR")
 if (dir.exists(file.path(output_dir,"r_objects", "clr_asv.rds"))) {
   DADA2_clr <- readRDS(file.path(output_dir,"r_objects", "clr_asv.rds"))
 }else{
@@ -319,9 +305,31 @@ if (dir.exists(file.path(output_dir,"r_objects", "clr_asv.rds"))) {
   saveRDS(DADA2_clr, file = file.path(output_dir,"r_objects", "clr_asv.rds"))
   write.csv(DADA2_clr, file = file.path(output_dir,"tables", "clr_asv.csv"))
 }
-HashSeq_clr <- as.data.frame(rgr::clr(as.matrix(hashseq + 1)))
-saveRDS(HashSeq_clr, file = file.path(output_dir,"r_objects", "clr_hashseq.rds"))
-write.csv(HashSeq_clr, file = file.path(output_dir,"tables", "clr_hashseq.csv"))
+
+print("Creating hashseq lognorm, ALR and CLR.")
+if (dir.exists(file.path(output_dir,"r_objects", "lognorm_hashseq.rds"))) {
+  ln_hs_tab <- readRDS(file.path(output_dir,"r_objects", "lognorm_HashSeq.rds"))
+}else{
+  ln_hs_tab <- lognorm(hashseq)
+  saveRDS(ln_hs_tab, file = file.path(output_dir,"r_objects", "lognorm_hashseq.rds"))
+  write.csv(ln_hs_tab, file = file.path(output_dir,"tables", "lognorm_hashseq.csv"))
+}
+print("Making HashSeq clr.")
+if (dir.exists(file.path(output_dir,"r_objects", "r_objects", "clr_hashseq.rds"))) {
+  HashSeq_clr <- readRDS(file.path(output_dir,"r_objects", "clr_hashseq.rds"))
+}else{
+  HashSeq_clr <- as.data.frame(rgr::clr(as.matrix(hashseq + 1)))
+  saveRDS(ln_hs_tab, file = file.path(output_dir,"r_objects", "clr_hashseq.rds"))
+  write.csv(ln_hs_tab, file = file.path(output_dir,"tables", "clr_hashseq.csv"))
+}
+my_zeros <- apply(asv_table, 2, function(x) {
+  return(sum(x == 0))
+})
+print("Making HashSeq alr.")
+alr_col <- which(my_zeros == min(my_zeros))[1]
+HashSeq_alr <- as.data.frame(rgr::alr(as.matrix(hashseq + 1), j = as.numeric(alr_col)))
+saveRDS(HashSeq_alr, file = file.path(output_dir,"r_objects", "alr_hashseq.rds"))
+write.csv(HashSeq_alr, file = file.path(output_dir,"tables", "alr_hashseq.csv"))
 
 print("Building lists of objects to loop over in main loop.")
 phyloseq_objects <- list(list(ref_ps, "Silva_DADA2"), 
@@ -329,15 +337,15 @@ phyloseq_objects <- list(list(ref_ps, "Silva_DADA2"),
                          list(cln_denovo_tree_ps, "Filtered_UPGMA"), 
                          list(cln_iqtree_ps,"Filtered_IQTree"),
                          list(iqtree_orig_ps, "IQTREE_Orig"))
-
 table_objects <- list(list(asv_table, "Raw_DADA2"),
                       list(ln_asv_tab, "lognorm_DADA2"),
                       list(DADA2_alr, "alr_DADA2"),
                       list(DADA2_clr, "clr_DADA2"),
                       list(hashseq, "Raw_HashSeq"),
-                      list(HashSeq_alr, "HashSeq_alr"),
-                      list(HashSeq_clr,"HashSeq_clr"))
-
+                      list(HashSeq_alr, "alr_HashSeq"),
+                      list(HashSeq_clr,"clr_HashSeq"),
+                      list(,"lognorm_HashSeq"))
+random_tree_phylos <- list()
 ##-Random num seed--------------------------------------------------##
 print(paste("Setting random seed to:", random_seed))
 set.seed(random_seed)
@@ -355,7 +363,7 @@ for (po in list(list(ref_ps, "Silva_rand_"),
                                        sample_data(po[[1]]@sam_data))
     phy_tree(rand_tree_ps) <- ape::makeNodeLabel(phy_tree(rand_tree_ps), method="number", prefix='n')
     phyloseq::plot_tree(rand_tree_ps, method = "treeonly", nodelabf=nodeplotblank, title = paste0(po[[2]], rand))
-    phyloseq_objects[[length(phyloseq_objects)+1]] <- list(rand_tree_ps,paste0(po[[2]],rand))
+    random_tree_phylos[[length(random_tree_phylos)+1]] <- list(rand_tree_ps,paste0(po[[2]],rand))
   }
 }
 
@@ -394,7 +402,21 @@ while (counter < num_cycles & skips < 5){
                          cycle = counter,
                          transf_label = paste0(po_name, "_Counts_Table"))
   }#end for (pso in 1:length(phyloseq_objects))
-  
+
+  for (pso in 1:length(random_tree_phylos)) {
+    my_pso <- random_tree_phylos[[pso]][[1]]
+    po_name <- random_tree_phylos[[pso]][[2]]
+    print(paste("Counter:", counter, "| making", po_name, "philr AUCs."))
+    make_ilr_taxa_auc_df(ps_obj = my_pso,
+                         metadata_cols = rf_cols,
+                         metadata = metadata,
+                         train_index = train_index,
+                         test_index = test_index,
+                         philr_ilr_weights = philr_ilr_weights,
+                         philr_taxa_weights = philr_taxa_weights,
+                         cycle = counter,
+                         transf_label = paste0(po_name, "_PhILR"))
+  }#end for (pso in 1:length(phyloseq_objects))
   for (to in 1:length(table_objects)) {
     my_table <- table_objects[[to]][[1]]
     to_name <- table_objects[[to]][[2]]
