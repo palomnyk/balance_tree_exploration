@@ -344,7 +344,7 @@ table_objects <- list(list(asv_table, "Raw_DADA2"),
                       list(hashseq, "Raw_HashSeq"),
                       list(HashSeq_alr, "alr_HashSeq"),
                       list(HashSeq_clr,"clr_HashSeq"),
-                      list(,"lognorm_HashSeq"))
+                      list(ln_hs_tab, "lognorm_HashSeq"))
 random_tree_phylos <- list()
 ##-Random num seed--------------------------------------------------##
 print(paste("Setting random seed to:", random_seed))
