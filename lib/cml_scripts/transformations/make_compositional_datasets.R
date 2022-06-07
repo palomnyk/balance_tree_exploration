@@ -96,7 +96,6 @@ if (dir.exists(file.path(output_dir,"r_objects", "lognorm_asv.rds"))) {
   saveRDS(ln_asv_tab, file = file.path(output_dir,"r_objects", "lognorm_asv.rds"))
   write.csv(ln_asv_tab, file = file.path(output_dir,"tables", "lognorm_dada2.csv"))
 }
-
 my_zeros <- apply(asv_table, 2, function(x) {
   return(sum(x == 0))
 })
@@ -129,15 +128,12 @@ if (dir.exists(file.path(output_dir,"r_objects", "lognorm_hashseq.rds"))) {
 }
 print("Making HashSeq clr.")
 if (dir.exists(file.path(output_dir,"r_objects", "r_objects", "clr_hashseq.rds"))) {
-  ln_hs_tab <- readRDS(file.path(output_dir,"r_objects", "lognorm_HashSeq.rds"))
+  HashSeq_clr <- readRDS(file.path(output_dir,"r_objects", "clr_hashseq.rds"))
 }else{
   HashSeq_clr <- as.data.frame(rgr::clr(as.matrix(hashseq + 1)))
   saveRDS(ln_hs_tab, file = file.path(output_dir,"r_objects", "clr_hashseq.rds"))
   write.csv(ln_hs_tab, file = file.path(output_dir,"tables", "clr_hashseq.csv"))
 }
-HashSeq_clr <- as.data.frame(rgr::clr(as.matrix(hashseq + 1)))
-saveRDS(HashSeq_clr, file = file.path(output_dir,"r_objects", "clr_hashseq.rds"))
-write.csv(HashSeq_clr, file = file.path(output_dir,"tables", "clr_hashseq.csv"))
 my_zeros <- apply(asv_table, 2, function(x) {
   return(sum(x == 0))
 })
@@ -148,4 +144,3 @@ saveRDS(HashSeq_alr, file = file.path(output_dir,"r_objects", "alr_hashseq.rds")
 write.csv(HashSeq_alr, file = file.path(output_dir,"tables", "alr_hashseq.csv"))
 
 print("Reached end of script.")
-
