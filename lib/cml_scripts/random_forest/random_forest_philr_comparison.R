@@ -570,7 +570,7 @@ for (mta in 1:length(unique(all_plot_data$metadata_col))){
   for(tw in unique(plot_data$taxa_weight)){
     for(iw in unique(plot_data$ilr_weight)){
       g <- ggplot2::ggplot(new_pd, aes(y = all_auc, x = trans_group)) + 
-        ggplot2::geom_boxplot( color = "blue",) +
+        ggplot2::geom_boxplot( color = "black",) +
         ggplot2::ggtitle(label = paste(project, my_meta)) +
         # ggplot2::ggtitle( label = paste("num_tg:", length(unique(new_pd$trans_group)))) +
         ggplot2::theme_classic() +
@@ -595,6 +595,39 @@ for (mta in 1:length(unique(all_plot_data$metadata_col))){
       index <- index + 1
     }#end for iw
   }#end for tw
+}
+
+dev.off()
+
+pdf(file = file.path(output_dir, "graphics", paste0("new_bp_all_weights", main_output_label, ".pdf")))
+for (mta in 1:length(unique(all_plot_data$metadata_col))){
+  my_meta <- as.character(unique(all_plot_data$metadata_col)[mta])
+  message(my_meta)
+  #select plot data for each metadata cat
+  plot_data <- all_plot_data[all_plot_data$metadata_col == my_meta,]
+  
+  # Organize the boxes so that count tables are first
+  my_transforms <- unique(plot_data$trans_group)
+  my_raw <- my_transforms[grep("raw", my_transforms, ignore.case = TRUE)]
+  my_alr <- my_transforms[grep("alr", my_transforms, ignore.case = TRUE)]
+  my_clr <- my_transforms[grep("clr", my_transforms, ignore.case = TRUE)]
+  my_lognorm <- my_transforms[grep("lognorm", my_transforms, ignore.case = TRUE)]
+  rand_philr <- my_transforms[grep("rand_", my_transforms, ignore.case = TRUE)]
+  other_DADA2 <- my_transforms[grep("DADA2_", my_transforms, ignore.case = TRUE)]
+  my_factors <- c(my_raw, my_alr, my_clr, my_lognorm, other_DADA2, rand_philr)
+  plot_data$trans_group <- factor(plot_data$trans_group, levels = c(my_factors))#put non-philr first
+  
+  g <- ggplot2::ggplot(plot_data, aes(y = all_auc, x = trans_group, group=trans_group)) + 
+    ggplot2::geom_boxplot() +
+    ggplot2::ggtitle(label = paste(project, my_meta)) +
+    ggplot2::geom_hline(yintercept = meta_mean, color="red") +
+    # scale_fill_discrete(labels=new_labels) +
+    # ggplot2::ggtitle( label = paste("num_tg:", length(unique(new_pd$trans_group)))) +
+    ggplot2::theme_classic() +
+    ggplot2::scale_x_discrete(guide = guide_axis(angle = 90)) +
+    ggplot2::ylab("AUC") +
+    ggplot2::xlab("Tree type")
+  print(g)
 }
 
 dev.off()
