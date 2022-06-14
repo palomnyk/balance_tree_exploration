@@ -2,7 +2,7 @@
 
 #SBATCH --partition=Orion                                    		# Partition/queue requested on server
 #SBATCH --job-name=Vanderbilt_rand_tree_vs_philr_auc_R                                   		# Job name
-#SBATCH --time=150:00:00                                      		# Time limit (hrs:min:sec)
+#SBATCH --time=200:00:00                                      		# Time limit (hrs:min:sec)
 #SBATCH --nodes=1                                         			# Number of nodes requested
 #SBATCH --ntasks-per-node=1                          			# Number of CPUs (processor cores/tasks)
 #SBATCH --mem=50gb                                          		# Memory limit
