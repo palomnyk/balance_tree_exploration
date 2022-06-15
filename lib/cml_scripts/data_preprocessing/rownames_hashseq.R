@@ -25,7 +25,7 @@ home_dir <- opt$homedir
 project <- opt$project
 output_dir <- file.path(home_dir, project, 'output')
 
-print("Read data:")
+print("Reading data.")
 hashseq <- data.frame(data.table::fread(file = file.path(output_dir,"hashseq", "SvTable.txt"),
                                         header=TRUE, data.table=FALSE), row.names = 1)
 asv_table <- data.frame(readRDS(file.path(output_dir, "r_objects", "ForwardReads_DADA2.rds")))
@@ -53,7 +53,7 @@ print(paste(tail(row.names(hashseq), 10), collapse = " "))
 print("Last 10 row names hashseq:")
 print(paste(tail(row.names(hashseq), 10), collapse = " "))
 print(paste("Hashseq and DADA2 are equal?",
- row.names(hashseq) == row.names(asv_table), "."))
+ identical(row.names(hashseq), row.names(asv_table)), "."))
 
 print("Writing munged hashseq table.\n")
 
