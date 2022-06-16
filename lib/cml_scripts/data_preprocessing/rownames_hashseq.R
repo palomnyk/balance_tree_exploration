@@ -54,6 +54,8 @@ print("Last 10 row names hashseq:")
 print(paste(tail(row.names(hashseq), 10), collapse = " "))
 print(paste("Hashseq and DADA2 are equal?",
  identical(row.names(hashseq), row.names(asv_table)), "."))
+print(paste("The different elements are:", collapse = " "))
+print(paste(setdiff(row.names(hashseq), row.names(asv_table))))
 
 print("Writing munged hashseq table.\n")
 
