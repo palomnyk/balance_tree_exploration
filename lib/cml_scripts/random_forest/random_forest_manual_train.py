@@ -93,7 +93,7 @@ ln_table = pd.read_csv(os.path.join(output_dir, "tables", "lognorm_asv.csv"), se
 ln_hs_tab = pd.read_csv(os.path.join(output_dir,"tables", "lognorm_hashseq.csv"), sep=",", header=0, index_col=0)
 HashSeq_clr = pd.read_csv(os.path.join(output_dir,"tables", "clr_hashseq.csv"), sep=",", header=0, index_col=0)
 HashSeq_alr = pd.read_csv(os.path.join(output_dir,"tables", "alr_hashseq.csv"), sep=",", header=0, index_col=0)
-
+Silva_ref_ct = pd.read_csv(os.path.join(output_dir,"tables", "Silva_ref_counts.csv"), sep=",", header=0, index_col=0)
 # meta_df = meta_df.loc[list(asv_table.index.values)]#drops rows from metadata that aren't in asv_table
 # if all(meta_df.index == hashseq_df.index):
 # 	print("dataframes are the same.")
@@ -101,14 +101,15 @@ HashSeq_alr = pd.read_csv(os.path.join(output_dir,"tables", "alr_hashseq.csv"), 
 print("Setting up tables to feed the random forest model.")
 # # --------------------------------------------------------------------------
 tables = []
-tables.append(("HashSeq", hashseq_df))
 tables.append(("DaDa2", asv_table))
+tables.append(("HashSeq", hashseq_df))
 tables.append(("lognorm_DADA2", ln_table))
 tables.append(("lognorm_HashSeq", ln_hs_tab))
 tables.append(("alr_DADA2", alr_table))
 tables.append(("alr_HashSeq", HashSeq_alr))
 tables.append(("clr_DADA2", clr_table))
 tables.append(("clr_HashSeq", HashSeq_clr))
+tables.append(("Silva_ref_counts_only", Silva_ref_ct))
 
 print(len(tables))
 philr_part_weights = ["anorm","enorm"]
@@ -143,7 +144,7 @@ with open(result_fpath, "w+") as fl:
 			for i in range(num_iterations):
 				rand_int = random.randint(0, 1000)
 				respns_var = meta_df.loc[list(my_table.index.values),m_c]#metadata var to test
-				pred_train, pred_test, resp_train, resp_test = model_selection.train_test_split(my_table, respns_var, test_size=float(train_percent), random_state=rand_int, shuffle=True) 
+				pred_train, pred_test, resp_train, resp_test = model_selection.train_test_split(my_table, respns_var, train_size=float(train_percent), random_state=rand_int, shuffle=True) 
 				if is_string_dtype(respns_var) == True and respns_var.isnull().sum() < 5:
 					clf = RandomForestClassifier(max_depth=2, random_state=0)
 					clf.fit(pred_train, resp_train)
