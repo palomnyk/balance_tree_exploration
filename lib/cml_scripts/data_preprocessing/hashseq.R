@@ -18,12 +18,12 @@ library("optparse")
 
 print("Loading cml options")
 option_list <- list(
-  make_option(c("-i", "--input_dir"), type="character", 
+  optparse::make_option(c("-i", "--input_dir"), type="character", 
               default=file.path('~','git','balance_tree_exploration'), 
               help="dataset dir path", metavar="home dir"),
-  make_option(c("-o", "--output_dir"), type="character", default=NULL, 
+  optparse::make_option(c("-o", "--output_dir"), type="character", default=NULL, 
               help="output_dir", metavar="project"),
-  make_option(c("-t", "--threshold"), type="character", default=1000,
+  optparse::make_option(c("-t", "--threshold"), type="character", default=0,
               help="hashseq threshold")); 
 
 opt_parser <- optparse::OptionParser(option_list=option_list);
