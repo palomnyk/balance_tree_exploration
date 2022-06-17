@@ -55,7 +55,7 @@ print(paste(tail(row.names(hashseq), 10), collapse = " "))
 print(paste("Hashseq and DADA2 are equal?",
  identical(row.names(hashseq), row.names(asv_table)), "."))
 print(all(row.names(hashseq) == row.names(asv_table)))
-print(all.equal(row.names(hashseq), row.names(asv_table)), check.attributes=FALSE))
+print(all.equal(row.names(hashseq), row.names(asv_table), check.attributes=FALSE))
 print(paste("The different elements are:", collapse = " "))
 print(paste(setdiff(row.names(hashseq), row.names(asv_table))))
 
