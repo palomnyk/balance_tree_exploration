@@ -269,7 +269,8 @@ metadata <- read.table(opt$metadata,
                        row.names = opt$metadata_rowname, 
                        check.names = FALSE,
                        stringsAsFactors=TRUE)
-print("attempting to equalize metadata rows to seq data rows")
+print("Removing non-factor columns from metadata to decrease run time.")
+metadata <- metadata[,sapply(metadata, is.factor)]
 rf_cols <- 1:ncol(metadata)#hack so I don't have to fix this in the function
 
 print("Attempting to read HashSeq count table")
@@ -308,7 +309,7 @@ if (dir.exists(file.path(output_dir,"r_objects", "clr_asv.rds"))) {
 
 print("Creating hashseq lognorm, ALR and CLR.")
 if (dir.exists(file.path(output_dir,"r_objects", "lognorm_hashseq.rds"))) {
-  ln_hs_tab <- readRDS(file.path(output_dir,"r_objects", "lognorm_HashSeq.rds"))
+  ln_hs_tab <- readRDS(file.path(output_dir,"r_objects", "lognorm_hashseq.rds"))
 }else{
   ln_hs_tab <- lognorm(hashseq)
   saveRDS(ln_hs_tab, file = file.path(output_dir,"r_objects", "lognorm_hashseq.rds"))
