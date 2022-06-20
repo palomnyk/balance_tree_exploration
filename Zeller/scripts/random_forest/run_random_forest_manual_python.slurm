@@ -5,7 +5,7 @@
 #SBATCH --time=01:00:00                                      		# Time limit (hrs:min:sec)
 #SBATCH --nodes=1                                         			# Number of nodes requested
 #SBATCH --ntasks-per-node=1                          			# Number of CPUs (processor cores/tasks)
-#SBATCH --mem=50gb                                          		# Memory limit
+#SBATCH --mem=100gb                                          		# Memory limit
 #SBATCH --mail-type=BEGIN,END,FAIL                              	# Mail events (NONE, BEGIN, END, FAIL, ALL)
 #SBATCH --mail-user=amyerke@uncc.edu                            	# Specified email address
 #SBATCH --output=/users/amyerke/slurmLogs/%x.%j.out     # Set directory for standard output
@@ -26,7 +26,7 @@ srun python ~/git/balance_tree_exploration/lib/cml_scripts/random_forest/random_
   -f patient_metadata.csv \
   -l , \
   -i Run \
-  -t 0.7
+  -t 0.75
 
 conda deactivate
 module unload anaconda3/2020.11
