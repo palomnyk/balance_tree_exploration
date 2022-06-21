@@ -1,5 +1,4 @@
 #!/bin/bash
-
 #SBATCH --partition=Orion                                    		# Partition/queue requested on server
 #SBATCH --job-name=Zeller_python_random_forest_manual                                   		# Job name
 #SBATCH --time=01:00:00                                      		# Time limit (hrs:min:sec)
@@ -18,11 +17,11 @@ echo Job: $SLURM_JOB_NAME with ID $SLURM_JOB_ID
 echo Running on host: `hostname`
 echo Using $SLURM_NTASKS processors across $SLURM_NNODES nodes
 
-module load anaconda3
-echo "Loaded Anaconda."
-source activate testing_pyCaret
-echo "activated testing_pyCaret conda env"
-srun python ~/git/balance_tree_exploration/lib/cml_scripts/random_forest/random_forest_manual_train.py\
+# module load anaconda3
+# echo "Loaded Anaconda."
+# source activate testing_pyCaret
+# echo "activated testing_pyCaret conda env"
+python ~/git/balance_tree_exploration/lib/cml_scripts/random_forest/random_forest_manual_train.py\
   -p Zeller \
   -a True \
   -f patient_metadata.csv \
