@@ -5,11 +5,11 @@
 #SBATCH --time=01:00:00                                      		# Time limit (hrs:min:sec)
 #SBATCH --nodes=1                                         			# Number of nodes requested
 #SBATCH --ntasks-per-node=1                          			# Number of CPUs (processor cores/tasks)
-#SBATCH --mem=100gb                                          		# Memory limit
+#SBATCH --mem=75gb                                          		# Memory limit
 #SBATCH --mail-type=BEGIN,END,FAIL                              	# Mail events (NONE, BEGIN, END, FAIL, ALL)
 #SBATCH --mail-user=amyerke@uncc.edu                            	# Specified email address
-#SBATCH --output=/users/amyerke/slurmLogs/%x.%j.out     # Set directory for standard output
-#SBATCH --error=/users/amyerke/slurmLogs/%x.%j.out      # Set directory for error log
+#SBATCH --output=/users/amyerke/slurmLogs/%x.%j.log     # Set directory for standard output
+#SBATCH --error=/users/amyerke/slurmLogs/%x.%j.log      # Set directory for error log
 ##SBATCH --uid=amyerke
 #SBATCH --get-user-env
 
@@ -18,6 +18,10 @@ echo Job: $SLURM_JOB_NAME with ID $SLURM_JOB_ID
 echo Running on host: `hostname`
 echo Using $SLURM_NTASKS processors across $SLURM_NNODES nodes
 
+module load anaconda3
+echo "Loaded Anaconda."
+source activate testing_pyCaret
+echo "activated testing_pyCaret conda env"
 srun python ~/git/balance_tree_exploration/lib/cml_scripts/random_forest/random_forest_manual_train.py\
   -p Zeller \
   -a True \
