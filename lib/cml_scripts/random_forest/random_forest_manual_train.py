@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # Author: Aaron Yerke, aaronyerke@gmail.com
 # This is a script for assessing the various compositional data 
 # transformations against the random forest
@@ -15,13 +17,14 @@ import matplotlib.colors as mcolors
 from pandas.api.types import is_string_dtype
 from requests import head
 from sklearn import model_selection
+from sklearn import model_selection
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.naive_bayes import GaussianNB
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, roc_auc_score
 import argparse
 import random
 
@@ -65,14 +68,21 @@ project = options.project
 output_dir = os.path.join(home_dir, project, "output")
 assert os.path.exists(output_dir)
 
+def df_factory(my_path, my_sep):
+	try:
+		df =  pd.read_csv(my_path, sep=my_sep, header=0, index_col=0)
+		return df
+	except:
+		print(f"An exception occurred during creation of dataframe from {my_path}")
+
 # --------------------------------------------------------------------------
 print("Establishing other constants")
 # --------------------------------------------------------------------------
 seed = 7
-scoring = "accuracy"
+scoring = "AUC"
 train_percent = options.training
 main_output_label = f"sklearn_random_forest_manual_{train_percent}training"
-result_fpath = os.path.join(output_dir, "tables", f"{main_output_label}_{train_percent}train_{project}_data.csv")
+result_fpath = os.path.join(output_dir, "tables", f"{main_output_label}_{train_percent}train_{project}_data_test.csv")
 col_names = ["dataset", "metadata"]
 num_iterations = 10
 col_names = col_names + [f"split{x}" for x in range(num_iterations)]
@@ -85,31 +95,20 @@ print("Importing data to working env.")
 meta_df = pd.read_csv(os.path.expanduser(os.path.join(home_dir, project, str(options.meta_fn))), \
 	sep=options.delim, header=0, index_col=options.meta_index_col)
 metad_cols = range(len(meta_df.columns))
-hashseq_df = pd.read_csv(os.path.join(output_dir, "hashseq", "hashseq.csv"), sep=",", header=0, index_col=0)
-asv_table = pd.read_csv(os.path.join(output_dir, "tables", "ForwardReads_DADA2.txt"), sep="\t", header=0, index_col=0)
-clr_table = pd.read_csv(os.path.join(output_dir, "tables", "clr_asv.csv"), sep=",", header=0, index_col=0)
-alr_table = pd.read_csv(os.path.join(output_dir, "tables", "alr_asv.csv"), sep=",", header=0, index_col=0)
-ln_table = pd.read_csv(os.path.join(output_dir, "tables", "lognorm_dada2.csv"), sep=",", header=0, index_col=0)
-ln_hs_tab = pd.read_csv(os.path.join(output_dir,"tables", "lognorm_hashseq.csv"), sep=",", header=0, index_col=0)
-HashSeq_clr = pd.read_csv(os.path.join(output_dir,"tables", "clr_hashseq.csv"), sep=",", header=0, index_col=0)
-HashSeq_alr = pd.read_csv(os.path.join(output_dir,"tables", "alr_hashseq.csv"), sep=",", header=0, index_col=0)
-Silva_ref_ct = pd.read_csv(os.path.join(output_dir,"tables", "Silva_ref_counts.csv"), sep=",", header=0, index_col=0)
-# meta_df = meta_df.loc[list(asv_table.index.values)]#drops rows from metadata that aren't in asv_table
-# if all(meta_df.index == hashseq_df.index):
-# 	print("dataframes are the same.")
+
 # ----------------------------------------------------------------------------
 print("Setting up tables to feed the random forest model.")
-# # --------------------------------------------------------------------------
+# --------------------------------------------------------------------------
 tables = []
-tables.append(("DaDa2", asv_table))
-tables.append(("HashSeq", hashseq_df))
-tables.append(("lognorm_DADA2", ln_table))
-tables.append(("lognorm_HashSeq", ln_hs_tab))
-tables.append(("alr_DADA2", alr_table))
-tables.append(("alr_HashSeq", HashSeq_alr))
-tables.append(("clr_DADA2", clr_table))
-tables.append(("clr_HashSeq", HashSeq_clr))
-tables.append(("Silva_ref_counts_only", Silva_ref_ct))
+tables.append(("DaDa2", (os.path.join(output_dir, "tables", "ForwardReads_DADA2.txt"),"\t")))
+tables.append(("HashSeq", (os.path.join(output_dir,  "hashseq", "hashseq.csv"),",")))
+tables.append(("lognorm_DADA2", (os.path.join(output_dir, "tables", "lognorm_dada2.csv"), ",")))
+tables.append(("lognorm_HashSeq", (os.path.join(output_dir,"tables", "lognorm_hashseq.csv"), ",")))
+tables.append(("alr_DADA2", (os.path.join(output_dir, "tables", "alr_asv.csv"), ",")))
+tables.append(("alr_HashSeq", (os.path.join(output_dir,"tables", "alr_hashseq.csv"), ",")))
+tables.append(("clr_DADA2", (os.path.join(output_dir, "tables", "clr_asv.csv"), ",")))
+tables.append(("clr_HashSeq", (os.path.join(output_dir,"tables", "clr_hashseq.csv"), ",")))
+tables.append(("Silva_ref_counts_only", (os.path.join(output_dir,"tables", "Silva_ref_counts.csv"), ",")))
 
 print(len(tables))
 philr_part_weights = ["anorm","enorm"]
@@ -123,22 +122,24 @@ for pw in philr_part_weights:
 		table_fn = f"ref_tree_cln_{iw}_{pw}.csv"
 		my_df = pd.read_csv(os.path.join(silva_philr_dir, table_fn), sep=',', header=0, index_col=0)
 		my_label = f"ref_tree_philr_{iw}_{pw}"
-		tables.append((my_label, my_df))
+		tables.append((my_label, (os.path.join(silva_philr_dir, table_fn), ',')))
 
-# meta_df.head
-# meta_df = meta_df.sample(frac=1)
-# meta_df.head
+#Commented code for scrambling the rownames
+# # meta_df.head
+# # meta_df = meta_df.sample(frac=1)
+# # meta_df.head
 
 # --------------------------------------------------------------------------
 print(f"Running random forest model to find {scoring}.")
-# # --------------------------------------------------------------------------
+# --------------------------------------------------------------------------
 with open(result_fpath, "w+") as fl:
 	fl.write(",".join(col_names))
 	fl.write("\n")
 	for meta_c in metad_cols:
 		m_c = list(meta_df.columns)[meta_c]
 		# meta_df = meta_df.loc[list(my_table.index.values)
-		for name, my_table in tables:
+		for name, table_info in tables:
+			my_table = df_factory(table_info[0], table_info[1])
 			my_accuracy = [0] * num_iterations
 			random.seed(10)
 			for i in range(num_iterations):
@@ -149,7 +150,8 @@ with open(result_fpath, "w+") as fl:
 					clf = RandomForestClassifier(max_depth=2, random_state=0)
 					clf.fit(pred_train, resp_train)
 					resp_pred = clf.predict(pred_test)
-					my_accuracy[i] = accuracy_score(resp_test, resp_pred)
+					my_accuracy[i] = roc_auc_score(resp_test, resp_pred)
+					# my_accuracy[i] = accuracy_score(resp_test, resp_pred)
 			final_acc = ",".join(map(str, my_accuracy))
 			print(final_acc)
 			msg = f"{name},{m_c},{final_acc}\n"
@@ -177,11 +179,15 @@ for meta_c in metadata_cats:
 	plot_data = meta_result_df.iloc[:,2:].transpose()
 	f_mean = np.nanmean(plot_data)
 	ax = fig.add_subplot(1,1,1)
-	ax.boxplot(plot_data)
+	ax.boxplot(plot_data, patch_artist = True)
+	colors = [["mistyrose"]*2,["lightblue"]*2, ["lightyellow"]*2, ["gold"]*2, "gainsboro", ["snow"]*4 ]
+	for patch, color in zip(ax['boxes'], colors):
+		patch.set_facecolor(color)
 	ax.axhline(np.nanmean(plot_data), c="r", linestyle="dashed")
 	ax.axhline(f_mean, c="g", linestyle = ("-."))
 	ax.set_xticklabels(meta_result_df["dataset"].tolist(), rotation=90)
 	ax.tick_params(axis='x', which='major', labelsize=15)
+
 	#for boxplot
 	fig.tight_layout()
 	pdf.savefig( fig )
