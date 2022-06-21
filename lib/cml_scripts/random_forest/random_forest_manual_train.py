@@ -86,7 +86,7 @@ col_names = ["dataset", "metadata"]
 num_iterations = 10
 col_names = col_names + [f"split{x}" for x in range(num_iterations)]
 print(col_names)
-pdf_fpath = os.path.join(output_dir, "graphics", f"bp_{main_output_label}_{project}.pdf", flush = True)
+pdf_fpath = os.path.join(output_dir, "graphics", f"bp_{main_output_label}_{project}.pdf")
 
 # --------------------------------------------------------------------------
 print("Importing data to working env.", flush = True)
