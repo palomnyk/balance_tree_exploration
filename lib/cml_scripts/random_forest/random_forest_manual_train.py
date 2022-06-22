@@ -26,6 +26,7 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import accuracy_score, roc_auc_score
 import argparse
 import random
+from pdb import set_trace
 
 # --------------------------------------------------------------------------
 print("Reading commmandline input with optparse.", flush = True)
@@ -73,6 +74,7 @@ def df_factory(my_path, my_sep):
 		return df
 	except:
 		print(f"An exception occurred during creation of dataframe from {my_path}", flush = True)
+		sys.exit(f"There was a problem loading {my_path}")
 
 # --------------------------------------------------------------------------
 print("Establishing other constants", flush = True)
@@ -94,6 +96,12 @@ print("Importing data to working env.", flush = True)
 meta_df = pd.read_csv(os.path.expanduser(os.path.join(home_dir, project, str(options.meta_fn))), \
 	sep=options.delim, header=0, index_col=options.meta_index_col)
 metad_cols = range(len(meta_df.columns))
+print(meta_df.dtypes, flush=True)
+meta_df = meta_df.select_dtypes(["object", "category", "string"])
+#Commented code for scrambling the rownames
+# # meta_df.head
+# # meta_df = meta_df.sample(frac=1)
+# # meta_df.head
 
 # ----------------------------------------------------------------------------
 print("Setting up tables to feed the random forest model.", flush = True)
@@ -123,11 +131,6 @@ for pw in philr_part_weights:
 		my_label = f"ref_tree_philr_{iw}_{pw}"
 		tables.append((my_label, (os.path.join(silva_philr_dir, table_fn), ',')))
 
-#Commented code for scrambling the rownames
-# # meta_df.head
-# # meta_df = meta_df.sample(frac=1)
-# # meta_df.head
-
 # --------------------------------------------------------------------------
 print(f"Running random forest model to find {scoring}.", flush = True)
 # --------------------------------------------------------------------------
@@ -136,6 +139,7 @@ with open(result_fpath, "w+") as fl:
 	fl.write("\n")
 	for meta_c in metad_cols:
 		m_c = list(meta_df.columns)[meta_c]
+
 		# meta_df = meta_df.loc[list(my_table.index.values)
 		for name, table_info in tables:
 			my_table = df_factory(table_info[0], table_info[1])
@@ -148,8 +152,9 @@ with open(result_fpath, "w+") as fl:
 				if is_string_dtype(respns_var) == True and respns_var.isnull().sum() < 5:
 					clf = RandomForestClassifier(max_depth=2, random_state=0)
 					clf.fit(pred_train, resp_train)
-					resp_pred = clf.predict(pred_test)
-					my_accuracy[i] = roc_auc_score(resp_test, resp_pred)
+					resp_pred = clf.predict_proba(pred_test)[:, 1]
+					set_trace()
+					my_accuracy[i] = roc_auc_score(y_true = resp_test, y_score= resp_pred)
 					# my_accuracy[i] = accuracy_score(resp_test, resp_pred)
 			final_acc = ",".join(map(str, my_accuracy))
 			print(final_acc)
