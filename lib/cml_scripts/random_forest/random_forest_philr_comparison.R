@@ -218,7 +218,7 @@ source(file.path(home_dir, "lib", "table_manipulations.R"))
 ##-Set up constants-------------------------------------------------##
 num_cycles <- opt$num_cycles
 if(num_cycles < 3) stop("num_cycles should be 3 or more")
-main_output_text <- "random_forest_auc_R_"
+main_output_text <- "random_forest_score_R_"
 main_output_label <- paste0(main_output_text, num_cycles)
 main_output_fn <- paste0(main_output_label, ".csv")
 main_output_fpath <- file.path(output_dir, "tables", main_output_fn)
