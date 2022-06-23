@@ -21,6 +21,9 @@ make_ilr_taxa_auc_df <- function(ps_obj,
 	if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
 	if (!requireNamespace("pROC", quietly = TRUE)) BiocManager::install("pROC")
 	library("pROC")
+  if (!requireNamespace("MLmetrics", quietly = TRUE)) BiocManager::install("MLmetrics")
+  library("MLmetrics")
+   
 	for (ilr_w in 1:length(philr_ilr_weights)){
 		for (tax_w in 1:length(philr_taxa_weights)){
 			tryCatch({
@@ -77,38 +80,40 @@ make_ilr_taxa_auc_df <- function(ps_obj,
 						# print(paste("levels resp_var_train", nlevels(as.factor(resp_var_train))))
 						roc_data <- data.frame(pred = pred, resp_var_test = resp_var_test)
 						
-						if (length(unique(unlist(resp_var_test))) > 2){
-							print("multilevels")
-							mult_auc <- c()
-							for (fact in 1:length(unique(resp_var_test))){#only need to test resp_test
-								try({
-									my_fact <- as.character(levels(resp_var_test)[fact])
-									# print(paste("my_fact:", my_fact))
-									dumb_resp_test <- as.factor(replace(as.character(resp_var_test), as.character(resp_var_test) != my_fact, "dumb_var"))
-									# print("dumb_resp")
-									# print(paste(dumb_resp_test))
-									dumb_pred <- as.factor(replace(as.character(pred), as.character(pred) != my_fact, "dumb_var"))
-									# print("dumb_pred")
-									# print(paste(dumb_resp_test))
-									my_roc <- pROC::roc(as.numeric(dumb_pred), as.numeric(dumb_resp_test))
-									# print("my_roc")
-									mult_auc <- c(mult_auc, pROC::auc(my_roc))
-									print(mult_auc)
-								})
-							}
-							if (length(mult_auc) > 0 ) {
-								print("in 'if (length(mult_auc) > 0 )' statement")
-								auc <- mean(mult_auc)
-							}else{
-								break
-							}
-						}else{
-              my_roc <- pROC::roc(as.numeric(pred), as.numeric(resp_var_test))
-              print("ROC made")
-              auc <- pROC::auc(my_roc)
-						}
-						# auc <- pROC::auc(my_roc)
-						# print(paste("auc: ")
+						score <- MLmetrics::Accuracy(pred, resp_var_test)
+						
+# 						if (length(unique(unlist(resp_var_test))) > 2){
+# 							print("multilevels")
+# 							mult_auc <- c()
+# 							for (fact in 1:length(unique(resp_var_test))){#only need to test resp_test
+# 								try({
+# 									my_fact <- as.character(levels(resp_var_test)[fact])
+# 									# print(paste("my_fact:", my_fact))
+# 									dumb_resp_test <- as.factor(replace(as.character(resp_var_test), as.character(resp_var_test) != my_fact, "dumb_var"))
+# 									# print("dumb_resp")
+# 									# print(paste(dumb_resp_test))
+# 									dumb_pred <- as.factor(replace(as.character(pred), as.character(pred) != my_fact, "dumb_var"))
+# 									# print("dumb_pred")
+# 									# print(paste(dumb_resp_test))
+# 									my_roc <- pROC::roc(as.numeric(dumb_pred), as.numeric(dumb_resp_test))
+# 									# print("my_roc")
+# 									mult_auc <- c(mult_auc, pROC::auc(my_roc))
+# 									print(mult_auc)
+# 								})
+# 							}
+# 							if (length(mult_auc) > 0 ) {
+# 								print("in 'if (length(mult_auc) > 0 )' statement")
+# 								score <- mean(mult_auc)
+# 							}else{
+# 								break
+# 							}
+# 						}else{
+#               my_roc <- pROC::roc(as.numeric(pred), as.numeric(resp_var_test))
+#               print("ROC made")
+#               score <- pROC::auc(my_roc)
+# 						}
+						# score <- pROC::auc(my_roc)
+						# print(paste("score: ")
 						my_df <- rf$importance
 						maxImp <- max(rf$importance)
 						maxRow <- which(rf$importance == maxImp)
@@ -116,8 +121,8 @@ make_ilr_taxa_auc_df <- function(ps_obj,
 						#Check its existence
 						if (file.exists(output_fpath)) {
 						  print(paste0("Writing output to ", output_fpath, " ."))
-						  # main_header <- "all_auc,	metadata_col, taxa_weight,	ilr_weight,	rf_imp_se, rf_type, rf_ntree, trans_group, random_batch, cycle"
-						  cat(paste(paste0("\n", auc), colnames(metadata)[mta], philr_taxa_weights[tax_w],#all_auc,	metadata_col, taxa_weight
+						  # main_header <- "all_score,	metadata_col, taxa_weight,	ilr_weight,	rf_imp_se, rf_type, rf_ntree, trans_group, random_batch, cycle"
+						  cat(paste(paste0("\n", score), colnames(metadata)[mta], philr_taxa_weights[tax_w],#all_score,	metadata_col, taxa_weight
 						            philr_ilr_weights[ilr_w], row.names(my_df)[maxRow], rf$type, #ilr_weight,	rf_imp_se, rf_type,
 						            rf$ntree, transf_label, random_label, cycle, #rf_ntree, trans_group, random_batch, cycle
 						            sep = ","), 
@@ -222,7 +227,7 @@ main_output_fpath <- file.path(output_dir, "tables", main_output_fn)
 philr_taxa_weights <- c("enorm")
 philr_ilr_weights <- c("mean.descendants")
 random_seed <- 36
-main_header <- "all_auc, metadata_col, taxa_weight, ilr_weight, rf_imp_se, rf_type, rf_ntree, trans_group, random_batch, cycle"
+main_header <- "all_score, metadata_col, taxa_weight, ilr_weight, rf_imp_se, rf_type, rf_ntree, trans_group, random_batch, cycle"
 
 print(paste("Initilizing", main_output_fpath, "."))
 print(paste("File header: ", main_header))
@@ -271,6 +276,7 @@ metadata <- read.table(opt$metadata,
                        stringsAsFactors=TRUE)
 print("Removing non-factor columns from metadata to decrease run time.")
 metadata <- metadata[,sapply(metadata, is.factor)]
+# df[,-which(sapply(df, class) == "factor")]
 rf_cols <- 1:ncol(metadata)#hack so I don't have to fix this in the function
 
 print("Attempting to read HashSeq count table")
@@ -348,7 +354,8 @@ table_objects <- list(list(asv_table, "Raw_DADA2"),
                       list(hashseq, "Raw_HashSeq"),
                       list(HashSeq_alr, "alr_HashSeq"),
                       list(HashSeq_clr,"clr_HashSeq"),
-                      list(ln_hs_tab, "lognorm_HashSeq"))
+                      list(ln_hs_tab, "lognorm_HashSeq")
+                      )
 random_tree_phylos <- list()
 ##-Random num seed--------------------------------------------------##
 print(paste("Setting random seed to:", random_seed))
@@ -374,8 +381,8 @@ for (po in list(list(ref_ps, "Silva_rand_"),
 skips <- 0
 counter <- 0
 
-print(paste("Counter:", counter, " entering main while loop"))
-while (counter < num_cycles & skips < 5){
+print(paste("Counter:", counter, " entering main loop"))
+for (counter in 1:num_cycles) {
   ##-Create training/testing sets-------------------------------------##
   train_index <- row.names(asv_table)[sample(x = nrow(asv_table), size = 0.75*nrow(asv_table), replace=FALSE)]
   test_index <- row.names(asv_table)[c(1:nrow(asv_table))[!(1:nrow(asv_table) %in% train_index)]]
@@ -438,8 +445,6 @@ while (counter < num_cycles & skips < 5){
   }#End for (to in 1:length(table_objects)) 
 
   print(paste("completed loop:", counter))
-  counter <- counter + 1
-  skips <- 0
 }
 
 print("Reading in data from file.")
@@ -495,12 +500,11 @@ for (mta in 1:length(unique(all_plot_data$metadata_col))){
   # for (tg in 1:length(unique(new_pd$trans_group))){
   #   trans_g <- new_pd$trans_group[tg]
   #   my_vals <- which(new_pd$trans_group == trans_g)
-  #   my_means <- c(my_means, mean(new_pd$all_auc[my_vals]))
+  #   my_means <- c(my_means, mean(new_pd$all_score[my_vals]))
   #   names(my_means)[tg] <- trans_g
   # }
   new_pd <- rbind(non_philr_ds_pd, philr_ds_pd)
   new_pd$trans_group <- factor(new_pd$trans_group, levels = c(non_philr_ds, philr_ds))
-  
   
   for(tw in unique(plot_data$taxa_weight)){
     for(iw in unique(plot_data$ilr_weight)){
@@ -512,7 +516,7 @@ for (mta in 1:length(unique(all_plot_data$metadata_col))){
       back_ground_points <- subset(philr_ds_pd, taxa_weight != tw & ilr_weight != iw)
       bg_jitter <- rbind(non_philr_ds_pd, back_ground_points)
       bg_jitter$trans_group <- factor(bg_jitter$trans_group, levels = c(non_philr_ds, philr_ds))
-      g <- ggplot2::ggplot(new_pd, aes(y = all_auc, x = trans_group)) + 
+      g <- ggplot2::ggplot(new_pd, aes(y = all_score, x = trans_group)) + 
         ggplot2::geom_boxplot(data = jitter_pd, color = "blue", alpha = 0.5) +
         ggplot2::geom_boxplot(data = bg_jitter, color = "red", alpha = 0.5) +
         ggplot2::ggtitle(label = paste("Jones", my_meta, ", part_weight:", tw, ", ilr_weight:", iw)) +
@@ -525,8 +529,8 @@ for (mta in 1:length(unique(all_plot_data$metadata_col))){
       #build vectors for table
       for (grp in unique(philr_pd_tw_iw$trans_group)){
         # print(grp)
-        my_case <- philr_pd_tw_iw[philr_pd_tw_iw$trans_group == grp, ]$all_auc
-        my_control <- back_ground_points[back_ground_points$trans_group == grp, ]$all_auc
+        my_case <- philr_pd_tw_iw[philr_pd_tw_iw$trans_group == grp, ]$all_score
+        my_control <- back_ground_points[back_ground_points$trans_group == grp, ]$all_score
         my_test <- t.test(my_case, my_control)
         my_pval <- my_test$p.value
         pval <- c(pval, my_pval)
@@ -573,7 +577,7 @@ for (mta in 1:length(unique(all_plot_data$metadata_col))){
   
   for(tw in unique(plot_data$taxa_weight)){
     for(iw in unique(plot_data$ilr_weight)){
-      g <- ggplot2::ggplot(new_pd, aes(y = all_auc, x = trans_group)) + 
+      g <- ggplot2::ggplot(new_pd, aes(y = all_score, x = trans_group)) + 
         ggplot2::geom_boxplot( color = "black",) +
         ggplot2::ggtitle(label = paste(project, my_meta)) +
         # ggplot2::ggtitle( label = paste("num_tg:", length(unique(new_pd$trans_group)))) +
@@ -585,8 +589,8 @@ for (mta in 1:length(unique(all_plot_data$metadata_col))){
       #build vectors for table
       for (grp in unique(philr_pd_tw_iw$trans_group)){
         # print(grp)
-        my_case <- philr_pd_tw_iw[philr_pd_tw_iw$trans_group == grp, ]$all_auc
-        my_control <- back_ground_points[back_ground_points$trans_group == grp, ]$all_auc
+        my_case <- philr_pd_tw_iw[philr_pd_tw_iw$trans_group == grp, ]$all_score
+        my_control <- back_ground_points[back_ground_points$trans_group == grp, ]$all_score
         my_test <- t.test(my_case, my_control)
         my_pval <- my_test$p.value
         pval <- c(pval, my_pval)
@@ -621,7 +625,7 @@ for (mta in 1:length(unique(all_plot_data$metadata_col))){
   my_factors <- c(my_raw, my_alr, my_clr, my_lognorm, other_DADA2, rand_philr)
   plot_data$trans_group <- factor(plot_data$trans_group, levels = c(my_factors))#put non-philr first
   
-  g <- ggplot2::ggplot(plot_data, aes(y = all_auc, x = trans_group, group=trans_group)) + 
+  g <- ggplot2::ggplot(plot_data, aes(y = all_score, x = trans_group, group=trans_group)) + 
     ggplot2::geom_boxplot() +
     ggplot2::ggtitle(label = paste(project, my_meta)) +
     ggplot2::geom_hline(yintercept = meta_mean, color="red") +
