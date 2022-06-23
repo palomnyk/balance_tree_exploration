@@ -26,7 +26,6 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import accuracy_score, roc_auc_score
 import argparse
 import random
-from pdb import set_trace
 
 # --------------------------------------------------------------------------
 print("Reading commmandline input with optparse.", flush = True)
@@ -139,7 +138,6 @@ with open(result_fpath, "w+") as fl:
 	fl.write("\n")
 	for meta_c in metad_cols:
 		m_c = list(meta_df.columns)[meta_c]
-
 		# meta_df = meta_df.loc[list(my_table.index.values)
 		for name, table_info in tables:
 			my_table = df_factory(table_info[0], table_info[1])
@@ -152,10 +150,11 @@ with open(result_fpath, "w+") as fl:
 				if is_string_dtype(respns_var) == True and respns_var.isnull().sum() < 5:
 					clf = RandomForestClassifier(max_depth=2, random_state=0)
 					clf.fit(pred_train, resp_train)
-					resp_pred = clf.predict_proba(pred_test)[:, 1]
-					set_trace()
-					my_accuracy[i] = roc_auc_score(y_true = resp_test, y_score= resp_pred)
-					# my_accuracy[i] = accuracy_score(resp_test, resp_pred)
+					resp_pred = clf.predict(pred_test)
+					# if len(set(respns_var)) <= 2:
+					# 	resp_pred = list(x[0:len(resp_pred[1])-1] for x in resp_pred)
+					# my_accuracy[i] = roc_auc_score(y_true = resp_test, y_score=resp_pred, multi_class="ovr", average="weighted")
+					my_accuracy[i] = accuracy_score(resp_test, resp_pred)
 			final_acc = ",".join(map(str, my_accuracy))
 			print(final_acc)
 			msg = f"{name},{m_c},{final_acc}\n"
@@ -182,15 +181,15 @@ for meta_c in metadata_cats:
 	# flat_num_only = pd.DataFrame(meta_result_df.iloc[:,5:]).to_numpy().flatten()
 	plot_data = meta_result_df.iloc[:,2:].transpose()
 	f_mean = np.nanmean(plot_data)
-	ax = fig.add_subplot(1,1,1)
-	ax.boxplot(plot_data, patch_artist = True)
+	fig.add_subplot(1,1,1)
+	my_b = plt.boxplot(plot_data, patch_artist = True)
 	colors = [["mistyrose"]*2,["lightblue"]*2, ["lightyellow"]*2, ["gold"]*2, "gainsboro", ["snow"]*4 ]
-	for patch, color in zip(ax['boxes'], colors):
+	for patch, color in zip(my_b['boxes'], colors):
 		patch.set_facecolor(color)
-	ax.axhline(np.nanmean(plot_data), c="r", linestyle="dashed")
-	ax.axhline(f_mean, c="g", linestyle = ("-."))
-	ax.set_xticklabels(meta_result_df["dataset"].tolist(), rotation=90)
-	ax.tick_params(axis='x', which='major', labelsize=15)
+	my_b.axhline(np.nanmean(plot_data), c="r", linestyle="dashed")
+	my_b.axhline(f_mean, c="g", linestyle = ("-."))
+	my_b.set_xticklabels(meta_result_df["dataset"].tolist(), rotation=90)
+	my_b.tick_params(axis='x', which='major', labelsize=15)
 
 	#for boxplot
 	fig.tight_layout()
