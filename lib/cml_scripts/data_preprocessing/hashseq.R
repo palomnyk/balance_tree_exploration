@@ -23,7 +23,7 @@ option_list <- list(
               help="dataset dir path", metavar="home dir"),
   optparse::make_option(c("-o", "--output_dir"), type="character", default=NULL, 
               help="output_dir", metavar="project"),
-  optparse::make_option(c("-t", "--threshold"), type="character", default=0,
+  optparse::make_option(c("-t", "--threshold"), type="numeric", default=0,
               help="hashseq threshold")); 
 
 opt_parser <- optparse::OptionParser(option_list=option_list);
@@ -41,7 +41,7 @@ print("Running hashseq")
 
 HashSeq::inferTrueSequences(inputDir = hash_in, 
                             outputDir = hash_out,
-                            abundanceThreshold = opt$threshold)
+                            abundanceThreshold = as.numeric(opt$threshold))
 
 print("R Script complete.")
 
