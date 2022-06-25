@@ -69,11 +69,15 @@ assert os.path.exists(output_dir)
 
 def df_factory(my_path, my_sep):
 	try:
-		df =  pd.read_csv(my_path, sep=my_sep, header=0, index_col=0)
+		df = pd.read_csv(my_path, sep=my_sep, header=0, index_col=0)
 		return df
-	except:
+	except Exception as e:
 		print(f"An exception occurred during creation of dataframe from {my_path}", flush = True)
+		print(e, flush=True)
 		sys.exit(f"There was a problem loading {my_path}")
+'/users/amyerke/git/balance_tree_exploration/Zeller/output/tables/clr_hashseq.csv'
+df = pd.read_csv('/users/amyerke/git/balance_tree_exploration/Zeller/output/tables/clr_hashseq.csv', sep=",", header=0, index_col=0)
+
 
 # --------------------------------------------------------------------------
 print("Establishing other constants", flush = True)
@@ -82,7 +86,7 @@ seed = 7
 scoring = "AUC"
 train_percent = options.training
 main_output_label = f"sklearn_random_forest_manual_{train_percent}training"
-result_fpath = os.path.join(output_dir, "tables", f"{main_output_label}_{train_percent}train_{project}_data_test.csv")
+result_fpath = os.path.join(output_dir, "tables", f"{main_output_label}_{project}_data_test.csv")
 col_names = ["dataset", "metadata"]
 num_iterations = 10
 col_names = col_names + [f"split{x}" for x in range(num_iterations)]
