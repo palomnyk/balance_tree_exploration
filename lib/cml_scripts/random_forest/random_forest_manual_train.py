@@ -75,9 +75,6 @@ def df_factory(my_path, my_sep):
 		print(f"An exception occurred during creation of dataframe from {my_path}", flush = True)
 		print(e, flush=True)
 		sys.exit(f"There was a problem loading {my_path}")
-'/users/amyerke/git/balance_tree_exploration/Zeller/output/tables/clr_hashseq.csv'
-df = pd.read_csv('/users/amyerke/git/balance_tree_exploration/Zeller/output/tables/clr_hashseq.csv', sep=",", header=0, index_col=0)
-
 
 # --------------------------------------------------------------------------
 print("Establishing other constants", flush = True)
@@ -85,8 +82,8 @@ print("Establishing other constants", flush = True)
 seed = 7
 scoring = "AUC"
 train_percent = options.training
-main_output_label = f"sklearn_random_forest_manual_{train_percent}training"
-result_fpath = os.path.join(output_dir, "tables", f"{main_output_label}_{project}_data_test.csv")
+main_output_label = f"sklearn_random_forest_manual_{train_percent}training_{project}_nohashseq"
+result_fpath = os.path.join(output_dir, "tables", f"{main_output_label}.csv")
 col_names = ["dataset", "metadata"]
 num_iterations = 10
 col_names = col_names + [f"split{x}" for x in range(num_iterations)]
@@ -189,6 +186,7 @@ for meta_c in metadata_cats:
 	my_b = plt.boxplot(plot_data, patch_artist = True)
 	colors = [["mistyrose"]*2,["lightblue"]*2, ["lightyellow"]*2, ["gold"]*2, "gainsboro", ["snow"]*4 ]
 	for patch, color in zip(my_b['boxes'], colors):
+		print(patch)
 		patch.set_facecolor(color)
 	my_b.axhline(np.nanmean(plot_data), c="r", linestyle="dashed")
 	my_b.axhline(f_mean, c="g", linestyle = ("-."))
