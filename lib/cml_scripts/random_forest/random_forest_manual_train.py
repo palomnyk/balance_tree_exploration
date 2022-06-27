@@ -80,15 +80,15 @@ def df_factory(my_path, my_sep):
 print("Establishing other constants", flush = True)
 # --------------------------------------------------------------------------
 seed = 7
-scoring = "AUC"
+scoring = "Accuracy"
 train_percent = options.training
-main_output_label = f"sklearn_random_forest_manual_{train_percent}training_{project}_nohashseq"
+main_output_label = f"sklearn_random_forest_manual_{train_percent}train_{project}_data"
 result_fpath = os.path.join(output_dir, "tables", f"{main_output_label}.csv")
 col_names = ["dataset", "metadata"]
 num_iterations = 10
 col_names = col_names + [f"split{x}" for x in range(num_iterations)]
 print(col_names)
-pdf_fpath = os.path.join(output_dir, "graphics", f"bp_{main_output_label}_{project}.pdf")
+pdf_fpath = os.path.join(output_dir, "graphics", f"bp_{main_output_label}.pdf")
 
 # --------------------------------------------------------------------------
 print("Importing data to working env.", flush = True)
@@ -107,15 +107,15 @@ meta_df = meta_df.select_dtypes(["object", "category", "string"])
 print("Setting up tables to feed the random forest model.", flush = True)
 # --------------------------------------------------------------------------
 tables = []
-tables.append(("DaDa2", (os.path.join(output_dir, "tables", "ForwardReads_DADA2.txt"),"\t")))
-tables.append(("HashSeq", (os.path.join(output_dir,  "hashseq", "hashseq.csv"),",")))
-tables.append(("lognorm_DADA2", (os.path.join(output_dir, "tables", "lognorm_dada2.csv"), ",")))
-tables.append(("lognorm_HashSeq", (os.path.join(output_dir,"tables", "lognorm_hashseq.csv"), ",")))
-tables.append(("alr_DADA2", (os.path.join(output_dir, "tables", "alr_asv.csv"), ",")))
-tables.append(("alr_HashSeq", (os.path.join(output_dir,"tables", "alr_hashseq.csv"), ",")))
-tables.append(("clr_DADA2", (os.path.join(output_dir, "tables", "clr_asv.csv"), ",")))
-tables.append(("clr_HashSeq", (os.path.join(output_dir,"tables", "clr_hashseq.csv"), ",")))
-tables.append(("Silva_ref_counts_only", (os.path.join(output_dir,"tables", "Silva_ref_counts.csv"), ",")))
+tables.append(("DaDa2",(os.path.join(output_dir, "tables", "ForwardReads_DADA2.txt"),"\t"),"r"))
+tables.append(("HashSeq", (os.path.join(output_dir,  "hashseq", "hashseq.csv"),","), "r"))
+tables.append(("lognorm_DADA2", (os.path.join(output_dir, "tables", "lognorm_dada2.csv"), ","), "y"))
+tables.append(("lognorm_HashSeq", (os.path.join(output_dir,"tables", "lognorm_hashseq.csv"), ","), "y"))
+tables.append(("alr_DADA2", (os.path.join(output_dir, "tables", "alr_asv.csv"), ","), "g"))
+tables.append(("alr_HashSeq", (os.path.join(output_dir,"tables", "alr_hashseq.csv"), ","), "g"))
+tables.append(("clr_DADA2", (os.path.join(output_dir, "tables", "clr_asv.csv"), ","), "m"))
+tables.append(("clr_HashSeq", (os.path.join(output_dir,"tables", "clr_hashseq.csv"), ","), "m"))
+tables.append(("Silva_ref_counts_only", (os.path.join(output_dir,"tables", "Silva_ref_counts.csv"), ","), "k"))
 
 print(len(tables), flush = True)
 philr_part_weights = ["anorm","enorm"]
@@ -129,7 +129,7 @@ for pw in philr_part_weights:
 		table_fn = f"ref_tree_cln_{iw}_{pw}.csv"
 		my_df = pd.read_csv(os.path.join(silva_philr_dir, table_fn), sep=',', header=0, index_col=0)
 		my_label = f"ref_tree_philr_{iw}_{pw}"
-		tables.append((my_label, (os.path.join(silva_philr_dir, table_fn), ',')))
+		tables.append((my_label, (os.path.join(silva_philr_dir, table_fn), ','), "w"))
 
 # --------------------------------------------------------------------------
 print(f"Running random forest model to find {scoring}.", flush = True)
@@ -168,7 +168,7 @@ print("Finished recording accuracy.", flush = True)
 print(f"Building boxplot PDF.", flush = True)
 # --------------------------------------------------------------------------
 #Setup for building boxplots
-result_df = pd.read_csv(result_fpath, sep=',', header=0)
+result_df = pd.read_csv(result_fpath, sep=',', header=0, index_col=0)
 metadata_cats = list(set(result_df["metadata"]))
 num_cols = 2
 num_rows = abs(-len(tables)//num_cols)
@@ -176,22 +176,23 @@ num_rows = abs(-len(tables)//num_cols)
 pdf = matplotlib.backends.backend_pdf.PdfPages(pdf_fpath)
 for meta_c in metadata_cats:
 	fig = plt.figure(figsize=(11,11))
-	fig.suptitle(f"{project} random forest manual {train_percent}training {scoring} {meta_c}", flush = True)
+	fig.suptitle(f"{project} random forest manual {train_percent}training {scoring} {meta_c}")
 	plt.subplots_adjust(bottom=0.8)
 	meta_result_df = pd.DataFrame(result_df[result_df["metadata"] == meta_c])
 	# flat_num_only = pd.DataFrame(meta_result_df.iloc[:,5:]).to_numpy().flatten()
-	plot_data = meta_result_df.iloc[:,2:].transpose()
+	plot_data = meta_result_df.iloc[:,1:].transpose()
 	f_mean = np.nanmean(plot_data)
-	fig.add_subplot(1,1,1)
-	my_b = plt.boxplot(plot_data, patch_artist = True)
-	colors = [["mistyrose"]*2,["lightblue"]*2, ["lightyellow"]*2, ["gold"]*2, "gainsboro", ["snow"]*4 ]
-	for patch, color in zip(my_b['boxes'], colors):
+	ax = fig.add_subplot(1,1,1)
+	bp = ax.boxplot(plot_data, patch_artist = True, labels=plot_data.columns)
+	# ax.boxplot(plot_data, patch_artist = True, labels=plot_data.columns)
+	colors = list([sublist[-1] for sublist in tables])
+	for patch, color in zip(bp['boxes'], colors):
 		print(patch)
 		patch.set_facecolor(color)
-	my_b.axhline(np.nanmean(plot_data), c="r", linestyle="dashed")
-	my_b.axhline(f_mean, c="g", linestyle = ("-."))
-	my_b.set_xticklabels(meta_result_df["dataset"].tolist(), rotation=90)
-	my_b.tick_params(axis='x', which='major', labelsize=15)
+	ax.axhline(np.nanmean(plot_data), c="r", linestyle="dashed")
+	ax.axhline(f_mean, c="g", linestyle = ("-."))
+	ax.set_xticklabels(labels = plot_data.columns, rotation=90)
+	ax.tick_params(axis='x', which='major', labelsize=15)
 
 	#for boxplot
 	fig.tight_layout()
