@@ -108,13 +108,13 @@ print("Setting up tables to feed the random forest model.", flush = True)
 # --------------------------------------------------------------------------
 tables = []
 tables.append(("DaDa2",(os.path.join(output_dir, "tables", "ForwardReads_DADA2.txt"),"\t"),"r"))
-tables.append(("HashSeq", (os.path.join(output_dir,  "hashseq", "hashseq.csv"),","), "r"))
+# tables.append(("HashSeq", (os.path.join(output_dir,  "hashseq", "hashseq.csv"),","), "r"))
 tables.append(("lognorm_DADA2", (os.path.join(output_dir, "tables", "lognorm_dada2.csv"), ","), "y"))
-tables.append(("lognorm_HashSeq", (os.path.join(output_dir,"tables", "lognorm_hashseq.csv"), ","), "y"))
+# tables.append(("lognorm_HashSeq", (os.path.join(output_dir,"tables", "lognorm_hashseq.csv"), ","), "y"))
 tables.append(("alr_DADA2", (os.path.join(output_dir, "tables", "alr_asv.csv"), ","), "g"))
-tables.append(("alr_HashSeq", (os.path.join(output_dir,"tables", "alr_hashseq.csv"), ","), "g"))
+# tables.append(("alr_HashSeq", (os.path.join(output_dir,"tables", "alr_hashseq.csv"), ","), "g"))
 tables.append(("clr_DADA2", (os.path.join(output_dir, "tables", "clr_asv.csv"), ","), "m"))
-tables.append(("clr_HashSeq", (os.path.join(output_dir,"tables", "clr_hashseq.csv"), ","), "m"))
+# tables.append(("clr_HashSeq", (os.path.join(output_dir,"tables", "clr_hashseq.csv"), ","), "m"))
 tables.append(("Silva_ref_counts_only", (os.path.join(output_dir,"tables", "Silva_ref_counts.csv"), ","), "k"))
 
 print(len(tables), flush = True)
@@ -187,7 +187,6 @@ for meta_c in metadata_cats:
 	# ax.boxplot(plot_data, patch_artist = True, labels=plot_data.columns)
 	colors = list([sublist[-1] for sublist in tables])
 	for patch, color in zip(bp['boxes'], colors):
-		print(patch)
 		patch.set_facecolor(color)
 	ax.axhline(np.nanmean(plot_data), c="r", linestyle="dashed")
 	ax.axhline(f_mean, c="g", linestyle = ("-."))
