@@ -85,8 +85,8 @@ random_seed <- 36
 
 print("Importing and preprocessing tables.")
 asv_table <- data.frame(readRDS(file.path(output_dir, "r_objects", "ForwardReads_DADA2.rds")))
-hashseq <- data.frame(data.table::fread(file = file.path(output_dir,"hashseq", "hashseq.csv"),
-                                        header="auto", data.table=FALSE), row.names = 1)
+# hashseq <- data.frame(data.table::fread(file = file.path(output_dir,"hashseq", "hashseq.csv"),
+#                                         header="auto", data.table=FALSE), row.names = 1)
 
 print("creating DADA2 lognorm, ALR and CLR")
 if (dir.exists(file.path(output_dir,"r_objects", "lognorm_asv.rds"))) {
