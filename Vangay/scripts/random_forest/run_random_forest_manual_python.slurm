@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --partition=Orion                                    		# Partition/queue requested on server
-#SBATCH --job-name=Zeller_python_random_forest_manual                                   		# Job name
+#SBATCH --job-name=Vangay_python_random_forest_manual                                   		# Job name
 #SBATCH --time=05:00:00                                      		# Time limit (hrs:min:sec)
 #SBATCH --nodes=1                                         			# Number of nodes requested
 #SBATCH --ntasks-per-node=1                          			# Number of CPUs (processor cores/tasks)
