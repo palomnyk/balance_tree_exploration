@@ -118,34 +118,34 @@ if (dir.exists(file.path(output_dir,"r_objects", "clr_asv.rds"))) {
   write.csv(DADA2_clr, file = file.path(output_dir,"tables", "clr_asv.csv"))
 }
 
-print("Creating hashseq lognorm, ALR and CLR.")
-if (dir.exists(file.path(output_dir,"r_objects", "lognorm_hashseq.rds"))) {
-  ln_hs_tab <- readRDS(file.path(output_dir,"r_objects", "lognorm_HashSeq.rds"))
-}else{
-	ln_hs_tab <- lognorm(hashseq)
-  saveRDS(ln_hs_tab, file = file.path(output_dir,"r_objects", "lognorm_hashseq.rds"))
-  write.csv(ln_hs_tab, file = file.path(output_dir,"tables", "lognorm_hashseq.csv"))
-}
-print("Making HashSeq clr.")
-if (dir.exists(file.path(output_dir,"r_objects", "r_objects", "clr_hashseq.rds"))) {
-  HashSeq_clr <- readRDS(file.path(output_dir,"r_objects", "clr_hashseq.rds"))
-}else{
-  HashSeq_clr <- as.data.frame(rgr::clr(as.matrix(hashseq + 1)))
-  saveRDS(ln_hs_tab, file = file.path(output_dir,"r_objects", "clr_hashseq.rds"))
-  write.csv(ln_hs_tab, file = file.path(output_dir,"tables", "clr_hashseq.csv"))
-}
-print("Making HashSeq alr.")
-my_zeros <- apply(hashseq, 2, function(x) {
-  return(sum(x == 0))
-})
-alr_col <- which(my_zeros == min(my_zeros))[1]
-if (dir.exists(file.path(output_dir,"r_objects", "r_objects", "alr_hashseq.rds"))) {
-  HashSeq_alr <- readRDS(file.path(output_dir,"r_objects", "alr_hashseq.rds"))
-}else{
-  HashSeq_alr <- as.data.frame(rgr::alr(as.matrix(hashseq + 1), j = as.numeric(alr_col)))
-  saveRDS(HashSeq_alr, file = file.path(output_dir,"r_objects", "alr_hashseq.rds"))
-  write.csv(HashSeq_alr, file = file.path(output_dir,"tables", "alr_hashseq.csv"))
-}
+# print("Creating hashseq lognorm, ALR and CLR.")
+# if (dir.exists(file.path(output_dir,"r_objects", "lognorm_hashseq.rds"))) {
+#   ln_hs_tab <- readRDS(file.path(output_dir,"r_objects", "lognorm_HashSeq.rds"))
+# }else{
+# 	ln_hs_tab <- lognorm(hashseq)
+#   saveRDS(ln_hs_tab, file = file.path(output_dir,"r_objects", "lognorm_hashseq.rds"))
+#   write.csv(ln_hs_tab, file = file.path(output_dir,"tables", "lognorm_hashseq.csv"))
+# }
+# print("Making HashSeq clr.")
+# if (dir.exists(file.path(output_dir,"r_objects", "r_objects", "clr_hashseq.rds"))) {
+#   HashSeq_clr <- readRDS(file.path(output_dir,"r_objects", "clr_hashseq.rds"))
+# }else{
+#   HashSeq_clr <- as.data.frame(rgr::clr(as.matrix(hashseq + 1)))
+#   saveRDS(ln_hs_tab, file = file.path(output_dir,"r_objects", "clr_hashseq.rds"))
+#   write.csv(ln_hs_tab, file = file.path(output_dir,"tables", "clr_hashseq.csv"))
+# }
+# print("Making HashSeq alr.")
+# my_zeros <- apply(hashseq, 2, function(x) {
+#   return(sum(x == 0))
+# })
+# alr_col <- which(my_zeros == min(my_zeros))[1]
+# if (dir.exists(file.path(output_dir,"r_objects", "r_objects", "alr_hashseq.rds"))) {
+#   HashSeq_alr <- readRDS(file.path(output_dir,"r_objects", "alr_hashseq.rds"))
+# }else{
+#   HashSeq_alr <- as.data.frame(rgr::alr(as.matrix(hashseq + 1), j = as.numeric(alr_col)))
+#   saveRDS(HashSeq_alr, file = file.path(output_dir,"r_objects", "alr_hashseq.rds"))
+#   write.csv(HashSeq_alr, file = file.path(output_dir,"tables", "alr_hashseq.csv"))
+# }
 print("Making Silva control")
 ref_ps <- readRDS(file.path(output_dir, "r_objects", "ref_tree_phyloseq_obj.rds"))
 write.csv(ref_ps@otu_table, file.path(output_dir,"tables", "Silva_ref_counts.csv"))
