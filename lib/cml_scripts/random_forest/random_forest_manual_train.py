@@ -140,7 +140,7 @@ with open(result_fpath, "w+") as fl:
 	for meta_c in metad_cols:
 		m_c = list(meta_df.columns)[meta_c]
 		# meta_df = meta_df.loc[list(my_table.index.values)
-		for name, table_info in tables:
+		for name, table_info, color in tables:
 			my_table = df_factory(table_info[0], table_info[1])
 			my_accuracy = [0] * num_iterations
 			random.seed(10)
@@ -184,7 +184,6 @@ for meta_c in metadata_cats:
 	f_mean = np.nanmean(plot_data)
 	ax = fig.add_subplot(1,1,1)
 	bp = ax.boxplot(plot_data, patch_artist = True, labels=plot_data.columns)
-	# ax.boxplot(plot_data, patch_artist = True, labels=plot_data.columns)
 	colors = list([sublist[-1] for sublist in tables])
 	for patch, color in zip(bp['boxes'], colors):
 		patch.set_facecolor(color)
