@@ -113,7 +113,7 @@ tables.append(("lognorm_DADA2", (os.path.join(output_dir, "tables", "lognorm_dad
 # tables.append(("lognorm_HashSeq", (os.path.join(output_dir,"tables", "lognorm_hashseq.csv"), ","), "y"))
 tables.append(("alr_DADA2", (os.path.join(output_dir, "tables", "alr_asv.csv"), ","), "g"))
 # tables.append(("alr_HashSeq", (os.path.join(output_dir,"tables", "alr_hashseq.csv"), ","), "g"))
-tables.append(("clr_DADA2", (os.path.join(output_dir, "tables", "clr_asv.csv"), ","), "m"))
+tables.append(("clr_DADA2", (os.path.join(output_dir, "tables", "clr_asv.csv"), ","), "g"))
 # tables.append(("clr_HashSeq", (os.path.join(output_dir,"tables", "clr_hashseq.csv"), ","), "m"))
 tables.append(("Silva_ref_counts_only", (os.path.join(output_dir,"tables", "Silva_ref_counts.csv"), ","), "k"))
 
@@ -122,7 +122,7 @@ philr_part_weights = ["anorm","enorm"]
 philr_ilr_weights = ["blw.sqrt","mean.descendants"]
 silva_philr_dir = os.path.join(output_dir, "tables", "silva_philr_weights")
 if not os.path.exists(silva_philr_dir):
-  print(f"{silva_philr_dir} does not exist. Use silva_philr_weights.R to create it.", flush = True)
+  print(f"{silva_philr_dir} does not exist. Use PhILR_random_trees_and_counts_tables.R to create it.", flush = True)
   sys.exit()
 for pw in philr_part_weights:
 	for iw in philr_ilr_weights:
