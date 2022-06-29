@@ -1,5 +1,5 @@
 # Author: Aaron Yerke (aaronyerke@gmail.com)
-# Script for making all weightschemes in philr for Silva Ref Tree
+# Script for making all weightschemes in PhILR 
 
 rm(list = ls()) #clear workspace
 
@@ -14,7 +14,70 @@ raw_ps_to_clean_ps <- function(ps) {
                                  sample_data(ps@sam_data))
   return(ps_clean)
 }
-
+make_PhILR_transform_tables <- function(counts_table,
+                                        tree,
+                                        table_name,
+                                        output_folder,
+                                        philr_taxa_weights = c("uniform","gm.counts","anorm","anorm.x.gm.counts","enorm","enorm.x.gm.counts"),
+                                        philr_ilr_weights = c("uniform","blw","blw.sqrt","mean.descendants"),
+                                        save_counts_table = FALSE
+                                        ){
+  print(paste0("Making all possible transformations of ", table_name, "." ))
+  if(!file.exists(output_folder)){
+    print(paste("Creating folder at ", output_folder))
+    dir.create(output_folder)
+  }
+  if (save_counts_table == TRUE){
+    write.csv(my_table, 
+              file = file.path(output_folder, paste0(table_name,".csv")),
+              sep = ",", row.names = TRUE)
+  }
+  print(paste0("Building output files of ", table_name, "." ))
+  for (ilr_w in 1:length(philr_ilr_weights)){
+    iw <- philr_ilr_weights[ilr_w]
+    for (tax_w in 1:length(philr_taxa_weights)){
+      pw <- philr_taxa_weights[tax_w]
+      table_name_full <- paste0(paste(table_name, iw, pw, sep = "_"),".csv")
+      
+      if(!file.exists(file.path(output_folder, table_name_full))){
+        my_table <- philr::philr(counts_table, tree,
+                                 part.weights = philr_taxa_weights[tax_w],
+                                 ilr.weights = philr_ilr_weights[ilr_w])
+        print(paste0("Saving ", table_name_full, " to ", output_folder))
+        write.csv(my_table, 
+                  file = file.path(output_folder, table_name_full),
+                  sep = ",", row.names = TRUE)
+      }else{
+        print(paste(table_name, "already exists at", output_folder))
+      }
+    }
+  }
+}
+make_random_tree_philrs <- function(counts_table,
+                                    tree,
+                                    table_name,
+                                    output_folder,#combines all output into same folder
+                                    num_random_trees,
+                                    philr_taxa_weights = c("uniform","gm.counts","anorm","anorm.x.gm.counts","enorm","enorm.x.gm.counts"),
+                                    philr_ilr_weights = c("uniform","blw","blw.sqrt","mean.descendants")
+                                    ){
+  random_seed <- 36
+  print(paste("Setting random seed to:", random_seed))
+  set.seed(random_seed)
+  print("Making random trees")
+  for (rand in 1:num_random_trees){
+    rand_tree <- ape::rtree(n = length(tree$tip.label), tip.label = phy_tree$tip.label)
+    rand_tree <- ape::makeNodeLabel(phy_tree(rand_tree_ps), method="number", prefix='n')
+    table_name_full <- paste0(paste(table_name),"_PhILR_random", rand)
+    make_PhILR_transform_tables(counts_table = counts_table,
+                                tree = rand_tree,
+                                table_name = table_name,
+                                output_folder = output_folder,
+                                philr_taxa_weights = philr_taxa_weights,
+                                philr_ilr_weights = philr_ilr_weights)
+    print(paste("Ending make_random_tree_philrs of", table_name))
+  }
+}
 ##-Load Depencencies------------------------------------------------##
 if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
 if (!requireNamespace("ape", quietly = TRUE)) BiocManager::install("ape")
@@ -28,7 +91,9 @@ if (!requireNamespace("optparse", quietly = TRUE)){
 }
 library("optparse")
 
+# --------------------------------------------------------------------------
 print("Finished loading libraries")
+# --------------------------------------------------------------------------
 
 option_list <- list(
   make_option(c("-d", "--homedir"), type="character", 
@@ -42,8 +107,9 @@ opt_parser <- optparse::OptionParser(option_list=option_list);
 opt <- parse_args(opt_parser);
 
 print(opt)
-
+# --------------------------------------------------------------------------
 print("Establishing directory constants.")
+# --------------------------------------------------------------------------
 home_dir <- opt$homedir
 project <- opt$project
 output_dir <- file.path(home_dir, project, 'output')
@@ -52,39 +118,88 @@ setwd(file.path(home_dir))
 source(file.path(home_dir, "lib", "statistical_functions.R"))
 source(file.path(home_dir, "lib", "table_manipulations.R"))
 
+# --------------------------------------------------------------------------
 print("Setting up other constants.")
+# --------------------------------------------------------------------------
 main_output_label <- paste0("philr_weights_shuffled")
 philr_taxa_weights <- c("uniform","gm.counts","anorm","anorm.x.gm.counts","enorm","enorm.x.gm.counts")
 philr_ilr_weights <- c("uniform","blw","blw.sqrt","mean.descendants")
-ref_tree_weights_data_dir_path <- file.path(output_dir, "tables", "silva_philr_weights")
-table_name <- "ref_tree_cln"
 
-print("Importing and prepping data.")
-ref_ps <- readRDS(file.path(output_dir, "r_objects", "ref_tree_phyloseq_obj.rds"))
-phy_tree(ref_ps) <- ape::makeNodeLabel(phy_tree(ref_ps), method="number", prefix='n')
-ref_ps_clean <- raw_ps_to_clean_ps(ref_ps)
-print("Cleaning UPGMA tree otu with philr tutorial normalization")
+# --------------------------------------------------------------------------
+print("Entering main method")
+# --------------------------------------------------------------------------
+pdf(file = file.path(output_dir, "graphics", paste0("trees_", main_output_label, ".pdf")))
+print("Importing and prepping Silva_DADA2.")
+phylo_obj <- readRDS(file.path(output_dir, "r_objects", "ref_tree_phyloseq_obj.rds"))
+phylo_label <- "Silva_DADA2"
+print(paste0("Counts table dimensions of ", phylo_label, ": ", dim(phylo_obj@otu_table), collapse = ""))
+make_PhILR_transform_tables(phylo_obj@otu_table,
+                            phylo_obj@phy_tree,
+                            phylo_label, 
+                            file.path(output_dir, "tables", phylo_label))
+make_random_tree_philrs(phylo_obj@otu_table,
+                        phylo_obj@phy_tree,
+                        phylo_label, 
+                        file.path(output_dir, "tables", phylo_label),
+                        10)
+phyloseq::plot_tree(phylo_obj, method = "treeonly", nodelabf=nodeplotblank, title = paste0("orig_ref"))
 
+phy_tree(phylo_obj) <- ape::makeNodeLabel(phy_tree(phylo_obj), method="number", prefix='n')
+print("Cleaning Silva tree otu with philr tutorial normalization")
+phylo_obj <- raw_ps_to_clean_ps(phylo_obj)
+phylo_label <- "Filtered_Silva_DADA2"
+phyloseq::plot_tree(phylo_obj, method = "treeonly", nodelabf=nodeplotblank, title = paste0("cln_ref"))
+print(paste0("Counts table dimensions of ", phylo_label, ": ", dim(phylo_obj@otu_table), collapse = ""))
+make_PhILR_transform_tables(phylo_obj@otu_table,
+                            phylo_obj@phy_tree,
+                            phylo_label, 
+                            file.path(output_dir, "tables", phylo_label))
+make_random_tree_philrs(phylo_obj@otu_table,
+                        phylo_obj@phy_tree,
+                        phylo_label, 
+                        file.path(output_dir, "tables", phylo_label),
+                        10)
 
-if(!file.exists(ref_tree_weights_data_dir_path)){
-  print(paste("Creating folder at ", ref_tree_weights_data_dir_path))
-  dir.create(ref_tree_weights_data_dir_path)
-}
+print("Importing UPGMA phyloseq")
+phylo_obj <- readRDS(file.path(output_dir, "r_objects", "denovo_tree_UPGMA_phyloseq_obj.rds"))
+phy_tree(phylo_obj) <- ape::makeNodeLabel(phy_tree(phylo_obj), method="number", prefix='n')
+phyloseq::plot_tree(phylo_obj, method = "treeonly", nodelabf=nodeplotblank, title = paste0("orig_upgma"))
+print("Cleaning UPGMA with philr tutorial normalization")
+phylo_obj <- raw_ps_to_clean_ps(phylo_obj)
+phylo_obj <- phyloseq::transform_sample_counts(phylo_obj, function(x) x + 1 )
+phyloseq::plot_tree(phylo_obj, method = "treeonly", nodelabf=nodeplotblank, title = paste0("cln_upgma"))
+phylo_label <- "Filtered_UPGMA_DADA2"
+print(paste0("Counts table dimensions of ", phylo_label, ": ", dim(phylo_obj@otu_table), collapse = ""))
+make_PhILR_transform_tables(phylo_obj@otu_table,
+                            phylo_obj@phy_tree,
+                            phylo_label, 
+                            file.path(output_dir, "tables", phylo_label))
+make_random_tree_philrs(phylo_obj@otu_table,
+                        phylo_obj@phy_tree,
+                        phylo_label, 
+                        file.path(output_dir, "tables", phylo_label),
+                        10)
 
-print("Building output files.")
-for (ilr_w in 1:length(philr_ilr_weights)){
-  iw <- philr_ilr_weights[ilr_w]
-  for (tax_w in 1:length(philr_taxa_weights)){
-    pw <- philr_taxa_weights[tax_w]
-    table_name_full <- paste0(paste(table_name, iw, pw, sep = "_"),".csv")
-    my_table <- philr::philr(ref_ps_clean@otu_table, ref_ps_clean@phy_tree,
-                             part.weights = philr_taxa_weights[tax_w],
-                             ilr.weights = philr_ilr_weights[ilr_w])
-    write.csv(my_table, 
-              file = file.path(ref_tree_weights_data_dir_path, table_name_full),
-              sep = ",", row.names = TRUE)
-  }
-}
+print("Importing IQTree phyloseq")
+phylo_obj <- readRDS(file.path(output_dir, "r_objects", "denovo_tree_iqtree_phyloseq_obj.rds"))
+phy_tree(phylo_obj) <- ape::makeNodeLabel(phy_tree(phylo_obj), method="number", prefix='n')
+phyloseq::plot_tree(phylo_obj, method = "treeonly", nodelabf=nodeplotblank, title = paste0("orig_iqtree"))
+print("Cleaning IQ-tree with philr tutorial normalization")
+phylo_obj <- raw_ps_to_clean_ps(phylo_obj)
+phyloseq::plot_tree(phylo_obj, method = "treeonly", nodelabf=nodeplotblank, title = paste0("cln_iqtree"))
+phylo_label <- "Filtered_IQtree"
+print(paste0("Counts table dimensions of ", phylo_label, ": ", dim(phylo_obj@otu_table), collapse = ""))
+make_PhILR_transform_tables(phylo_obj@otu_table,
+                            phylo_obj@phy_tree,
+                            phylo_label, 
+                            file.path(output_dir, "tables", phylo_label))
+make_random_tree_philrs(phylo_obj@otu_table,
+                        phylo_obj@phy_tree,
+                        phylo_label, 
+                        file.path(output_dir, "tables", phylo_label),
+                        10)
+
+dev.off()
 
 print("script complete")
 
