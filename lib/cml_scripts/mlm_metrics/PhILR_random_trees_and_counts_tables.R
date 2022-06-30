@@ -22,7 +22,7 @@ make_PhILR_transform_tables <- function(counts_table,
                                         philr_ilr_weights = c("uniform","blw","blw.sqrt","mean.descendants"),
                                         save_counts_table = FALSE
                                         ){
-  print(paste0("Making all possible transformations of ", table_name, "." ))
+  print(paste0("Making all possible PhILR Weighted transformations of ", table_name, "." ))
   if(!file.exists(output_folder)){
     print(paste("Creating folder at ", output_folder))
     dir.create(output_folder)
@@ -52,7 +52,7 @@ make_PhILR_transform_tables <- function(counts_table,
                   file = file.path(output_folder, table_name_full),
                   sep = ",", row.names = TRUE)
       }else{
-        print(paste(table_name, "already exists at", output_folder))
+        print(paste(table_name_full, "already exists at", output_folder))
       }
     }
   }
@@ -70,11 +70,12 @@ make_random_tree_philrs <- function(counts_table,
   set.seed(random_seed)
   print("Making random trees")
   for (rand in 1:num_random_trees){
-    rand_tree <- ape::rtree(n = length(tree$tip.label), tip.label = phy_tree$tip.label)
-    rand_tree <- ape::makeNodeLabel(phy_tree, method="number", prefix='n')
+    print(paste("random tree", rand))
+    my_rand_tree <- ape::rtree(n = length(tree$tip.label), tip.label = tree$tip.label)
+    my_rand_tree <- ape::makeNodeLabel(my_rand_tree, method="number", prefix='n')
     table_name_full <- paste0(paste(table_name),"_PhILR_random", rand)
     make_PhILR_transform_tables(counts_table = counts_table,
-                                tree = rand_tree,
+                                tree = my_rand_tree,
                                 table_name = table_name,
                                 output_folder = output_folder,
                                 philr_taxa_weights = philr_taxa_weights,
@@ -96,7 +97,7 @@ if (!requireNamespace("optparse", quietly = TRUE)){
 library("optparse")
 
 # --------------------------------------------------------------------------
-print("Finished loading libraries")
+print("Finished loading libraries, now reading cml input.")
 # --------------------------------------------------------------------------
 
 option_list <- list(
@@ -130,10 +131,9 @@ philr_taxa_weights <- c("uniform","gm.counts","anorm","anorm.x.gm.counts","enorm
 philr_ilr_weights <- c("uniform","blw","blw.sqrt","mean.descendants")
 
 # --------------------------------------------------------------------------
-print("Entering main method")
+print("Importing and prepping Silva_DADA2.")
 # --------------------------------------------------------------------------
 pdf(file = file.path(output_dir, "graphics", paste0("trees_", main_output_label, ".pdf")))
-print("Importing and prepping Silva_DADA2.")
 phylo_obj <- readRDS(file.path(output_dir, "r_objects", "ref_tree_phyloseq_obj.rds"))
 phylo_label <- "Silva_DADA2"
 print(paste0("Counts table dimensions of ", phylo_label, ": ", dim(phylo_obj@otu_table), collapse = ""))
@@ -163,8 +163,9 @@ make_random_tree_philrs(phylo_obj@otu_table,
                         phylo_label, 
                         file.path(output_dir, "tables", phylo_label),
                         10)
-
+# --------------------------------------------------------------------------
 print("Importing UPGMA phyloseq")
+# --------------------------------------------------------------------------
 phylo_obj <- readRDS(file.path(output_dir, "r_objects", "denovo_tree_UPGMA_phyloseq_obj.rds"))
 phy_tree(phylo_obj) <- ape::makeNodeLabel(phy_tree(phylo_obj), method="number", prefix='n')
 phyloseq::plot_tree(phylo_obj, method = "treeonly", nodelabf=nodeplotblank, title = paste0("orig_upgma"))
@@ -183,8 +184,9 @@ make_random_tree_philrs(phylo_obj@otu_table,
                         phylo_label, 
                         file.path(output_dir, "tables", phylo_label),
                         10)
-
+# --------------------------------------------------------------------------
 print("Importing IQTree phyloseq")
+# --------------------------------------------------------------------------
 phylo_obj <- readRDS(file.path(output_dir, "r_objects", "denovo_tree_iqtree_phyloseq_obj.rds"))
 phy_tree(phylo_obj) <- ape::makeNodeLabel(phy_tree(phylo_obj), method="number", prefix='n')
 phyloseq::plot_tree(phylo_obj, method = "treeonly", nodelabf=nodeplotblank, title = paste0("orig_iqtree"))
@@ -205,5 +207,6 @@ make_random_tree_philrs(phylo_obj@otu_table,
 
 dev.off()
 
+# --------------------------------------------------------------------------
 print("script complete")
-
+# --------------------------------------------------------------------------
