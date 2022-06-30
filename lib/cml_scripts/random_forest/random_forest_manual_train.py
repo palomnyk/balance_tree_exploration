@@ -95,9 +95,9 @@ print("Importing data to working env.", flush = True)
 # --------------------------------------------------------------------------
 meta_df = pd.read_csv(os.path.expanduser(os.path.join(home_dir, project, str(options.meta_fn))), \
 	sep=options.delim, header=0, index_col=options.meta_index_col)
-metad_cols = range(len(meta_df.columns))
 print(meta_df.dtypes, flush=True)
 meta_df = meta_df.select_dtypes(["object", "category", "string"])
+metad_cols = range(len(meta_df.columns))
 #Commented code for scrambling the rownames
 # # meta_df.head
 # # meta_df = meta_df.sample(frac=1)
