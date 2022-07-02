@@ -79,7 +79,7 @@ make_random_tree_philrs <- function(counts_table,
     table_name_full <- paste0(paste(table_name),"_PhILR_random", rand)
     make_PhILR_transform_tables(counts_table = counts_table,
                                 tree = my_rand_tree,
-                                table_name = table_name,
+                                table_name = table_name_full,
                                 output_folder = output_folder,
                                 philr_taxa_weights = philr_taxa_weights,
                                 philr_ilr_weights = philr_ilr_weights)

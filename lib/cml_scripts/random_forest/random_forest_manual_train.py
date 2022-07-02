@@ -60,14 +60,47 @@ parser.add_argument("-t", "--training", default=0.9,
 options, unknown = parser.parse_known_args()
 
 # --------------------------------------------------------------------------
-print("Establishing directory layout.", flush = True)
+print("Defining functions", flush = True)
 # --------------------------------------------------------------------------
-home_dir = os.path.expanduser(options.homedir)
-project = options.project
-output_dir = os.path.join(home_dir, project, "output")
-assert os.path.exists(output_dir)
+def add_PhILR_dfs_to_table(lst, \
+	root_folder, \
+	base_fn, \
+	philr_part_weights = ["anorm","enorm"], \
+	philr_ilr_weights = ["blw.sqrt","mean.descendants"], \
+	color = "w"):
+	if not os.path.exists(root_folder):
+		print(f"{root_folder} does not exist. Use PhILR_random_trees_and_counts_tables.R to create it.", flush = True)
+		sys.exit()
+	for pw in philr_part_weights:
+		for iw in philr_ilr_weights:
+			table_fn = f"{base_fn}_{iw}_{pw}.csv"
+			# my_df = pd.read_csv(os.path.join(root_folder, table_fn), sep=',', header=0, index_col=0)
+			my_label = f"{base_fn}_{iw}_{pw}"
+			lst.append((my_label, (os.path.join(root_folder, table_fn), ','), color))
+	return lst
+
+def add_random_tree_PhILRs_to_table(lst, \
+	root_folder, \
+	base_fn, \
+	philr_part_weights = ["anorm","enorm"], \
+	philr_ilr_weights = ["blw.sqrt","mean.descendants"], \
+	color = "w", \
+	num_rand_trees = 10):
+	print(f"Adding random trees from {base_fn}.")
+	if not os.path.exists(root_folder):
+		print(f"{root_folder} does not exist. Use PhILR_random_trees_and_counts_tables.R to create it.", flush = True)
+		sys.exit()
+	for rand in range(1,num_rand_trees+1):
+		for pw in philr_part_weights:
+			for iw in philr_ilr_weights:
+				my_label = f"{base_fn}_PhILR_random{rand}_{iw}_{pw}"
+				table_fn = f"{my_label}.csv"
+				my_df = pd.read_csv(os.path.join(root_folder, table_fn), sep=',', header=0, index_col=0)
+				lst.append((my_label, (os.path.join(root_folder, table_fn), ','), color))
+	return lst
 
 def df_factory(my_path, my_sep):
+	# Use for building df from "tables" list in random forest loop
 	try:
 		df = pd.read_csv(my_path, sep=my_sep, header=0, index_col=0)
 		return df
@@ -75,6 +108,14 @@ def df_factory(my_path, my_sep):
 		print(f"An exception occurred during creation of dataframe from {my_path}", flush = True)
 		print(e, flush=True)
 		sys.exit(f"There was a problem loading {my_path}")
+
+# --------------------------------------------------------------------------
+print("Establishing directory layout.", flush = True)
+# --------------------------------------------------------------------------
+home_dir = os.path.expanduser(options.homedir)
+project = options.project
+output_dir = os.path.join(home_dir, project, "output")
+assert os.path.exists(output_dir)
 
 # --------------------------------------------------------------------------
 print("Establishing other constants", flush = True)
@@ -115,21 +156,18 @@ tables.append(("alr_DADA2", (os.path.join(output_dir, "tables", "alr_asv.csv"), 
 # tables.append(("alr_HashSeq", (os.path.join(output_dir,"tables", "alr_hashseq.csv"), ","), "g"))
 tables.append(("clr_DADA2", (os.path.join(output_dir, "tables", "clr_asv.csv"), ","), "g"))
 # tables.append(("clr_HashSeq", (os.path.join(output_dir,"tables", "clr_hashseq.csv"), ","), "m"))
-tables.append(("Silva_ref_counts_only", (os.path.join(output_dir,"tables", "Silva_ref_counts.csv"), ","), "k"))
-
-print(len(tables), flush = True)
-philr_part_weights = ["anorm","enorm"]
-philr_ilr_weights = ["blw.sqrt","mean.descendants"]
-silva_philr_dir = os.path.join(output_dir, "tables", "silva_philr_weights")
-if not os.path.exists(silva_philr_dir):
-  print(f"{silva_philr_dir} does not exist. Use PhILR_random_trees_and_counts_tables.R to create it.", flush = True)
-  sys.exit()
-for pw in philr_part_weights:
-	for iw in philr_ilr_weights:
-		table_fn = f"ref_tree_cln_{iw}_{pw}.csv"
-		my_df = pd.read_csv(os.path.join(silva_philr_dir, table_fn), sep=',', header=0, index_col=0)
-		my_label = f"ref_tree_philr_{iw}_{pw}"
-		tables.append((my_label, (os.path.join(silva_philr_dir, table_fn), ','), "w"))
+tables.append(("Silva_DADA2", (os.path.join(output_dir,"tables", "Silva_DADA2", "Silva_DADA2.csv"), ","), "c"))
+tables = add_PhILR_dfs_to_table(tables, os.path.join(output_dir, "tables", "Silva_DADA2"), "Silva_DADA2", color = "w")
+tables = add_random_tree_PhILRs_to_table(tables, os.path.join(output_dir, "tables", "Silva_DADA2"), "Silva_DADA2", color = "k", num_rand_trees=10)
+tables.append(("Filtered_Silva_DADA2", (os.path.join(output_dir,"tables", "Filtered_Silva_DADA2", "Filtered_Silva_DADA2.csv"), ","), "m"))
+tables = add_PhILR_dfs_to_table(tables, os.path.join(output_dir, "tables", "Filtered_Silva_DADA2"), "Filtered_Silva_DADA2", color = "w")
+tables = add_random_tree_PhILRs_to_table(tables, os.path.join(output_dir, "tables", "Filtered_Silva_DADA2"), "Filtered_Silva_DADA2", color = "k", num_rand_trees=10)
+tables.append(("Filtered_UPGMA_DADA2", (os.path.join(output_dir,"tables", "Filtered_UPGMA_DADA2", "Filtered_UPGMA_DADA2.csv"), ","), "b"))
+tables = add_PhILR_dfs_to_table(tables, os.path.join(output_dir, "tables", "Filtered_UPGMA_DADA2"), "Filtered_UPGMA_DADA2", color = "w")
+tables = add_random_tree_PhILRs_to_table(tables, os.path.join(output_dir, "tables", "Filtered_UPGMA_DADA2"), "Filtered_UPGMA_DADA2", color = "k", num_rand_trees=10)
+tables.append(("Filtered_IQtree", (os.path.join(output_dir,"tables", "Filtered_IQtree", "Filtered_IQtree.csv"), ","), "orange"))
+tables = add_PhILR_dfs_to_table(tables, os.path.join(output_dir, "tables", "Filtered_IQtree"), "Filtered_IQtree", color = "w")
+tables = add_random_tree_PhILRs_to_table(tables, os.path.join(output_dir, "tables", "Filtered_IQtree"), "Filtered_IQtree", color = "k", num_rand_trees=10)
 
 # --------------------------------------------------------------------------
 print(f"Running random forest model to find {scoring}.", flush = True)
