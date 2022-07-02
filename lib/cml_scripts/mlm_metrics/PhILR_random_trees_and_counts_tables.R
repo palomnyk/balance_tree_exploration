@@ -23,12 +23,15 @@ make_PhILR_transform_tables <- function(counts_table,
                                         save_counts_table = FALSE
                                         ){
   print(paste0("Making all possible PhILR Weighted transformations of ", table_name, "." ))
+  print(paste0("Using these taxa weights ", paste(philr_taxa_weights, collapse = " "), "." ))
+  print(paste0("And these ilr weights ", paste(philr_ilr_weights, collapse = " "), "." ))
   if(!file.exists(output_folder)){
     print(paste("Creating folder at ", output_folder))
     dir.create(output_folder)
   }
   if (save_counts_table == TRUE){
-    write.csv(my_table, 
+    print("Saving counts table.")
+    write.csv(counts_table, 
               file = file.path(output_folder, paste0(table_name,".csv")),
               sep = ",", row.names = TRUE)
   }
@@ -140,7 +143,8 @@ print(paste0("Counts table dimensions of ", phylo_label, ": ", dim(phylo_obj@otu
 make_PhILR_transform_tables(phylo_obj@otu_table,
                             phylo_obj@phy_tree,
                             phylo_label, 
-                            file.path(output_dir, "tables", phylo_label))
+                            file.path(output_dir, "tables", phylo_label),
+                            save_counts_table = TRUE)
 make_random_tree_philrs(phylo_obj@otu_table,
                         phylo_obj@phy_tree,
                         phylo_label, 
@@ -157,7 +161,8 @@ print(paste0("Counts table dimensions of ", phylo_label, ": ", dim(phylo_obj@otu
 make_PhILR_transform_tables(phylo_obj@otu_table,
                             phylo_obj@phy_tree,
                             phylo_label, 
-                            file.path(output_dir, "tables", phylo_label))
+                            file.path(output_dir, "tables", phylo_label),
+                            save_counts_table = TRUE)
 make_random_tree_philrs(phylo_obj@otu_table,
                         phylo_obj@phy_tree,
                         phylo_label, 
@@ -178,7 +183,8 @@ print(paste0("Counts table dimensions of ", phylo_label, ": ", dim(phylo_obj@otu
 make_PhILR_transform_tables(phylo_obj@otu_table,
                             phylo_obj@phy_tree,
                             phylo_label, 
-                            file.path(output_dir, "tables", phylo_label))
+                            file.path(output_dir, "tables", phylo_label),
+                            save_counts_table = TRUE)
 make_random_tree_philrs(phylo_obj@otu_table,
                         phylo_obj@phy_tree,
                         phylo_label, 
@@ -198,7 +204,8 @@ print(paste0("Counts table dimensions of ", phylo_label, ": ", dim(phylo_obj@otu
 make_PhILR_transform_tables(phylo_obj@otu_table,
                             phylo_obj@phy_tree,
                             phylo_label, 
-                            file.path(output_dir, "tables", phylo_label))
+                            file.path(output_dir, "tables", phylo_label),
+                            save_counts_table = TRUE)
 make_random_tree_philrs(phylo_obj@otu_table,
                         phylo_obj@phy_tree,
                         phylo_label, 
