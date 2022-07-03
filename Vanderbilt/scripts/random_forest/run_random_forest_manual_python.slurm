@@ -1,15 +1,15 @@
 #!/bin/bash
 
-#SBATCH --partition=Orion                                    		# Partition/queue requested on server
-#SBATCH --job-name=python_random_forest_manual                                   		# Job name
+#SBATCH --partition=Pisces                                    		# Partition/queue requested on server
+#SBATCH --job-name=Vanderbilt_python_random_forest_manual   		# Job name
 #SBATCH --time=01:00:00                                      		# Time limit (hrs:min:sec)
 #SBATCH --nodes=1                                         			# Number of nodes requested
 #SBATCH --ntasks-per-node=1                          			# Number of CPUs (processor cores/tasks)
 #SBATCH --mem=100gb                                          		# Memory limit
 #SBATCH --mail-type=BEGIN,END,FAIL                              	# Mail events (NONE, BEGIN, END, FAIL, ALL)
 #SBATCH --mail-user=amyerke@uncc.edu                            	# Specified email address
-#SBATCH --output=/users/amyerke/slurmLogs/%x.%j.out     # Set directory for standard output
-#SBATCH --error=/users/amyerke/slurmLogs/%x.%j.out      # Set directory for error log
+#SBATCH --output=/users/amyerke/slurmLogs/%x.%j.log     # Set directory for standard output
+#SBATCH --error=/users/amyerke/slurmLogs/%x.%j.log      # Set directory for error log
 ##SBATCH --uid=amyerke
 #SBATCH --get-user-env
 
@@ -22,7 +22,7 @@ export PYTHONUNBUFFERED=TRUE #lets print statements show up without flush=True
 
 module load anaconda3/2020.11
 conda activate testing_pyCaret
-python ~/git/balance_tree_exploration/lib/cml_scripts/random_forest/random_forest_manual_train.py\
+python -m pdb ~/git/balance_tree_exploration/lib/cml_scripts/random_forest/random_forest_manual_train.py\
   -p Vanderbilt \
   -a True \
   -f patient_metadata.tsv \
@@ -57,3 +57,6 @@ echo ""
 echo "======================================================"
 echo "End Time   : $(date)"
 echo "======================================================"
+
+
+
