@@ -35,6 +35,7 @@ make_PhILR_transform_tables <- function(counts_table,
               file = file.path(output_folder, paste0(table_name,".csv")),
               sep = ",", row.names = TRUE)
   }
+  tree = ape::makeNodeLabel(tree, method="number", prefix='n')
 	if (any(counts_table == 0)){
 				    print("adding pseudocount of 1 before PhILR transform")
 				    counts_table = counts_table + 1
