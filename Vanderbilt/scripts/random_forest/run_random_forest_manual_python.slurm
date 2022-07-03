@@ -22,7 +22,7 @@ export PYTHONUNBUFFERED=TRUE #lets print statements show up without flush=True
 
 module load anaconda3/2020.11
 conda activate testing_pyCaret
-python -m pdb ~/git/balance_tree_exploration/lib/cml_scripts/random_forest/random_forest_manual_train.py\
+python ~/git/balance_tree_exploration/lib/cml_scripts/random_forest/random_forest_manual_train.py\
   -p Vanderbilt \
   -a True \
   -f patient_metadata.tsv \

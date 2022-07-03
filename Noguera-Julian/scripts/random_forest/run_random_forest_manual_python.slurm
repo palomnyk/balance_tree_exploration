@@ -22,7 +22,7 @@ echo Using $SLURM_NTASKS processors across $SLURM_NNODES nodes
 # source activate testing_pyCaret
 # echo "activated testing_pyCaret conda env"
 export PYTHONUNBUFFERED=TRUE
-python -m pdb ~/git/balance_tree_exploration/lib/cml_scripts/random_forest/random_forest_manual_train.py\
+python ~/git/balance_tree_exploration/lib/cml_scripts/random_forest/random_forest_manual_train.py\
   -p Noguera-Julian \
   -a True \
   -f patient_metadata.csv \
