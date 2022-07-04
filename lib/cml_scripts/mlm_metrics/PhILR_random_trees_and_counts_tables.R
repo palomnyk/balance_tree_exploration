@@ -77,7 +77,7 @@ make_random_tree_philrs <- function(counts_table,
     print(paste("random tree", rand))
     my_rand_tree <- ape::rtree(n = length(tree$tip.label), tip.label = tree$tip.label)
     my_rand_tree <- ape::makeNodeLabel(my_rand_tree, method="number", prefix='n')
-    table_name_full <- paste0(paste(table_name),"_PhILR_random", rand)
+    table_name_full <- paste0("Shuffle", rand, "_PhILR_", table_name)
     make_PhILR_transform_tables(counts_table = counts_table,
                                 tree = my_rand_tree,
                                 table_name = table_name_full,

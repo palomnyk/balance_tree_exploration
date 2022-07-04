@@ -82,8 +82,10 @@ def add_PhILR_dfs_to_table(lst, \
 def add_random_tree_PhILRs_to_table(lst, \
 	root_folder, \
 	base_fn, \
-	philr_part_weights = ["anorm","enorm"], \
-	philr_ilr_weights = ["blw.sqrt","mean.descendants"], \
+	# philr_part_weights = ["anorm","enorm"], \
+	# philr_ilr_weights = ["blw.sqrt","mean.descendants"], \
+	philr_part_weights = ["anorm"], \
+	philr_ilr_weights = ["blw.sqrt"], \
 	color = "w", \
 	num_rand_trees = 10):
 	print(f"Adding random trees from {base_fn}.")
@@ -93,7 +95,7 @@ def add_random_tree_PhILRs_to_table(lst, \
 	for rand in range(1,num_rand_trees+1):
 		for pw in philr_part_weights:
 			for iw in philr_ilr_weights:
-				my_label = f"{base_fn}_PhILR_random{rand}_{iw}_{pw}"
+				my_label = f"Shuffle{rand}_PhILR_{base_fn}_{iw}_{pw}"
 				table_fn = f"{my_label}.csv"
 				my_df = pd.read_csv(os.path.join(root_folder, table_fn), sep=',', header=0, index_col=0)
 				lst.append((my_label, (os.path.join(root_folder, table_fn), ','), color))
@@ -156,18 +158,18 @@ tables.append(("alr_DADA2", (os.path.join(output_dir, "tables", "alr_asv.csv"), 
 # tables.append(("alr_HashSeq", (os.path.join(output_dir,"tables", "alr_hashseq.csv"), ","), "g"))
 tables.append(("clr_DADA2", (os.path.join(output_dir, "tables", "clr_asv.csv"), ","), "g"))
 # tables.append(("clr_HashSeq", (os.path.join(output_dir,"tables", "clr_hashseq.csv"), ","), "m"))
-tables.append(("Silva_DADA2", (os.path.join(output_dir,"tables", "Silva_DADA2", "Silva_DADA2.csv"), ","), "c"))
-tables = add_PhILR_dfs_to_table(tables, os.path.join(output_dir, "tables", "Silva_DADA2"), "Silva_DADA2", color = "w")
-tables = add_random_tree_PhILRs_to_table(tables, os.path.join(output_dir, "tables", "Silva_DADA2"), "Silva_DADA2", color = "k", num_rand_trees=3)
-tables.append(("Filtered_Silva_DADA2", (os.path.join(output_dir,"tables", "Filtered_Silva_DADA2", "Filtered_Silva_DADA2.csv"), ","), "m"))
-tables = add_PhILR_dfs_to_table(tables, os.path.join(output_dir, "tables", "Filtered_Silva_DADA2"), "Filtered_Silva_DADA2", color = "w")
-tables = add_random_tree_PhILRs_to_table(tables, os.path.join(output_dir, "tables", "Filtered_Silva_DADA2"), "Filtered_Silva_DADA2", color = "k", num_rand_trees=3)
-tables.append(("Filtered_UPGMA_DADA2", (os.path.join(output_dir,"tables", "Filtered_UPGMA_DADA2", "Filtered_UPGMA_DADA2.csv"), ","), "b"))
-tables = add_PhILR_dfs_to_table(tables, os.path.join(output_dir, "tables", "Filtered_UPGMA_DADA2"), "Filtered_UPGMA_DADA2", color = "w")
-tables = add_random_tree_PhILRs_to_table(tables, os.path.join(output_dir, "tables", "Filtered_UPGMA_DADA2"), "Filtered_UPGMA_DADA2", color = "k", num_rand_trees=3)
+tables.append(("Silva_DADA2", (os.path.join(output_dir,"tables", "Silva_DADA2", "Silva_DADA2.csv"), ","), "#64baeb"))
+tables = add_PhILR_dfs_to_table(tables, os.path.join(output_dir, "tables", "Silva_DADA2"), "Silva_DADA2", color = "#c8e5f5")
+tables = add_random_tree_PhILRs_to_table(tables, os.path.join(output_dir, "tables", "Silva_DADA2"), "Silva_DADA2", color = "#1474aa", num_rand_trees=3)
+tables.append(("Filtered_Silva_DADA2", (os.path.join(output_dir,"tables", "Filtered_Silva_DADA2", "Filtered_Silva_DADA2.csv"), ","), "#f78646"))
+tables = add_PhILR_dfs_to_table(tables, os.path.join(output_dir, "tables", "Filtered_Silva_DADA2"), "Filtered_Silva_DADA2", color = "#f5cbb3")
+tables = add_random_tree_PhILRs_to_table(tables, os.path.join(output_dir, "tables", "Filtered_Silva_DADA2"), "Filtered_Silva_DADA2", color = "#8c390b", num_rand_trees=3)
+tables.append(("Filtered_UPGMA_DADA2", (os.path.join(output_dir,"tables", "Filtered_UPGMA_DADA2", "Filtered_UPGMA_DADA2.csv"), ","), "#0000ff"))
+tables = add_PhILR_dfs_to_table(tables, os.path.join(output_dir, "tables", "Filtered_UPGMA_DADA2"), "Filtered_UPGMA_DADA2", color = "#b7b7f3")
+tables = add_random_tree_PhILRs_to_table(tables, os.path.join(output_dir, "tables", "Filtered_UPGMA_DADA2"), "Filtered_UPGMA_DADA2", color = "#050598", num_rand_trees=3)
 tables.append(("Filtered_IQtree", (os.path.join(output_dir,"tables", "Filtered_IQtree", "Filtered_IQtree.csv"), ","), "orange"))
-tables = add_PhILR_dfs_to_table(tables, os.path.join(output_dir, "tables", "Filtered_IQtree"), "Filtered_IQtree", color = "w")
-tables = add_random_tree_PhILRs_to_table(tables, os.path.join(output_dir, "tables", "Filtered_IQtree"), "Filtered_IQtree", color = "k", num_rand_trees=3)
+tables = add_PhILR_dfs_to_table(tables, os.path.join(output_dir, "tables", "Filtered_IQtree"), "Filtered_IQtree", color = "#f7d8a0")
+tables = add_random_tree_PhILRs_to_table(tables, os.path.join(output_dir, "tables", "Filtered_IQtree"), "Filtered_IQtree", color = "#e29302", num_rand_trees=3)
 
 # --------------------------------------------------------------------------
 print(f"Running random forest model to find {scoring}.", flush = True)
@@ -228,7 +230,7 @@ for meta_c in metadata_cats:
 	ax.axhline(np.nanmean(plot_data), c="r", linestyle="dashed")
 	ax.axhline(f_mean, c="g", linestyle = ("-."))
 	ax.set_xticklabels(labels = plot_data.columns, rotation=90)
-	ax.tick_params(axis='x', which='major', labelsize=15)
+	ax.tick_params(axis='x', which='major', labelsize=10)
 
 	#for boxplot
 	fig.tight_layout()
