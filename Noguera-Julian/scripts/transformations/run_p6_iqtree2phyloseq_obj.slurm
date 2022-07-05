@@ -23,8 +23,7 @@ module load R
 srun Rscript ~/git/balance_tree_exploration/lib/cml_scripts/transformations/p6_iqtree2phyloseq_obj.R \
 -d ~/git/balance_tree_exploration \
 -p Noguera-Julian \
--m ~/git/balance_tree_exploration/Noguera-Julian/patient_metadata.csv \
--l , \
+-m ~/git/balance_tree_exploration/Noguera-Julian/patient_metadata.tsv \
 -r Run
 
 # Options:
