@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#SBATCH --partition=Orion                                    		# Partition/queue requested on server
+#SBATCH --partition=Pisces                                    		# Partition/queue requested on server
 #SBATCH --job-name=Vangay_create_rf_datasets                                   		# Job name
-#SBATCH --time=100:00:00                                      		# Time limit (hrs:min:sec)
+#SBATCH --time=1:00:00                                      		# Time limit (hrs:min:sec)
 #SBATCH --nodes=1                                         			# Number of nodes requested
 #SBATCH --ntasks-per-node=1                          			# Number of CPUs (processor cores/tasks)
 #SBATCH --mem=50gb                                          		# Memory limit
@@ -24,8 +24,7 @@ Rscript ~/git/balance_tree_exploration/lib/cml_scripts/transformations/make_comp
   -d ~/git/balance_tree_exploration \
   -p Vangay \
   -m ~/git/balance_tree_exploration/Vangay/patient_metadata.tsv \
-  -r Run \
-  -n 20
+  -r run_accession
 
 echo ""
 echo "======================================================"
