@@ -25,8 +25,7 @@ export PYTHONUNBUFFERED=TRUE
 python ~/git/balance_tree_exploration/lib/cml_scripts/random_forest/random_forest_manual_train.py\
   -p Noguera-Julian \
   -a True \
-  -f patient_metadata.csv \
-  -l , \
+  -f patient_metadata.tsv \
   -i Run \
   -t 0.75
 
