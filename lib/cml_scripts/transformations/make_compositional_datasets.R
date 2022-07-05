@@ -91,21 +91,14 @@ my_zeros <- apply(initial_table, 2, function(x) {
 alr_col <- which(my_zeros == min(my_zeros))[1]
 # alr_col_num <- grep(alr_col, colnames(initial_table))
 print("creating DADA2 ALR")
-if (!file.exists(file.path(output_dir,"r_objects", "alr_asv.rds"))) {
-  df <- as.data.frame(rgr::alr(as.matrix(initial_table + 1), j = as.numeric(alr_col)))
-  saveRDS(df, file = file.path(output_dir,"r_objects", "alr_asv.rds"))
-  write.csv(df, file = file.path(output_dir,"tables", "alr_asv.csv"))
-}
+df <- as.data.frame(rgr::alr(as.matrix(initial_table + 1), j = as.numeric(alr_col)))
+saveRDS(df, file = file.path(output_dir,"r_objects", "alr_asv.rds"))
+write.csv(df, file = file.path(output_dir,"tables", "alr_asv.csv"))
+  
 print("creating DADA2 CLR")
-if (!dir.exists(file.path(output_dir,"r_objects", "clr_asv.rds"))) {
-  df <- as.data.frame(rgr::clr(as.matrix(initial_table + 1)))
-  saveRDS(df, file = file.path(output_dir,"r_objects", "clr_asv.rds"))
-  write.csv(df, file = file.path(output_dir,"tables", "clr_asv.csv"))
-}
-
-# --------------------------------------------------------------------------
-print("Now creating ")
-# --------------------------------------------------------------------------
+df <- as.data.frame(rgr::clr(as.matrix(initial_table + 1)))
+saveRDS(df, file = file.path(output_dir,"r_objects", "clr_asv.rds"))
+write.csv(df, file = file.path(output_dir,"tables", "clr_asv.csv"))
 
 # print("Creating hashseq lognorm, ALR and CLR.")
 # hashseq <- data.frame(data.table::fread(file = file.path(output_dir,"hashseq", "hashseq.csv"),
@@ -137,5 +130,10 @@ print("Now creating ")
 #   saveRDS(HashSeq_alr, file = file.path(output_dir,"r_objects", "alr_hashseq.rds"))
 #   write.csv(HashSeq_alr, file = file.path(output_dir,"tables", "alr_hashseq.csv"))
 # }
+
+# --------------------------------------------------------------------------
+print("Now creating PhILR tables and counts tables")
+# --------------------------------------------------------------------------
+
 
 print("Reached end of script.")
