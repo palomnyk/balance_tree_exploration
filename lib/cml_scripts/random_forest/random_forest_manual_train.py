@@ -65,8 +65,10 @@ print("Defining functions", flush = True)
 def add_PhILR_dfs_to_table(lst, \
 	root_folder, \
 	base_fn, \
-	philr_part_weights = ["anorm","enorm"], \
-	philr_ilr_weights = ["blw.sqrt","mean.descendants"], \
+	# philr_part_weights = ["anorm","enorm"], \
+	# philr_ilr_weights = ["blw.sqrt","mean.descendants"], \
+	philr_part_weights = ["anorm"], \
+	philr_ilr_weights = ["blw.sqrt"], \
 	color = "w"):
 	if not os.path.exists(root_folder):
 		print(f"{root_folder} does not exist. Use PhILR_random_trees_and_counts_tables.R to create it.", flush = True)
@@ -160,16 +162,16 @@ tables.append(("clr_DADA2", (os.path.join(output_dir, "tables", "clr_asv.csv"), 
 # tables.append(("clr_HashSeq", (os.path.join(output_dir,"tables", "clr_hashseq.csv"), ","), "m"))
 tables.append(("Silva_DADA2", (os.path.join(output_dir,"tables", "Silva_DADA2", "Silva_DADA2.csv"), ","), "#64baeb"))
 tables = add_PhILR_dfs_to_table(tables, os.path.join(output_dir, "tables", "Silva_DADA2"), "Silva_DADA2", color = "#c8e5f5")
-tables = add_random_tree_PhILRs_to_table(tables, os.path.join(output_dir, "tables", "Silva_DADA2"), "Silva_DADA2", color = "#1474aa", num_rand_trees=3)
+tables = add_random_tree_PhILRs_to_table(tables, os.path.join(output_dir, "tables", "Silva_DADA2"), "Silva_DADA2", color = "#1474aa", num_rand_trees=5)
 tables.append(("Filtered_Silva_DADA2", (os.path.join(output_dir,"tables", "Filtered_Silva_DADA2", "Filtered_Silva_DADA2.csv"), ","), "#f78646"))
 tables = add_PhILR_dfs_to_table(tables, os.path.join(output_dir, "tables", "Filtered_Silva_DADA2"), "Filtered_Silva_DADA2", color = "#f5cbb3")
-tables = add_random_tree_PhILRs_to_table(tables, os.path.join(output_dir, "tables", "Filtered_Silva_DADA2"), "Filtered_Silva_DADA2", color = "#8c390b", num_rand_trees=3)
+tables = add_random_tree_PhILRs_to_table(tables, os.path.join(output_dir, "tables", "Filtered_Silva_DADA2"), "Filtered_Silva_DADA2", color = "#8c390b", num_rand_trees=5)
 tables.append(("Filtered_UPGMA_DADA2", (os.path.join(output_dir,"tables", "Filtered_UPGMA_DADA2", "Filtered_UPGMA_DADA2.csv"), ","), "#0000ff"))
 tables = add_PhILR_dfs_to_table(tables, os.path.join(output_dir, "tables", "Filtered_UPGMA_DADA2"), "Filtered_UPGMA_DADA2", color = "#b7b7f3")
-tables = add_random_tree_PhILRs_to_table(tables, os.path.join(output_dir, "tables", "Filtered_UPGMA_DADA2"), "Filtered_UPGMA_DADA2", color = "#050598", num_rand_trees=3)
+tables = add_random_tree_PhILRs_to_table(tables, os.path.join(output_dir, "tables", "Filtered_UPGMA_DADA2"), "Filtered_UPGMA_DADA2", color = "#050598", num_rand_trees=5)
 tables.append(("Filtered_IQtree", (os.path.join(output_dir,"tables", "Filtered_IQtree", "Filtered_IQtree.csv"), ","), "orange"))
 tables = add_PhILR_dfs_to_table(tables, os.path.join(output_dir, "tables", "Filtered_IQtree"), "Filtered_IQtree", color = "#f7d8a0")
-tables = add_random_tree_PhILRs_to_table(tables, os.path.join(output_dir, "tables", "Filtered_IQtree"), "Filtered_IQtree", color = "#e29302", num_rand_trees=3)
+tables = add_random_tree_PhILRs_to_table(tables, os.path.join(output_dir, "tables", "Filtered_IQtree"), "Filtered_IQtree", color = "#e29302", num_rand_trees=5)
 
 # --------------------------------------------------------------------------
 print(f"Running random forest model to find {scoring}.", flush = True)
