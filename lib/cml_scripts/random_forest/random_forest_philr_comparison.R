@@ -241,32 +241,6 @@ total_seqs <- rowSums(asv_table)
 total_seqs <- data.frame("total_seqs"=total_seqs, "duplicate" = total_seqs,
                          row.names = row.names(asv_table))
 
-pdf(file = file.path(output_dir, "graphics", paste0("trees_", main_output_label, ".pdf")))
-print("Cleaning Ref tree otu with philr tutorial normalization")
-ref_ps <- readRDS(file.path(output_dir, "r_objects", "ref_tree_phyloseq_obj.rds"))
-phy_tree(ref_ps) <- ape::makeNodeLabel(phy_tree(ref_ps), method="number", prefix='n')
-phyloseq::plot_tree(ref_ps, method = "treeonly", nodelabf=nodeplotblank, title = paste0("orig_ref"))
-
-ref_ps_clean <- raw_ps_to_clean_ps(ref_ps)
-phyloseq::plot_tree(ref_ps_clean, method = "treeonly", nodelabf=nodeplotblank, title = paste0("cln_ref"))
-print("Cleaning UPGMA tree otu with philr tutorial normalization")
-
-denovo_tree_ps <- readRDS(file.path(output_dir, "r_objects", "denovo_tree_UPGMA_phyloseq_obj.rds"))
-phy_tree(denovo_tree_ps) <- ape::makeNodeLabel(phy_tree(denovo_tree_ps), method="number", prefix='n')
-phyloseq::plot_tree(denovo_tree_ps, method = "treeonly", nodelabf=nodeplotblank, title = paste0("orig_upgma"))
-
-cln_denovo_tree_ps <- raw_ps_to_clean_ps(denovo_tree_ps)
-denovo_tree_ps <- phyloseq::transform_sample_counts(denovo_tree_ps, function(x) x + 1 )
-phyloseq::plot_tree(cln_denovo_tree_ps, method = "treeonly", nodelabf=nodeplotblank, title = paste0("cln_upgma"))
-
-iqtree_orig_ps <- readRDS(file.path(output_dir, "r_objects", "denovo_tree_iqtree_phyloseq_obj.rds"))
-phy_tree(iqtree_orig_ps) <- ape::makeNodeLabel(phy_tree(iqtree_orig_ps), method="number", prefix='n')
-phyloseq::plot_tree(iqtree_orig_ps, method = "treeonly", nodelabf=nodeplotblank, title = paste0("orig_iqtree"))
-
-cln_iqtree_ps <- raw_ps_to_clean_ps(iqtree_orig_ps)
-phyloseq::plot_tree(cln_iqtree_ps, method = "treeonly", nodelabf=nodeplotblank, title = paste0("cln_iqtree"))
-dev.off()
-
 print("loading and munging metadata")
 metadata <- read.table(opt$metadata, 
                        sep=opt$metadata_delim, 
@@ -279,104 +253,89 @@ metadata <- metadata[,sapply(metadata, is.factor)]
 # df[,-which(sapply(df, class) == "factor")]
 rf_cols <- 1:ncol(metadata)#hack so I don't have to fix this in the function
 
-# print("Attempting to read HashSeq count table")
-# hashseq <- data.frame(data.table::fread(file = file.path(output_dir,"hashseq", "hashseq.csv"),
-#                                         header="auto", data.table=FALSE), row.names = 1)# hashseq <- hashseq[, colSums(hashseq != 0) > 0.01*nrow(hashseq)]#remove columns that don't have at least 10%
-# print(paste("HashSeq has", ncol(hashseq), "columns after column reduction."))
-print("creating DADA2 lognorm, ALR and CLR")
-if (dir.exists(file.path(output_dir,"r_objects", "lognorm_asv.rds"))) {
-  ln_asv_tab <- readRDS(file.path(output_dir,"r_objects", "lognorm_asv.rds"))
-}else{
-  ln_asv_tab <- lognorm(asv_table)
-  saveRDS(ln_asv_tab, file = file.path(output_dir,"r_objects", "lognorm_asv.rds"))
-  write.csv(ln_asv_tab, file = file.path(output_dir,"tables", "lognorm_dada2.csv"))
-}
-my_zeros <- apply(asv_table, 2, function(x) {
-  return(sum(x == 0))
-})
-alr_col <- which(my_zeros == min(my_zeros))[1]
-# alr_col_num <- grep(alr_col, colnames(asv_table))
-print("creating DADA2 ALR")
-if (file.exists(file.path(output_dir,"r_objects", "alr_asv.rds"))) {
-  DADA2_alr <- readRDS(file.path(output_dir,"r_objects", "alr_asv.rds"))
-}else{
-  DADA2_alr <- as.data.frame(rgr::alr(as.matrix(asv_table + 1), j = as.numeric(alr_col)))
-  saveRDS(DADA2_alr, file = file.path(output_dir,"r_objects", "alr_asv.rds"))
-  write.csv(DADA2_alr, file = file.path(output_dir,"tables", "alr_asv.csv"))
-}
-print("creating DADA2 CLR")
-if (dir.exists(file.path(output_dir,"r_objects", "clr_asv.rds"))) {
-  DADA2_clr <- readRDS(file.path(output_dir,"r_objects", "clr_asv.rds"))
-}else{
-  DADA2_clr <- as.data.frame(rgr::clr(as.matrix(asv_table + 1)))
-  saveRDS(DADA2_clr, file = file.path(output_dir,"r_objects", "clr_asv.rds"))
-  write.csv(DADA2_clr, file = file.path(output_dir,"tables", "clr_asv.csv"))
+# --------------------------------------------------------------------------
+print("Defining functions")
+# --------------------------------------------------------------------------
+add_PhILR_dfs_to_table <- function(lst,
+                           root_folder,
+                           base_fn,
+                           # philr_part_weights = c("anorm","enorm"),
+                           # philr_ilr_weights = c("blw.sqrt","mean.descendants"),
+                           philr_part_weights = c("anorm"),
+                           philr_ilr_weights = c("blw.sqrt"),
+                           color = "w"){
+  if (!dir.exists(root_folder)){
+    print(paste0(root_folder,"does not exist. Use PhILR_random_trees_and_counts_tables.R to create it."))
+    break
+  }
+  for (ilr_w in philr_ilr_weights){
+    for (tax_w in philr_taxa_weights){
+      my_label <- paste(base_fn, ilr_w, tax_w, sep = "_")
+      table_fn <- paste0(my_label, ".csv")
+      lst[[length(lst) + 1]] <- c(my_label, file.path(root_folder, table_fn), ',', color)
+    }
+  }
+  return(lst)
 }
 
-# print("Creating hashseq lognorm, ALR and CLR.")
-# if (dir.exists(file.path(output_dir,"r_objects", "lognorm_hashseq.rds"))) {
-#   ln_hs_tab <- readRDS(file.path(output_dir,"r_objects", "lognorm_hashseq.rds"))
-# }else{
-#   ln_hs_tab <- lognorm(hashseq)
-#   saveRDS(ln_hs_tab, file = file.path(output_dir,"r_objects", "lognorm_hashseq.rds"))
-#   write.csv(ln_hs_tab, file = file.path(output_dir,"tables", "lognorm_hashseq.csv"))
-# }
-# print("Making HashSeq clr.")
-# if (dir.exists(file.path(output_dir,"r_objects", "r_objects", "clr_hashseq.rds"))) {
-#   HashSeq_clr <- readRDS(file.path(output_dir,"r_objects", "clr_hashseq.rds"))
-# }else{
-#   HashSeq_clr <- as.data.frame(rgr::clr(as.matrix(hashseq + 1)))
-#   saveRDS(ln_hs_tab, file = file.path(output_dir,"r_objects", "clr_hashseq.rds"))
-#   write.csv(ln_hs_tab, file = file.path(output_dir,"tables", "clr_hashseq.csv"))
-# }
-# print("Making HashSeq alr.")
-# my_zeros <- apply(hashseq, 2, function(x) {
-#   return(sum(x == 0))
-# })
-# alr_col <- which(my_zeros == min(my_zeros))[1]
-# if (dir.exists(file.path(output_dir,"r_objects", "r_objects", "alr_hashseq.rds"))) {
-#   HashSeq_alr <- readRDS(file.path(output_dir,"r_objects", "alr_hashseq.rds"))
-# }else{
-#   HashSeq_alr <- as.data.frame(rgr::alr(as.matrix(hashseq + 1), j = as.numeric(alr_col)))
-#   saveRDS(HashSeq_alr, file = file.path(output_dir,"r_objects", "alr_hashseq.rds"))
-#   write.csv(HashSeq_alr, file = file.path(output_dir,"tables", "alr_hashseq.csv"))
-# }
-print("Building lists of objects to loop over in main loop.")
-phyloseq_objects <- list(list(ref_ps, "Silva_DADA2"), 
-                         list(ref_ps_clean, "Filtered_Silva_DADA2"),
-                         list(cln_denovo_tree_ps, "Filtered_UPGMA"), 
-                         list(cln_iqtree_ps,"Filtered_IQTree"),
-                         list(iqtree_orig_ps, "IQTREE_Orig"))
-table_objects <- list(list(asv_table, "Raw_DADA2"),
-                      list(ln_asv_tab, "lognorm_DADA2"),
-                      list(DADA2_alr, "alr_DADA2"),
-                      list(DADA2_clr, "clr_DADA2")
-                      # list(hashseq, "Raw_HashSeq"),
-                      # list(HashSeq_alr, "alr_HashSeq"),
-                      # list(HashSeq_clr,"clr_HashSeq"),
-                      # list(ln_hs_tab, "lognorm_HashSeq")
-                      )
-random_tree_phylos <- list()
-##-Random num seed--------------------------------------------------##
-print(paste("Setting random seed to:", random_seed))
-set.seed(random_seed)
-print("Making random trees")
-for (po in list(list(ref_ps, "Silva_rand_"),
-                list(cln_denovo_tree_ps, "Filtered_UPGMA_rand_"),
-                list(ref_ps_clean, "Filtered_Silva_rand_"),
-                list(cln_iqtree_ps, "Filtered_IQTREE_rand_"))
-){
-  for (rand in 1:5){
-    rand_tree <- ape::rtree(n = length(po[[1]]@phy_tree$tip.label), tip.label = po[[1]]@phy_tree$tip.label)
-    rand_tree_ps <- phyloseq::phyloseq(otu_table(po[[1]]@otu_table, taxa_are_rows = F),
-                                       phy_tree(rand_tree),
-                                       tax_table(po[[1]]@tax_table),
-                                       sample_data(po[[1]]@sam_data))
-    phy_tree(rand_tree_ps) <- ape::makeNodeLabel(phy_tree(rand_tree_ps), method="number", prefix='n')
-    phyloseq::plot_tree(rand_tree_ps, method = "treeonly", nodelabf=nodeplotblank, title = paste0(po[[2]], rand))
-    random_tree_phylos[[length(random_tree_phylos)+1]] <- list(rand_tree_ps,paste0(po[[2]],rand))
+add_random_tree_PhILRs_to_table  <- function(lst, 
+                                    root_folder, 
+                                    base_fn, 
+                                    # philr_part_weights = c("anorm","enorm"),
+                                    # philr_ilr_weights = c("blw.sqrt","mean.descendants"),
+                                    philr_part_weights = c("anorm"),
+                                    philr_ilr_weights = c("blw.sqrt"),
+                                    color = "w", 
+                                    num_rand_trees = 10){
+  print(paste0("Adding random trees from ", base_fn, "."))
+  if (!dir.exists(root_folder)){
+    print(paste0(root_folder,"does not exist. Use PhILR_random_trees_and_counts_tables.R to create it."))
+    break
   }
+  for (rand in 1:num_rand_trees){
+    for (ilr_w in philr_ilr_weights){
+      for (tax_w in philr_taxa_weights){
+        my_label <- paste(paste0("Shuffle", rand, "_PhILR"), base_fn, ilr_w, tax_w, sep = "_")
+        table_fn <- paste0(my_label, ".csv")
+        lst[[length(lst) + 1]] <- c(my_label, file.path(root_folder, table_fn), ',', color)
+      }
+    }
+  }
+  return(lst)
 }
+
+df_factory <- function(my_path, my_sep){
+  # Use for building df from "tables" list in random forest loop
+  df <- read.table(my_path, sep=my_sep, 
+                  header=0, row.names=0,
+                  check.names = FALSE,
+                  stringsAsFactors=TRUE)
+  return(df)
+}
+
+tables <- list()
+tables[[length(tables) + 1]] <- c("DaDa2",file.path(output_dir, "tables", "ForwardReads_DADA2.txt"),"\t","r")
+# tables[[length(tables) + 1]] <- c("HashSeq", file.path(output_dir,  "hashseq", "hashseq.csv"),",", "r")
+tables[[length(tables) + 1]] <- c("lognorm_DADA2", file.path(output_dir, "tables", "lognorm_dada2.csv"), ",", "y")
+# tables[[length(tables) + 1]] <- c("lognorm_HashSeq", file.path(output_dir,"tables", "lognorm_hashseq.csv"), ",", "y")
+tables[[length(tables) + 1]] <- c("alr_DADA2", file.path(output_dir, "tables", "alr_asv.csv"), ",", "g")
+# tables[[length(tables) + 1]] <- c("alr_HashSeq", file.path(output_dir,"tables", "alr_hashseq.csv"), ",", "g")
+tables[[length(tables) + 1]] <- c("clr_DADA2", file.path(output_dir, "tables", "clr_asv.csv"), ",", "g")
+# tables[[length(tables) + 1]] <- c("clr_HashSeq", file.path(output_dir,"tables", "clr_hashseq.csv"), ",", "m")
+tables[[length(tables) + 1]] <- c("Silva_DADA2", file.path(output_dir,"tables", "Silva_DADA2", "Silva_DADA2.csv"), ",", "#64baeb")
+tables <- add_PhILR_dfs_to_table(tables, file.path(output_dir, "tables", "Silva_DADA2"), "Silva_DADA2", color = "#c8e5f5")
+tables <- add_random_tree_PhILRs_to_table(tables, file.path(output_dir, "tables", "Silva_DADA2"), "Silva_DADA2", color = "#1474aa", num_rand_trees=5)
+tables[[length(tables) + 1]] <- c("Filtered_Silva_DADA2", file.path(output_dir,"tables", "Filtered_Silva_DADA2", "Filtered_Silva_DADA2.csv"), ",", "#f78646")
+tables <- add_PhILR_dfs_to_table(tables, file.path(output_dir, "tables", "Filtered_Silva_DADA2"), "Filtered_Silva_DADA2", color = "#f5cbb3")
+tables <- add_random_tree_PhILRs_to_table(tables, file.path(output_dir, "tables", "Filtered_Silva_DADA2"), "Filtered_Silva_DADA2", color = "#8c390b", num_rand_trees=5)
+tables[[length(tables) + 1]] <- c("Filtered_UPGMA_DADA2", file.path(output_dir,"tables", "Filtered_UPGMA_DADA2", "Filtered_UPGMA_DADA2.csv"), ",", "#0000ff")
+tables <- add_PhILR_dfs_to_table(tables, file.path(output_dir, "tables", "Filtered_UPGMA_DADA2"), "Filtered_UPGMA_DADA2", color = "#b7b7f3")
+tables <- add_random_tree_PhILRs_to_table(tables, file.path(output_dir, "tables", "Filtered_UPGMA_DADA2"), "Filtered_UPGMA_DADA2", color = "#050598", num_rand_trees=5)
+tables[[length(tables) + 1]] <- c("Filtered_IQtree", file.path(output_dir,"tables", "Filtered_IQtree", "Filtered_IQtree.csv"), ",", "orange")
+tables <- add_PhILR_dfs_to_table(tables, file.path(output_dir, "tables", "Filtered_IQtree"), "Filtered_IQtree", color = "#f7d8a0")
+tables <- add_random_tree_PhILRs_to_table(tables, file.path(output_dir, "tables", "Filtered_IQtree"), "Filtered_IQtree", color = "#e29302", num_rand_trees=5)
+
+print(tables)
 
 skips <- 0
 counter <- 0
@@ -386,6 +345,96 @@ for (counter in 1:num_cycles) {
   ##-Create training/testing sets-------------------------------------##
   train_index <- row.names(asv_table)[sample(x = nrow(asv_table), size = 0.75*nrow(asv_table), replace=FALSE)]
   test_index <- row.names(asv_table)[c(1:nrow(asv_table))[!(1:nrow(asv_table) %in% train_index)]]
+  
+  for(mta in metadata_cols){
+    tryCatch(
+      { 
+        print(paste("starting metadata col:", mta, colnames(metadata)[mta]))
+        if (any(is.na(my_table))) {
+          print("There are NA's - breaking loop.")
+          break
+        }
+        resp_var_test <- metadata[row.names(metadata) %in% test_index,mta]
+        # print(resp_var_test)
+        # print(paste("Length of resp_var_test:", length(resp_var_test)))
+        resp_var_train <- metadata[row.names(metadata) %in% train_index,mta]
+        # print(resp_var_train)
+        print("Unique resp var test/ resp var train")
+        # print(paste(unique(resp_var_test)))
+        # print(paste(unique(resp_var_train)))
+        #rf requires rownames on resp var
+        names(resp_var_test) <- row.names(my_table_test)
+        rf <- randomForest::randomForest(my_table_train, resp_var_train)
+        print("made rf")
+        pred <- predict(rf, my_table_test)
+        # print(paste("pred:", pred))
+        # print(paste("num factors", length(unique(resp_var_test))))
+        # print(paste("levels resp_var_train", nlevels(as.factor(resp_var_train))))
+        roc_data <- data.frame(pred = pred, resp_var_test = resp_var_test)
+        
+        score <- MLmetrics::Accuracy(pred, resp_var_test)
+        
+        # 						if (length(unique(unlist(resp_var_test))) > 2){
+        # 							print("multilevels")
+        # 							mult_auc <- c()
+        # 							for (fact in 1:length(unique(resp_var_test))){#only need to test resp_test
+        # 								try({
+        # 									my_fact <- as.character(levels(resp_var_test)[fact])
+        # 									# print(paste("my_fact:", my_fact))
+        # 									dumb_resp_test <- as.factor(replace(as.character(resp_var_test), as.character(resp_var_test) != my_fact, "dumb_var"))
+        # 									# print("dumb_resp")
+        # 									# print(paste(dumb_resp_test))
+        # 									dumb_pred <- as.factor(replace(as.character(pred), as.character(pred) != my_fact, "dumb_var"))
+        # 									# print("dumb_pred")
+        # 									# print(paste(dumb_resp_test))
+        # 									my_roc <- pROC::roc(as.numeric(dumb_pred), as.numeric(dumb_resp_test))
+        # 									# print("my_roc")
+        # 									mult_auc <- c(mult_auc, pROC::auc(my_roc))
+        # 									print(mult_auc)
+        # 								})
+        # 							}
+        # 							if (length(mult_auc) > 0 ) {
+        # 								print("in 'if (length(mult_auc) > 0 )' statement")
+        # 								score <- mean(mult_auc)
+        # 							}else{
+        # 								break
+        # 							}
+        # 						}else{
+        #               my_roc <- pROC::roc(as.numeric(pred), as.numeric(resp_var_test))
+        #               print("ROC made")
+        #               score <- pROC::auc(my_roc)
+        # 						}
+        # score <- pROC::auc(my_roc)
+        # print(paste("score: ")
+        my_df <- rf$importance
+        maxImp <- max(rf$importance)
+        maxRow <- which(rf$importance == maxImp)
+        
+        #Check its existence
+        if (file.exists(output_fpath)) {
+          print(paste0("Writing output to ", output_fpath, " ."))
+          # main_header <- "all_score,	metadata_col, taxa_weight,	ilr_weight,	rf_imp_se, rf_type, rf_ntree, trans_group, random_batch, cycle"
+          cat(paste(paste0("\n", score), colnames(metadata)[mta], philr_taxa_weights[tax_w],#all_score,	metadata_col, taxa_weight
+                    philr_ilr_weights[ilr_w], row.names(my_df)[maxRow], rf$type, #ilr_weight,	rf_imp_se, rf_type,
+                    rf$ntree, transf_label, random_label, cycle, #rf_ntree, trans_group, random_batch, cycle
+                    sep = ","), 
+              file = output_fpath, 
+              append=TRUE)
+        }
+      },
+      error=function(cond) {
+        print(paste("Opps, an error2 is thrown with", transf_label))
+        message(paste(transf_label, cond))
+      },
+      warning=function(cond) {
+        print(paste("Opps, a warning2 is thrown with", transf_label))
+        message(paste(transf_label, cond))
+      }
+    )
+  }#for mta
+  if (just_otu == TRUE) break
+  
+  
   
   for (pso in 1:length(phyloseq_objects)) {
     my_pso <- phyloseq_objects[[pso]][[1]]
