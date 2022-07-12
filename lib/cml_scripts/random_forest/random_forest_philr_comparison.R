@@ -177,6 +177,8 @@ if (!requireNamespace("pROC", quietly = TRUE)) BiocManager::install("pROC")
 library("pROC")
 if (!requireNamespace("data.table", quietly = TRUE)) BiocManager::install("data.table")
 library("data.table")
+if (!requireNamespace("MLmetrics", quietly = TRUE)) BiocManager::install("MLmetrics")
+library("MLmetrics")
 if (!requireNamespace("optparse", quietly = TRUE)){
   install.packages("optparse")
 }
@@ -227,7 +229,7 @@ main_output_fpath <- file.path(output_dir, "tables", main_output_fn)
 philr_taxa_weights <- c("enorm")
 philr_ilr_weights <- c("mean.descendants")
 random_seed <- 36
-main_header <- "all_score, metadata_col, taxa_weight, ilr_weight, rf_imp_se, rf_type, rf_ntree, trans_group, random_batch, cycle"
+main_header <- "all_score, metadata_col, rf_imp_se, rf_type, rf_ntree, trans_group, cycle"
 
 print(paste("Initilizing", main_output_fpath, "."))
 print(paste("File header: ", main_header))
@@ -236,11 +238,6 @@ cat(main_header,
     append=FALSE)
 
 ##-Import tables and data preprocessing-----------------------------##
-asv_table <- data.frame(readRDS(file.path(output_dir, "r_objects", "ForwardReads_DADA2.rds")))
-total_seqs <- rowSums(asv_table)
-total_seqs <- data.frame("total_seqs"=total_seqs, "duplicate" = total_seqs,
-                         row.names = row.names(asv_table))
-
 print("loading and munging metadata")
 metadata <- read.table(opt$metadata, 
                        sep=opt$metadata_delim, 
@@ -343,37 +340,35 @@ counter <- 0
 print(paste("Counter:", counter, " entering main loop"))
 for (counter in 1:num_cycles) {
   ##-Create training/testing sets-------------------------------------##
-  train_index <- row.names(asv_table)[sample(x = nrow(asv_table), size = 0.75*nrow(asv_table), replace=FALSE)]
-  test_index <- row.names(asv_table)[c(1:nrow(asv_table))[!(1:nrow(asv_table) %in% train_index)]]
-  
-  for(mta in metadata_cols){
-    tryCatch(
-      { 
-        print(paste("starting metadata col:", mta, colnames(metadata)[mta]))
+  train_index <- row.names(metadata)[sample(x = nrow(metadata), size = 0.75*nrow(metadata), replace=FALSE)]
+  test_index <- row.names(metadata)[c(1:nrow(metadata))[!(1:nrow(metadata) %in% train_index)]]
+  for(mta in rf_cols){
+    print(paste("starting metadata col:", mta, colnames(metadata)[mta]))
+    # tryCatch({
+      for (tabl in tables){
+        print(tabl)
+        transf_label <- tabl[1]
+        my_table <- data.frame(data.table::fread(file = tabl[2],
+                                                header=TRUE, data.table=FALSE),
+                               row.names = 1)
         if (any(is.na(my_table))) {
           print("There are NA's - breaking loop.")
           break
         }
-        resp_var_test <- metadata[row.names(metadata) %in% test_index,mta]
-        # print(resp_var_test)
-        # print(paste("Length of resp_var_test:", length(resp_var_test)))
+        if(setequal(row.names(metadata), row.names(my_table)) == FALSE){
+          warning(paste("Metadata dataframe and", transf_label, "dataframe must have the same rows (order is not important)."))   
+        }
+        my_table_train <- my_table[row.names(my_table) %in% train_index,]
+        my_table_test <- my_table[row.names(my_table) %in% test_index,]
         resp_var_train <- metadata[row.names(metadata) %in% train_index,mta]
-        # print(resp_var_train)
+        resp_var_test <- metadata[row.names(metadata) %in% test_index,mta]
         print("Unique resp var test/ resp var train")
-        # print(paste(unique(resp_var_test)))
-        # print(paste(unique(resp_var_train)))
-        #rf requires rownames on resp var
         names(resp_var_test) <- row.names(my_table_test)
         rf <- randomForest::randomForest(my_table_train, resp_var_train)
         print("made rf")
         pred <- predict(rf, my_table_test)
-        # print(paste("pred:", pred))
-        # print(paste("num factors", length(unique(resp_var_test))))
-        # print(paste("levels resp_var_train", nlevels(as.factor(resp_var_train))))
         roc_data <- data.frame(pred = pred, resp_var_test = resp_var_test)
-        
         score <- MLmetrics::Accuracy(pred, resp_var_test)
-        
         # 						if (length(unique(unlist(resp_var_test))) > 2){
         # 							print("multilevels")
         # 							mult_auc <- c()
@@ -405,94 +400,34 @@ for (counter in 1:num_cycles) {
         #               score <- pROC::auc(my_roc)
         # 						}
         # score <- pROC::auc(my_roc)
-        # print(paste("score: ")
+        print(paste("score:", score))
         my_df <- rf$importance
         maxImp <- max(rf$importance)
         maxRow <- which(rf$importance == maxImp)
         
         #Check its existence
-        if (file.exists(output_fpath)) {
-          print(paste0("Writing output to ", output_fpath, " ."))
-          # main_header <- "all_score,	metadata_col, taxa_weight,	ilr_weight,	rf_imp_se, rf_type, rf_ntree, trans_group, random_batch, cycle"
-          cat(paste(paste0("\n", score), colnames(metadata)[mta], philr_taxa_weights[tax_w],#all_score,	metadata_col, taxa_weight
-                    philr_ilr_weights[ilr_w], row.names(my_df)[maxRow], rf$type, #ilr_weight,	rf_imp_se, rf_type,
-                    rf$ntree, transf_label, random_label, cycle, #rf_ntree, trans_group, random_batch, cycle
-                    sep = ","), 
-              file = output_fpath, 
+        if (file.exists(main_output_fpath)) {
+          print(paste0("Writing output to ", main_output_fpath, " ."))
+          # main_header <- "all_score,	metadata_col,	rf_imp_se, rf_type, rf_ntree, trans_group, random_batch, cycle"
+          cat(paste(paste0("\n", score), colnames(metadata)[mta], row.names(my_df)[maxRow], rf$type, #ilr_weight,	rf_imp_se, rf_type,
+                    rf$ntree, transf_label, counter, #rf_ntree, trans_group, cycle
+                    sep = ","),
+              file = main_output_fpath,
               append=TRUE)
-        }
-      },
-      error=function(cond) {
-        print(paste("Opps, an error2 is thrown with", transf_label))
-        message(paste(transf_label, cond))
-      },
-      warning=function(cond) {
-        print(paste("Opps, a warning2 is thrown with", transf_label))
-        message(paste(transf_label, cond))
-      }
-    )
+          }#if
+        }#for loop
+  #     },#try catch
+  #     error=function(cond) {
+  #       print(paste("Opps, an error2 is thrown with", transf_label))
+  #       message(paste(transf_label, cond))
+  #     },
+  #     warning=function(cond) {
+  #       print(paste("Opps, a warning2 is thrown with", transf_label))
+  #       message(paste(transf_label, cond))
+  #     },
+  #     finally=.Call(CfreadCleanup)
+  #   )
   }#for mta
-  if (just_otu == TRUE) break
-  
-  
-  
-  for (pso in 1:length(phyloseq_objects)) {
-    my_pso <- phyloseq_objects[[pso]][[1]]
-    po_name <- phyloseq_objects[[pso]][[2]]
-    print(paste("Counter:", counter, "| making", po_name, "philr AUCs."))
-    make_ilr_taxa_auc_df(ps_obj = my_pso,
-                         metadata_cols = rf_cols,
-                         metadata = metadata,
-                         train_index = train_index,
-                         test_index = test_index,
-                         philr_ilr_weights = philr_ilr_weights,
-                         philr_taxa_weights = philr_taxa_weights,
-                         cycle = counter,
-                         transf_label = paste0(po_name, "_PhILR"))
-    
-    print(paste("Counter:", counter, "| making", po_name, "count table AUCs."))
-    make_ilr_taxa_auc_df(ps_obj = as.data.frame(my_pso@otu_table),
-                         metadata_cols = rf_cols,
-                         metadata = metadata,
-                         train_index = train_index,
-                         test_index = test_index,
-                         philr_ilr_weights = philr_ilr_weights,
-                         philr_taxa_weights = philr_taxa_weights,
-                         just_otu = TRUE,
-                         cycle = counter,
-                         transf_label = paste0(po_name, "_Counts_Table"))
-  }#end for (pso in 1:length(phyloseq_objects))
-
-  for (pso in 1:length(random_tree_phylos)) {
-    my_pso <- random_tree_phylos[[pso]][[1]]
-    po_name <- random_tree_phylos[[pso]][[2]]
-    print(paste("Counter:", counter, "| making", po_name, "philr AUCs."))
-    make_ilr_taxa_auc_df(ps_obj = my_pso,
-                         metadata_cols = rf_cols,
-                         metadata = metadata,
-                         train_index = train_index,
-                         test_index = test_index,
-                         philr_ilr_weights = philr_ilr_weights,
-                         philr_taxa_weights = philr_taxa_weights,
-                         cycle = counter,
-                         transf_label = paste0(po_name, "_PhILR"))
-  }#end for (pso in 1:length(phyloseq_objects))
-  for (to in 1:length(table_objects)) {
-    my_table <- table_objects[[to]][[1]]
-    to_name <- table_objects[[to]][[2]]
-    print(paste("Counter:", counter, "| making", to_name, "count table AUCs."))
-    make_ilr_taxa_auc_df(ps_obj = my_table,
-                         metadata_cols = rf_cols,
-                         metadata = metadata,
-                         train_index = train_index,
-                         test_index = test_index,
-                         philr_ilr_weights = philr_ilr_weights,
-                         philr_taxa_weights = philr_taxa_weights,
-                         just_otu = TRUE,
-                         cycle = counter,
-                         transf_label = paste0(to_name, ""))
-  }#End for (to in 1:length(table_objects)) 
-
   print(paste("completed loop:", counter))
 }
 
