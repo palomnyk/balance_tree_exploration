@@ -356,6 +356,8 @@ for (counter in 1:num_cycles) {
           break
         }
         if(setequal(row.names(metadata), row.names(my_table)) == FALSE){
+          print(paste0("These samples are in the metdata, but not ", transf_label,": ", setdiff(row.names(metadata), row.names(my_table))))
+          print(paste0("These samples are in the ", transf_label, " but not metadata: ", setdiff(row.names(my_table), row.names(metadata))))
           warning(paste("Metadata dataframe and", transf_label, "dataframe must have the same rows (order is not important)."))   
         }
         my_table_train <- my_table[row.names(my_table) %in% train_index,]
