@@ -23,8 +23,7 @@ module load R
 Rscript ~/git/balance_tree_exploration/lib/cml_scripts/random_forest/random_forest_philr_comparison.R \
   -d ~/git/balance_tree_exploration \
   -p Noguera-Julian \
-  -m ~/git/balance_tree_exploration/Noguera-Julian/patient_metadata.csv \
-  -l , \
+  -m ~/git/balance_tree_exploration/Noguera-Julian/patient_metadata.tsv \
   -r Run \
   -n 20
 
