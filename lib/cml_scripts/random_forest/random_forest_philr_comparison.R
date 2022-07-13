@@ -344,6 +344,14 @@ for (counter in 1:num_cycles) {
   test_index <- row.names(metadata)[c(1:nrow(metadata))[!(1:nrow(metadata) %in% train_index)]]
   for(mta in rf_cols){
     print(paste("starting metadata col:", mta, colnames(metadata)[mta]))
+    print(paste("Finding rows where", colnames(metadata)[mta], "has NA or Empty values from training and testing selectors."))
+    na_or_empty_index <- which(is.na(metadata[,mta]) | metadata[,mta] == "")
+    na_or_empty_rows <- row.names(metadata)[na_or_empty_index]
+    print(length(train_index))
+    train_index <- setdiff(train_index, na_or_empty_rows)
+    print(train_index)
+    test_index <- setdiff(test_index, na_or_empty_rows)
+    print(length(train_index))
     # tryCatch({
       for (tabl in tables){
         print(tabl)
@@ -351,10 +359,6 @@ for (counter in 1:num_cycles) {
         my_table <- data.frame(data.table::fread(file = tabl[2],
                                                 header=TRUE, data.table=FALSE),
                                row.names = 1)
-        if (any(is.na(my_table))) {
-          print("There are NA's - breaking loop.")
-          break
-        }
         if(setequal(row.names(metadata), row.names(my_table)) == FALSE){
           print(paste0("These samples are in the metdata, but not ", transf_label,": ", setdiff(row.names(metadata), row.names(my_table))))
           print(paste0("These samples are in the ", transf_label, " but not metadata: ", setdiff(row.names(my_table), row.names(metadata))))
@@ -364,7 +368,9 @@ for (counter in 1:num_cycles) {
         my_table_test <- my_table[row.names(my_table) %in% test_index,]
         resp_var_train <- metadata[row.names(metadata) %in% train_index,mta]
         resp_var_test <- metadata[row.names(metadata) %in% test_index,mta]
-        print("Unique resp var test/ resp var train")
+        resp_var_train <- droplevels(resp_var_train, exclude= NA, "")
+        resp_var_test <- droplevels(resp_var_test, exclude= NA, "")
+        print(length(resp_var_train))
         names(resp_var_test) <- row.names(my_table_test)
         rf <- randomForest::randomForest(my_table_train, resp_var_train)
         print("made rf")
