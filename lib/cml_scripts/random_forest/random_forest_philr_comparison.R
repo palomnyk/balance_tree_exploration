@@ -247,6 +247,7 @@ metadata <- read.table(opt$metadata,
                        stringsAsFactors=TRUE)
 print("Removing non-factor columns from metadata to decrease run time.")
 metadata <- metadata[,sapply(metadata, is.factor)]
+metadata <- metadata[,sapply(metadata, function(x){ length(levels(x)) < 10})]#hack to remove date columns if they get counted as factors
 # df[,-which(sapply(df, class) == "factor")]
 rf_cols <- 1:ncol(metadata)#hack so I don't have to fix this in the function
 
@@ -370,6 +371,7 @@ for (counter in 1:num_cycles) {
         resp_var_test <- metadata[row.names(metadata) %in% test_index,mta]
         resp_var_train <- droplevels(resp_var_train, exclude= NA, "")
         resp_var_test <- droplevels(resp_var_test, exclude= NA, "")
+        print(levels(resp_var_test))
         print(length(resp_var_train))
         names(resp_var_test) <- row.names(my_table_test)
         rf <- randomForest::randomForest(my_table_train, resp_var_train)
