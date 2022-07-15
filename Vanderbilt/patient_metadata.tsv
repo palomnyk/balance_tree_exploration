@@ -1,4 +1,5 @@
 Run	Age	BMI	Genotype	sex	Treatment	Visit	type
+SRR5928157	61	39.5	GG	male	Placebo	pre	STOOL
 SRR5928158	59	38	GG	female	Placebo	pre	STOOL
 SRR5928159	54	36.9	GG	male	Mag	pre	STOOL
 SRR5928160	74	29.8	GG	male	Placebo	pre	STOOL
@@ -19,6 +20,7 @@ SRR5928175	55	25.8	GG	female	Mag	pre	STOOL
 SRR5928176	70	31	GG	male	Mag	post	STOOL
 SRR5928177	70	21.6	GA	male	Placebo	pre	STOOL
 SRR5928179	57	23.3	GA	male	Placebo	pre	STOOL
+SRR5928180	71	20.1	GA	female	Placebo	pre	STOOL
 SRR5928181	58	27	GG	female	Mag	post	STOOL
 SRR5928182	59	24.1	GG	male	Mag	pre	STOOL
 SRR5928183	60	25.7	GG	female	Mag	post	STOOL
@@ -154,6 +156,7 @@ SRR5928406	69	34.6	GG	female	Mag	post	SWAB
 SRR5928407	70	31	GG	male	Mag	pre	SWAB
 SRR5928408	60	25.7	GG	female	Mag	pre	SWAB
 SRR5928409	69	24.1	GG	male	Mag	post	SWAB
+SRR5928410	47	26	GA	female	Mag	pre	SWAB
 SRR5928411	71	19.4	GA	female	Placebo	pre	SWAB
 SRR5928413	71	20.1	GA	female	Placebo	post	SWAB
 SRR5928414	55	31.2	GG	male	Mag	post	SWAB
@@ -167,6 +170,7 @@ SRR5928421	67	36.6	GG	female	Mag	pre	SWAB
 SRR5928422	74	29.8	GG	male	Placebo	pre	SWAB
 SRR5928423	55	22.7	GG	female	Placebo	pre	SWAB
 SRR5928424	67	36.6	GG	female	Mag	post	SWAB
+SRR5928425	58	33.2	GG	male	Placebo	post	SWAB
 SRR5928426	58	33.2	GG	male	Placebo	pre	SWAB
 SRR5928427	61	34.9	GA	male	Mag	pre	SWAB
 SRR5928428	59	38	GG	female	Placebo	post	SWAB
@@ -183,6 +187,7 @@ SRR5928439	57	30.2	GG	female	Placebo	post	SWAB
 SRR5928440	68	39	GA	male	Placebo	post	SWAB
 SRR5928441	65	27.9	GA	male	Mag	post	SWAB
 SRR5928442	68	24.5	GA	female	Mag	pre	SWAB
+SRR5928444	58	27	GA	female	Placebo	post	SWAB
 SRR5928445	71	19.4	GA	female	Placebo	post	SWAB
 SRR5928446	47	26	GA	female	Mag	post	SWAB
 SRR5928447	68	39	GA	male	Placebo	pre	SWAB
@@ -199,6 +204,7 @@ SRR5928458	58	27	GG	female	Mag	pre	SWAB
 SRR5928459	57	30.1	GG	female	Mag	post	SWAB
 SRR5928460	70	21.6	GA	male	Placebo	pre	SWAB
 SRR5928461	63	27.8	GG	male	Placebo	post	SWAB
+SRR5928462	52	29.3	GG	male	Placebo	pre	SWAB
 SRR5928463	55	44.5	GG	male	Placebo	pre	SWAB
 SRR5928464	73	26.5	GG	male	Placebo	pre	SWAB
 SRR5928465	57	23.3	GA	male	Placebo	pre	SWAB
@@ -226,6 +232,7 @@ SRR5928372	68	26.5	GG	male	Mag	pre	SWAB
 SRR5928384	57	26.1	GG	female	Mag	post	SWAB
 SRR5928395	71	20.4	GG	female	Mag	pre	SWAB
 SRR5928405	77	24.6	GG	female	Placebo	pre	SWAB
+SRR5928412	52	29.3	GG	male	Placebo	post	SWAB
 SRR5928437	54	35.2	GG	male	Mag	post	SWAB
 SRR5928443	54	23.2	GA	male	Mag	post	SWAB
 SRR5928450	53	27.7	GA	female	Mag	pre	SWAB
