@@ -188,108 +188,112 @@ print(tables)
 skips <- 0
 counter <- 0
 
-# print(paste("Counter:", counter, " entering main loop"))
-# for (counter in 1:num_cycles) {
-#   ##-Create training/testing sets-------------------------------------##
-#   train_index <- row.names(metadata)[sample(x = nrow(metadata), size = 0.75*nrow(metadata), replace=FALSE)]
-#   test_index <- row.names(metadata)[c(1:nrow(metadata))[!(1:nrow(metadata) %in% train_index)]]
-#   for(mta in rf_cols){
-#     print(paste("starting metadata col:", mta, colnames(metadata)[mta]))
-#     print(paste("Finding rows where", colnames(metadata)[mta], "has NA or Empty values from training and testing selectors."))
-#     na_or_empty_index <- which(is.na(metadata[,mta]) | metadata[,mta] == "")
-#     na_or_empty_rows <- row.names(metadata)[na_or_empty_index]
-#     print(length(train_index))
-#     train_index <- setdiff(train_index, na_or_empty_rows)
-#     print(train_index)
-#     test_index <- setdiff(test_index, na_or_empty_rows)
-#     print(length(train_index))
-#     # tryCatch({
-#       for (tabl in tables){
-#         print(tabl)
-#         transf_label <- tabl[1]
-#         my_table <- data.frame(data.table::fread(file = tabl[2],
-#                                                 header=TRUE, data.table=FALSE),
-#                                row.names = 1)
-#         if(setequal(row.names(metadata), row.names(my_table)) == FALSE){
-#           print(paste0("These samples are in the metdata, but not ", transf_label,": ", setdiff(row.names(metadata), row.names(my_table))))
-#           print(paste0("These samples are in the ", transf_label, " but not metadata: ", setdiff(row.names(my_table), row.names(metadata))))
-#           warning(paste("Metadata dataframe and", transf_label, "dataframe must have the same rows (order is not important)."))
-#         }
-#         my_table_train <- my_table[row.names(my_table) %in% train_index,]
-#         my_table_test <- my_table[row.names(my_table) %in% test_index,]
-#         resp_var_train <- metadata[row.names(metadata) %in% train_index,mta]
-#         resp_var_test <- metadata[row.names(metadata) %in% test_index,mta]
-#         resp_var_train <- droplevels(resp_var_train, exclude= NA, "")
-#         resp_var_test <- droplevels(resp_var_test, exclude= NA, "")
-#         print(levels(resp_var_test))
-#         print(length(resp_var_train))
-#         names(resp_var_test) <- row.names(my_table_test)
-#         rf <- randomForest::randomForest(my_table_train, resp_var_train)
-#         print("made rf")
-#         pred <- predict(rf, my_table_test)
-#         roc_data <- data.frame(pred = pred, resp_var_test = resp_var_test)
-#         score <- MLmetrics::Accuracy(pred, resp_var_test)
-#         # 						if (length(unique(unlist(resp_var_test))) > 2){
-#         # 							print("multilevels")
-#         # 							mult_auc <- c()
-#         # 							for (fact in 1:length(unique(resp_var_test))){#only need to test resp_test
-#         # 								try({
-#         # 									my_fact <- as.character(levels(resp_var_test)[fact])
-#         # 									# print(paste("my_fact:", my_fact))
-#         # 									dumb_resp_test <- as.factor(replace(as.character(resp_var_test), as.character(resp_var_test) != my_fact, "dumb_var"))
-#         # 									# print("dumb_resp")
-#         # 									# print(paste(dumb_resp_test))
-#         # 									dumb_pred <- as.factor(replace(as.character(pred), as.character(pred) != my_fact, "dumb_var"))
-#         # 									# print("dumb_pred")
-#         # 									# print(paste(dumb_resp_test))
-#         # 									my_roc <- pROC::roc(as.numeric(dumb_pred), as.numeric(dumb_resp_test))
-#         # 									# print("my_roc")
-#         # 									mult_auc <- c(mult_auc, pROC::auc(my_roc))
-#         # 									print(mult_auc)
-#         # 								})
-#         # 							}
-#         # 							if (length(mult_auc) > 0 ) {
-#         # 								print("in 'if (length(mult_auc) > 0 )' statement")
-#         # 								score <- mean(mult_auc)
-#         # 							}else{
-#         # 								break
-#         # 							}
-#         # 						}else{
-#         #               my_roc <- pROC::roc(as.numeric(pred), as.numeric(resp_var_test))
-#         #               print("ROC made")
-#         #               score <- pROC::auc(my_roc)
-#         # 						}
-#         # score <- pROC::auc(my_roc)
-#         print(paste("score:", score))
-#         my_df <- rf$importance
-#         maxImp <- max(rf$importance)
-#         maxRow <- which(rf$importance == maxImp)
-# 
-#         #Check its existence
-#         if (file.exists(main_output_fpath)) {
-#           print(paste0("Writing output to ", main_output_fpath, " ."))
-#           # main_header <- "all_score,	metadata_col,	rf_imp_se, rf_type, rf_ntree, trans_group, random_batch, cycle"
-#           cat(paste(paste0("\n", score), colnames(metadata)[mta], row.names(my_df)[maxRow], rf$type, #ilr_weight,	rf_imp_se, rf_type,
-#                     rf$ntree, transf_label, counter, #rf_ntree, trans_group, cycle
-#                     sep = ","),
-#               file = main_output_fpath,
-#               append=TRUE)
-#           }#if
-#         }#for loop
-#   #     },#try catch
-#   #     error=function(cond) {
-#   #       print(paste("Opps, an error2 is thrown with", transf_label))
-#   #       message(paste(transf_label, cond))
-#   #     },
-#   #     warning=function(cond) {
-#   #       print(paste("Opps, a warning2 is thrown with", transf_label))
-#   #       message(paste(transf_label, cond))
-#   #     },
-#   #     finally=.Call(CfreadCleanup)
-#   #   )
-#   }#for mta
-#   print(paste("completed loop:", counter))
-# }
+rowname_table <- data.frame(data.table::fread(file = tables[[1]][2],#this is a hack to make the train and test index work
+                                              header=TRUE, data.table=FALSE),#the row names of this table should be 
+                            row.names = 1)#available in all of the other tables or there will be an error
+
+print(paste("Counter:", counter, " entering main loop"))
+for (counter in 1:num_cycles) {
+  ##-Create training/testing sets-------------------------------------##
+  train_index <- row.names(rowname_table)[sample(x = nrow(rowname_table), size = 0.75*nrow(rowname_table), replace=FALSE)]
+  test_index <- row.names(rowname_table)[c(1:nrow(rowname_table))[!(1:nrow(rowname_table) %in% train_index)]]
+  for(mta in rf_cols){
+    print(paste("starting metadata col:", mta, colnames(metadata)[mta]))
+    print(paste("Finding rows where", colnames(metadata)[mta], "has NA or Empty values from training and testing selectors."))
+    na_or_empty_index <- which(is.na(metadata[,mta]) | metadata[,mta] == "")
+    na_or_empty_rows <- row.names(metadata)[na_or_empty_index]
+    print(length(train_index))
+    train_index <- setdiff(train_index, na_or_empty_rows)
+    print(train_index)
+    test_index <- setdiff(test_index, na_or_empty_rows)
+    print(length(train_index))
+    # tryCatch({
+      for (tabl in tables){
+        print(tabl)
+        transf_label <- tabl[1]
+        my_table <- data.frame(data.table::fread(file = tabl[2],
+                                                header=TRUE, data.table=FALSE),
+                               row.names = 1)
+        if(setequal(row.names(metadata), row.names(my_table)) == FALSE){
+          print(paste0("These samples are in the metdata, but not ", transf_label,": ", setdiff(row.names(metadata), row.names(my_table))))
+          print(paste0("These samples are in the ", transf_label, " but not metadata: ", setdiff(row.names(my_table), row.names(metadata))))
+          warning(paste("Metadata dataframe and", transf_label, "dataframe must have the same rows (order is not important)."))
+        }
+        my_table_train <- my_table[row.names(my_table) %in% train_index,]
+        my_table_test <- my_table[row.names(my_table) %in% test_index,]
+        resp_var_train <- metadata[row.names(metadata) %in% train_index,mta]
+        resp_var_test <- metadata[row.names(metadata) %in% test_index,mta]
+        resp_var_train <- droplevels(resp_var_train, exclude= NA, "")
+        resp_var_test <- droplevels(resp_var_test, exclude= NA, "")
+        print(levels(resp_var_test))
+        print(length(resp_var_train))
+        names(resp_var_test) <- row.names(my_table_test)
+        rf <- randomForest::randomForest(my_table_train, resp_var_train)
+        print("made rf")
+        pred <- predict(rf, my_table_test)
+        roc_data <- data.frame(pred = pred, resp_var_test = resp_var_test)
+        score <- MLmetrics::Accuracy(pred, resp_var_test)
+        # 						if (length(unique(unlist(resp_var_test))) > 2){
+        # 							print("multilevels")
+        # 							mult_auc <- c()
+        # 							for (fact in 1:length(unique(resp_var_test))){#only need to test resp_test
+        # 								try({
+        # 									my_fact <- as.character(levels(resp_var_test)[fact])
+        # 									# print(paste("my_fact:", my_fact))
+        # 									dumb_resp_test <- as.factor(replace(as.character(resp_var_test), as.character(resp_var_test) != my_fact, "dumb_var"))
+        # 									# print("dumb_resp")
+        # 									# print(paste(dumb_resp_test))
+        # 									dumb_pred <- as.factor(replace(as.character(pred), as.character(pred) != my_fact, "dumb_var"))
+        # 									# print("dumb_pred")
+        # 									# print(paste(dumb_resp_test))
+        # 									my_roc <- pROC::roc(as.numeric(dumb_pred), as.numeric(dumb_resp_test))
+        # 									# print("my_roc")
+        # 									mult_auc <- c(mult_auc, pROC::auc(my_roc))
+        # 									print(mult_auc)
+        # 								})
+        # 							}
+        # 							if (length(mult_auc) > 0 ) {
+        # 								print("in 'if (length(mult_auc) > 0 )' statement")
+        # 								score <- mean(mult_auc)
+        # 							}else{
+        # 								break
+        # 							}
+        # 						}else{
+        #               my_roc <- pROC::roc(as.numeric(pred), as.numeric(resp_var_test))
+        #               print("ROC made")
+        #               score <- pROC::auc(my_roc)
+        # 						}
+        # score <- pROC::auc(my_roc)
+        print(paste("score:", score))
+        my_df <- rf$importance
+        maxImp <- max(rf$importance)
+        maxRow <- which(rf$importance == maxImp)
+
+        #Check its existence
+        if (file.exists(main_output_fpath)) {
+          print(paste0("Writing output to ", main_output_fpath, " ."))
+          # main_header <- "all_score,	metadata_col,	rf_imp_se, rf_type, rf_ntree, trans_group, random_batch, cycle"
+          cat(paste(paste0("\n", score), colnames(metadata)[mta], row.names(my_df)[maxRow], rf$type, #ilr_weight,	rf_imp_se, rf_type,
+                    rf$ntree, transf_label, counter, #rf_ntree, trans_group, cycle
+                    sep = ","),
+              file = main_output_fpath,
+              append=TRUE)
+          }#if
+        }#for loop
+  #     },#try catch
+  #     error=function(cond) {
+  #       print(paste("Opps, an error2 is thrown with", transf_label))
+  #       message(paste(transf_label, cond))
+  #     },
+  #     warning=function(cond) {
+  #       print(paste("Opps, a warning2 is thrown with", transf_label))
+  #       message(paste(transf_label, cond))
+  #     },
+  #     finally=.Call(CfreadCleanup)
+  #   )
+  }#for mta
+  print(paste("completed loop:", counter))
+}
 
 print("Reading in data from file.")
 all_plot_data <- data.frame(read.table(file = main_output_fpath,
