@@ -75,9 +75,9 @@ def add_PhILR_dfs_to_table(lst, \
 		sys.exit()
 	for pw in philr_part_weights:
 		for iw in philr_ilr_weights:
-			table_fn = f"{base_fn}_{iw}_{pw}.csv"
-			# my_df = pd.read_csv(os.path.join(root_folder, table_fn), sep=',', header=0, index_col=0)
 			my_label = f"{base_fn}_{iw}_{pw}"
+			table_fn = f"{my_label}.csv"
+			# my_df = pd.read_csv(os.path.join(root_folder, table_fn), sep=',', header=0, index_col=0)
 			lst.append((my_label, (os.path.join(root_folder, table_fn), ','), color))
 	return lst
 
@@ -153,25 +153,25 @@ print("Setting up tables to feed the random forest model.", flush = True)
 # --------------------------------------------------------------------------
 tables = []
 tables.append(("DaDa2",(os.path.join(output_dir, "tables", "ForwardReads_DADA2.txt"),"\t"),"r"))
-# tables.append(("HashSeq", (os.path.join(output_dir,  "hashseq", "hashseq.csv"),","), "r"))
-tables.append(("lognorm_DADA2", (os.path.join(output_dir, "tables", "lognorm_dada2.csv"), ","), "y"))
-# tables.append(("lognorm_HashSeq", (os.path.join(output_dir,"tables", "lognorm_hashseq.csv"), ","), "y"))
-tables.append(("alr_DADA2", (os.path.join(output_dir, "tables", "alr_asv.csv"), ","), "g"))
-# tables.append(("alr_HashSeq", (os.path.join(output_dir,"tables", "alr_hashseq.csv"), ","), "g"))
-tables.append(("clr_DADA2", (os.path.join(output_dir, "tables", "clr_asv.csv"), ","), "g"))
-# tables.append(("clr_HashSeq", (os.path.join(output_dir,"tables", "clr_hashseq.csv"), ","), "m"))
-tables.append(("Silva_DADA2", (os.path.join(output_dir,"tables", "Silva_DADA2", "Silva_DADA2.csv"), ","), "#64baeb"))
-tables = add_PhILR_dfs_to_table(tables, os.path.join(output_dir, "tables", "Silva_DADA2"), "Silva_DADA2", color = "#c8e5f5")
-tables = add_random_tree_PhILRs_to_table(tables, os.path.join(output_dir, "tables", "Silva_DADA2"), "Silva_DADA2", color = "#1474aa", num_rand_trees=5)
-tables.append(("Filtered_Silva_DADA2", (os.path.join(output_dir,"tables", "Filtered_Silva_DADA2", "Filtered_Silva_DADA2.csv"), ","), "#f78646"))
-tables = add_PhILR_dfs_to_table(tables, os.path.join(output_dir, "tables", "Filtered_Silva_DADA2"), "Filtered_Silva_DADA2", color = "#f5cbb3")
-tables = add_random_tree_PhILRs_to_table(tables, os.path.join(output_dir, "tables", "Filtered_Silva_DADA2"), "Filtered_Silva_DADA2", color = "#8c390b", num_rand_trees=5)
-tables.append(("Filtered_UPGMA_DADA2", (os.path.join(output_dir,"tables", "Filtered_UPGMA_DADA2", "Filtered_UPGMA_DADA2.csv"), ","), "#0000ff"))
-tables = add_PhILR_dfs_to_table(tables, os.path.join(output_dir, "tables", "Filtered_UPGMA_DADA2"), "Filtered_UPGMA_DADA2", color = "#b7b7f3")
-tables = add_random_tree_PhILRs_to_table(tables, os.path.join(output_dir, "tables", "Filtered_UPGMA_DADA2"), "Filtered_UPGMA_DADA2", color = "#050598", num_rand_trees=5)
-tables.append(("Filtered_IQtree", (os.path.join(output_dir,"tables", "Filtered_IQtree", "Filtered_IQtree.csv"), ","), "orange"))
-tables = add_PhILR_dfs_to_table(tables, os.path.join(output_dir, "tables", "Filtered_IQtree"), "Filtered_IQtree", color = "#f7d8a0")
-tables = add_random_tree_PhILRs_to_table(tables, os.path.join(output_dir, "tables", "Filtered_IQtree"), "Filtered_IQtree", color = "#e29302", num_rand_trees=5)
+# # tables.append(("HashSeq", (os.path.join(output_dir,  "hashseq", "hashseq.csv"),","), "r"))
+# tables.append(("lognorm_DADA2", (os.path.join(output_dir, "tables", "lognorm_dada2.csv"), ","), "y"))
+# # tables.append(("lognorm_HashSeq", (os.path.join(output_dir,"tables", "lognorm_hashseq.csv"), ","), "y"))
+# tables.append(("alr_DADA2", (os.path.join(output_dir, "tables", "alr_asv.csv"), ","), "g"))
+# # tables.append(("alr_HashSeq", (os.path.join(output_dir,"tables", "alr_hashseq.csv"), ","), "g"))
+# tables.append(("clr_DADA2", (os.path.join(output_dir, "tables", "clr_asv.csv"), ","), "g"))
+# # tables.append(("clr_HashSeq", (os.path.join(output_dir,"tables", "clr_hashseq.csv"), ","), "m"))
+# tables.append(("Silva_DADA2", (os.path.join(output_dir,"tables", "Silva_DADA2", "Silva_DADA2.csv"), ","), "#64baeb"))
+# tables = add_PhILR_dfs_to_table(tables, os.path.join(output_dir, "tables", "Silva_DADA2"), "Silva_DADA2", color = "#c8e5f5")
+# tables = add_random_tree_PhILRs_to_table(tables, os.path.join(output_dir, "tables", "Silva_DADA2"), "Silva_DADA2", color = "#1474aa", num_rand_trees=5)
+# tables.append(("Filtered_Silva_DADA2", (os.path.join(output_dir,"tables", "Filtered_Silva_DADA2", "Filtered_Silva_DADA2.csv"), ","), "#f78646"))
+# tables = add_PhILR_dfs_to_table(tables, os.path.join(output_dir, "tables", "Filtered_Silva_DADA2"), "Filtered_Silva_DADA2", color = "#f5cbb3")
+# tables = add_random_tree_PhILRs_to_table(tables, os.path.join(output_dir, "tables", "Filtered_Silva_DADA2"), "Filtered_Silva_DADA2", color = "#8c390b", num_rand_trees=5)
+# tables.append(("Filtered_UPGMA_DADA2", (os.path.join(output_dir,"tables", "Filtered_UPGMA_DADA2", "Filtered_UPGMA_DADA2.csv"), ","), "#0000ff"))
+# tables = add_PhILR_dfs_to_table(tables, os.path.join(output_dir, "tables", "Filtered_UPGMA_DADA2"), "Filtered_UPGMA_DADA2", color = "#b7b7f3")
+# tables = add_random_tree_PhILRs_to_table(tables, os.path.join(output_dir, "tables", "Filtered_UPGMA_DADA2"), "Filtered_UPGMA_DADA2", color = "#050598", num_rand_trees=5)
+# tables.append(("Filtered_IQtree", (os.path.join(output_dir,"tables", "Filtered_IQtree", "Filtered_IQtree.csv"), ","), "orange"))
+# tables = add_PhILR_dfs_to_table(tables, os.path.join(output_dir, "tables", "Filtered_IQtree"), "Filtered_IQtree", color = "#f7d8a0")
+# tables = add_random_tree_PhILRs_to_table(tables, os.path.join(output_dir, "tables", "Filtered_IQtree"), "Filtered_IQtree", color = "#e29302", num_rand_trees=5)
 
 # --------------------------------------------------------------------------
 print(f"Running random forest model to find {scoring}.", flush = True)
@@ -189,8 +189,11 @@ with open(result_fpath, "w+") as fl:
 			for i in range(num_iterations):
 				rand_int = random.randint(0, 1000)
 				respns_var = meta_df.loc[list(my_table.index.values),m_c]#metadata var to test
+				non_nan_vals = np.invert(pd.isna(respns_var.values))#removing nan values
+				my_table = my_table[non_nan_vals]#removing nan values
+				respns_var = respns_var[non_nan_vals]#removing nan values
 				pred_train, pred_test, resp_train, resp_test = model_selection.train_test_split(my_table, respns_var, train_size=float(train_percent), random_state=rand_int, shuffle=True) 
-				if is_string_dtype(respns_var) == True and respns_var.isnull().sum() < 5:
+				if is_string_dtype(respns_var) == True:
 					clf = RandomForestClassifier(max_depth=2, random_state=0)
 					clf.fit(pred_train, resp_train)
 					resp_pred = clf.predict(pred_test)
@@ -218,19 +221,17 @@ num_rows = abs(-len(tables)//num_cols)
 pdf = matplotlib.backends.backend_pdf.PdfPages(pdf_fpath)
 for meta_c in metadata_cats:
 	fig = plt.figure(figsize=(11,11))
-	fig.suptitle(f"{project} random forest manual {train_percent}training {scoring} {meta_c}")
+	fig.suptitle(f"{project} sklearn random forest manual {train_percent}training {scoring} {meta_c}")
 	plt.subplots_adjust(bottom=0.8)
 	meta_result_df = pd.DataFrame(result_df[result_df["metadata"] == meta_c])
 	# flat_num_only = pd.DataFrame(meta_result_df.iloc[:,5:]).to_numpy().flatten()
 	plot_data = meta_result_df.iloc[:,1:].transpose()
-	f_mean = np.nanmean(plot_data)
 	ax = fig.add_subplot(1,1,1)
 	bp = ax.boxplot(plot_data, patch_artist = True, labels=plot_data.columns)
 	colors = list([sublist[-1] for sublist in tables])
 	for patch, color in zip(bp['boxes'], colors):
 		patch.set_facecolor(color)
 	ax.axhline(np.nanmean(plot_data), c="r", linestyle="dashed")
-	ax.axhline(f_mean, c="g", linestyle = ("-."))
 	ax.set_xticklabels(labels = plot_data.columns, rotation=90)
 	ax.tick_params(axis='x', which='major', labelsize=10)
 

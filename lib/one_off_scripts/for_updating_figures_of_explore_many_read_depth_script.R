@@ -38,7 +38,7 @@ library("ggplot2")
 
 ##-Establish directory layout---------------------------------------##
 home_dir <- file.path('~','git','balance_tree_exploration')
-project <- "Vanderbilt"
+project <- "Zeller"
 output_dir <- file.path(home_dir, project, 'output')
 setwd(file.path(home_dir))
 
