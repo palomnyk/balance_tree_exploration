@@ -17,10 +17,10 @@ echo Job: $SLURM_JOB_NAME with ID $SLURM_JOB_ID
 echo Running on host: `hostname`
 echo Using $SLURM_NTASKS processors across $SLURM_NNODES nodes
 
-# module load anaconda3
-# echo "Loaded Anaconda."
-# source activate testing_pyCaret
-# echo "activated testing_pyCaret conda env"
+module load anaconda3
+echo "Loaded Anaconda."
+source activate testing_pyCaret
+echo "activated testing_pyCaret conda env"
 export PYTHONUNBUFFERED=TRUE
 python ~/git/balance_tree_exploration/lib/cml_scripts/random_forest/random_forest_manual_train.py\
   -p Vangay \
