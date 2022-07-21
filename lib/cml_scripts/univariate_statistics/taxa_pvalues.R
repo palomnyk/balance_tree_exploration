@@ -36,8 +36,8 @@ makeTaxaTable <- function(no, tax, tax_lev_int){
 }
 
 ##-Functions--------------------------------------------------------##
-source(file.path(home_dir, "r_libraries", "statistical_functions.R"))
-source(file.path(home_dir, "r_libraries", "table_manipulations.R"))
+source(file.path(home_dir, "lib", "statistical_functions.R"))
+source(file.path(home_dir, "lib", "table_manipulations.R"))
 
 # --------------------------------------------------------------------------
 print("Loading dependencies")
