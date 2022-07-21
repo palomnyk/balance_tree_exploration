@@ -35,10 +35,6 @@ makeTaxaTable <- function(no, tax, tax_lev_int){
   return(otu_tab)
 }
 
-##-Functions--------------------------------------------------------##
-source(file.path(home_dir, "lib", "statistical_functions.R"))
-source(file.path(home_dir, "lib", "table_manipulations.R"))
-
 # --------------------------------------------------------------------------
 print("Loading dependencies")
 # --------------------------------------------------------------------------
@@ -76,6 +72,10 @@ home_dir <- opt$homedir
 project <- opt$project
 output_dir <- file.path(home_dir, project, 'output')
 setwd(file.path(home_dir))
+
+##-Functions--------------------------------------------------------##
+source(file.path(home_dir, "lib", "statistical_functions.R"))
+source(file.path(home_dir, "lib", "table_manipulations.R"))
 
 # --------------------------------------------------------------------------
 print("Importing preprocessing and data.")
