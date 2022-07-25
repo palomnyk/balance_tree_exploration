@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --partition=Pis                                    		# Partition/queue requested on server
+#SBATCH --partition=Pisces                                    		# Partition/queue requested on server
 #SBATCH --job-name=anova_taxa_pvals_all                                   		# Job name
 #SBATCH --time=20:00:00                                      		# Time limit (hrs:min:sec)
 #SBATCH --nodes=4                                         			# Number of nodes requested
