@@ -37,7 +37,7 @@ projects = ["Vanderbilt", "Vangay", "Zeller", "Noguera-Julian"]
 # projects = ["Vanderbilt", "Vangay"]
 output_dir = os.path.join(home_dir, "metastudies", "output")
 assert os.path.exists(output_dir)
-plot_pdf_fpath = os.path.join(output_dir, "python_by_transformation.pdf")
+plot_pdf_fpath = os.path.join(output_dir, "log10_python_by_transformation.pdf")
 # --------------------------------------------------------------------------
 print("Establishing other constants.", flush = True)
 # --------------------------------------------------------------------------
@@ -50,6 +50,12 @@ comp_ds = ['alr_DADA2', 'clr_DADA2', 'DaDa2', 'Filtered_IQtree', \
 	'Silva_DADA2_blw.sqrt_anorm']
 
 pdf = matplotlib.backends.backend_pdf.PdfPages(plot_pdf_fpath)
+#set font sizes
+plt.rc('font', size=15) 
+plt.rc('xtick', labelsize=20) 
+plt.rc('ytick', labelsize=20) 
+plt.rc('axes', labelsize=20) 
+plt.rc('axes', titlesize=50)
 for ds1 in comp_ds:
 	print(ds1)
 	for ds2 in comp_ds:
@@ -89,7 +95,7 @@ for ds1 in comp_ds:
 				# print(my_table)
 				for feat, ave in zip(list(ds2_table["metadata"].values) ,list(means)):
 					ds2_score[feat] = ave
-					pvals[feat] = min(my_table.loc[(my_table["meta_name"]==feat) & (my_table["taxa_lev"] == "Genus"), "pval"].values)
+					pvals[feat] = min(my_table.loc[(my_table["meta_name"]==feat) & (my_table["taxa_lev"] == "Genus"), "pval"].values) + 1e-80
 			print("build graphic")
 			print(pvals.values())
 			pval_log = np.log10(list(pvals.values()))
@@ -97,17 +103,11 @@ for ds1 in comp_ds:
 			fig.suptitle(f"Metastudy {train_percent}training {ds1} vs {ds2} by pvalue, Python only")
 			plt.subplots_adjust(bottom=0.8)
 			ax = fig.add_subplot(1,1,1)
-			ax.scatter(pvals.values(), ds2_score.values(), color = "red")
-			ax.scatter(pvals.values(), ds1_score.values(), color = "blue")
+			ax.scatter(pval_log, ds1_score.values(), color = "blue", label=ds1)
+			ax.scatter(pval_log, ds2_score.values(), color = "red", label=ds2)
 			ax.set_xlabel("log10 of ANOVA p-value of the strongest genus for each metadata cat")
 			ax.set_ylabel("Acuracy")
-			# colors = list([sublist[-1] for sublist in tables])
-			# for patch, color in zip(bp['boxes'], colors):
-			# 	patch.set_facecolor(color)
-			# ax.axhline(np.nanmean(plot_data), c="r", linestyle="dashed")
-			# ax.set_xticklabels(labels = plot_data.columns, rotation=90)
-			# ax.tick_params(axis='x', which='major', labelsize=10)
-			#for boxplot
+			ax.legend(title="Legend", loc="upper left", framealpha=1)
 			fig.tight_layout()
 			print("Saving figure to pdf", flush = True)
 			pdf.savefig( fig )
