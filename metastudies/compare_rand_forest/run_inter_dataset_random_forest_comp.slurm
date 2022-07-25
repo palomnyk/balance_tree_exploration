@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --partition=Pisces                                    		# Partition/queue requested on server
-#SBATCH --job-name=anova_taxa_pvals_all                                   		# Job name
+#SBATCH --job-name=inter_dataset_rand                                   		# Job name
 #SBATCH --time=20:00:00                                      		# Time limit (hrs:min:sec)
 #SBATCH --nodes=4                                         			# Number of nodes requested
 #SBATCH --ntasks-per-node=1                          			# Number of CPUs (processor cores/tasks)
@@ -18,12 +18,18 @@ echo "Submit Dir : $SLURM_SUBMIT_DIR"
 echo Running on host: `hostname`
 echo Using $SLURM_NTASKS processors across $SLURM_NNODES nodes
 
-module load R
+### Display the job context
+echo Job: $SLURM_JOB_NAME with ID $SLURM_JOB_ID
+echo Running on host: `hostname`
+echo Using $SLURM_NTASKS processors across $SLURM_NNODES nodes
 
-echo launching Vanderbilt
-
+module load anaconda3/2020.11
+conda activate testing_pyCaret
 python ~/git/balance_tree_exploration/metastudies/compare_rand_forest/intra_dataset_random_forest_comp.py\
   -d ~/git/balance_tree_exploration
+
+conda deactivate
+module unload anaconda3/2020.11
 
 echo ""
 echo "======================================================"
