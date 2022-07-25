@@ -13,17 +13,6 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.backends.backend_pdf
-import matplotlib.colors as mcolors
-from pandas.api.types import is_string_dtype
-from requests import head
-from sklearn import model_selection
-from sklearn import model_selection
-from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
-from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import accuracy_score, roc_auc_score
 import argparse
 import random
@@ -48,7 +37,7 @@ home_dir = os.path.expanduser(options.homedir)
 projects = ["Vanderbilt", "Vangay"]
 output_dir = os.path.join(home_dir, "metastudies", "output")
 assert os.path.exists(output_dir)
-plot_pdf_fpath = os.path.join(output_dir, "log10_python_by_transformation.pdf")
+plot_pdf_fpath = os.path.join(output_dir, "python_by_transformation.pdf")
 # --------------------------------------------------------------------------
 print("Establishing other constants.", flush = True)
 # --------------------------------------------------------------------------
@@ -100,7 +89,7 @@ for ds1 in comp_ds:
 				# print(my_table)
 				for feat, ave in zip(list(ds2_table["metadata"].values) ,list(means)):
 					ds2_score[feat] = ave
-					pvals[feat] = min(my_table.loc[(my_table["meta_name"]==feat) & (my_table["taxa_lev"] == "Genus"), "pval"].values) + 0.0000000001
+					pvals[feat] = min(my_table.loc[(my_table["meta_name"]==feat) & (my_table["taxa_lev"] == "Genus"), "pval"].values)
 			print("build graphic")
 			print(pvals.values())
 			pval_log = np.log10(list(pvals.values()))
@@ -108,8 +97,8 @@ for ds1 in comp_ds:
 			fig.suptitle(f"Metastudy {train_percent}training {ds1} vs {ds2} by pvalue, Python only")
 			plt.subplots_adjust(bottom=0.8)
 			ax = fig.add_subplot(1,1,1)
-			ax.scatter(pval_log, ds2_score.values(), color = "red")
-			ax.scatter(pval_log, ds1_score.values(), color = "blue")
+			ax.scatter(pvals.values(), ds2_score.values(), color = "red")
+			ax.scatter(pvals.values(), ds1_score.values(), color = "blue")
 			ax.set_xlabel("log10 of ANOVA p-value of the strongest genus for each metadata cat")
 			ax.set_ylabel("Acuracy")
 			# colors = list([sublist[-1] for sublist in tables])
