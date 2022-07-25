@@ -8,6 +8,7 @@ import os, sys
 import time
 from statistics import mean
 from matplotlib import markers
+import math as math
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -47,8 +48,12 @@ home_dir = os.path.expanduser(options.homedir)
 projects = ["Vanderbilt", "Vangay"]
 output_dir = os.path.join(home_dir, "metastudies", "output")
 assert os.path.exists(output_dir)
-plot_pdf_fpath = os.path.join(output_dir, "python_by_transformation.pdf")
-
+plot_pdf_fpath = os.path.join(output_dir, "log10_python_by_transformation.pdf")
+# --------------------------------------------------------------------------
+print("Establishing other constants.", flush = True)
+# --------------------------------------------------------------------------
+font1 = {'family':'serif','color':'blue','size':20}
+font2 = {'family':'serif','color':'darkred','size':15}
 comp_ds = ['alr_DADA2', 'clr_DADA2', 'DaDa2', 'Filtered_IQtree', \
 	'Filtered_IQtree_blw.sqrt_anorm', 'Filtered_Silva_DADA2', \
 	'Filtered_Silva_DADA2_blw.sqrt_anorm', 'Filtered_UPGMA_DADA2', \
@@ -77,40 +82,36 @@ for ds1 in comp_ds:
 				my_table = pd.read_csv(result_fpath, sep=',', header=0)
 				#table 1
 				ds1_table = my_table.loc[my_table["dataset"] == ds1,]
+				# print(ds1_table)
 				splits = ds1_table.columns[ds1_table.columns.str.startswith('split')].tolist()
+				# print(ds1_table[splits])
 				means = ds1_table[splits].agg(mean, axis = 1)
-				assert not means.empty(), f"{ds1} is not in the table from {project}"
+				print(means)
+				assert not means.empty, f"{ds1} is not in the table from {project}"
 				for feat, ave in zip(list(ds1_table["metadata"].values) ,list(means)):
 					ds1_score[feat] = ave
 				#table 2
 				ds2_table = my_table.loc[my_table["dataset"] == ds2,]
 				splits = ds2_table.columns[ds2_table.columns.str.startswith('split')].tolist()
 				means = ds2_table[splits].agg(mean, axis = 1)
-				assert not means.empty(), f"{ds2} is not in the table from {project}"
+				assert not means.empty, f"{ds2} is not in the table from {project}"
 				pval_fpath = os.path.join(op_dir, "tables", f"{project}_pValuesUnivariate_taxaVmetadata.csv")
 				my_table = pd.read_csv(pval_fpath, sep=',', header=0)
 				# print(my_table)
 				for feat, ave in zip(list(ds2_table["metadata"].values) ,list(means)):
 					ds2_score[feat] = ave
-					pvals[feat] = min(my_table.loc[(my_table["meta_name"]==feat) & (my_table["taxa_lev"] == "Genus"), "pval"].values)
-			#build graphic
+					pvals[feat] = min(my_table.loc[(my_table["meta_name"]==feat) & (my_table["taxa_lev"] == "Genus"), "pval"].values) + 0.0000000001
+			print("build graphic")
+			print(pvals.values())
+			pval_log = np.log10(list(pvals.values()))
 			fig = plt.figure(figsize=(11,11))
-			fig.suptitle(f"Metastudy {train_percent}training {ds1} vs {ds2} by pvalue")
+			fig.suptitle(f"Metastudy {train_percent}training {ds1} vs {ds2} by pvalue, Python only")
 			plt.subplots_adjust(bottom=0.8)
 			ax = fig.add_subplot(1,1,1)
-			# print("pvals")
-			# print(list(pvals.values()))
-			# print("ds1")
-			# print(list(ds1_score.values()))
-			print("pvals")
-			print(pvals)
-			print("ds1")
-			print(ds1_score)
-			print("ds2")
-			print(ds2_score)
-			print("proj")
-			print(proj)
-			ax.scatter(pvals.values(), ds1_score.values())
+			ax.scatter(pval_log, ds2_score.values(), color = "red")
+			ax.scatter(pval_log, ds1_score.values(), color = "blue")
+			ax.set_xlabel("log10 of ANOVA p-value of the strongest genus for each metadata cat")
+			ax.set_ylabel("Acuracy")
 			# colors = list([sublist[-1] for sublist in tables])
 			# for patch, color in zip(bp['boxes'], colors):
 			# 	patch.set_facecolor(color)
@@ -119,7 +120,7 @@ for ds1 in comp_ds:
 			# ax.tick_params(axis='x', which='major', labelsize=10)
 			#for boxplot
 			fig.tight_layout()
-			print("Saving pdf", flush = True)
+			print("Saving figure to pdf", flush = True)
 			pdf.savefig( fig )
 			# sys.exit()
 			# print(my_table.columns)
