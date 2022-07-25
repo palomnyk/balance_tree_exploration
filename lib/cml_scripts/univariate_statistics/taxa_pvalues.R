@@ -78,7 +78,7 @@ source(file.path(home_dir, "lib", "statistical_functions.R"))
 source(file.path(home_dir, "lib", "table_manipulations.R"))
 
 # --------------------------------------------------------------------------
-print("Importing preprocessing and data.")
+print("Importing and preprocessing data.")
 # --------------------------------------------------------------------------
 asv_table <- data.frame(readRDS(file.path(output_dir, "r_objects", "ForwardReads_DADA2.rds")))
 
@@ -94,7 +94,7 @@ metadata <- read.table(opt$metadata,
 metadata <- metadata[row.names(asv_table),]
 
 # --------------------------------------------------------------------------
-print("Importing preprocessing and data.")
+print("Main loop.")
 # --------------------------------------------------------------------------
 taxa_int <- c()
 taxa_name <- c()
