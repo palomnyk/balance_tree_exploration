@@ -4,8 +4,9 @@
 
 rm(list = ls()) #clear workspace
 
-
-##-Load Depencencies------------------------------------------------##
+# --------------------------------------------------------------------------
+print("Loading dependencies")
+# --------------------------------------------------------------------------
 if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
 if (!requireNamespace("ape", quietly = TRUE)) BiocManager::install("ape")
 library("ape")
@@ -27,12 +28,11 @@ if (!requireNamespace("data.table", quietly = TRUE)) BiocManager::install("data.
 library("data.table")
 if (!requireNamespace("MLmetrics", quietly = TRUE)) BiocManager::install("MLmetrics")
 library("MLmetrics")
-if (!requireNamespace("optparse", quietly = TRUE)){
-  install.packages("optparse")
-}
+if (!requireNamespace("optparse", quietly = TRUE)) install.packages("optparse")
 library("optparse")
-print("finished loading libraries")
-
+# --------------------------------------------------------------------------
+print("Reading cml arguments")
+# --------------------------------------------------------------------------
 option_list <- list(
   optparse::make_option(c("-d", "--homedir"), type="character", 
                         default=file.path('~','git','balance_tree_exploration'), 
@@ -56,7 +56,9 @@ opt <- optparse::parse_args(opt_parser);
 
 print(opt)
 
+# --------------------------------------------------------------------------
 print("Establishing directory layout and other constants.")
+# --------------------------------------------------------------------------
 home_dir <- opt$homedir
 project <- opt$project
 output_dir <- file.path(home_dir, project, 'output')
@@ -81,6 +83,7 @@ main_header <- "all_score, metadata_col, rf_imp_se, rf_type, rf_ntree, trans_gro
 
 ##-Import tables and data preprocessing-----------------------------##
 print("loading and munging metadata")
+##-Import tables and data preprocessing-----------------------------##
 metadata <- read.table(opt$metadata, 
                        sep=opt$metadata_delim, 
                        header=TRUE, 
@@ -97,65 +100,6 @@ print(colnames(metadata))
 # df[,-which(sapply(df, class) == "factor")]
 rf_cols <- 1:ncol(metadata)#hack so I don't have to fix this in the function
 
-# --------------------------------------------------------------------------
-print("Defining functions")
-# --------------------------------------------------------------------------
-add_PhILR_dfs_to_table <- function(lst,
-                           root_folder,
-                           base_fn,
-                           # philr_part_weights = c("anorm","enorm"),
-                           # philr_ilr_weights = c("blw.sqrt","mean.descendants"),
-                           philr_part_weights = c("anorm"),
-                           philr_ilr_weights = c("blw.sqrt"),
-                           color = "w"){
-  if (!dir.exists(root_folder)){
-    print(paste0(root_folder,"does not exist. Use PhILR_random_trees_and_counts_tables.R to create it."))
-    # break
-  }
-  for (ilr_w in philr_ilr_weights){
-    for (tax_w in philr_taxa_weights){
-      my_label <- paste(base_fn, ilr_w, tax_w, sep = "_")
-      table_fn <- paste0(my_label, ".csv")
-      lst[[length(lst) + 1]] <- c(my_label, file.path(root_folder, table_fn), ',', color)
-    }
-  }
-  return(lst)
-}
-
-add_random_tree_PhILRs_to_table  <- function(lst, 
-                                    root_folder, 
-                                    base_fn, 
-                                    # philr_part_weights = c("anorm","enorm"),
-                                    # philr_ilr_weights = c("blw.sqrt","mean.descendants"),
-                                    philr_part_weights = c("anorm"),
-                                    philr_ilr_weights = c("blw.sqrt"),
-                                    color = "w", 
-                                    num_rand_trees = 10){
-  print(paste0("Adding random trees from ", base_fn, "."))
-  if (!dir.exists(root_folder)){
-    print(paste0(root_folder,"does not exist. Use PhILR_random_trees_and_counts_tables.R to create it."))
-    # break
-  }
-  for (rand in 1:num_rand_trees){
-    for (ilr_w in philr_ilr_weights){
-      for (tax_w in philr_taxa_weights){
-        my_label <- paste(paste0("Shuffle", rand, "_PhILR"), base_fn, ilr_w, tax_w, sep = "_")
-        table_fn <- paste0(my_label, ".csv")
-        lst[[length(lst) + 1]] <- c(my_label, file.path(root_folder, table_fn), ',', color)
-      }
-    }
-  }
-  return(lst)
-}
-
-df_factory <- function(my_path, my_sep){
-  # Use for building df from "tables" list in random forest loop
-  df <- read.table(my_path, sep=my_sep, 
-                  header=0, row.names=0,
-                  check.names = FALSE,
-                  stringsAsFactors=TRUE)
-  return(df)
-}
 
 tables <- list()
 tables[[length(tables) + 1]] <- c("DaDa2",file.path(output_dir, "tables", "ForwardReads_DADA2.txt"),"\t","r")
@@ -181,11 +125,11 @@ tables <- add_random_tree_PhILRs_to_table(tables, file.path(output_dir, "tables"
 
 print(tables)
 
-# print(paste("Initilizing", main_output_fpath, "."))
-# print(paste("File header: ", main_header))
-# cat(main_header,
-#     file = main_output_fpath,
-#     append=FALSE)
+print(paste("Initilizing", main_output_fpath, "."))
+print(paste("File header: ", main_header))
+cat(main_header,
+    file = main_output_fpath,
+    append=FALSE)
 
 skips <- 0
 counter <- 0
@@ -199,6 +143,7 @@ for (counter in 1:num_cycles) {
   ##-Create training/testing sets-------------------------------------##
   train_index <- row.names(rowname_table)[sample(x = nrow(rowname_table), size = 0.75*nrow(rowname_table), replace=FALSE)]
   test_index <- row.names(rowname_table)[c(1:nrow(rowname_table))[!(1:nrow(rowname_table) %in% train_index)]]
+  
   for(mta in rf_cols){
     print(paste("starting metadata col:", mta, colnames(metadata)[mta]))
     print(paste("Finding rows where", colnames(metadata)[mta], "has NA or Empty values from training and testing selectors."))
