@@ -5,6 +5,66 @@
 rm(list = ls()) #clear workspace
 
 # --------------------------------------------------------------------------
+print("Defining functions")
+# --------------------------------------------------------------------------
+add_PhILR_dfs_to_table <- function(lst,
+                                   root_folder,
+                                   base_fn,
+                                   # philr_part_weights = c("anorm","enorm"),
+                                   # philr_ilr_weights = c("blw.sqrt","mean.descendants"),
+                                   philr_part_weights = c("anorm"),
+                                   philr_ilr_weights = c("blw.sqrt"),
+                                   color = "w"){
+  if (!dir.exists(root_folder)){
+    print(paste0(root_folder,"does not exist. Use PhILR_random_trees_and_counts_tables.R to create it."))
+    # break
+  }
+  for (ilr_w in philr_ilr_weights){
+    for (tax_w in philr_taxa_weights){
+      my_label <- paste(base_fn, ilr_w, tax_w, sep = "_")
+      table_fn <- paste0(my_label, ".csv")
+      lst[[length(lst) + 1]] <- c(my_label, file.path(root_folder, table_fn), ',', color)
+    }
+  }
+  return(lst)
+}
+
+add_random_tree_PhILRs_to_table  <- function(lst, 
+                                             root_folder, 
+                                             base_fn, 
+                                             # philr_part_weights = c("anorm","enorm"),
+                                             # philr_ilr_weights = c("blw.sqrt","mean.descendants"),
+                                             philr_part_weights = c("anorm"),
+                                             philr_ilr_weights = c("blw.sqrt"),
+                                             color = "w", 
+                                             num_rand_trees = 10){
+  print(paste0("Adding random trees from ", base_fn, "."))
+  if (!dir.exists(root_folder)){
+    print(paste0(root_folder,"does not exist. Use PhILR_random_trees_and_counts_tables.R to create it."))
+    # break
+  }
+  for (rand in 1:num_rand_trees){
+    for (ilr_w in philr_ilr_weights){
+      for (tax_w in philr_taxa_weights){
+        my_label <- paste(paste0("Shuffle", rand, "_PhILR"), base_fn, ilr_w, tax_w, sep = "_")
+        table_fn <- paste0(my_label, ".csv")
+        lst[[length(lst) + 1]] <- c(my_label, file.path(root_folder, table_fn), ',', color)
+      }
+    }
+  }
+  return(lst)
+}
+
+df_factory <- function(my_path, my_sep){
+  # Use for building df from "tables" list in random forest loop
+  df <- read.table(my_path, sep=my_sep, 
+                   header=0, row.names=0,
+                   check.names = FALSE,
+                   stringsAsFactors=TRUE)
+  return(df)
+}
+
+# --------------------------------------------------------------------------
 print("Loading dependencies")
 # --------------------------------------------------------------------------
 if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
@@ -131,11 +191,10 @@ cat(main_header,
     file = main_output_fpath,
     append=FALSE)
 
-skips <- 0
 counter <- 0
 
 rowname_table <- data.frame(data.table::fread(file = tables[[1]][2],#this is a hack to make the train and test index work
-                                              header=TRUE, data.table=FALSE),#the row names of this table should be 
+                                              header=TRUE, data.table=FALSE),#the row names of this table should be
                             row.names = 1)#available in all of the other tables or there will be an error
 
 print(paste("Counter:", counter, " entering main loop"))
@@ -143,7 +202,7 @@ for (counter in 1:num_cycles) {
   ##-Create training/testing sets-------------------------------------##
   train_index <- row.names(rowname_table)[sample(x = nrow(rowname_table), size = 0.75*nrow(rowname_table), replace=FALSE)]
   test_index <- row.names(rowname_table)[c(1:nrow(rowname_table))[!(1:nrow(rowname_table) %in% train_index)]]
-  
+
   for(mta in rf_cols){
     print(paste("starting metadata col:", mta, colnames(metadata)[mta]))
     print(paste("Finding rows where", colnames(metadata)[mta], "has NA or Empty values from training and testing selectors."))
@@ -180,37 +239,6 @@ for (counter in 1:num_cycles) {
         pred <- predict(rf, my_table_test)
         roc_data <- data.frame(pred = pred, resp_var_test = resp_var_test)
         score <- MLmetrics::Accuracy(pred, resp_var_test)
-        # 						if (length(unique(unlist(resp_var_test))) > 2){
-        # 							print("multilevels")
-        # 							mult_auc <- c()
-        # 							for (fact in 1:length(unique(resp_var_test))){#only need to test resp_test
-        # 								try({
-        # 									my_fact <- as.character(levels(resp_var_test)[fact])
-        # 									# print(paste("my_fact:", my_fact))
-        # 									dumb_resp_test <- as.factor(replace(as.character(resp_var_test), as.character(resp_var_test) != my_fact, "dumb_var"))
-        # 									# print("dumb_resp")
-        # 									# print(paste(dumb_resp_test))
-        # 									dumb_pred <- as.factor(replace(as.character(pred), as.character(pred) != my_fact, "dumb_var"))
-        # 									# print("dumb_pred")
-        # 									# print(paste(dumb_resp_test))
-        # 									my_roc <- pROC::roc(as.numeric(dumb_pred), as.numeric(dumb_resp_test))
-        # 									# print("my_roc")
-        # 									mult_auc <- c(mult_auc, pROC::auc(my_roc))
-        # 									print(mult_auc)
-        # 								})
-        # 							}
-        # 							if (length(mult_auc) > 0 ) {
-        # 								print("in 'if (length(mult_auc) > 0 )' statement")
-        # 								score <- mean(mult_auc)
-        # 							}else{
-        # 								break
-        # 							}
-        # 						}else{
-        #               my_roc <- pROC::roc(as.numeric(pred), as.numeric(resp_var_test))
-        #               print("ROC made")
-        #               score <- pROC::auc(my_roc)
-        # 						}
-        # score <- pROC::auc(my_roc)
         print(paste("score:", score))
         my_df <- rf$importance
         maxImp <- max(rf$importance)
@@ -242,10 +270,34 @@ for (counter in 1:num_cycles) {
   print(paste("completed loop:", counter))
 }
 
+
+# --------------------------------------------------------------------------
+print("Reshaping data from long to wide format")
+# --------------------------------------------------------------------------
 print("Reading in data from file.")
 all_plot_data <- data.frame(read.table(file = main_output_fpath,
-            sep = ",", header = TRUE))
+                                       sep = ",", header = TRUE))
+print("Building wide df.")
+data_cols <- unlist(lapply(1:num_cycles, function(x) paste0("split",x)))
+wide_header <- c("metadata_col", "trans_group", "color", data_cols)
+wide_result_df <- data.frame(matrix(nrow = length(unique(all_plot_data$metadata_col)) * length(unique(all_plot_data$trans_group)), 
+                                    ncol = length(wide_header)))
+colnames(wide_result_df) <- wide_header
+wide_result_df$metadata_col <- rep(unique(all_plot_data$metadata_col), length(unique(all_plot_data$trans_group)))
+wide_result_df$trans_group <- rep(unique(all_plot_data$trans_group), each = length(unique(all_plot_data$metadata_col)))
 
+for (ro in 1:nrow(all_plot_data)){
+  my_split <- paste0("split", all_plot_data[ro,"cycle"])
+  wide_result_df[wide_result_df$metadata_col == all_plot_data[ro,"metadata_col"] & wide_result_df$trans_group == all_plot_data[ro,"trans_group"], my_split] = all_plot_data[ro,"all_score"]
+}
+print(wide_result_df)
+
+write.table(wide_result_df, row.names = FALSE, sep = ",",
+            file = file.path(output_dir, "tables", paste0("wide_",main_output_label, ".csv")))
+
+# --------------------------------------------------------------------------
+print("Recording most important sequences.")
+# --------------------------------------------------------------------------
 unique(all_plot_data$rf_type)
 
 best_seqs <- table(all_plot_data$rf_imp_seq)
