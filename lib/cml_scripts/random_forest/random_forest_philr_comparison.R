@@ -144,10 +144,10 @@ main_header <- "all_score, metadata_col, rf_imp_se, rf_type, rf_ntree, trans_gro
 ##-Import tables and data preprocessing-----------------------------##
 print("loading and munging metadata")
 ##-Import tables and data preprocessing-----------------------------##
-metadata <- read.table(opt$metadata, 
-                       sep=opt$metadata_delim, 
-                       header=TRUE, 
-                       row.names = opt$metadata_rowname, 
+metadata <- read.table(opt$metadata,
+                       sep=opt$metadata_delim,
+                       header=TRUE,
+                       row.names = opt$metadata_rowname,
                        check.names = FALSE,
                        stringsAsFactors=TRUE)
 print("Metadata columns:")
@@ -223,7 +223,7 @@ for (counter in 1:num_cycles) {
         if(setequal(row.names(metadata), row.names(my_table)) == FALSE){
           print(paste0("These samples are in the metdata, but not ", transf_label,": ", setdiff(row.names(metadata), row.names(my_table))))
           print(paste0("These samples are in the ", transf_label, " but not metadata: ", setdiff(row.names(my_table), row.names(metadata))))
-          warning(paste("Metadata dataframe and", transf_label, "dataframe must have the same rows (order is not important)."))
+          # warning(paste("Metadata dataframe and", transf_label, "dataframe must have the same rows (order is not important)."))
         }
         my_table_train <- my_table[row.names(my_table) %in% train_index,]
         my_table_test <- my_table[row.names(my_table) %in% test_index,]
