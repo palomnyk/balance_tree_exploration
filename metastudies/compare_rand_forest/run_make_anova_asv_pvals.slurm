@@ -3,7 +3,6 @@
 #SBATCH --partition=Pisces                                    		# Partition/queue requested on server
 #SBATCH --job-name=anova_asv_pvals_all                                   		# Job name
 #SBATCH --time=20:00:00                                      		# Time limit (hrs:min:sec)
-#SBATCH --nodes=4                                         			# Number of nodes requested
 #SBATCH --ntasks-per-node=1                          			# Number of CPUs (processor cores/tasks)
 #SBATCH --mem=200gb                                          		# Memory limit
 #SBATCH --mail-type=BEGIN,END,FAIL                              	# Mail events (NONE, BEGIN, END, FAIL, ALL)
