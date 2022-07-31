@@ -234,26 +234,29 @@ for (counter in 1:num_cycles) {
         print(levels(resp_var_test))
         print(length(resp_var_train))
         names(resp_var_test) <- row.names(my_table_test)
-        rf <- randomForest::randomForest(my_table_train, resp_var_train)
-        print("made rf")
-        pred <- predict(rf, my_table_test)
-        roc_data <- data.frame(pred = pred, resp_var_test = resp_var_test)
-        score <- MLmetrics::Accuracy(pred, resp_var_test)
-        print(paste("score:", score))
-        my_df <- rf$importance
-        maxImp <- max(rf$importance)
-        maxRow <- which(rf$importance == maxImp)
-
-        #Check its existence
-        if (file.exists(main_output_fpath)) {
-          print(paste0("Writing output to ", main_output_fpath, " ."))
-          # main_header <- "all_score,	metadata_col,	rf_imp_se, rf_type, rf_ntree, trans_group, random_batch, cycle"
-          cat(paste(paste0("\n", score), colnames(metadata)[mta], row.names(my_df)[maxRow], rf$type, #ilr_weight,	rf_imp_se, rf_type,
-                    rf$ntree, transf_label, counter, #rf_ntree, trans_group, cycle
-                    sep = ","),
-              file = main_output_fpath,
-              append=TRUE)
-          }#if
+        if (length(levels(resp_var_test)) > 1 & length(resp_var_train) > 1){
+          print("There is at least 2 groups and more than one sample in the resp var.")
+          rf <- randomForest::randomForest(my_table_train, resp_var_train)
+          print("made rf")
+          pred <- predict(rf, my_table_test)
+          roc_data <- data.frame(pred = pred, resp_var_test = resp_var_test)
+          score <- MLmetrics::Accuracy(pred, resp_var_test)
+          print(paste("score:", score))
+          my_df <- rf$importance
+          maxImp <- max(rf$importance)
+          maxRow <- which(rf$importance == maxImp)
+          
+          #Check its existence
+          if (file.exists(main_output_fpath)) {
+            print(paste0("Writing output to ", main_output_fpath, " ."))
+            # main_header <- "all_score,	metadata_col,	rf_imp_se, rf_type, rf_ntree, trans_group, random_batch, cycle"
+            cat(paste(paste0("\n", score), colnames(metadata)[mta], row.names(my_df)[maxRow], rf$type, #ilr_weight,	rf_imp_se, rf_type,
+                      rf$ntree, transf_label, counter, #rf_ntree, trans_group, cycle
+                      sep = ","),
+                file = main_output_fpath,
+                append=TRUE)
+            }#second if
+          }#end if (length(levels(resp_var_test))...
         }#for loop
   #     },#try catch
   #     error=function(cond) {
