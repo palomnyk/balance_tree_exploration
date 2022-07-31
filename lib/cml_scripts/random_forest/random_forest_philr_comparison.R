@@ -154,7 +154,7 @@ print("Metadata columns:")
 print(sapply(metadata, class))
 print("Removing non-factor columns from metadata to decrease run time.")
 metadata <- metadata[,sapply(metadata, is.factor)]
-metadata <- Filter(function(x) length(unique(na.omit(x))) < 10, metadata)#hack to remove date columns if they get counted as factors
+metadata <- Filter(function(x) length(unique(na.omit(x))) < 6, metadata)#hack to remove date columns if they get counted as factors
 print("Metadata columns:")
 print(colnames(metadata))
 # df[,-which(sapply(df, class) == "factor")]
