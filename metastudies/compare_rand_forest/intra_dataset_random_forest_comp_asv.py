@@ -93,7 +93,7 @@ for ds1 in comp_ds:
 				# print(my_table)
 				for feat, ave in zip(list(ds2_table["metadata"].values) ,list(means)):
 					ds2_score[feat] = ave
-					pvals[feat] = min(my_table.loc[my_table["meta_name"]==feat]) + 1e-100
+					pvals[feat] = min(my_table.loc[my_table["meta_name"]==feat, "pval"]) + 1e-100
 			print("build graphic")
 			print(pvals.values())
 			pval_log = np.log10(list(pvals.values()))
