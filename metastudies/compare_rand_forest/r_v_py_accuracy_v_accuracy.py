@@ -34,7 +34,7 @@ print("Establishing directory layout.", flush = True)
 # --------------------------------------------------------------------------
 home_dir = os.path.expanduser(options.homedir)
 # projects = ["Vanderbilt", "Vangay", "Zeller", "Noguera-Julian"]
-projects = ["Vanderbilt", "Vangay"]
+projects = ["Vanderbilt", "Vangay", "Zeller",]
 output_dir = os.path.join(home_dir, "metastudies", "output")
 assert os.path.exists(output_dir)
 plot_pdf_fpath = os.path.join(output_dir, "inter_group_comp_R_v_Python_by_transformation.pdf")
@@ -89,30 +89,35 @@ for ds in comp_ds:
 			my_table = my_table.loc[my_table["trans_group"] == ds,]
 			splits = my_table.columns[my_table.columns.str.startswith('split')].tolist()
 			means = my_table[splits].agg(mean, axis = 1)
-			assert not means.empty, f"{ds} is not in the table from {project}"
+			# assert not means.empty, f"{ds} is not in the table from {project}"
 			# pval_fpath = os.path.join(op_dir, "tables", f"{project}_pValuesUnivariate_taxaVmetadata.csv")
 			# my_table = pd.read_csv(pval_fpath, sep=',', header=0)
 			# print(my_table)
 			for feat, ave in zip(list(my_table["metadata_col"].values) ,list(means)):
 				r_score[feat] = ave
 				# pvals[feat] = min(my_table.loc[(my_table["meta_name"]==feat) & (my_table["taxa_lev"] == "Genus"), "pval"].values) + 1e-100
-		print("build graphic")
-		# print(pvals.values())
-		# pval_log = np.log10(list(pvals.values()))
-		r_score = {key:r_score[key] for key in py_score.keys()}
+		same_keys = set(r_score.keys()).intersection(set(py_score.keys()))
+		print("Same_keys")
+		print(same_keys)
+		r_score = {key:r_score[key] for key in same_keys}
+		py_score = {key:py_score[key] for key in same_keys}
 		print(r_score.keys())
+		print(r_score.values())
 		print(py_score.keys())
+		print(py_score.values())
 		ds1_lst = np.array(list(py_score.values()))
 		ds2_lst = np.array(list(r_score.values()))
-		a, b = np.polyfit(ds1_lst, ds2_lst, 1)
+		print("build graphic")
+		# a, b = np.polyfit(ds1_lst, ds2_lst, 1)
 		fig = plt.figure(figsize=(11,11))
 		fig.suptitle(f"Metastudy {train_percent}training {ds} Py vs R, accuracy vs accuracy")
 		plt.subplots_adjust(bottom=0.8)
 		ax = fig.add_subplot(1,1,1)
-		ax.scatter(ds1_lst, ds2_lst, color = "blue", label=f"{ds} Py vs R RF")
+		ax.scatter(ds1_lst, ds2_lst, color = "blue", label=f"{ds}")
 		ax.plot([0,1], [0,1], color = "r", label = "expected")
-		ax.plot(ds1_lst, a*ds1_lst+b, color = "green", label = "accuracy polyfit")
-		ax.set_xlabel("Accracy Python RF")
+		# ax.plot(ds1_lst, a*ds1_lst+b, color = "green", label = "accuracy polyfit")
+		# plt.annotate(r_score.keys(), ds1_lst * (1 + 0.01), ds2_lst * (1 + 0.01) , fontsize=12)
+		ax.set_xlabel("Accuracy Python RF")
 		ax.set_ylabel("Accuracy R RF")
 		ax.legend(title="Legend", loc="upper left", framealpha=1)
 		fig.tight_layout()
