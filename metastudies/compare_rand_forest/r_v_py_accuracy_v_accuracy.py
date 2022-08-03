@@ -86,7 +86,7 @@ for ds in comp_ds:
 			assert not means.empty, f"{ds} is not in the py table from {project}"
 			for feat, ave in zip(list(my_table["metadata"].values) ,list(means)):
 				print(ave)
-				py_score[feat] = ave
+				py_score[f"{project}_{feat}"] = ave
 			#table 2
 			# print("py_score")
 			# print(py_score)
@@ -96,7 +96,7 @@ for ds in comp_ds:
 			my_table = pd.read_csv(result_fpath, sep=',', header=0)
 			print(my_table.to_string())
 			my_table = my_table.loc[my_table["trans_group"] == ds,]
-			print(my_table.to_string())
+			# print(my_table.to_string())
 			splits = my_table.columns[my_table.columns.str.startswith('split')].tolist()
 			means = my_table[splits].agg(mean, axis = 1)
 			# assert not means.empty, f"{ds} is not in the table from {project}"
@@ -105,7 +105,7 @@ for ds in comp_ds:
 			print("R means")
 			print(means)
 			for feat, ave in zip(list(my_table["metadata_col"].values) ,list(means)):
-				r_score[feat] = ave
+				r_score[f"{project}_{feat}"] = ave
 				# pvals[feat] = min(my_table.loc[(my_table["meta_name"]==feat) & (my_table["taxa_lev"] == "Genus"), "pval"].values) + 1e-100
 		same_keys = set(r_score.keys()).intersection(set(py_score.keys()))
 		r_score = {key:r_score[key] for key in same_keys}
