@@ -33,8 +33,8 @@ options, unknown = parser.parse_known_args()
 print("Establishing directory layout.", flush = True)
 # --------------------------------------------------------------------------
 home_dir = os.path.expanduser(options.homedir)
-# projects = ["Vanderbilt", "Vangay", "Zeller", "Noguera-Julian"]
-projects = ["Vanderbilt", "Vangay", "Zeller",]
+projects = ["Vanderbilt", "Vangay", "Zeller", "Noguera-Julian"]
+# projects = ["Vanderbilt", "Vangay"]
 output_dir = os.path.join(home_dir, "metastudies", "output")
 assert os.path.exists(output_dir)
 plot_pdf_fpath = os.path.join(output_dir, "inter_group_comp_R_v_Python_by_transformation.pdf")
@@ -75,30 +75,45 @@ for ds in comp_ds:
 			my_table = my_table.loc[my_table["dataset"] == ds,]
 			# print(ds1_table)
 			splits = my_table.columns[my_table.columns.str.startswith('split')].tolist()
-			# print(ds1_table[splits])
+			# print(my_table[splits].to_string())
 			means = my_table[splits].agg(mean, axis = 1)
 			print(means)
+			# if any(pd.isna(my_table[splits])):
+			# 	print("Nan found")
+			# 	print(my_table[splits])
+			# 	print(project)
+			# 	sys.exit()
 			assert not means.empty, f"{ds} is not in the py table from {project}"
 			for feat, ave in zip(list(my_table["metadata"].values) ,list(means)):
+				print(ave)
 				py_score[feat] = ave
 			#table 2
-			main_output_label = f"wide_random_forest_score_R_20"
+			# print("py_score")
+			# print(py_score)
 			op_dir = os.path.join(home_dir, project, "output")
-			result_fpath = os.path.join(op_dir, "tables", f"{main_output_label}.csv")
+			result_fpath = os.path.join(op_dir, "tables", f"wide_random_forest_score_R_20.csv")
+			print("R tables")
 			my_table = pd.read_csv(result_fpath, sep=',', header=0)
+			print(my_table.to_string())
 			my_table = my_table.loc[my_table["trans_group"] == ds,]
+			print(my_table.to_string())
 			splits = my_table.columns[my_table.columns.str.startswith('split')].tolist()
 			means = my_table[splits].agg(mean, axis = 1)
 			# assert not means.empty, f"{ds} is not in the table from {project}"
 			# pval_fpath = os.path.join(op_dir, "tables", f"{project}_pValuesUnivariate_taxaVmetadata.csv")
 			# my_table = pd.read_csv(pval_fpath, sep=',', header=0)
-			# print(my_table)
+			print("R means")
+			print(means)
 			for feat, ave in zip(list(my_table["metadata_col"].values) ,list(means)):
 				r_score[feat] = ave
 				# pvals[feat] = min(my_table.loc[(my_table["meta_name"]==feat) & (my_table["taxa_lev"] == "Genus"), "pval"].values) + 1e-100
 		same_keys = set(r_score.keys()).intersection(set(py_score.keys()))
 		print("Same_keys")
 		print(same_keys)
+		print(r_score.keys())
+		print(r_score.values())
+		print(py_score.keys())
+		print(py_score.values())
 		r_score = {key:r_score[key] for key in same_keys}
 		py_score = {key:py_score[key] for key in same_keys}
 		print(r_score.keys())
@@ -113,14 +128,16 @@ for ds in comp_ds:
 		fig.suptitle(f"Metastudy {train_percent}training {ds} Py vs R, accuracy vs accuracy")
 		plt.subplots_adjust(bottom=0.8)
 		ax = fig.add_subplot(1,1,1)
-		ax.scatter(ds1_lst, ds2_lst, color = "blue", label=f"{ds}")
+		# ax.scatter(ds1_lst, ds2_lst, label=list(r_score.keys()))
 		ax.plot([0,1], [0,1], color = "r", label = "expected")
 		# ax.plot(ds1_lst, a*ds1_lst+b, color = "green", label = "accuracy polyfit")
-		# plt.annotate(r_score.keys(), ds1_lst * (1 + 0.01), ds2_lst * (1 + 0.01) , fontsize=12)
 		ax.set_xlabel("Accuracy Python RF")
 		ax.set_ylabel("Accuracy R RF")
-		ax.legend(title="Legend", loc="upper left", framealpha=1)
 		fig.tight_layout()
+		for i, label in enumerate(list(r_score.keys())):
+			ax.scatter(ds1_lst[i], ds2_lst[i], label=list(r_score.keys())[i])
+			plt.annotate(label, (ds1_lst[i], ds2_lst[i]))
+		ax.legend(title="Legend", loc="best", framealpha=0.1)
 		print("Saving figure to pdf", flush = True)
 		pdf.savefig( fig )
 		# sys.exit()
