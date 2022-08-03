@@ -33,8 +33,8 @@ options, unknown = parser.parse_known_args()
 print("Establishing directory layout.", flush = True)
 # --------------------------------------------------------------------------
 home_dir = os.path.expanduser(options.homedir)
-# projects = ["Vanderbilt", "Vangay", "Zeller", "Noguera-Julian"]
-projects = ["Vanderbilt", "Vangay", "Zeller"]
+projects = ["Vanderbilt", "Vangay", "Zeller", "Noguera-Julian"]
+# projects = ["Vanderbilt", "Vangay", "Zeller"]
 output_dir = os.path.join(home_dir, "metastudies", "output")
 assert os.path.exists(output_dir)
 plot_pdf_fpath = os.path.join(output_dir, "inter_group_comp_R_v_Python_by_transformation.pdf")
@@ -108,18 +108,8 @@ for ds in comp_ds:
 				r_score[feat] = ave
 				# pvals[feat] = min(my_table.loc[(my_table["meta_name"]==feat) & (my_table["taxa_lev"] == "Genus"), "pval"].values) + 1e-100
 		same_keys = set(r_score.keys()).intersection(set(py_score.keys()))
-		print("Same_keys")
-		print(same_keys)
-		print(r_score.keys())
-		print(r_score.values())
-		print(py_score.keys())
-		print(py_score.values())
 		r_score = {key:r_score[key] for key in same_keys}
 		py_score = {key:py_score[key] for key in same_keys}
-		print(r_score.keys())
-		print(r_score.values())
-		print(py_score.keys())
-		print(py_score.values())
 		ds1_lst = np.array(list(py_score.values()))
 		ds2_lst = np.array(list(r_score.values()))
 		print("build graphic")
