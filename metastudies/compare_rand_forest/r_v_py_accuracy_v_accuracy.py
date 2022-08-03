@@ -33,8 +33,8 @@ options, unknown = parser.parse_known_args()
 print("Establishing directory layout.", flush = True)
 # --------------------------------------------------------------------------
 home_dir = os.path.expanduser(options.homedir)
-projects = ["Vanderbilt", "Vangay", "Zeller", "Noguera-Julian"]
-# projects = ["Vanderbilt", "Vangay"]
+# projects = ["Vanderbilt", "Vangay", "Zeller", "Noguera-Julian"]
+projects = ["Vanderbilt", "Vangay", "Zeller"]
 output_dir = os.path.join(home_dir, "metastudies", "output")
 assert os.path.exists(output_dir)
 plot_pdf_fpath = os.path.join(output_dir, "inter_group_comp_R_v_Python_by_transformation.pdf")
