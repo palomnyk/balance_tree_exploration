@@ -27,7 +27,7 @@ python ~/git/balance_tree_exploration/lib/cml_scripts/random_forest/random_fores
   -a True \
   -f patient_metadata.tsv \
   -i Run \
-  -t 0.9
+  -t 0.75
 conda deactivate
 module unload anaconda3/2020.11
 # usage: sklearn_model_metrics.py [-h] [-m] [-d homedir] [-p project]
