@@ -43,14 +43,14 @@ plot_pdf_fpath = os.path.join(output_dir, "inter_group_comp_R_v_Python_by_transf
 # --------------------------------------------------------------------------
 print("Establishing other constants.", flush = True)
 # --------------------------------------------------------------------------
-comp_ds = ['alr_DADA2', 'clr_DADA2', 'DaDa2', 'Filtered_IQtree', \
-	'Filtered_IQtree_mean.descendants_enorm', 'Filtered_Silva_DADA2', \
-	'Filtered_Silva_DADA2_mean.descendants_enorm', 'Filtered_UPGMA_DADA2', \
-	'Filtered_UPGMA_DADA2_mean.descendants_enorm', 'lognorm_DADA2', 'Silva_DADA2', \
-	'Silva_DADA2_mean.descendants_enorm']
+# comp_ds = ['alr_DADA2', 'clr_DADA2', 'DaDa2', 'Filtered_IQtree', \
+# 	'Filtered_IQtree_mean.descendants_enorm', 'Filtered_Silva_DADA2', \
+# 	'Filtered_Silva_DADA2_mean.descendants_enorm', 'Filtered_UPGMA_DADA2', \
+# 	'Filtered_UPGMA_DADA2_mean.descendants_enorm', 'lognorm_DADA2', 'Silva_DADA2', \
+# 	'Silva_DADA2_mean.descendants_enorm']
 
-# comp_ds = ['alr_DADA2', 'clr_DADA2', 'DaDa2', 'Filtered_IQtree', 'Filtered_Silva_DADA2',
-#  'Filtered_UPGMA_DADA2', 'lognorm_DADA2', 'Silva_DADA2']
+comp_ds = ['alr_DADA2', 'clr_DADA2', 'DaDa2', 'Filtered_IQtree', 'Filtered_Silva_DADA2',
+ 'Filtered_UPGMA_DADA2', 'lognorm_DADA2', 'Silva_DADA2']
 
 pdf = matplotlib.backends.backend_pdf.PdfPages(plot_pdf_fpath)
 #set font sizes
