@@ -69,7 +69,7 @@ def add_PhILR_dfs_to_table(lst, \
 	# philr_part_weights = ["anorm","enorm"], \
 	# philr_ilr_weights = ["blw.sqrt","mean.descendants"], \
 	philr_part_weights = ["enorm"], \
-	philr_ilr_weights = ["mean.descendants"], \
+	philr_ilr_weights = ["blw.sqrt"], \
 	color = "w"):
 	if not os.path.exists(root_folder):
 		print(f"{root_folder} does not exist. Use PhILR_random_trees_and_counts_tables.R to create it.", flush = True)
@@ -88,7 +88,7 @@ def add_random_tree_PhILRs_to_table(lst, \
 	# philr_part_weights = ["anorm","enorm"], \
 	# philr_ilr_weights = ["blw.sqrt","mean.descendants"], \
 	philr_part_weights = ["enorm"], \
-	philr_ilr_weights = ["mean.descendants"], \
+	philr_ilr_weights = ["blw.sqrt"], \
 	color = "w", \
 	num_rand_trees = 10):
 	print(f"Adding random trees from {base_fn}.")

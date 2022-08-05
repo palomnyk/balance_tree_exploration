@@ -44,10 +44,13 @@ plot_pdf_fpath = os.path.join(output_dir, "inter_group_comp_R_v_Python_by_transf
 print("Establishing other constants.", flush = True)
 # --------------------------------------------------------------------------
 comp_ds = ['alr_DADA2', 'clr_DADA2', 'DaDa2', 'Filtered_IQtree', \
-	'Filtered_IQtree_blw.sqrt_anorm', 'Filtered_Silva_DADA2', \
-	'Filtered_Silva_DADA2_blw.sqrt_anorm', 'Filtered_UPGMA_DADA2', \
-	'Filtered_UPGMA_DADA2_blw.sqrt_anorm', 'lognorm_DADA2', 'Silva_DADA2', \
-	'Silva_DADA2_blw.sqrt_anorm']
+	'Filtered_IQtree_mean.descendants_enorm', 'Filtered_Silva_DADA2', \
+	'Filtered_Silva_DADA2_mean.descendants_enorm', 'Filtered_UPGMA_DADA2', \
+	'Filtered_UPGMA_DADA2_mean.descendants_enorm', 'lognorm_DADA2', 'Silva_DADA2', \
+	'Silva_DADA2_mean.descendants_enorm']
+
+# comp_ds = ['alr_DADA2', 'clr_DADA2', 'DaDa2', 'Filtered_IQtree', 'Filtered_Silva_DADA2',
+#  'Filtered_UPGMA_DADA2', 'lognorm_DADA2', 'Silva_DADA2']
 
 pdf = matplotlib.backends.backend_pdf.PdfPages(plot_pdf_fpath)
 #set font sizes
@@ -114,34 +117,53 @@ for ds in comp_ds:
 	r_score = {key:r_score[key] for key in same_keys}
 	py_score = {key:py_score[key] for key in same_keys}
 	ds1_lst = np.array(list(map(lambda x: x[0], list(py_score.values()))))
-	print("ds1_lst")
-	print(ds1_lst)
 	ds2_lst = np.array(list(map(lambda x: x[0], list(r_score.values()))))
-	print("build graphic")
-	# a, b = np.polyfit(ds1_lst, ds2_lst, 1)
-	fig = plt.figure(figsize=(11,11))
-	fig.suptitle(f"Metastudy {train_percent}training {ds} Py vs R, accuracy vs accuracy")
-	plt.subplots_adjust(bottom=0.8)
-	ax = fig.add_subplot(1,1,1)
-	# ax.scatter(ds1_lst, ds2_lst, label=list(r_score.keys()))
-	ax.plot([0,1], [0,1], color = "r", label = "expected")
-	# ax.plot(ds1_lst, a*ds1_lst+b, color = "green", label = "accuracy polyfit")
-	ax.set_xlabel("Accuracy Python Rand Forest")
-	ax.set_ylabel("Accuracy R Rand Forest")
-	fig.tight_layout()
-	my_projects = list(set(list(map(lambda x: x[1], list(r_score.values())))))
-	my_markers = ["o", "s", "P", "v", "x"]
-	for i, label in enumerate(list(r_score.keys())):
-		my_proj = r_score[label][1]
-		my_marker = my_markers[my_projects.index(my_proj)]
-		ax.scatter(ds1_lst[i], ds2_lst[i], s=70, label=list(r_score.keys())[i], marker=my_marker)
-		# plt.annotate(label, (ds1_lst[i], ds2_lst[i]))
-	ax.legend(title="Legend", loc="best", framealpha=0.1)
-	print("Saving figure to pdf", flush = True)
-	pdf.savefig( fig, bbox_inches='tight' )
-	# sys.exit()
-	# print(my_table.columns)
-	# print(sorted(set(my_table["dataset"].values),key=lambda s: s.lower()))
+	if len(ds1_lst) > 0:
+		print("build graphic")
+		# a, b = np.polyfit(ds1_lst, ds2_lst, 1)
+		fig = plt.figure(figsize=(11,11))
+		fig.suptitle(f"Metastudy {train_percent}training {ds} Py vs R, accuracy vs accuracy")
+		plt.subplots_adjust(bottom=0.8)
+		ax = fig.add_subplot(1,1,1)
+		# ax.scatter(ds1_lst, ds2_lst, label=list(r_score.keys()))
+		ax.plot([0,1], [0,1], color = "r", label = "expected")
+		# ax.plot(ds1_lst, a*ds1_lst+b, color = "green", label = "accuracy polyfit")
+		ax.set_xlabel("Accuracy Python Rand Forest")
+		ax.set_ylabel("Accuracy R Rand Forest")
+		fig.tight_layout()
+		my_projects = list(set(list(map(lambda x: x[1], list(r_score.values())))))
+		my_markers = ["o", "s", "P", "v", "x"]
+		for i, label in enumerate(list(r_score.keys())):
+			my_proj = r_score[label][1]
+			my_marker = my_markers[my_projects.index(my_proj)]
+			ax.scatter(ds1_lst[i], ds2_lst[i], s=70, label=list(r_score.keys())[i], marker=my_marker)
+			# plt.annotate(label, (ds1_lst[i], ds2_lst[i]))
+		# ax.legend(title="Legend", loc="best", framealpha=0.1)
+		print("Saving figure to pdf", flush = True)
+		pdf.savefig( fig, bbox_inches='tight' )
+		# sys.exit()
+		# print(my_table.columns)
+		# print(sorted(set(my_table["dataset"].values),key=lambda s: s.lower()))X
+print("Making seperate legend.")
+fig = plt.figure(figsize=(11,11))
+fig.suptitle(f"Legend {train_percent}training {ds} Py vs R, accuracy vs accuracy")
+plt.subplots_adjust(bottom=0.8)
+ax = fig.add_subplot(1,1,1)
+ax.plot([0,1], [0,1], color = "r", label = "expected")
+# ax.plot(ds1_lst, a*ds1_lst+b, color = "green", label = "accuracy polyfit")
+ax.set_xlabel("Accuracy Python Rand Forest")
+ax.set_ylabel("Accuracy R Rand Forest")
+fig.tight_layout()
+my_projects = list(set(list(map(lambda x: x[1], list(r_score.values())))))
+my_markers = ["o", "s", "P", "v", "x"]
+for i, label in enumerate(list(r_score.keys())):
+	my_proj = r_score[label][1]
+	my_marker = my_markers[my_projects.index(my_proj)]
+	ax.scatter(ds1_lst[i], ds2_lst[i], s=70, label=list(r_score.keys())[i], marker=my_marker)
+	# plt.annotate(label, (ds1_lst[i], ds2_lst[i]))
+ax.legend(title="Legend",  loc="center", framealpha=1, mode = "expand", markerscale=2)
+print("Saving figure to pdf", flush = True)
+pdf.savefig( fig, bbox_inches='tight' )
 
 print("Saving pdf", flush = True)
 pdf.close()
