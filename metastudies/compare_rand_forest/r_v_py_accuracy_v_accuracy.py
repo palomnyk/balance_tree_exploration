@@ -1,6 +1,14 @@
 #!/usr/bin/env python
 # Author: Aaron Yerke, aaronyerke@gmail.com
-# This is a script for comparing random forest output to pvalues
+#This is a script for comparing R and Python random forest output
+# --------------------------------------------------------------------------
+print(f"Running {__file__}")
+print("""
+This is a script for comparing R and Python random forest output. 
+Our hypthesis is that R does slightly better than Python.
+""")
+# --------------------------------------------------------------------------
+
 # --------------------------------------------------------------------------
 print("Loading external libraries.",flush = True)
 # --------------------------------------------------------------------------
@@ -43,14 +51,14 @@ plot_pdf_fpath = os.path.join(output_dir, "inter_group_comp_R_v_Python_by_transf
 # --------------------------------------------------------------------------
 print("Establishing other constants.", flush = True)
 # --------------------------------------------------------------------------
-# comp_ds = ['alr_DADA2', 'clr_DADA2', 'DaDa2', 'Filtered_IQtree', \
-# 	'Filtered_IQtree_mean.descendants_enorm', 'Filtered_Silva_DADA2', \
-# 	'Filtered_Silva_DADA2_mean.descendants_enorm', 'Filtered_UPGMA_DADA2', \
-# 	'Filtered_UPGMA_DADA2_mean.descendants_enorm', 'lognorm_DADA2', 'Silva_DADA2', \
-# 	'Silva_DADA2_mean.descendants_enorm']
+comp_ds = ['alr_DADA2', 'clr_DADA2', 'DaDa2', 'Filtered_IQtree', \
+	'Filtered_IQtree_mean.descendants_enorm', 'Filtered_Silva_DADA2', \
+	'Filtered_Silva_DADA2_mean.descendants_enorm', 'Filtered_UPGMA_DADA2', \
+	'Filtered_UPGMA_DADA2_mean.descendants_enorm', 'lognorm_DADA2', 'Silva_DADA2', \
+	'Silva_DADA2_mean.descendants_enorm']
 
-comp_ds = ['alr_DADA2', 'clr_DADA2', 'DaDa2', 'Filtered_IQtree', 'Filtered_Silva_DADA2',
- 'Filtered_UPGMA_DADA2', 'lognorm_DADA2', 'Silva_DADA2']
+# comp_ds = ['alr_DADA2', 'clr_DADA2', 'DaDa2', 'Filtered_IQtree', 'Filtered_Silva_DADA2',
+#  'Filtered_UPGMA_DADA2', 'lognorm_DADA2', 'Silva_DADA2']
 
 pdf = matplotlib.backends.backend_pdf.PdfPages(plot_pdf_fpath)
 #set font sizes
@@ -91,7 +99,7 @@ for ds in comp_ds:
 		# 	sys.exit()
 		assert not means.empty, f"{ds} is not in the py table from {project}"
 		for feat, ave in zip(list(my_table["metadata"].values) ,list(means)):
-			print(ave)
+			print(f"Python: {ave} for {feat}")
 			py_score[f"{project}_{feat}"] = [ave, project]
 		#table 2
 		# print("py_score")
@@ -111,6 +119,7 @@ for ds in comp_ds:
 		print("R means")
 		print(means)
 		for feat, ave in zip(list(my_table["metadata_col"].values) ,list(means)):
+			print(f"R: {ave} for {feat}")
 			r_score[f"{project}_{feat}"] = [ave, project]
 			# pvals[feat] = min(my_table.loc[(my_table["meta_name"]==feat) & (my_table["taxa_lev"] == "Genus"), "pval"].values) + 1e-100
 	same_keys = set(r_score.keys()).intersection(set(py_score.keys()))
