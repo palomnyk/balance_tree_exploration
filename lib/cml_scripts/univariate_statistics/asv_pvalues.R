@@ -73,6 +73,7 @@ meta_name <- c()
 meta_col <- c()
 pval <- c()
 my_table <- asv_table
+pdf(file = file.path(output_dir, "graphics", "silva_ref_tree.pdf"))
 for( tx in 1:ncol(my_table)){
   my_taxa <- names(my_table)[tx]
   for(meta in 1:ncol(metadata)){
@@ -93,6 +94,20 @@ dFrame <- dFrame [order(dFrame$pval),]
 dFrame$adj_pval <- p.adjust( dFrame$pval, method = "BH" )	
 write.table(dFrame, file=file.path(output_dir, "tables", paste0(project, "_pValuesUnivariate_sequenceVmetadata.csv")), 
             sep=",", row.names = F)
+
+# --------------------------------------------------------------------------
+print("Making boxplots ordered by pval.")
+# --------------------------------------------------------------------------
+
+pdf(file = file.path(output_dir, "graphics", paste0("univariate_pval_seq_", project,".pdf")))
+for( rw in 1:nrow(dFrame)){
+  taxon <- dFrame$asv_name[rw]
+  boxplot(asv_table[,taxon] ~ my_meta,
+  main=paste(project, dFrame$meta_name[rw], base::formatC(dFrame$pval[rw],format="e", digits=6)),
+  sub=taxon
+  )
+}
+dev.off()
 
 
 
