@@ -108,7 +108,7 @@ for( taxa_col in 1:ncol(asv_tax)){
     my_taxa <- names(my_table)[tx]
     for(meta in 1:ncol(metadata)){
       my_meta <- metadata[,meta]
-      my_lm <- lm(unlist(asv_table[,tx]) ~ my_meta)
+      my_lm <- lm(my_meta ~ asv_table[,tx])
       my_pval <- anova(my_lm)$"Pr(>F)"[1]
       pval <- c(pval, my_pval)
       taxa_int <- c(taxa_int, taxa_col)
@@ -135,7 +135,7 @@ print("Making boxplots ordered by pval.")
 pdf(file = file.path(output_dir, "graphics", paste0("univariate_pval_tax_", project,".pdf")))
 for( rw in 1:nrow(dFrame)){
   taxon <- dFrame$taxa[rw]
-  boxplot(asv_table[,taxon] ~ my_meta,
+  base::boxplot(my_meta ~ asv_table[,taxon],
           main=paste(project, dFrame$meta_name[rw], base::formatC(dFrame$pval[rw],format="e", digits=6)),
           sub=taxon
   )
