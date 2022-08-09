@@ -109,5 +109,14 @@ for( rw in 1:nrow(dFrame)){
 }
 dev.off()
 
+pdf(file = file.path(output_dir, "graphics", paste0("top_100_univariate_pval_seq_", project,".pdf")))
+for( rw in 1:100){
+  taxon <- dFrame$asv_name[rw]
+  boxplot(asv_table[,taxon] ~ my_meta,
+          main=paste(project, dFrame$meta_name[rw], base::formatC(dFrame$pval[rw],format="e", digits=6)),
+          sub=taxon
+  )
+}
+dev.off()
 
 
