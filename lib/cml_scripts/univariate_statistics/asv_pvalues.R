@@ -78,7 +78,7 @@ for( tx in 1:ncol(my_table)){
   my_taxa <- names(my_table)[tx]
   for(meta in 1:ncol(metadata)){
     my_meta <- metadata[,meta]
-    my_lm <- lm(my_meta ~ asv_table[,taxon])
+    my_lm <- lm(my_meta ~ asv_table[,tx])
     my_pval <- anova(my_lm)$"Pr(>F)"[1]
     pval <- c(pval, my_pval)
     asv_name <- c(asv_name, my_taxa)
