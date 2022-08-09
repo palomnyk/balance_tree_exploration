@@ -128,5 +128,17 @@ dFrame$adj_pval <- p.adjust( dFrame$pval, method = "BH" )
 write.table(dFrame, file=file.path(output_dir, "tables", paste0(project, "_pValuesUnivariate_taxaVmetadata.csv")), 
             sep=",", row.names = F)
 
+# --------------------------------------------------------------------------
+print("Making boxplots ordered by pval.")
+# --------------------------------------------------------------------------
 
+pdf(file = file.path(output_dir, "graphics", paste0("univariate_pval_tax_", project,".pdf")))
+for( rw in 1:nrow(dFrame)){
+  taxon <- dFrame$taxa[rw]
+  boxplot(asv_table[,taxon] ~ my_meta,
+          main=paste(project, dFrame$meta_name[rw], base::formatC(dFrame$pval[rw],format="e", digits=6)),
+          sub=taxon
+  )
+}
+dev.off()
 
