@@ -2,6 +2,11 @@
 # Author: Aaron Yerke, aaronyerke@gmail.com
 # This is a script for comparing random forest output to pvalues
 # --------------------------------------------------------------------------
+print(f"Running {__file__}")
+print("""This is a script for comparing random forest accuracy output to asv pvalues.""")
+# --------------------------------------------------------------------------
+
+# --------------------------------------------------------------------------
 print("Loading external libraries.",flush = True)
 # --------------------------------------------------------------------------
 import os, sys
@@ -34,7 +39,6 @@ print("Establishing directory layout.", flush = True)
 # --------------------------------------------------------------------------
 home_dir = os.path.expanduser(options.homedir)
 projects = ["Vanderbilt", "Vangay", "Zeller", "Noguera-Julian"]
-# projects = ["Vanderbilt", "Vangay"]
 output_dir = os.path.join(home_dir, "metastudies", "output")
 assert os.path.exists(output_dir)
 plot_pdf_fpath = os.path.join(output_dir, "log10_python_vs_asv_by_transformation.pdf")
@@ -46,6 +50,9 @@ comp_ds = ['alr_DADA2', 'clr_DADA2', 'DaDa2', 'Filtered_IQtree', \
 	'Filtered_Silva_DADA2_mean.descendants_enorm', 'Filtered_UPGMA_DADA2', \
 	'Filtered_UPGMA_DADA2_mean.descendants_enorm', 'lognorm_DADA2', 'Silva_DADA2', \
 	'Silva_DADA2_mean.descendants_enorm']
+
+comp_ds = ['alr_DADA2', 'clr_DADA2', 'DaDa2', 'Filtered_IQtree', 'Filtered_Silva_DADA2',
+ 'Filtered_UPGMA_DADA2', 'lognorm_DADA2', 'Silva_DADA2']
 
 pdf = matplotlib.backends.backend_pdf.PdfPages(plot_pdf_fpath)
 #set font sizes
@@ -79,10 +86,11 @@ for ds1 in comp_ds:
 				splits = ds1_table.columns[ds1_table.columns.str.startswith('split')].tolist()
 				# print(ds1_table[splits])
 				means = ds1_table[splits].agg(mean, axis = 1)
-				print(means)
+				# print(means)
 				assert not means.empty, f"{ds1} is not in the table from {project}"
 				for feat, ave in zip(list(ds1_table["metadata"].values) ,list(means)):
 					ds1_score[feat] = ave
+					# print(f"Python: {ave} for {feat}")
 				#table 2
 				ds2_table = my_table.loc[my_table["dataset"] == ds2,]
 				splits = ds2_table.columns[ds2_table.columns.str.startswith('split')].tolist()
@@ -94,6 +102,14 @@ for ds1 in comp_ds:
 				for feat, ave in zip(list(ds2_table["metadata"].values) ,list(means)):
 					ds2_score[feat] = ave
 					pvals[feat] = min(my_table.loc[my_table["meta_name"]==feat, "pval"]) + 1e-307
+					my_min = min(my_table.loc[my_table["meta_name"]==feat, "pval"])
+					print(f"pval {feat} my min: {my_min}")
+			same_keys = set(ds1_score.keys()).intersection(set(ds2_score.keys()))
+			ds1_score = {key:ds1_score[key] for key in same_keys}
+			ds2_score = {key:ds2_score[key] for key in same_keys}
+			pvals = {key:pvals[key] for key in same_keys}
+			ds1_lst = np.array(list(map(lambda x: x, list(ds1_score.values()))))
+			ds2_lst = np.array(list(map(lambda x: x, list(ds2_score.values()))))
 			print("build graphic")
 			print(pvals.values())
 			pval_log = np.log10(list(pvals.values()))
@@ -101,11 +117,17 @@ for ds1 in comp_ds:
 			fig.suptitle(f"Metastudy {train_percent}training {ds1} vs {ds2} by pvalue, Python only")
 			plt.subplots_adjust(bottom=0.8)
 			ax = fig.add_subplot(1,1,1)
-			ax.scatter(pval_log, ds1_score.values(), color = "blue", label=ds1)
-			ax.scatter(pval_log, ds2_score.values(), color = "red", label=ds2)
+			# ax.scatter(pval_log, ds1_score.values(), color = "blue", label=ds1)
+			# ax.scatter(pval_log, ds2_score.values(), color = "red", label=ds2)
+			for i, label in enumerate(list(ds1_score.keys())):
+				# my_marker = my_markers[my_projects.index(my_proj)]
+				ax.scatter(pval_log[i], ds1_lst[i], s=70, color="blue", label=list(ds1_score.keys())[i], marker="+")
+				plt.annotate(f"{ds1}_{label}", (pval_log[i], ds1_lst[i]))
+				ax.scatter(pval_log[i], ds2_lst[i], s=70, color="red", label=list(ds2_score.keys())[i], marker="o")
+				plt.annotate(f"{ds2}_{label}", (pval_log[i], ds2_lst[i]))
 			ax.set_xlabel("log10 of ANOVA p-value of the strongest genus for each metadata cat")
 			ax.set_ylabel("Accuracy")
-			ax.legend(title="Legend", loc="upper left", framealpha=1)
+			# ax.legend(title="Legend", loc="upper left", framealpha=1)
 			fig.tight_layout()
 			print("Saving figure to pdf", flush = True)
 			pdf.savefig( fig )
