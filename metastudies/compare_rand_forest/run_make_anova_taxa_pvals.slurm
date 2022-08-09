@@ -1,11 +1,10 @@
 #!/bin/bash
 
-#SBATCH --partition=Pis                                    		# Partition/queue requested on server
+#SBATCH --partition=Pisces                                    		# Partition/queue requested on server
 #SBATCH --job-name=anova_taxa_pvals_all                                   		# Job name
-#SBATCH --time=20:00:00                                      		# Time limit (hrs:min:sec)
-#SBATCH --nodes=4                                         			# Number of nodes requested
+#SBATCH --time=20:00:00                                      		# Time limit (hrs:min:sec)                                        			# Number of nodes requested
 #SBATCH --ntasks-per-node=1                          			# Number of CPUs (processor cores/tasks)
-#SBATCH --mem=200gb                                          		# Memory limit
+#SBATCH --mem=100gb                                          		# Memory limit
 #SBATCH --mail-type=BEGIN,END,FAIL                              	# Mail events (NONE, BEGIN, END, FAIL, ALL)
 #SBATCH --mail-user=amyerke@uncc.edu                            	# Specified email address
 #SBATCH --output=/users/amyerke/slurmLogs/%x.%j.log     # Set directory for standard output
