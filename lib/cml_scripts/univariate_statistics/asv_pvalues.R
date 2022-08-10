@@ -98,6 +98,8 @@ write.table(dFrame, file=file.path(output_dir, "tables", paste0(project, "_pValu
 # --------------------------------------------------------------------------
 print("Making boxplots ordered by pval.")
 # --------------------------------------------------------------------------
+dFrame <- read.csv(file=file.path(output_dir, "tables", paste0(project, "_pValuesUnivariate_sequenceVmetadata.csv")), 
+                   sep=",")
 
 pdf(file = file.path(output_dir, "graphics", paste0("univariate_pval_seq_", project,".pdf")))
 for( rw in 1:nrow(dFrame)){
@@ -105,7 +107,7 @@ for( rw in 1:nrow(dFrame)){
   my_meta <- metadata[,dFrame$meta_name[rw]]
   boxplot(asv_table[,taxon] ~ my_meta,
   main=paste(project, dFrame$meta_name[rw], base::formatC(dFrame$pval[rw],format="e", digits=6)),
-  sub=taxon)
+  sub=taxon, las=2, xlab = taxon, ylab = "sequence:")
 }
 dev.off()
 
@@ -115,7 +117,7 @@ for( rw in 1:100){
   my_meta <- metadata[,dFrame$meta_name[rw]]
   boxplot(asv_table[,taxon] ~ my_meta,
           main=paste(project, dFrame$meta_name[rw], base::formatC(dFrame$pval[rw],format="e", digits=6)),
-          sub=taxon)
+          sub=taxon, las=2, xlab = taxon, ylab = "sequence:")
 }
 dev.off()
 

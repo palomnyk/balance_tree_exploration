@@ -124,7 +124,7 @@ for( taxa_col in 1:ncol(asv_tax)){
       meta_col <- c(meta_col, meta)
       graphics::boxplot(asv_table[,tx] ~ my_meta,
                         main=paste(project, my_meta, base::formatC(my_pval,format="e", digits=6)),
-                        sub=my_taxa)
+                        sub=my_taxa, las=2, xlab = my_taxa, ylab = "sequence:")
     }
   }
 }
