@@ -92,10 +92,16 @@ metadata <- read.table(opt$metadata,
                        check.names = FALSE,
                        stringsAsFactors=TRUE)
 metadata <- metadata[row.names(asv_table),]
+# print("Removing non-factor columns from metadata to decrease run time.")
+# metadata <- metadata[,sapply(metadata, is.factor)]
+# metadata <- Filter(function(x) length(unique(na.omit(x))) < 6, metadata)#hack to remove date columns if they get counted as factors
+# print("Metadata columns:")
+# print(colnames(metadata))
 
 # --------------------------------------------------------------------------
 print("Main loop.")
 # --------------------------------------------------------------------------
+pdf(file = file.path(output_dir, "graphics", paste0("univariate_pval_tax_", project,".pdf")))
 taxa_int <- c()
 taxa_name <- c()
 meta_name <- c()
@@ -108,7 +114,7 @@ for( taxa_col in 1:ncol(asv_tax)){
     my_taxa <- names(my_table)[tx]
     for(meta in 1:ncol(metadata)){
       my_meta <- metadata[,meta]
-      my_lm <- lm(my_meta ~ asv_table[,tx])
+      my_lm <- lm(asv_table[,tx] ~ my_meta)
       my_pval <- anova(my_lm)$"Pr(>F)"[1]
       pval <- c(pval, my_pval)
       taxa_int <- c(taxa_int, taxa_col)
@@ -116,9 +122,13 @@ for( taxa_col in 1:ncol(asv_tax)){
       taxa_name <- c(taxa_name, my_taxa)
       meta_name <- c(meta_name, names(metadata)[meta])
       meta_col <- c(meta_col, meta)
+      graphics::boxplot(asv_table[,tx] ~ my_meta,
+                        main=paste(project, my_meta, base::formatC(my_pval,format="e", digits=6)),
+                        sub=my_taxa)
     }
   }
-}  
+}
+dev.off()
 
 adj_pval <- p.adjust(pval, method = "BH")
 
@@ -129,16 +139,11 @@ write.table(dFrame, file=file.path(output_dir, "tables", paste0(project, "_pValu
             sep=",", row.names = F)
 
 # --------------------------------------------------------------------------
-print("Making boxplots ordered by pval.")
+print("Reached end of R script.")
 # --------------------------------------------------------------------------
 
-pdf(file = file.path(output_dir, "graphics", paste0("univariate_pval_tax_", project,".pdf")))
-for( rw in 1:nrow(dFrame)){
-  taxon <- dFrame$taxa[rw]
-  base::boxplot(my_meta ~ asv_table[,taxon],
-          main=paste(project, dFrame$meta_name[rw], base::formatC(dFrame$pval[rw],format="e", digits=6)),
-          sub=taxon
-  )
-}
-dev.off()
+
+
+
+
 
