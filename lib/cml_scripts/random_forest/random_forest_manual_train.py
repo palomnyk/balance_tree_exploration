@@ -250,7 +250,7 @@ for meta_c in metadata_cats:
 	plt.subplots_adjust(bottom=0.8)
 	meta_result_df = pd.DataFrame(result_df[result_df["metadata"] == meta_c])
 	# flat_num_only = pd.DataFrame(meta_result_df.iloc[:,5:]).to_numpy().flatten()
-	plot_data = meta_result_df.iloc[:,1:].transpose()
+	plot_data = meta_result_df.iloc[:,2:].transpose()
 	ax = fig.add_subplot(1,1,1)
 	bp = ax.boxplot(plot_data, patch_artist = True, labels=plot_data.columns)
 	colors = list([sublist[-1] for sublist in tables])
