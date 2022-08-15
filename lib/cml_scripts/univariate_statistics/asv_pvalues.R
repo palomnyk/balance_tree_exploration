@@ -136,7 +136,7 @@ for (rw in 1:nrow(dFrame)) {
   }
 }
 
-write.table(bi_dFrame, file=file.path(output_dir, "tables", paste0(project, "bimodal_pValuesUnivariate_sequenceVmetadata.csv")),
+write.table(bi_dFrame, file=file.path(output_dir, "tables", paste0(project, "_bimodal_pValuesUnivariate_sequenceVmetadata.csv")),
             sep=",", row.names = F)
 
 # --------------------------------------------------------------------------
