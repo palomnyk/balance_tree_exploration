@@ -68,32 +68,32 @@ metadata <- metadata[row.names(asv_table),]
 # --------------------------------------------------------------------------
 print("Main loop.")
 # --------------------------------------------------------------------------
-asv_name <- c()
-meta_name <- c()
-meta_col <- c()
-pval <- c()
-my_table <- asv_table
-pdf(file = file.path(output_dir, "graphics", "silva_ref_tree.pdf"))
-for( tx in 1:ncol(my_table)){
-  my_taxa <- names(my_table)[tx]
-  for(meta in 1:ncol(metadata)){
-    my_meta <- metadata[,meta]
-    my_lm <- lm(asv_table[,tx] ~ my_meta)
-    my_pval <- anova(my_lm)$"Pr(>F)"[1]
-    pval <- c(pval, my_pval)
-    asv_name <- c(asv_name, my_taxa)
-    meta_name <- c(meta_name, names(metadata)[meta])
-    meta_col <- c(meta_col, meta)
-  }
-}
-
-adj_pval <- p.adjust(pval, method = "BH")
-
-dFrame <- data.frame(asv_name, meta_name, meta_col, pval, adj_pval)
-dFrame <- dFrame [order(dFrame$pval),]
-dFrame$adj_pval <- p.adjust( dFrame$pval, method = "BH" )	
-write.table(dFrame, file=file.path(output_dir, "tables", paste0(project, "_pValuesUnivariate_sequenceVmetadata.csv")), 
-            sep=",", row.names = F)
+# asv_name <- c()
+# meta_name <- c()
+# meta_col <- c()
+# pval <- c()
+# my_table <- asv_table
+# pdf(file = file.path(output_dir, "graphics", "silva_ref_tree.pdf"))
+# for( tx in 1:ncol(my_table)){
+#   my_taxa <- names(my_table)[tx]
+#   for(meta in 1:ncol(metadata)){
+#     my_meta <- metadata[,meta]
+#     my_lm <- lm(asv_table[,tx] ~ my_meta)
+#     my_pval <- anova(my_lm)$"Pr(>F)"[1]
+#     pval <- c(pval, my_pval)
+#     asv_name <- c(asv_name, my_taxa)
+#     meta_name <- c(meta_name, names(metadata)[meta])
+#     meta_col <- c(meta_col, meta)
+#   }
+# }
+# 
+# adj_pval <- p.adjust(pval, method = "BH")
+# 
+# dFrame <- data.frame(asv_name, meta_name, meta_col, pval, adj_pval)
+# dFrame <- dFrame [order(dFrame$pval),]
+# dFrame$adj_pval <- p.adjust( dFrame$pval, method = "BH" )
+# write.table(dFrame, file=file.path(output_dir, "tables", paste0(project, "_pValuesUnivariate_sequenceVmetadata.csv")),
+#             sep=",", row.names = F)
 
 # --------------------------------------------------------------------------
 print("Making boxplots ordered by pval.")
@@ -122,7 +122,26 @@ for( rw in 1:100){
 dev.off()
 
 # --------------------------------------------------------------------------
+print("Create pvalue table that only has bimodal categories.")
+# --------------------------------------------------------------------------
+
+bi_dFrame <- dFrame[0,]
+
+for (rw in 1:nrow(dFrame)) {
+  my_meta <- dFrame$meta_name[rw]
+  my_cats <- unique(na.omit(metadata[,my_meta]))
+  my_cats <- lapply(my_cats, function(x) x[!x %in% ""])
+  if (length(my_cats) == 2){
+    rbind(bi_dFrame, dFrame[rw,])
+  }
+}
+
+write.table(bi_dFrame, file=file.path(output_dir, "tables", paste0(project, "bimodal_pValuesUnivariate_sequenceVmetadata.csv")),
+            sep=",", row.names = F)
+
+# --------------------------------------------------------------------------
 print("Reached end of R script.")
 # --------------------------------------------------------------------------
+
 
 
