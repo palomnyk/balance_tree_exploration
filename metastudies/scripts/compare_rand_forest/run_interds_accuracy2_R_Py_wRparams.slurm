@@ -23,7 +23,7 @@ conda activate testing_pyCaret
 python ~/git/balance_tree_exploration/lib/cml_scripts/metastudy_comparisons/inter_ds_accuracy_v_accuracy.py\
   -d ~/git/balance_tree_exploration \
 	-x wide_random_forest_score_R_20.csv \
-	-y sklrn_rand_forst_manual_0.75train_ntree500_m_try0.333.csv \
+	-y sklrn_randmforst_manual_0.75train_ntree500_m_try0.333.csv \
 	-v R_randomForest \
 	-w Sklearn_ntree500_mtry0.333 \
 	-a trans_group \
