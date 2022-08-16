@@ -28,9 +28,9 @@ python ~/git/balance_tree_exploration/lib/cml_scripts/random_forest/random_fores
   -f patient_metadata.tsv \
   -i Run \
   -t 0.75 \
-  -n 200
-	-s 100
-	-a 2000
+  -n 200 \
+	-s 100 \
+	-r 2000
 
 conda deactivate
 module unload anaconda3/2020.11
