@@ -111,8 +111,6 @@ for ds in comp_ds:
 			print(f"{options.x_axis_label}: {ave} for {feat}")
 			x_score[f"{project}_{feat}"] = [ave, project]
 		#table 2
-		# print("x_score")
-		# print(x_score)
 		op_dir = os.path.join(home_dir, project, "output")
 		result_fpath = os.path.join(op_dir, "tables", options.y_axis_fname)
 		print(f"{options.y_axis_label} tables")
@@ -130,28 +128,27 @@ for ds in comp_ds:
 	same_keys = set(y_score.keys()).intersection(set(x_score.keys()))
 	x_score = {key:x_score[key] for key in same_keys}
 	y_score = {key:y_score[key] for key in same_keys}
-	ds1_lst = np.array(list(map(lambda x: x[0], list(x_score.values()))))
-	ds2_lst = np.array(list(map(lambda x: x[0], list(y_score.values()))))
-	if len(ds1_lst) > 0:
+	x_lst = np.array(list(map(lambda x: x[0], list(x_score.values()))))
+	y_lst = np.array(list(map(lambda x: x[0], list(y_score.values()))))
+	if len(x_lst) > 0:
 		print("build graphic")
 		fig = plt.figure(figsize=(11,11))
 		fig.suptitle(f"Metastudy {train_percent}training {ds} {options.x_axis_label} vs {options.y_axis_label}")
 		plt.subplots_adjust(bottom=0.8)
 		ax = fig.add_subplot(1,1,1)
-		# ax.scatter(ds1_lst, ds2_lst, label=list(y_score.keys()))
+		# ax.scatter(x_lst, y_lst, label=list(y_score.keys()))
 		ax.plot([0,1], [0,1], color = "r", label = "expected")
-		# ax.plot(ds1_lst, a*ds1_lst+b, color = "green", label = "accuracy polyfit")
+		# ax.plot(x_lst, a*x_lst+b, color = "green", label = "accuracy polyfit")
 		ax.set_xlabel(f"{options.x_axis_label} accuracy")
 		ax.set_ylabel(f"{options.y_axis_label} accuracy")
 		fig.tight_layout()
-		my_projects = list(set(list(map(lambda x: x[1], list(y_score.values())))))
+		my_projects = list(set(list(map(lambda x: x[1], list(y_score.values())))))#pulling second element from each dict.value
 		my_markers = ["o", "s", "P", "v", "x"]
 		for i, label in enumerate(list(y_score.keys())):
 			my_proj = y_score[label][1]
 			my_marker = my_markers[my_projects.index(my_proj)]
-			ax.scatter(ds1_lst[i], ds2_lst[i], s=70, label=list(y_score.keys())[i], marker=my_marker)
-			# plt.annotate(label, (ds1_lst[i], ds2_lst[i]))
-		# ax.legend(title="Legend", loc="best", framealpha=0.1)
+			ax.scatter(x_lst[i], y_lst[i], s=70, label=list(y_score.keys())[i], marker=my_marker)
+			# plt.annotate(label, (x_lst[i], y_lst[i]))
 		print("Saving figure to pdf", flush = True)
 		pdf.savefig( fig, bbox_inches='tight' )
 		# sys.exit()
@@ -162,18 +159,13 @@ fig = plt.figure(figsize=(11,11))
 fig.suptitle(f"Legend {train_percent}training {ds} Py vs R, accuracy vs accuracy")
 plt.subplots_adjust(bottom=0.8)
 ax = fig.add_subplot(1,1,1)
-ax.plot([0,1], [0,1], color = "r", label = "expected")
-# ax.plot(ds1_lst, a*ds1_lst+b, color = "green", label = "accuracy polyfit")
-ax.set_xlabel(f"{options.x_axis_label}")
-ax.set_ylabel(f"{options.y_axis_label}")
 fig.tight_layout()
 my_projects = list(set(list(map(lambda x: x[1], list(y_score.values())))))
-my_markers = ["o", "s", "P", "v", "x"]
 for i, label in enumerate(list(y_score.keys())):
 	my_proj = y_score[label][1]
 	my_marker = my_markers[my_projects.index(my_proj)]
-	ax.scatter(ds1_lst[i], ds2_lst[i], s=70, label=list(y_score.keys())[i], marker=my_marker)
-	# plt.annotate(label, (ds1_lst[i], ds2_lst[i]))
+	ax.scatter(0, 0, s=70, label=list(y_score.keys())[i], marker=my_marker)
+	# plt.annotate(label, (x_lst[i], y_lst[i]))
 ax.legend(title="Legend",  loc="center", framealpha=1, mode = "expand", markerscale=2)
 print("Saving figure to pdf", flush = True)
 pdf.savefig( fig, bbox_inches='tight' )

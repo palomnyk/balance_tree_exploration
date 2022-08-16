@@ -21,14 +21,14 @@ echo Using $SLURM_NTASKS processors across $SLURM_NNODES nodes
 module load anaconda3/2020.11
 conda activate testing_pyCaret
 python ~/git/balance_tree_exploration/lib/cml_scripts/metastudy_comparisons/inter_ds_accuracy_v_accuracy.py\
-  -d ~/git/balance_tree_exploration \
-	-x wide_random_forest_score_R_20.csv \
-	-y sklrn_randmforst_manual_0.75train_ntree500_m_try0.333.csv \
-	-v R_randomForest \
-	-w Sklearn_ntree500_mtry0.333 \
-	-a trans_group \
-	-b dataset \
-	-p Vanderbilt Zeller Vangay Noguera-Julian
+  --homedir ~/git/balance_tree_exploration \
+	--x_axis_fname wide_random_forest_score_R_20.csv \
+	--y_axis_fname sklrn_randmforst_manual_0.75train_ntree500_m_try0.333.csv \
+	--x_axis_label R_randomForest \
+	--y_axis_label Sklearn_ntree500_mtry0.333 \
+	--x_axis_col_name trans_group \
+	--y_axis_col_name dataset \
+	--project_list Vanderbilt Zeller Vangay Noguera-Julian
 
 conda deactivate
 module unload anaconda3/2020.11
