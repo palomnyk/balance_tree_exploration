@@ -28,7 +28,7 @@ python ~/git/balance_tree_exploration/lib/cml_scripts/metastudy_comparisons/inte
 	-w Sklearn_ntree500_mtry0.333 \
 	-a trans_group \
 	-b dataset \
-	-p Vanderbilt Zeller
+	-p Vanderbilt Zeller Vangay Noguera-Julian
 
 conda deactivate
 module unload anaconda3/2020.11
