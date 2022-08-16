@@ -28,8 +28,8 @@ python ~/git/balance_tree_exploration/lib/cml_scripts/metastudy_comparisons/inte
 	--x_axis_label Sklearn_ntree500_mtry0.333 \
 	--y_axis_col_name trans_group \
 	--x_axis_col_name dataset \
-	--y_axis_col_name trans_group\
-	--x_axis_col_name dataset \
+	--y_axis_metadata_col_name metadata_col
+	--x_axis_metadata_col_name metadata
 	--project_list Vanderbilt Zeller Vangay Noguera-Julian
 
 conda deactivate
