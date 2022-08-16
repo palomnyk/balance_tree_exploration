@@ -136,7 +136,6 @@ print("Establishing other constants", flush = True)
 seed = 7
 scoring = "Accuracy"
 train_percent = options.training
-mtry_str = round(options.m_try, 3)
 main_output_label = f"sklrn_randmforst_manual_{train_percent}train_variable_ntree"
 #info for random forest classification
 result_fpath = os.path.join(output_dir, "tables", f"{main_output_label}.csv")
