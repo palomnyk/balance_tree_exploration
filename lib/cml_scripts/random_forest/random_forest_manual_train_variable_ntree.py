@@ -61,7 +61,7 @@ parser.add_argument("-n", "--n_tree_step", default=100, type=int,
                   help="Step of increase in estimators.")
 parser.add_argument("-s", "--n_tree_min", default=100, type=int,
                   help="How many n_tree to start.")
-parser.add_argument("-a", "--n_tree_max", default=100, type=int,
+parser.add_argument("-r", "--n_tree_max", default=100, type=int,
                   help="How many n_tree to in last step.")
 # parser.add_argument("-y", "--m_try", default=1/3, type=float,
 #                   help="Max features for RFC, should be fraction.")
