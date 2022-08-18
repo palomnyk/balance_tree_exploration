@@ -39,6 +39,7 @@ print("Establishing directory layout.", flush = True)
 # --------------------------------------------------------------------------
 home_dir = os.path.expanduser(options.homedir)
 projects = ["Vanderbilt", "Vangay", "Zeller", "Noguera-Julian"]
+projects = ["Vanderbilt"]
 output_dir = os.path.join(home_dir, "metastudies", "output")
 assert os.path.exists(output_dir)
 plot_pdf_fpath = os.path.join(output_dir, "num_estimators_vs_accuracy.pdf")
@@ -87,15 +88,16 @@ for project in projects:
 		means = new_table[splits].agg(mean, axis = 1)
 		assert not means.empty, f"is not in the table from {project}"
 		my_labels = [f"{project}_{feat}" for feat in new_table["metadata"]]
-		ax.scatter(new_table["n_trees"], means, s=70, label=my_labels, marker=my_marker)
+		ax.scatter(new_table["n_trees"], means, s=70, label=meta_d, marker=my_marker)
 		ax.plot(new_table["n_trees"], means)
 ax.set_xlabel("Number of estimators")
 ax.set_ylabel("Accuracy")
 fig.tight_layout()
 print("Saving figure to pdf", flush = True)
 pdf.savefig( fig )
+
 # --------------------------------------------------------------------------
-print("Main loop.", flush = True)
+print("Making legend.", flush = True)
 # --------------------------------------------------------------------------
 # simply duplicating the above code to make legend
 for project in projects:
@@ -113,8 +115,8 @@ for project in projects:
 		means = new_table[splits].agg(mean, axis = 1)
 		assert not means.empty, f"is not in the table from {project}"
 		my_labels = [f"{project}_{feat}" for feat in new_table["metadata"]]
-		ax.scatter(new_table["n_trees"].values, means, s=70, label=meta_d, marker=my_marker)
-		ax.plot(new_table["n_trees"], means)
+		ax.scatter(new_table["n_trees"].values, means, s=70)
+		# ax.plot(new_table["n_trees"], means)
 ax.set_xlabel("Number of estimators")
 ax.set_ylabel("Accuracy")
 ax.legend(title="Legend", loc="center", mode = "expand", framealpha=1)
