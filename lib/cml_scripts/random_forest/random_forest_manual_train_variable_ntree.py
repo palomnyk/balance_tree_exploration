@@ -140,7 +140,7 @@ main_output_label = f"sklrn_randmforst_manual_{train_percent}train_variable_ntre
 #info for random forest classification
 result_fpath = os.path.join(output_dir, "tables", f"{main_output_label}.csv")
 col_names = ["dataset", "metadata", "color", "n_trees"]
-num_iterations = 10
+num_iterations = 20
 col_names = col_names + [f"split{x}" for x in range(num_iterations)]
 print(col_names)
 #info for random forest feature importance
@@ -234,34 +234,32 @@ print("Finished recording accuracy.", flush = True)
 # pdf.close()
 
 # --------------------------------------------------------------------------
-print(f"Building boxplot PDF.", flush = True)
+print(f"Building scatterplot PDF.", flush = True)
 # --------------------------------------------------------------------------
-#Setup for building boxplots
-# result_df = pd.read_csv(result_fpath, sep=',', header=0, index_col=0)
-# metadata_cats = list(set(result_df["metadata"]))
-# num_cols = 2
-# num_rows = abs(-len(tables)//num_cols)
+# Setup for building boxplots
+result_df = pd.read_csv(result_fpath, sep=',', header=0, index_col=0)
+metadata_cats = list(set(result_df["metadata"]))
+my_datasets = list(set(result_df["datasets"]))
+splits = result_df.columns[result_df.columns.str.startswith('split')].tolist()
+num_cols = 2
+num_rows = abs(-len(tables)//num_cols)
 
-# pdf = matplotlib.backends.backend_pdf.PdfPages(boxplot_pdf_fpath)
-# for meta_c in metadata_cats:
-# 	fig = plt.figure(figsize=(11,11))
-# 	fig.suptitle(f"{project} sklearn randforest manual {train_percent}training {scoring} {meta_c} ntree{options.n_tree}_m_try{mtry_str}")
-# 	plt.subplots_adjust(bottom=0.8)
-# 	meta_result_df = pd.DataFrame(result_df[result_df["metadata"] == meta_c])
-# 	# flat_num_only = pd.DataFrame(meta_result_df.iloc[:,5:]).to_numpy().flatten()
-# 	plot_data = meta_result_df.iloc[:,2:].transpose()
-# 	ax = fig.add_subplot(1,1,1)
-# 	bp = ax.boxplot(plot_data, patch_artist = True, labels=plot_data.columns.values)
-# 	colors = list([sublist[-1] for sublist in tables])
-# 	for patch, color in zip(bp['boxes'], colors):
-# 		patch.set_facecolor(color)
-# 	ax.axhline(np.nanmean(plot_data), c="r", linestyle="dashed")
-# 	ax.set_xticklabels(labels = plot_data.columns, rotation=90)
-# 	ax.tick_params(axis='x', which='major', labelsize=10)
+pdf = matplotlib.backends.backend_pdf.PdfPages(boxplot_pdf_fpath)
+for meta_c in metadata_cats:
+	fig = plt.figure(figsize=(11,11))
+	fig.suptitle(f"{project} sklearn randforest manual {train_percent}training {scoring} {meta_c} estimators vs accuracy")
+	plt.subplots_adjust(bottom=0.8)
+	ax = fig.add_subplot(1,1,1)
+	meta_result_df = pd.DataFrame(result_df[result_df["metadata"] == meta_c])
+	for ds in my_datasets:
+		ds_result = meta_result_df[meta_result_df["dataset"] == ds]
+		for rw in range(len(ds_result.index)):
+			ax.scatter(ds_result.loc[rw,"ntrees"], mean(ds_result.loc[rw,splits]))
+			# plt.annotate(f"{ds1}_{label}", (pval_log[i], ds1_lst[i]))
 
-# 	#for boxplot
-# 	fig.tight_layout()
-# 	pdf.savefig( fig )
+	#for boxplot
+	fig.tight_layout()
+	pdf.savefig( fig )
 
-# print("Saving pdf", flush = True)
-# pdf.close()
+print("Saving pdf", flush = True)
+pdf.close()

@@ -132,7 +132,7 @@ main_output_label = f"sklearn_random_forest_manual_{train_percent}train_{project
 #info for random forest classification
 result_fpath = os.path.join(output_dir, "tables", f"{main_output_label}.csv")
 col_names = ["dataset", "metadata", "color"]
-num_iterations = 10
+num_iterations = 20
 col_names = col_names + [f"split{x}" for x in range(num_iterations)]
 print(col_names)
 #info for random forest feature importance
