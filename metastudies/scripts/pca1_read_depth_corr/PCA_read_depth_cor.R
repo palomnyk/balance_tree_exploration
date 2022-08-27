@@ -34,10 +34,9 @@ kendal <- vector(mode = "numeric", length = length(projects) * mds_depth)
 prj_nam <- vector(mode = "character", length = length(projects) * mds_depth)
 mds_lev <- vector(mode = "integer", length = length(projects) * mds_depth)
 
-data_cols <- unlist(lapply(1:mds_depth, function(x) paste0("PCA",x)))
-wide_header <- c("Project", data_cols)
-wide_dframe <- data.frame(matrix(nrow = length(projects), 
-                                    ncol = length(wide_header)))
+wide_header <- unlist(lapply(1:mds_depth, function(x) paste0("PCA",x)))
+wide_dframe <- data.frame(matrix(nrow = length(projects), ncol = length(wide_header)),
+                          row.names = projects)
 colnames(wide_dframe) <- wide_header
 
 # Running main loop---------------------------------------------------------
@@ -57,7 +56,7 @@ for (pr in 1:length(projects)){
   ##-Extract PCA matrix and convert to dataframe----------------------##
   myPCA <- data.frame(my_prcmp$x)
   my_var_exp <- my_prcmp$sdev^2/sum(my_prcmp$sdev^2)
-  wide_row <- c(prj)
+  wide_row <- c()
   for (md in 1:mds_depth){
     my_corr <- stats::cor(read_depth, myPCA[,md], method = "kendal")
     wide_row <- c(wide_row, my_corr)
@@ -82,10 +81,11 @@ write.table(long_dframe,
 
 write.table(wide_dframe,
             sep = ",",
-            row.names = FALSE,
             file = file.path(output_dir, "wide_pca_readdepth_corr.csv"))
 
-
+write.table(format(wide_dframe,  digits=3),
+            sep = ",",
+            file = file.path(output_dir, "abrev_wide_pca_readdepth_corr.csv"))
 
 
 
