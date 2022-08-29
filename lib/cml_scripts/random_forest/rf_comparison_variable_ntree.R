@@ -20,7 +20,7 @@ add_PhILR_dfs_to_table <- function(lst,
     # break
   }
   for (ilr_w in philr_ilr_weights){
-    for (tax_w in philr_taxa_weights){
+    for (tax_w in philr_part_weights){
       my_label <- paste(base_fn, ilr_w, tax_w, sep = "_")
       table_fn <- paste0(my_label, ".csv")
       lst[[length(lst) + 1]] <- c(my_label, file.path(root_folder, table_fn), ',', color)
@@ -45,7 +45,7 @@ add_random_tree_PhILRs_to_table  <- function(lst,
   }
   for (rand in 1:num_rand_trees){
     for (ilr_w in philr_ilr_weights){
-      for (tax_w in philr_taxa_weights){
+      for (tax_w in philr_part_weights){
         my_label <- paste(paste0("Shuffle", rand, "_PhILR"), base_fn, ilr_w, tax_w, sep = "_")
         table_fn <- paste0(my_label, ".csv")
         lst[[length(lst) + 1]] <- c(my_label, file.path(root_folder, table_fn), ',', color)
@@ -135,7 +135,7 @@ source(file.path(home_dir, "lib", "table_manipulations.R"))
 ##-Set up constants-------------------------------------------------##
 num_cycles <- opt$num_cycles
 if(num_cycles < 3) stop("num_cycles should be 3 or more")
-main_output_text <- "short_random_forest_score_R_var_ntree"
+main_output_text <- "random_forest_score_R_var_ntree"
 main_output_label <- paste0(main_output_text, num_cycles)
 main_output_fn <- paste0(main_output_label, ".csv")
 main_output_fpath <- file.path(output_dir, "tables", main_output_fn)
@@ -168,13 +168,13 @@ rf_cols <- 1:ncol(metadata)#hack so I don't have to fix this in the function
 
 tables <- list()
 tables[[length(tables) + 1]] <- c("DaDa2",file.path(output_dir, "tables", "ForwardReads_DADA2.txt"),"\t","r")
-tables[[length(tables) + 1]] <- c("lognorm_DADA2", file.path(output_dir, "tables", "lognorm_dada2.csv"), ",", "y")
-# tables[[length(tables) + 1]] <- c("lognorm_HashSeq", file.path(output_dir,"tables", "lognorm_hashseq.csv"), ",", "y")
-tables[[length(tables) + 1]] <- c("alr_DADA2", file.path(output_dir, "tables", "alr_asv.csv"), ",", "g")
-# tables[[length(tables) + 1]] <- c("alr_HashSeq", file.path(output_dir,"tables", "alr_hashseq.csv"), ",", "g")
-tables[[length(tables) + 1]] <- c("clr_DADA2", file.path(output_dir, "tables", "clr_asv.csv"), ",", "g")
-# tables[[length(tables) + 1]] <- c("clr_HashSeq", file.path(output_dir,"tables", "clr_hashseq.csv"), ",", "m")
-tables[[length(tables) + 1]] <- c("Silva_DADA2", file.path(output_dir,"tables", "Silva_DADA2", "Silva_DADA2.csv"), ",", "#64baeb")
+# tables[[length(tables) + 1]] <- c("lognorm_DADA2", file.path(output_dir, "tables", "lognorm_dada2.csv"), ",", "y")
+# # tables[[length(tables) + 1]] <- c("lognorm_HashSeq", file.path(output_dir,"tables", "lognorm_hashseq.csv"), ",", "y")
+# tables[[length(tables) + 1]] <- c("alr_DADA2", file.path(output_dir, "tables", "alr_asv.csv"), ",", "g")
+# # tables[[length(tables) + 1]] <- c("alr_HashSeq", file.path(output_dir,"tables", "alr_hashseq.csv"), ",", "g")
+# tables[[length(tables) + 1]] <- c("clr_DADA2", file.path(output_dir, "tables", "clr_asv.csv"), ",", "g")
+# # tables[[length(tables) + 1]] <- c("clr_HashSeq", file.path(output_dir,"tables", "clr_hashseq.csv"), ",", "m")
+# tables[[length(tables) + 1]] <- c("Silva_DADA2", file.path(output_dir,"tables", "Silva_DADA2", "Silva_DADA2.csv"), ",", "#64baeb")
 
 print(tables)
 
@@ -259,7 +259,7 @@ for (counter in 1:num_cycles) {
               if (wide_result_df$metadata[row_count] == colnames(metadata)[mta] &&
                 wide_result_df$dataset[row_count] == transf_label &&
                 wide_result_df$color[row_count] == tabl[4] &&
-                wide_result_df$ntrees == ntr
+                wide_result_df$ntrees[row_count] == ntr
               ){
                 wide_result_df[row_count, paste0("split",counter)] <- score
               }else{
@@ -310,6 +310,4 @@ all_plot_data <- data.frame(read.table(file = main_output_fpath,
                                        sep = ",", header = TRUE))
 
 print("finished R script")
-
-
 
