@@ -41,8 +41,6 @@ plot_pdf_fpath = os.path.join(output_dir, "log10_python_by_transformation.pdf")
 # --------------------------------------------------------------------------
 print("Establishing other constants.", flush = True)
 # --------------------------------------------------------------------------
-font1 = {'family':'serif','color':'blue','size':20}
-font2 = {'family':'serif','color':'darkred','size':15}
 comp_ds = ['alr_DADA2', 'clr_DADA2', 'DaDa2', 'Filtered_IQtree', \
 	'Filtered_IQtree_blw.sqrt_anorm', 'Filtered_Silva_DADA2', \
 	'Filtered_Silva_DADA2_blw.sqrt_anorm', 'Filtered_UPGMA_DADA2', \
@@ -95,7 +93,7 @@ for ds1 in comp_ds:
 				# print(my_table)
 				for feat, ave in zip(list(ds2_table["metadata"].values) ,list(means)):
 					ds2_score[feat] = ave
-					pvals[feat] = min(my_table.loc[(my_table["meta_name"]==feat) & (my_table["taxa_lev"] == "Genus"), "pval"].values) + 1e-80
+					pvals[feat] = min(my_table.loc[(my_table["meta_name"]==feat) & (my_table["taxa_lev"] == "Genus"), "pval"].values) + 1e-100
 			print("build graphic")
 			print(pvals.values())
 			pval_log = np.log10(list(pvals.values()))
@@ -106,7 +104,7 @@ for ds1 in comp_ds:
 			ax.scatter(pval_log, ds1_score.values(), color = "blue", label=ds1)
 			ax.scatter(pval_log, ds2_score.values(), color = "red", label=ds2)
 			ax.set_xlabel("log10 of ANOVA p-value of the strongest genus for each metadata cat")
-			ax.set_ylabel("Acuracy")
+			ax.set_ylabel("Accuracy")
 			ax.legend(title="Legend", loc="upper left", framealpha=1)
 			fig.tight_layout()
 			print("Saving figure to pdf", flush = True)
@@ -117,4 +115,3 @@ for ds1 in comp_ds:
 
 print("Saving pdf", flush = True)
 pdf.close()
-
