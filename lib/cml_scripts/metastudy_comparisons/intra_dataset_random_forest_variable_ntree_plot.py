@@ -32,6 +32,16 @@ parser = argparse.ArgumentParser(description="This script runs a random forest t
 parser.add_argument("-d", "--homedir",
                   default=os.path.expanduser(os.path.join("~", "git", "balance_tree_exploration")),
                   help="path to git balance treee exploration git repository", dest="homedir", metavar="homedir")
+parser.add_argument("-i", "--input_file_paradigm",
+                  default="sklrn_randmforst_manual_0.75train_variable_ntree.csv",
+                  help="""
+									The file name that all of the input files share. They should all be in their
+									perspective output/tables/ folders. 
+									sklrn_randmforst_manual_0.75train_variable_ntree.csv is the default, the R
+									version will be wide_random_forest_score_R_var_ntree20.csv.
+									""", dest="input_file_paradigm", metavar="input_file_paradigm")
+parser.add_argument("-l", "--label", default="sklearn_rf", help="Label for chart")
+
 options, unknown = parser.parse_known_args()
 
 # --------------------------------------------------------------------------
@@ -41,7 +51,7 @@ home_dir = os.path.expanduser(options.homedir)
 projects = ["Vanderbilt", "Vangay", "Zeller", "Noguera-Julian"]
 output_dir = os.path.join(home_dir, "metastudies", "output")
 assert os.path.exists(output_dir)
-plot_pdf_fpath = os.path.join(output_dir, "num_estimators_vs_accuracy.pdf")
+plot_pdf_fpath = os.path.join(output_dir, f"{options.label}_num_estimators_vs_accuracy_py.pdf")
 # --------------------------------------------------------------------------
 print("Establishing other constants.", flush = True)
 # --------------------------------------------------------------------------
@@ -51,8 +61,7 @@ comp_ds = ['alr_DADA2', 'clr_DADA2', 'DaDa2', 'Filtered_IQtree', \
 	'Filtered_UPGMA_DADA2_mean.descendants_enorm', 'lognorm_DADA2', 'Silva_DADA2', \
 	'Silva_DADA2_mean.descendants_enorm']
 
-comp_ds = ['alr_DADA2', 'clr_DADA2', 'DaDa2', 'Filtered_IQtree', 'Filtered_Silva_DADA2',
- 'Filtered_UPGMA_DADA2', 'lognorm_DADA2', 'Silva_DADA2']
+comp_ds = ['DADA2']
 
 my_markers = ["o", "s", "P", "v", "x"]
 
@@ -69,14 +78,14 @@ print("Main loop.", flush = True)
 # --------------------------------------------------------------------------
 pdf = matplotlib.backends.backend_pdf.PdfPages(plot_pdf_fpath)
 fig = plt.figure(figsize=(11,11))
-fig.suptitle(f"Metastudy num estimators vs accuracys")
+fig.suptitle(f"Metastudy num estimators vs accuracy {options.label}")
 plt.subplots_adjust(bottom=0.8)
 ax = fig.add_subplot(1,1,1)
 for project in projects:
 	my_results = {}#use structure {feature: [n_trees, mean_accuracy]}
 	print(f"Adding project {project}")
 	op_dir = os.path.join(home_dir, project, "output")
-	result_fpath = os.path.join(op_dir, "tables", f"sklrn_randmforst_manual_0.75train_variable_ntree.csv")
+	result_fpath = os.path.join(op_dir, "tables", options.input_file_paradigm)
 	print(result_fpath)
 	my_table = pd.read_csv(result_fpath, sep=',', header=0)
 	my_table = my_table[my_table["dataset"]=="DaDa2"]
