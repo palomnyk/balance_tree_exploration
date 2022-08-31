@@ -128,7 +128,7 @@ print("Establishing other constants", flush = True)
 seed = 7
 scoring = "Accuracy"
 train_percent = float(options.training)
-main_output_label = f"sklearn_random_forest_manual_{train_percent}train_{project}_data"
+main_output_label = f"sklearn_random_forest_manual_{train_percent}train"
 #info for random forest classification
 result_fpath = os.path.join(output_dir, "tables", f"{main_output_label}.csv")
 col_names = ["dataset", "metadata", "color"]
