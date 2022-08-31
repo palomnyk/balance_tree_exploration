@@ -1,701 +1,701 @@
-Run	Collection_Date	ETHNICITY	geo_loc_name_country	HIV_RiskGroup	HIV_serostatus	Host_Age	host_sex
-SRR3094678	2014-01-18	caucasian	Spain	hts	positive	56	female
-SRR3094679	2014-01-20	caucasian	Spain	hts	positive	45	male
-SRR3094680	2014-01-20	hispanic-latin	Spain	msm	positive	46	male
-SRR3094681	2014-02-04	caucasian	Spain	msm	negative	33	male
-SRR3094682	2014-01-21	hispanic-latin	Spain	msm	negative	40	male
-SRR3094683	2014-02-04	caucasian	Spain	msm	negative	42	male
-SRR3094684	2014-01-27	caucasian	Spain	hts	positive	59	female
-SRR3094685	2014-01-27	caucasian	Spain	hts	positive	52	male
-SRR3094686	2014-01-30	caucasian	Spain	hts	positive	55	male
-SRR3094687	2014-02-25	caucasian	Spain	msm	negative	54	male
-SRR3094688	2014-02-05	caucasian	Spain	msm	positive	52	male
-SRR3094689	2014-02-05	hispanic-latin	Spain	hts	positive	49	female
-SRR3094690	2014-02-05	caucasian	Spain	hts	positive	40	female
-SRR3094691	2014-02-05	caucasian	Spain	hts	positive	56	female
-SRR3094692	2014-02-05	caucasian	Spain	hts	positive	50	female
-SRR3094693	2014-02-06	hispanic-latin	Spain	hts	negative	40	female
-SRR3094694	2014-02-07	caucasian	Spain	msm	positive	37	male
-SRR3094695	2014-02-07	hispanic-latin	Spain	msm	positive	46	male
-SRR3094696	2014-02-07	caucasian	Spain	msm	negative	46	male
-SRR3094697	2014-02-11	caucasian	Spain	pwid	positive	45	female
-SRR3094698	2014-02-13	asiatic	Spain	hts	positive	38	female
-SRR3094699	2014-02-13	others	Spain	hts	positive	35	female
-SRR3094700	2014-02-13	caucasian	Spain	hts	positive	60	female
-SRR3094701	2014-02-13	caucasian	Spain	pwid	positive	43	male
-SRR3094702	2014-02-14	caucasian	Spain	hts	negative	50	female
-SRR3094703	2014-02-14	hispanic-latin	Spain	msm	positive	44	male
-SRR3094704	2014-02-17	caucasian	Spain	pwid	positive	52	female
-SRR3094705	2014-02-19	caucasian	Spain	msm	positive	42	male
-SRR3094706	2014-03-19	caucasian	Spain	msm	negative	28	male
-SRR3094707	2014-02-26	caucasian	Spain	pwid	positive	53	female
-SRR3094708	2014-02-11	caucasian	Spain	msm	negative	43	male
-SRR3094709	2014-02-11	hispanic-latin	Spain	msm	negative	45	male
-SRR3094710	2014-02-27	caucasian	Spain	msm	positive	53	male
-SRR3094711	2014-02-28	caucasian	Spain	hts	positive	35	male
-SRR3094712	2014-03-05	caucasian	Spain	hts	positive	57	female
-SRR3094713	2014-03-06	caucasian	Spain	hts	positive	48	male
-SRR3094714	2014-03-12	caucasian	Spain	msm	positive	26	male
-SRR3094715	2014-03-12	caucasian	Spain	msm	positive	50	male
-SRR3094716	2014-03-13	caucasian	Spain	pwid	positive	60	female
-SRR3094717	2014-03-13	hispanic-latin	Spain	hts	positive	44	female
-SRR3094718	2014-03-14	caucasian	Spain	msm	positive	47	male
-SRR3094719	2014-03-25	caucasian	Spain	msm	positive	44	male
-SRR3094720	2014-03-21	hispanic-latin	Spain	msm	positive	43	male
-SRR3094721	2014-03-14	caucasian	Spain	msm	positive	34	male
-SRR3094722	2014-03-17	caucasian	Spain	msm	positive	35	male
-SRR3094723	2014-03-17	caucasian	Spain	hts	positive	50	female
-SRR3094724	2014-03-17	caucasian	Spain	hts	positive	47	male
-SRR3094725	2014-03-17	caucasian	Spain	hts	positive	46	female
-SRR3094726	2014-03-21	caucasian	Spain	msm	positive	31	male
-SRR3094727	2014-03-24	hispanic-latin	Spain	msm	positive	36	male
-SRR3094728	2014-03-25	caucasian	Spain	msm	positive	53	male
-SRR3094729	2014-03-19	caucasian	Spain	msm	positive	41	male
-SRR3094730	2014-03-26	others	Spain	hts	positive	42	female
-SRR3094731	2014-03-27	hispanic-latin	Spain	hts	positive	34	female
-SRR3094732	2014-04-01	others	Spain	msm	positive	48	male
-SRR3094733	2014-04-03	caucasian	Spain	hts	positive	44	male
-SRR3094734	2014-04-02	caucasian	Spain	pwid	positive	53	male
-SRR3094735	2014-04-25	caucasian	Spain	msm	positive	34	male
-SRR3094736	2014-04-04	hispanic-latin	Spain	msm	positive	50	male
-SRR3094737	2014-04-23	caucasian	Spain	msm	positive	52	male
-SRR3094738	2014-04-10	caucasian	Spain	msm	positive	35	male
-SRR3094739	2014-04-15	caucasian	Spain	msm	positive	36	male
-SRR3094740	2014-04-15	caucasian	Spain	msm	positive	19	male
-SRR3094741	2014-04-16	caucasian	Spain	hts	positive	54	male
-SRR3094742	2014-04-22	caucasian	Spain	msm	positive	53	male
-SRR3094743	2014-04-23	hispanic-latin	Spain	msm	positive	23	male
-SRR3094744	2014-05-08	caucasian	Spain	msm	positive	38	male
-SRR3094745	2014-05-19	caucasian	Spain	pwid	positive	53	male
-SRR3094746	2014-04-30	hispanic-latin	Spain	msm	positive	34	male
-SRR3094747	2014-05-06	caucasian	Spain	msm	positive	37	male
-SRR3094748	2014-05-09	caucasian	Spain	msm	positive	37	male
-SRR3094749	2014-04-09	caucasian	Spain	msm	negative	42	male
-SRR3094750	2014-04-30	caucasian	Spain	msm	negative	60	male
-SRR3094751	2014-05-07	caucasian	Spain	msm	negative	37	male
-SRR3094752	2014-05-21	hispanic-latin	Spain	msm	negative	37	male
-SRR3094753	2014-05-21	caucasian	Spain	msm	negative	38	male
-SRR3094754	2014-05-21	caucasian	Spain	msm	negative	36	male
-SRR3094755	2014-05-16	caucasian	Spain	hts	positive	49	male
-SRR3094756	2014-05-20	caucasian	Spain	msm	positive	38	male
-SRR3094757	2014-05-22	caucasian	Spain	msm	positive	27	male
-SRR3094758	2014-05-23	caucasian	Spain	msm	positive	32	male
-SRR3094759	2014-03-04	hispanic-latin	Spain	msm	positive	43	male
-SRR3094760	2014-05-28	caucasian	Spain	msm	positive	28	male
-SRR3094761	2014-05-29	caucasian	Spain	msm	positive	46	male
-SRR3094762	2014-10-15	caucasian	Spain	msm	negative	34	male
-SRR3094763	2013-02-27	caucasian	Spain	msm	positive	30	male
-SRR3094764	2013-05-03	hispanic-latin	Spain	msm	positive	28	male
-SRR3094765	2014-06-06	caucasian	Spain	hts	positive	60	male
-SRR3094766	2014-06-19	caucasian	Spain	hts	positive	58	female
-SRR3094767	2014-06-18	caucasian	Spain	hts	positive	55	male
-SRR3094768	2014-06-20	caucasian	Spain	hts	positive	50	male
-SRR3094769	2014-06-19	caucasian	Spain	msm	positive	38	male
-SRR3094770	2014-06-20	caucasian	Spain	msm	positive	58	male
-SRR3094771	2014-06-25	caucasian	Spain	msm	positive	36	male
-SRR3094772	2014-07-02	hispanic-latin	Spain	msm	positive	32	male
-SRR3094773	2014-07-25	caucasian	Spain	msm	positive	23	male
-SRR3094774	2014-07-11	caucasian	Spain	pwid	positive	42	male
-SRR3094775	2014-07-09	caucasian	Spain	msm	negative	37	male
-SRR3094776	2014-07-02	caucasian	Spain	msm	negative	35	male
-SRR3094777	2014-07-23	hispanic-latin	Spain	msm	positive	29	male
-SRR3094778	2014-07-25	hispanic-latin	Spain	msm	positive	36	male
-SRR3094779	2014-07-29	caucasian	Spain	msm	positive	56	male
-SRR3094780	2014-11-26	caucasian	Spain	hts	positive	40	male
-SRR3094781	2014-08-29	caucasian	Spain	msm	positive	43	male
-SRR3094782	2014-09-02	caucasian	Spain	msm	positive	51	male
-SRR3094783	2014-11-03	caucasian	Spain	msm	positive	29	male
-SRR3094784	2014-09-08	hispanic-latin	Spain	hts	positive	34	female
-SRR3094785	2014-09-18	caucasian	Spain	hts	positive	51	female
-SRR3094786	2014-09-26	caucasian	Spain	pwid	positive	40	female
-SRR3094787	2014-09-19	caucasian	Spain	hts	positive	68	female
-SRR3094788	2014-09-19	caucasian	Spain	msm	positive	25	male
-SRR3094789	2014-09-29	caucasian	Spain	msm	negative	51	male
-SRR3094790	2014-09-22	caucasian	Spain	msm	positive	43	male
-SRR3094791	2014-09-25	hispanic-latin	Spain	msm	positive	46	male
-SRR3094792	2014-09-26	caucasian	Spain	hts	positive	54	male
-SRR3094793	2014-09-26	caucasian	Spain	msm	positive	26	male
-SRR3094794	2014-10-01	hispanic-latin	Spain	msm	positive	60	male
-SRR3094795	2014-10-02	caucasian	Spain	pwid	positive	55	female
-SRR3094796	2014-10-23	caucasian	Spain	msm	positive	42	male
-SRR3094797	2014-10-23	caucasian	Spain	msm	positive	39	male
-SRR3094798	2014-10-10	caucasian	Spain	msm	positive	56	male
-SRR3094799	2014-10-16	caucasian	Spain	hts	positive	44	male
-SRR3094800	2014-10-29	caucasian	Spain	msm	positive	29	male
-SRR3094801	2014-10-28	caucasian	Spain	msm	negative	30	male
-SRR3094802	2014-10-28	caucasian	Spain	pwid	positive	47	male
-SRR3094803	2014-10-31	caucasian	Spain	hts	positive	54	male
-SRR3094804	2014-11-10	hispanic-latin	Spain	msm	positive	44	male
-SRR3094805	2014-11-04	hispanic-latin	Spain	msm	positive	60	male
-SRR3094806	2014-11-04	caucasian	Spain	msm	positive	46	male
-SRR3094807	2014-11-05	hispanic-latin	Spain	hts	positive	41	female
-SRR3094808	2014-11-06	caucasian	Spain	msm	positive	38	male
-SRR3094809	2014-11-10	caucasian	Spain	msm	negative	48	male
-SRR3094810	2014-11-10	caucasian	Spain	msm	positive	52	male
-SRR3094811	2014-11-12	caucasian	Spain	msm	negative	34	male
-SRR3094812	2014-11-12	caucasian	Spain	msm	positive	35	male
-SRR3094813	2014-07-30	caucasian	Spain	msm	negative	28	male
-SRR3094814	2014-12-19	hispanic-latin	Spain	msm	positive	20	male
-SRR3094815	2014-11-17	caucasian	Spain	msm	positive	52	male
-SRR3094816	2014-11-21	caucasian	Spain	msm	positive	47	male
-SRR3094817	2014-11-24	caucasian	Spain	msm	positive	44	male
-SRR3094818	2014-11-24	caucasian	Spain	msm	positive	37	male
-SRR3094819	2014-12-01	caucasian	Spain	msm	positive	25	male
-SRR3094820	2014-11-26	caucasian	Spain	hts	negative	33	female
-SRR3094821	2014-11-27	caucasian	Spain	pwid	positive	54	female
-SRR3094822	2014-11-27	caucasian	Spain	msm	positive	60	male
-SRR3094823	2014-11-28	caucasian	Spain	pwid	positive	53	male
-SRR3094824	2014-11-28	caucasian	Spain	msm	positive	26	male
-SRR3094825	2014-12-01	caucasian	Spain	hts	negative	35	male
-SRR3094826	2014-12-02	caucasian	Spain	pwid	positive	54	male
-SRR3094827	2014-12-10	caucasian	Spain	msm	negative	25	male
-SRR3094828	2014-12-15	caucasian	Spain	msm	positive	48	male
-SRR3094829	2014-10-23	caucasian	Spain	msm	positive	38	male
-SRR3094830	2014-10-16	caucasian	Spain	pwid	positive	53	male
-SRR3094831	2014-10-16	hispanic-latin	Spain	hts	positive	31	female
-SRR3094832	2014-11-05	caucasian	Spain	msm	positive	47	male
-SRR3094833	2014-11-18	caucasian	Spain	msm	positive	46	male
-SRR3094834	2014-02-14	caucasian	Spain	hts	positive	56	female
-SRR3094835	2014-02-17	caucasian	Spain	hts	positive	45	male
-SRR3094836	2014-02-17	hispanic-latin	Spain	msm	positive	46	male
-SRR3094837	2014-03-05	caucasian	Spain	msm	negative	33	male
-SRR3094838	2014-03-12	hispanic-latin	Spain	msm	negative	40	male
-SRR3094839	2014-03-05	caucasian	Spain	msm	negative	42	male
-SRR3094840	2014-02-13	caucasian	Spain	hts	positive	59	female
-SRR3094841	2014-02-24	caucasian	Spain	hts	positive	52	male
-SRR3094842	2014-02-24	caucasian	Spain	hts	positive	55	male
-SRR3094843	2014-03-26	caucasian	Spain	msm	negative	54	male
-SRR3094844	2014-03-07	caucasian	Spain	msm	positive	52	male
-SRR3094845	2014-03-07	hispanic-latin	Spain	hts	positive	49	female
-SRR3094846	2014-03-05	caucasian	Spain	hts	positive	40	female
-SRR3094847	2012-03-12	caucasian	Spain	hts	positive	56	female
-SRR3094848	2014-03-05	caucasian	Spain	hts	positive	50	female
-SRR3094849	2014-03-14	hispanic-latin	Spain	hts	negative	40	female
-SRR3094850	2014-07-28	hispanic-latin	Spain	msm	positive	46	male
-SRR3094851	2014-07-28	caucasian	Spain	msm	negative	46	male
-SRR3094852	2014-02-20	others	Spain	hts	positive	35	female
-SRR3094853	2014-04-10	caucasian	Spain	hts	positive	60	female
-SRR3094854	2014-02-27	caucasian	Spain	pwid	positive	43	male
-SRR3094855	2014-03-04	caucasian	Spain	hts	negative	50	female
-SRR3094856	2014-03-10	caucasian	Spain	pwid	positive	52	female
-SRR3094857	2014-03-20	caucasian	Spain	msm	positive	42	male
-SRR3094858	2014-04-16	caucasian	Spain	msm	negative	28	male
-SRR3094859	2014-03-17	caucasian	Spain	pwid	positive	53	female
-SRR3094860	2014-03-19	caucasian	Spain	msm	negative	43	male
-SRR3094861	2014-03-12	hispanic-latin	Spain	msm	negative	45	male
-SRR3094862	2014-03-14	caucasian	Spain	msm	positive	53	male
-SRR3094863	2014-03-19	caucasian	Spain	hts	positive	35	male
-SRR3094864	2014-04-04	caucasian	Spain	hts	positive	57	female
-SRR3094865	2014-04-03	caucasian	Spain	hts	positive	48	male
-SRR3094866	2014-04-04	caucasian	Spain	msm	positive	50	male
-SRR3094867	2014-04-03	caucasian	Spain	pwid	positive	60	female
-SRR3094868	2014-03-18	hispanic-latin	Spain	hts	positive	44	female
-SRR3094869	2014-04-10	caucasian	Spain	msm	positive	47	male
-SRR3094870	2014-03-31	hispanic-latin	Spain	msm	positive	43	male
-SRR3094871	2014-04-01	caucasian	Spain	hts	positive	50	female
-SRR3094872	2014-04-10	caucasian	Spain	hts	positive	47	male
-SRR3094873	2014-04-28	caucasian	Spain	hts	positive	46	female
-SRR3094874	2014-04-25	caucasian	Spain	msm	positive	31	male
-SRR3094875	2014-04-23	hispanic-latin	Spain	msm	positive	36	male
-SRR3094876	2014-04-22	caucasian	Spain	msm	positive	53	male
-SRR3094877	2014-04-29	caucasian	Spain	msm	positive	41	male
-SRR3094878	2014-04-10	others	Spain	hts	positive	42	female
-SRR3094879	2014-05-20	caucasian	Spain	msm	positive	34	male
-SRR3094880	2014-04-30	hispanic-latin	Spain	msm	positive	50	male
-SRR3094881	2014-05-29	caucasian	Spain	msm	positive	52	male
-SRR3094882	2014-05-02	caucasian	Spain	msm	positive	19	male
-SRR3094883	2014-04-29	caucasian	Spain	hts	positive	54	male
-SRR3094884	2014-04-28	caucasian	Spain	msm	positive	53	male
-SRR3094885	2014-05-21	caucasian	Spain	msm	positive	38	male
-SRR3094886	2014-05-14	hispanic-latin	Spain	msm	positive	34	male
-SRR3094887	2014-05-26	caucasian	Spain	msm	positive	37	male
-SRR3094888	2014-05-21	caucasian	Spain	msm	negative	42	male
-SRR3094889	2014-09-17	caucasian	Spain	msm	negative	60	male
-SRR3094890	2014-10-15	caucasian	Spain	msm	negative	37	male
-SRR3094891	2014-06-18	hispanic-latin	Spain	msm	negative	37	male
-SRR3094892	2014-06-18	caucasian	Spain	msm	negative	38	male
-SRR3094893	2014-06-18	caucasian	Spain	msm	negative	36	male
-SRR3094894	2014-07-03	caucasian	Spain	msm	positive	27	male
-SRR3094895	2014-06-16	caucasian	Spain	msm	positive	32	male
-SRR3094896	2014-06-30	caucasian	Spain	msm	positive	46	male
-SRR3094897	2014-11-12	caucasian	Spain	msm	negative	34	male
-SRR3094898	2013-03-22	caucasian	Spain	msm	positive	30	male
-SRR3094899	2013-05-31	hispanic-latin	Spain	msm	positive	28	male
-SRR3094900	2014-06-13	caucasian	Spain	hts	positive	60	male
-SRR3094901	2014-07-21	caucasian	Spain	hts	positive	58	female
-SRR3094902	2014-07-16	caucasian	Spain	hts	positive	55	male
-SRR3094903	2014-07-22	caucasian	Spain	msm	positive	38	male
-SRR3094904	2014-07-18	caucasian	Spain	msm	positive	58	male
-SRR3094905	2014-07-11	caucasian	Spain	msm	positive	36	male
-SRR3094906	2014-07-18	hispanic-latin	Spain	msm	positive	32	male
-SRR3094907	2014-09-08	caucasian	Spain	msm	positive	23	male
-SRR3094908	2014-08-05	caucasian	Spain	msm	negative	37	male
-SRR3094909	2014-08-06	caucasian	Spain	msm	negative	35	male
-SRR3094910	2014-08-21	hispanic-latin	Spain	msm	positive	29	male
-SRR3094911	2014-09-29	caucasian	Spain	msm	positive	56	male
-SRR3094912	2014-10-21	caucasian	Spain	msm	positive	43	male
-SRR3094913	2014-09-16	caucasian	Spain	msm	positive	51	male
-SRR3094914	2014-11-17	caucasian	Spain	msm	positive	29	male
-SRR3094915	2014-09-16	hispanic-latin	Spain	hts	positive	34	female
-SRR3094916	2014-10-09	caucasian	Spain	pwid	positive	40	female
-SRR3094917	2014-09-24	caucasian	Spain	hts	positive	68	female
-SRR3094918	2014-09-25	caucasian	Spain	msm	positive	25	male
-SRR3094919	2014-10-01	caucasian	Spain	msm	positive	43	male
-SRR3094920	2014-11-10	hispanic-latin	Spain	msm	positive	46	male
-SRR3094921	2014-10-29	hispanic-latin	Spain	msm	positive	60	male
-SRR3094922	2014-12-18	caucasian	Spain	msm	positive	56	male
-SRR3094923	2014-11-12	caucasian	Spain	hts	positive	44	male
-SRR3094924	2014-12-03	caucasian	Spain	msm	positive	29	male
-SRR3094925	2014-12-08	caucasian	Spain	msm	negative	30	male
-SRR3094926	2014-11-28	caucasian	Spain	hts	positive	54	male
-SRR3094927	2014-12-03	hispanic-latin	Spain	msm	positive	60	male
-SRR3094928	2014-11-24	caucasian	Spain	msm	positive	46	male
-SRR3094929	2014-12-02	hispanic-latin	Spain	hts	positive	41	female
-SRR3094930	2014-12-17	caucasian	Spain	msm	negative	34	male
-SRR3094931	2014-12-17	caucasian	Spain	msm	positive	35	male
-SRR3094932	2014-12-03	caucasian	Spain	msm	positive	52	male
-SRR3094933	2014-12-16	caucasian	Spain	msm	positive	44	male
-SRR3094934	2014-12-03	caucasian	Spain	msm	positive	37	male
-SRR3094935	2014-12-18	caucasian	Spain	pwid	positive	54	female
-SRR3094936	2014-12-17	caucasian	Spain	msm	positive	60	male
-SRR3094937	2014-12-23	caucasian	Spain	hts	negative	35	male
-SRR3094938	2014-12-17	caucasian	Spain	msm	negative	25	male
-SRR3094939	2014-11-19	caucasian	Spain	msm	positive	38	male
-SRR3094940	2014-11-13	caucasian	Spain	pwid	positive	53	male
-SRR3094941	2014-11-13	hispanic-latin	Spain	hts	positive	31	female
-SRR3094942	2014-12-15	caucasian	Spain	msm	positive	47	male
-SRR3094943	2014-12-16	caucasian	Spain	msm	positive	46	male
-SRR3095028	2014-02-14	caucasian	Spain	hts	positive	56	female
-SRR3095029	2014-02-17	caucasian	Spain	hts	positive	45	male
-SRR3095030	2014-02-17	hispanic-latin	Spain	msm	positive	46	male
-SRR3095031	2014-03-05	caucasian	Spain	msm	negative	33	male
-SRR3095032	2014-03-12	hispanic-latin	Spain	msm	negative	40	male
-SRR3095033	2014-03-05	caucasian	Spain	msm	negative	42	male
-SRR3095034	2014-02-13	caucasian	Spain	hts	positive	59	female
-SRR3095035	2014-02-24	caucasian	Spain	hts	positive	52	male
-SRR3095036	2014-02-24	caucasian	Spain	hts	positive	55	male
-SRR3095037	2014-03-26	caucasian	Spain	msm	negative	54	male
-SRR3095038	2014-03-07	caucasian	Spain	msm	positive	52	male
-SRR3095039	2014-03-07	hispanic-latin	Spain	hts	positive	49	female
-SRR3095040	2014-03-05	caucasian	Spain	hts	positive	40	female
-SRR3095041	2012-03-12	caucasian	Spain	hts	positive	56	female
-SRR3095042	2014-03-05	caucasian	Spain	hts	positive	50	female
-SRR3095043	2014-03-14	hispanic-latin	Spain	hts	negative	40	female
-SRR3095044	2014-07-28	hispanic-latin	Spain	msm	positive	46	male
-SRR3095045	2014-07-28	caucasian	Spain	msm	negative	46	male
-SRR3095046	2014-02-20	others	Spain	hts	positive	35	female
-SRR3095047	2014-04-10	caucasian	Spain	hts	positive	60	female
-SRR3095048	2014-02-27	caucasian	Spain	pwid	positive	43	male
-SRR3095049	2014-03-04	caucasian	Spain	hts	negative	50	female
-SRR3095050	2014-03-10	caucasian	Spain	pwid	positive	52	female
-SRR3095051	2014-03-20	caucasian	Spain	msm	positive	42	male
-SRR3095052	2014-04-16	caucasian	Spain	msm	negative	28	male
-SRR3095053	2014-03-17	caucasian	Spain	pwid	positive	53	female
-SRR3095054	2014-03-19	caucasian	Spain	msm	negative	43	male
-SRR3095055	2014-03-12	hispanic-latin	Spain	msm	negative	45	male
-SRR3095056	2014-03-14	caucasian	Spain	msm	positive	53	male
-SRR3095057	2014-03-19	caucasian	Spain	hts	positive	35	male
-SRR3095058	2014-04-04	caucasian	Spain	hts	positive	57	female
-SRR3095059	2014-04-03	caucasian	Spain	hts	positive	48	male
-SRR3095060	2014-04-04	caucasian	Spain	msm	positive	50	male
-SRR3095061	2014-04-03	caucasian	Spain	pwid	positive	60	female
-SRR3095062	2014-03-18	hispanic-latin	Spain	hts	positive	44	female
-SRR3095063	2014-04-10	caucasian	Spain	msm	positive	47	male
-SRR3095064	2014-03-31	hispanic-latin	Spain	msm	positive	43	male
-SRR3095065	2014-04-01	caucasian	Spain	hts	positive	50	female
-SRR3095066	2014-04-10	caucasian	Spain	hts	positive	47	male
-SRR3095067	2014-04-28	caucasian	Spain	hts	positive	46	female
-SRR3095068	2014-04-25	caucasian	Spain	msm	positive	31	male
-SRR3095069	2014-04-23	hispanic-latin	Spain	msm	positive	36	male
-SRR3095070	2014-04-22	caucasian	Spain	msm	positive	53	male
-SRR3095071	2014-04-29	caucasian	Spain	msm	positive	41	male
-SRR3095072	2014-04-10	others	Spain	hts	positive	42	female
-SRR3095073	2014-05-20	caucasian	Spain	msm	positive	34	male
-SRR3095074	2014-04-30	hispanic-latin	Spain	msm	positive	50	male
-SRR3095075	2014-05-29	caucasian	Spain	msm	positive	52	male
-SRR3095076	2014-05-02	caucasian	Spain	msm	positive	19	male
-SRR3095077	2014-04-29	caucasian	Spain	hts	positive	54	male
-SRR3095078	2014-04-28	caucasian	Spain	msm	positive	53	male
-SRR3095079	2014-05-21	caucasian	Spain	msm	positive	38	male
-SRR3095080	2014-05-14	hispanic-latin	Spain	msm	positive	34	male
-SRR3095081	2014-05-26	caucasian	Spain	msm	positive	37	male
-SRR3095082	2014-05-21	caucasian	Spain	msm	negative	42	male
-SRR3095083	2014-09-17	caucasian	Spain	msm	negative	60	male
-SRR3095084	2014-10-15	caucasian	Spain	msm	negative	37	male
-SRR3095085	2014-06-18	hispanic-latin	Spain	msm	negative	37	male
-SRR3095086	2014-06-18	caucasian	Spain	msm	negative	38	male
-SRR3095087	2014-06-18	caucasian	Spain	msm	negative	36	male
-SRR3095088	2014-07-03	caucasian	Spain	msm	positive	27	male
-SRR3095089	2014-06-16	caucasian	Spain	msm	positive	32	male
-SRR3095090	2014-06-30	caucasian	Spain	msm	positive	46	male
-SRR3095091	2014-11-12	caucasian	Spain	msm	negative	34	male
-SRR3095092	2013-03-22	caucasian	Spain	msm	positive	30	male
-SRR3095093	2013-05-31	hispanic-latin	Spain	msm	positive	28	male
-SRR3095094	2014-06-13	caucasian	Spain	hts	positive	60	male
-SRR3095095	2014-07-21	caucasian	Spain	hts	positive	58	female
-SRR3095096	2014-07-16	caucasian	Spain	hts	positive	55	male
-SRR3095097	2014-07-22	caucasian	Spain	msm	positive	38	male
-SRR3095098	2014-07-18	caucasian	Spain	msm	positive	58	male
-SRR3095099	2014-07-11	caucasian	Spain	msm	positive	36	male
-SRR3095100	2014-07-18	hispanic-latin	Spain	msm	positive	32	male
-SRR3095101	2014-09-08	caucasian	Spain	msm	positive	23	male
-SRR3095102	2014-08-05	caucasian	Spain	msm	negative	37	male
-SRR3095103	2014-08-06	caucasian	Spain	msm	negative	35	male
-SRR3095104	2014-08-21	hispanic-latin	Spain	msm	positive	29	male
-SRR3095105	2014-09-29	caucasian	Spain	msm	positive	56	male
-SRR3095106	2014-10-21	caucasian	Spain	msm	positive	43	male
-SRR3095107	2014-09-16	caucasian	Spain	msm	positive	51	male
-SRR3095108	2014-11-17	caucasian	Spain	msm	positive	29	male
-SRR3095109	2014-09-16	hispanic-latin	Spain	hts	positive	34	female
-SRR3095110	2014-10-09	caucasian	Spain	pwid	positive	40	female
-SRR3095111	2014-09-24	caucasian	Spain	hts	positive	68	female
-SRR3095112	2014-09-25	caucasian	Spain	msm	positive	25	male
-SRR3095113	2014-10-01	caucasian	Spain	msm	positive	43	male
-SRR3095114	2014-11-10	hispanic-latin	Spain	msm	positive	46	male
-SRR3095115	2014-10-29	hispanic-latin	Spain	msm	positive	60	male
-SRR3095116	2014-12-18	caucasian	Spain	msm	positive	56	male
-SRR3095117	2014-11-12	caucasian	Spain	hts	positive	44	male
-SRR3095118	2014-12-03	caucasian	Spain	msm	positive	29	male
-SRR3095119	2014-12-08	caucasian	Spain	msm	negative	30	male
-SRR3095120	2014-11-28	caucasian	Spain	hts	positive	54	male
-SRR3095121	2014-12-03	hispanic-latin	Spain	msm	positive	60	male
-SRR3095122	2014-11-24	caucasian	Spain	msm	positive	46	male
-SRR3095123	2014-12-02	hispanic-latin	Spain	hts	positive	41	female
-SRR3095124	2014-12-17	caucasian	Spain	msm	negative	34	male
-SRR3095125	2014-12-17	caucasian	Spain	msm	positive	35	male
-SRR3095126	2014-12-03	caucasian	Spain	msm	positive	52	male
-SRR3095127	2014-12-16	caucasian	Spain	msm	positive	44	male
-SRR3095128	2014-12-03	caucasian	Spain	msm	positive	37	male
-SRR3095129	2014-12-18	caucasian	Spain	pwid	positive	54	female
-SRR3095130	2014-12-17	caucasian	Spain	msm	positive	60	male
-SRR3095131	2014-12-23	caucasian	Spain	hts	negative	35	male
-SRR3095132	2014-12-17	caucasian	Spain	msm	negative	25	male
-SRR3095133	2014-11-19	caucasian	Spain	msm	positive	38	male
-SRR3095134	2014-11-13	caucasian	Spain	pwid	positive	53	male
-SRR3095135	2014-11-13	hispanic-latin	Spain	hts	positive	31	female
-SRR3095136	2014-12-15	caucasian	Spain	msm	positive	47	male
-SRR3095137	2014-12-16	caucasian	Spain	msm	positive	46	male
-SRR6714072	2014-11-06	caucasian	Spain	msm	positive	38	male
-SRR6714073	2014-11-10	caucasian	Spain	msm	negative	48	male
-SRR6714074	2014-11-10	caucasian	Spain	msm	positive	52	male
-SRR6714075	2014-11-12	caucasian	Spain	msm	negative	34	male
-SRR6714076	2014-11-12	caucasian	Spain	msm	positive	35	male
-SRR6714077	2014-07-30	caucasian	Spain	msm	negative	28	male
-SRR6714078	2014-12-19	hispanic-latin	Spain	msm	positive	20	male
-SRR6714079	2014-11-17	caucasian	Spain	msm	positive	52	male
-SRR6714080	2014-11-21	caucasian	Spain	msm	positive	47	male
-SRR6714081	2014-11-24	caucasian	Spain	msm	positive	44	male
-SRR6714082	2014-11-05	hispanic-latin	Spain	hts	positive	41	female
-SRR6714083	2014-11-04	caucasian	Spain	msm	positive	46	male
-SRR6714084	2014-11-04	hispanic-latin	Spain	msm	positive	60	male
-SRR6714085	2014-11-10	hispanic-latin	Spain	msm	positive	44	male
-SRR6714086	2014-10-31	caucasian	Spain	hts	positive	54	male
-SRR6714087	2014-10-28	caucasian	Spain	pwid	positive	47	male
-SRR6714088	2014-10-28	caucasian	Spain	msm	negative	30	male
-SRR6714089	2014-10-29	caucasian	Spain	msm	positive	29	male
-SRR6714090	2014-10-16	caucasian	Spain	hts	positive	44	male
-SRR6714091	2014-10-10	caucasian	Spain	msm	positive	56	male
-SRR6714092	2014-03-13	caucasian	Spain	pwid	positive	60	female
-SRR6714093	2014-03-13	hispanic-latin	Spain	hts	positive	44	female
-SRR6714094	2014-03-05	caucasian	Spain	hts	positive	57	female
-SRR6714095	2014-03-06	caucasian	Spain	hts	positive	48	male
-SRR6714096	2014-03-12	caucasian	Spain	msm	positive	26	male
-SRR6714097	2014-03-12	caucasian	Spain	msm	positive	50	male
-SRR6714098	2014-02-11	caucasian	Spain	msm	negative	43	male
-SRR6714099	2014-02-11	hispanic-latin	Spain	msm	negative	45	male
-SRR6714100	2014-02-27	caucasian	Spain	msm	positive	53	male
-SRR6714101	2014-02-28	caucasian	Spain	hts	positive	35	male
-SRR6714102	2014-10-23	caucasian	Spain	msm	positive	42	male
-SRR6714103	2014-10-23	caucasian	Spain	msm	positive	39	male
-SRR6714104	2014-09-22	caucasian	Spain	msm	positive	43	male
-SRR6714105	2014-09-25	hispanic-latin	Spain	msm	positive	46	male
-SRR6714106	2014-09-19	caucasian	Spain	msm	positive	25	male
-SRR6714107	2014-09-29	caucasian	Spain	msm	negative	51	male
-SRR6714108	2014-10-01	hispanic-latin	Spain	msm	positive	60	male
-SRR6714109	2014-10-02	caucasian	Spain	pwid	positive	55	female
-SRR6714110	2014-09-26	caucasian	Spain	hts	positive	54	male
-SRR6714111	2014-09-26	caucasian	Spain	msm	positive	26	male
-SRR6714112	2014-03-04	hispanic-latin	Spain	msm	positive	43	male
-SRR6714113	2014-05-23	caucasian	Spain	msm	positive	32	male
-SRR6714114	2014-05-29	caucasian	Spain	msm	positive	46	male
-SRR6714115	2014-05-28	caucasian	Spain	msm	positive	28	male
-SRR6714116	2013-02-27	caucasian	Spain	msm	positive	30	male
-SRR6714117	2014-10-15	caucasian	Spain	msm	negative	34	male
-SRR6714118	2014-06-06	caucasian	Spain	hts	positive	60	male
-SRR6714119	2013-05-03	hispanic-latin	Spain	msm	positive	28	male
-SRR6714120	2014-06-18	caucasian	Spain	hts	positive	55	male
-SRR6714121	2014-06-19	caucasian	Spain	hts	positive	58	female
-SRR6714122	2014-05-06	caucasian	Spain	msm	positive	37	male
-SRR6714123	2014-04-30	hispanic-latin	Spain	msm	positive	34	male
-SRR6714124	2014-05-19	caucasian	Spain	pwid	positive	53	male
-SRR6714125	2014-05-08	caucasian	Spain	msm	positive	38	male
-SRR6714126	2014-04-23	hispanic-latin	Spain	msm	positive	23	male
-SRR6714127	2014-04-22	caucasian	Spain	msm	positive	53	male
-SRR6714128	2014-04-16	caucasian	Spain	hts	positive	54	male
-SRR6714129	2014-04-15	caucasian	Spain	msm	positive	19	male
-SRR6714130	2014-04-15	caucasian	Spain	msm	positive	36	male
-SRR6714131	2014-04-10	caucasian	Spain	msm	positive	35	male
-SRR6714132	2014-09-19	caucasian	Spain	hts	positive	68	female
-SRR6714133	2014-09-26	caucasian	Spain	pwid	positive	40	female
-SRR6714134	2014-07-29	caucasian	Spain	msm	positive	56	male
-SRR6714135	2014-07-25	hispanic-latin	Spain	msm	positive	36	male
-SRR6714136	2014-08-29	caucasian	Spain	msm	positive	43	male
-SRR6714137	2014-11-26	caucasian	Spain	hts	positive	40	male
-SRR6714138	2014-11-03	caucasian	Spain	msm	positive	29	male
-SRR6714139	2014-09-02	caucasian	Spain	msm	positive	51	male
-SRR6714140	2014-09-18	caucasian	Spain	hts	positive	51	female
-SRR6714141	2014-09-08	hispanic-latin	Spain	hts	positive	34	female
-SRR6714142	2014-06-20	caucasian	Spain	msm	positive	58	male
-SRR6714143	2014-06-25	caucasian	Spain	msm	positive	36	male
-SRR6714144	2014-06-20	caucasian	Spain	hts	positive	50	male
-SRR6714145	2014-06-19	caucasian	Spain	msm	positive	38	male
-SRR6714146	2014-07-11	caucasian	Spain	pwid	positive	42	male
-SRR6714147	2014-07-09	caucasian	Spain	msm	negative	37	male
-SRR6714148	2014-07-02	hispanic-latin	Spain	msm	positive	32	male
-SRR6714149	2014-07-25	caucasian	Spain	msm	positive	23	male
-SRR6714150	2014-07-02	caucasian	Spain	msm	negative	35	male
-SRR6714151	2014-07-23	hispanic-latin	Spain	msm	positive	29	male
-SRR6714152	2014-02-07	caucasian	Spain	msm	negative	46	male
-SRR6714153	2014-02-11	caucasian	Spain	pwid	positive	45	female
-SRR6714154	2014-02-05	caucasian	Spain	hts	positive	40	female
-SRR6714155	2014-02-05	caucasian	Spain	hts	positive	56	female
-SRR6714156	2014-02-05	caucasian	Spain	msm	positive	52	male
-SRR6714157	2014-02-05	hispanic-latin	Spain	hts	positive	49	female
-SRR6714158	2014-02-07	caucasian	Spain	msm	positive	37	male
-SRR6714159	2014-02-07	hispanic-latin	Spain	msm	positive	46	male
-SRR6714160	2014-02-05	caucasian	Spain	hts	positive	50	female
-SRR6714161	2014-02-06	hispanic-latin	Spain	hts	negative	40	female
-SRR6714162	2014-05-20	caucasian	Spain	msm	positive	38	male
-SRR6714163	2014-05-22	caucasian	Spain	msm	positive	27	male
-SRR6714164	2014-05-09	caucasian	Spain	msm	positive	37	male
-SRR6714165	2014-04-09	caucasian	Spain	msm	negative	42	male
-SRR6714166	2014-04-30	caucasian	Spain	msm	negative	60	male
-SRR6714167	2014-05-07	caucasian	Spain	msm	negative	37	male
-SRR6714168	2014-05-21	hispanic-latin	Spain	msm	negative	37	male
-SRR6714169	2014-05-21	caucasian	Spain	msm	negative	38	male
-SRR6714170	2014-05-21	caucasian	Spain	msm	negative	36	male
-SRR6714171	2014-05-16	caucasian	Spain	hts	positive	49	male
-SRR6714172	2014-03-17	caucasian	Spain	hts	positive	50	female
-SRR6714173	2014-03-17	caucasian	Spain	msm	positive	35	male
-SRR6714174	2014-03-17	caucasian	Spain	hts	positive	46	female
-SRR6714175	2014-03-17	caucasian	Spain	hts	positive	47	male
-SRR6714176	2014-03-25	caucasian	Spain	msm	positive	44	male
-SRR6714177	2014-03-14	caucasian	Spain	msm	positive	47	male
-SRR6714178	2014-03-14	caucasian	Spain	msm	positive	34	male
-SRR6714179	2014-03-21	hispanic-latin	Spain	msm	positive	43	male
-SRR6714180	2014-03-24	hispanic-latin	Spain	msm	positive	36	male
-SRR6714181	2014-03-21	caucasian	Spain	msm	positive	31	male
-SRR6714182	2014-04-02	caucasian	Spain	pwid	positive	53	male
-SRR6714183	2014-04-25	caucasian	Spain	msm	positive	34	male
-SRR6714184	2014-04-01	others	Spain	msm	positive	48	male
-SRR6714185	2014-04-03	caucasian	Spain	hts	positive	44	male
-SRR6714186	2014-03-26	others	Spain	hts	positive	42	female
-SRR6714187	2014-03-27	hispanic-latin	Spain	hts	positive	34	female
-SRR6714188	2014-03-25	caucasian	Spain	msm	positive	53	male
-SRR6714189	2014-03-19	caucasian	Spain	msm	positive	41	male
-SRR6714190	2014-04-04	hispanic-latin	Spain	msm	positive	50	male
-SRR6714191	2014-04-23	caucasian	Spain	msm	positive	52	male
-SRR6714192	2014-01-30	caucasian	Spain	hts	positive	55	male
-SRR6714193	2014-02-25	caucasian	Spain	msm	negative	54	male
-SRR6714194	2014-01-20	hispanic-latin	Spain	msm	positive	46	male
-SRR6714195	2014-02-04	caucasian	Spain	msm	negative	33	male
-SRR6714196	2014-01-18	caucasian	Spain	hts	positive	56	female
-SRR6714197	2014-01-20	caucasian	Spain	hts	positive	45	male
-SRR6714198	2014-01-27	caucasian	Spain	hts	positive	59	female
-SRR6714199	2014-01-27	caucasian	Spain	hts	positive	52	male
-SRR6714200	2014-01-21	hispanic-latin	Spain	msm	negative	40	male
-SRR6714201	2014-02-04	caucasian	Spain	msm	negative	42	male
-SRR6714202	2014-11-05	caucasian	Spain	msm	positive	47	male
-SRR6714203	2014-11-18	caucasian	Spain	msm	positive	46	male
-SRR6714204	2014-10-16	caucasian	Spain	pwid	positive	53	male
-SRR6714205	2014-10-16	hispanic-latin	Spain	hts	positive	31	female
-SRR6714206	2014-12-15	caucasian	Spain	msm	positive	48	male
-SRR6714207	2014-10-23	caucasian	Spain	msm	positive	38	male
-SRR6714208	2014-02-13	caucasian	Spain	pwid	positive	43	male
-SRR6714209	2014-02-13	caucasian	Spain	hts	positive	60	female
-SRR6714210	2014-02-13	others	Spain	hts	positive	35	female
-SRR6714211	2014-02-13	asiatic	Spain	hts	positive	38	female
-SRR6714212	2014-02-19	caucasian	Spain	msm	positive	42	male
-SRR6714213	2014-02-17	caucasian	Spain	pwid	positive	52	female
-SRR6714214	2014-02-14	hispanic-latin	Spain	msm	positive	44	male
-SRR6714215	2014-02-14	caucasian	Spain	hts	negative	50	female
-SRR6714216	2014-02-26	caucasian	Spain	pwid	positive	53	female
-SRR6714217	2014-03-19	caucasian	Spain	msm	negative	28	male
-SRR6714218	2014-11-28	caucasian	Spain	pwid	positive	53	male
-SRR6714219	2014-11-27	caucasian	Spain	msm	positive	60	male
-SRR6714220	2014-12-01	caucasian	Spain	hts	negative	35	male
-SRR6714221	2014-11-28	caucasian	Spain	msm	positive	26	male
-SRR6714222	2014-12-01	caucasian	Spain	msm	positive	25	male
-SRR6714223	2014-11-24	caucasian	Spain	msm	positive	37	male
-SRR6714224	2014-11-27	caucasian	Spain	pwid	positive	54	female
-SRR6714225	2014-11-26	caucasian	Spain	hts	negative	33	female
-SRR6714226	2014-12-10	caucasian	Spain	msm	negative	25	male
-SRR6714227	2014-12-02	caucasian	Spain	pwid	positive	54	male
-SRR3094944	2010-05-11	caucasian	Sweden	pwid	positive	53	male
-SRR3094945	2010-12-08	caucasian	Sweden	msm	positive	43	male
-SRR3094946	2011-05-03	black	Sweden	hts	positive	35	female
-SRR3094947	2010-07-05	black	Sweden	hts	positive	45	female
-SRR3094948	2010-10-15	black	Sweden	hts	positive	30	female
-SRR3094949	2010-06-15	asian	Sweden	hts	positive	30	female
-SRR3094950	2010-03-15	caucasian	Sweden	hts	positive	65	male
-SRR3094951	2010-06-02	caucasian	Sweden	hts	positive	32	female
-SRR3094952	2010-08-09	black	Sweden	hts	positive	34	male
-SRR3094953	2012-02-16	black	Sweden	hts	positive	26	female
-SRR3094954	2010-07-09	caucasian	Sweden	pwid	positive	67	female
-SRR3094955	2010-04-21	caucasian	Sweden	hts	positive	59	female
-SRR3094956	2010-06-03	black	Sweden	hts	positive	34	male
-SRR3094957	2010-05-31	caucasian	Sweden	hts	positive	62	male
-SRR3094958	2010-08-27	caucasian	Sweden	msm	positive	30	male
-SRR3094959	2010-05-12	caucasian	Sweden	msm	positive	58	male
-SRR3094960	2010-05-05	caucasian	Sweden	hts	positive	61	male
-SRR3094961	2010-04-23	caucasian	Sweden	pwid	positive	48	male
-SRR3094962	2010-11-24	caucasian	Sweden	hts	positive	37	female
-SRR3094963	2010-04-16	caucasian	Sweden	pwid	positive	42	female
-SRR3094964	2010-03-12	caucasian	Sweden	hts	positive	51	male
-SRR3094965	2010-05-11	caucasian	Sweden	hts	positive	51	female
-SRR3094966	2010-09-29	caucasian	Sweden	pwid	positive	41	male
-SRR3094967	2010-09-20	caucasian	Sweden	hts	positive	45	male
-SRR3094968	2010-10-21	caucasian	Sweden	pwid	positive	30	male
-SRR3094969	2010-11-09	black	Sweden	hts	positive	33	female
-SRR3094970	2010-08-23	black	Sweden	hts	positive	34	male
-SRR3094971	2010-09-07	caucasian	Sweden	msm	positive	41	male
-SRR3094972	2010-03-30	caucasian	Sweden	hts	positive	32	female
-SRR3094973	2010-06-23	caucasian	Sweden	msm	positive	63	male
-SRR3094974	2010-10-11	black	Sweden	hts	positive	32	male
-SRR3094975	2010-06-15	caucasian	Sweden	hts	positive	57	male
-SRR3094976	2010-06-18	black	Sweden	hts	positive	33	male
-SRR3094977	2010-05-25	black	Sweden	hts	positive	41	male
-SRR3094978	2010-04-12	caucasian	Sweden	msm	positive	28	male
-SRR3094979	2010-05-26	caucasian	Sweden	pwid	positive	45	male
-SRR3094980	2010-04-08	hispanic-latin	Sweden	msm	positive	48	male
-SRR3094981	2010-03-30	caucasian	Sweden	hts	positive	27	female
-SRR3094982	2010-06-02	black	Sweden	hts	positive	47	female
-SRR3094983	2011-01-26	black	Sweden	hts	positive	27	female
-SRR3094984	2010-05-12	black	Sweden	hts	positive	54	female
-SRR3094985	2010-03-22	black	Sweden	hts	positive	25	male
-SRR3094986	2010-07-13	black	Sweden	hts	positive	45	female
-SRR3094987	2010-06-21	caucasian	Sweden	msm	positive	78	male
-SRR3094988	2010-03-24	caucasian	Sweden	pwid	positive	47	male
-SRR3094989	2010-03-18	caucasian	Sweden	hts	positive	54	male
-SRR3094990	2010-09-20	black	Sweden	hts	positive	44	male
-SRR3094991	2010-05-19	black	Sweden	hts	positive	33	female
-SRR3094992	2010-03-22	black	Sweden	hts	positive	34	female
-SRR3094993	2010-06-14	caucasian	Sweden	msm	positive	23	male
-SRR3094994	2010-04-22	caucasian	Sweden	msm	positive	25	male
-SRR3094995	2010-06-15	caucasian	Sweden	msm	positive	58	male
-SRR3094996	2010-10-11	caucasian	Sweden	hts	positive	49	male
-SRR3094997	2010-03-29	caucasian	Sweden	msm	positive	30	male
-SRR3094998	2010-01-15	black	Sweden	hts	positive	60	male
-SRR3094999	2010-10-13	latin	Sweden	msm	positive	20	male
-SRR3095000	2010-04-13	caucasian	Sweden	msm	positive	36	male
-SRR3095001	2010-04-06	black	Sweden	hts	positive	36	female
-SRR3095002	2010-04-01	caucasian	Sweden	hts	positive	37	male
-SRR3095003	2010-08-27	asian	Sweden	hts	positive	30	female
-SRR3095004	2010-12-09	caucasian	Sweden	msm	positive	32	male
-SRR3095005	2010-05-27	caucasian	Sweden	hts	positive	38	male
-SRR3095006	2010-06-07	caucasian	Sweden	hts	positive	19	female
-SRR3095007	2011-02-07	caucasian	Sweden	msm	positive	37	male
-SRR3095008	2010-06-23	caucasian	Sweden	msm	positive	33	male
-SRR3095009	2010-06-23	caucasian	Sweden	msm	positive	32	male
-SRR3095010	2010-09-01	caucasian	Sweden	pwid	positive	38	female
-SRR3095011	2010-09-13	caucasian	Sweden	msm	positive	38	male
-SRR3095012	2010-10-11	black	Sweden	hts	positive	40	female
-SRR3095013	2010-10-20	black	Sweden	hts	positive	30	female
-SRR3095014	2011-06-30	caucasian	Sweden	hts	positive	49	female
-SRR3095015	2010-06-08	caucasian	Sweden	hts	positive	52	male
-SRR3095016	2011-06-30	black	Sweden	hts	positive	40	female
-SRR3095017	2011-01-17	black	Sweden	hts	positive	38	female
-SRR3095018	2011-06-30	black	Sweden	hts	positive	47	female
-SRR3095019	2010-07-12	caucasian	Sweden	pwid	positive	55	male
-SRR3095020	2011-01-27	caucasian	Sweden	hts	positive	45	female
-SRR3095021	2010-10-07	black	Sweden	hts	negative	44	male
-SRR3095022	2010-10-11	caucasian	Sweden	hts	negative	28	female
-SRR3095023	2010-10-28	caucasian	Sweden	hts	negative	46	male
-SRR3095024	2010-11-15	caucasian	Sweden	hts	negative	55	male
-SRR3095025	2010-12-15	caucasian	Sweden	hts	negative	48	male
-SRR3095026	2011-02-18	black	Sweden	hts	negative	43	male
-SRR3095027	2011-06-01	caucasian	Sweden	hts	negative	34	female
-SRR3095138	2010-05-11	caucasian	Sweden	pwid	positive	53	male
-SRR3095139	2010-12-08	caucasian	Sweden	msm	positive	43	male
-SRR3095140	2011-05-03	black	Sweden	hts	positive	35	female
-SRR3095141	2010-07-05	black	Sweden	hts	positive	45	female
-SRR3095142	2010-10-15	black	Sweden	hts	positive	30	female
-SRR3095143	2010-06-15	asian	Sweden	hts	positive	30	female
-SRR3095144	2010-03-15	caucasian	Sweden	hts	positive	65	male
-SRR3095145	2010-06-02	caucasian	Sweden	hts	positive	32	female
-SRR3095146	2010-08-09	black	Sweden	hts	positive	34	male
-SRR3095147	2012-02-16	black	Sweden	hts	positive	26	female
-SRR3095148	2010-07-09	caucasian	Sweden	pwid	positive	67	female
-SRR3095149	2010-04-21	caucasian	Sweden	hts	positive	59	female
-SRR3095150	2010-06-03	black	Sweden	hts	positive	34	male
-SRR3095151	2010-05-31	caucasian	Sweden	hts	positive	62	male
-SRR3095152	2010-08-27	caucasian	Sweden	msm	positive	30	male
-SRR3095153	2010-05-12	caucasian	Sweden	msm	positive	58	male
-SRR3095154	2010-05-05	caucasian	Sweden	hts	positive	61	male
-SRR3095155	2010-04-23	caucasian	Sweden	pwid	positive	48	male
-SRR3095156	2010-11-24	caucasian	Sweden	hts	positive	37	female
-SRR3095157	2010-04-16	caucasian	Sweden	pwid	positive	42	female
-SRR3095158	2010-03-12	caucasian	Sweden	hts	positive	51	male
-SRR3095159	2010-05-11	caucasian	Sweden	hts	positive	51	female
-SRR3095160	2010-09-29	caucasian	Sweden	pwid	positive	41	male
-SRR3095161	2010-09-20	caucasian	Sweden	hts	positive	45	male
-SRR3095162	2010-10-21	caucasian	Sweden	pwid	positive	30	male
-SRR3095163	2010-11-09	black	Sweden	hts	positive	33	female
-SRR3095164	2010-08-23	black	Sweden	hts	positive	34	male
-SRR3095165	2010-09-07	caucasian	Sweden	msm	positive	41	male
-SRR3095166	2010-03-30	caucasian	Sweden	hts	positive	32	female
-SRR3095167	2010-06-23	caucasian	Sweden	msm	positive	63	male
-SRR3095168	2010-10-11	black	Sweden	hts	positive	32	male
-SRR3095169	2010-06-15	caucasian	Sweden	hts	positive	57	male
-SRR3095170	2010-06-18	black	Sweden	hts	positive	33	male
-SRR3095171	2010-05-25	black	Sweden	hts	positive	41	male
-SRR3095172	2010-04-12	caucasian	Sweden	msm	positive	28	male
-SRR3095173	2010-05-26	caucasian	Sweden	pwid	positive	45	male
-SRR3095174	2010-04-08	hispanic-latin	Sweden	msm	positive	48	male
-SRR3095175	2010-03-30	caucasian	Sweden	hts	positive	27	female
-SRR3095176	2010-06-02	black	Sweden	hts	positive	47	female
-SRR3095177	2011-01-26	black	Sweden	hts	positive	27	female
-SRR3095178	2010-05-12	black	Sweden	hts	positive	54	female
-SRR3095179	2010-03-22	black	Sweden	hts	positive	25	male
-SRR3095180	2010-07-13	black	Sweden	hts	positive	45	female
-SRR3095181	2010-06-21	caucasian	Sweden	msm	positive	78	male
-SRR3095182	2010-03-24	caucasian	Sweden	pwid	positive	47	male
-SRR3095183	2010-03-18	caucasian	Sweden	hts	positive	54	male
-SRR3095184	2010-09-20	black	Sweden	hts	positive	44	male
-SRR3095185	2010-05-19	black	Sweden	hts	positive	33	female
-SRR3095186	2010-03-22	black	Sweden	hts	positive	34	female
-SRR3095187	2010-06-14	caucasian	Sweden	msm	positive	23	male
-SRR3095188	2010-04-22	caucasian	Sweden	msm	positive	25	male
-SRR3095189	2010-06-15	caucasian	Sweden	msm	positive	58	male
-SRR3095190	2010-10-11	caucasian	Sweden	hts	positive	49	male
-SRR3095191	2010-03-29	caucasian	Sweden	msm	positive	30	male
-SRR3095192	2010-01-15	black	Sweden	hts	positive	60	male
-SRR3095193	2010-10-13	latin	Sweden	msm	positive	20	male
-SRR3095194	2010-04-13	caucasian	Sweden	msm	positive	36	male
-SRR3095195	2010-04-06	black	Sweden	hts	positive	36	female
-SRR3095196	2010-04-01	caucasian	Sweden	hts	positive	37	male
-SRR3095197	2010-08-27	asian	Sweden	hts	positive	30	female
-SRR3095198	2010-12-09	caucasian	Sweden	msm	positive	32	male
-SRR3095199	2010-05-27	caucasian	Sweden	hts	positive	38	male
-SRR3095200	2010-06-07	caucasian	Sweden	hts	positive	19	female
-SRR3095201	2011-02-07	caucasian	Sweden	msm	positive	37	male
-SRR3095202	2010-06-23	caucasian	Sweden	msm	positive	33	male
-SRR3095203	2010-06-23	caucasian	Sweden	msm	positive	32	male
-SRR3095204	2010-09-01	caucasian	Sweden	pwid	positive	38	female
-SRR3095205	2010-09-13	caucasian	Sweden	msm	positive	38	male
-SRR3095206	2010-10-11	black	Sweden	hts	positive	40	female
-SRR3095207	2010-10-20	black	Sweden	hts	positive	30	female
-SRR3095208	2011-06-30	caucasian	Sweden	hts	positive	49	female
-SRR3095209	2010-06-08	caucasian	Sweden	hts	positive	52	male
-SRR3095210	2011-06-30	black	Sweden	hts	positive	40	female
-SRR3095211	2011-01-17	black	Sweden	hts	positive	38	female
-SRR3095212	2011-06-30	black	Sweden	hts	positive	47	female
-SRR3095213	2010-07-12	caucasian	Sweden	pwid	positive	55	male
-SRR3095214	2011-01-27	caucasian	Sweden	hts	positive	45	female
-SRR3095215	2010-10-07	black	Sweden	hts	negative	44	male
-SRR3095216	2010-10-11	caucasian	Sweden	hts	negative	28	female
-SRR3095217	2010-10-28	caucasian	Sweden	hts	negative	46	male
-SRR3095218	2010-11-15	caucasian	Sweden	hts	negative	55	male
-SRR3095219	2010-12-15	caucasian	Sweden	hts	negative	48	male
-SRR3095220	2011-02-18	black	Sweden	hts	negative	43	male
-SRR3095221	2011-06-01	caucasian	Sweden	hts	negative	34	female
+Run	Host_Age	ETHNICITY	geo_loc_name_country	HIV_RiskGroup	HIV_serostatus	host_other_gender	host_sex	HIV_Profile	PCR_human_papilloma_virus	host_allergy	host_deposition_frequency_per_day	host_abdominal_transit_alterations	host_Residency_Area	HCV_coinfection	Anal_cytology	host_sexual_orientation	Syphilis_serology	HBV_coinfection	PCR_Neisseria_gonorrhoeae	PCR_Chlamydia_trachomatis	HIV_viral_load	CD4+_Tcell_counts	leukocytes	stool_consistency	lymphocytes	host_body_mass_index
+SRR3094678	56	caucasian	Spain	hts	positive	f	female	concordant	yes	no	1	yes	Rest	negative	Normal	nonMSM	negative	negative	negative	negative	undetectable	561	8.2	hard	2.3	22.4
+SRR3094679	45	caucasian	Spain	hts	positive	m	male	concordant	no	no	2	no	BMA	negative	HSIL	nonMSM	negative	negative	negative	negative	undetectable	1517	10.3	hard	4.1	28
+SRR3094680	46	hispanic-latin	Spain	msm	positive	m	male	concordant	yes	no	1	no	BMA	negative	HSIL	MSM	negative	negative	negative	negative	undetectable	767	6.4	soft	2.8	23.7
+SRR3094681	33	caucasian	Spain	msm	negative	m	male	negative	no	no	2	no	BMA	negative	LSIL	MSM	negative	negative	negative	negative			4.6	soft	1.8	22.3
+SRR3094682	40	hispanic-latin	Spain	msm	negative	m	male	negative	no	no	1	no	BCN	negative	Normal	MSM	negative	negative	negative	negative			4.7	hard	2	
+SRR3094683	42	caucasian	Spain	msm	negative	m	male	negative	no	no	1	no	Rest	negative	LSIL	MSM	negative	negative	negative	negative			8.7	hard	3	29.9
+SRR3094684	59	caucasian	Spain	hts	positive	f	female	concordant	no	no	1	no	BCN		ASCUS	nonMSM					undetectable	678	7	hard	2.8	28.9
+SRR3094685	52	caucasian	Spain	hts	positive	m	male	concordant	no	no	1	no	BMA	negative	Normal	nonMSM	negative	negative	negative	negative	undetectable	1274	10.4	hard	4.5	29
+SRR3094686	55	caucasian	Spain	hts	positive	m	male	discordant	no	no	1	no	Rest		Normal	nonMSM					undetectable	201	5.5	soft	0.8	21.3
+SRR3094687	54	caucasian	Spain	msm	negative	m	male	negative	yes	no	3	no	BCN	negative	Normal	MSM	negative		negative	negative			5.1	soft	2.2	
+SRR3094688	52	caucasian	Spain	msm	positive	m	male	concordant	yes	no	1	no	BCN	negative	Normal	MSM	negative	negative	negative	negative	undetectable	687	5.2	hard	1.7	29.4
+SRR3094689	49	hispanic-latin	Spain	hts	positive	f	female	concordant	yes	no	1	no	BMA	negative	Normal	nonMSM	negative	negative	negative	negative	undetectable	603	5.5	hard	1.5	23.5
+SRR3094690	40	caucasian	Spain	hts	positive	f	female	concordant	yes	no	1	no	BMA	negative	Normal	nonMSM	negative	negative	negative	negative	undetectable	777	5	hard	2.1	19.5
+SRR3094691	56	caucasian	Spain	hts	positive	f	female	discordant	yes	yes	1	no	Rest	negative	Normal	nonMSM	negative	negative	negative	negative	undetectable	283	3.7	hard	1.2	22.7
+SRR3094692	50	caucasian	Spain	hts	positive	f	female	discordant	yes	yes	1	no	BMA	negative	ASCUS	nonMSM	negative	negative	negative	negative	undetectable	242	5.8	hard	1.6	23.4
+SRR3094693	40	hispanic-latin	Spain	hts	negative	f	female	negative	yes	yes	1	no	Rest	negative	ASCUS	nonMSM	negative	negative	negative	negative			7.3	soft	1.9	17.9
+SRR3094694	37	caucasian	Spain	msm	positive	m	male	naive	no	yes	1	no	BCN	negative	Normal	MSM	positive	negative			16714	526	6.6	soft	1.6	24.8
+SRR3094695	46	hispanic-latin	Spain	msm	positive	m	male	concordant	yes		2	no	BMA	negative	Normal	MSM	positive	negative	negative	negative	undetectable	530	4.5	soft	1.9	24.5
+SRR3094696	46	caucasian	Spain	msm	negative	m	male	negative	no	no	2	no	BMA	negative	Normal	MSM	negative	negative	negative	negative			12.7	hard	1.9	29.9
+SRR3094697	45	caucasian	Spain	pwid	positive	f	female	elite_controllers	no	no	1	no	Rest	positive	Normal	nonMSM	negative	positive	negative	negative	undetectable	734	4.7	soft	1.6	18
+SRR3094698	38	asiatic	Spain	hts	positive	f	female	concordant	yes	no	1	yes	BCN	negative	Normal	nonMSM	negative	negative	negative	negative	undetectable	947	8.5	hard	2.1	21.1
+SRR3094699	35	others	Spain	hts	positive	f	female	concordant	no	no	2	no	BMA	negative	Normal	nonMSM	negative	negative	negative	negative	undetectable	686	5.4	hard	2.2	26.6
+SRR3094700	60	caucasian	Spain	hts	positive	f	female	concordant	yes	no	1	no	BMA	negative	Normal	nonMSM	negative	negative	negative	negative	undetectable	766	6.7	soft	2.3	22.8
+SRR3094701	43	caucasian	Spain	pwid	positive	m	male	concordant	no	no	1	no	BMA	positive	Normal	nonMSM	negative	positive	negative	negative	undetectable	628	5.3	hard	1.5	23.5
+SRR3094702	50	caucasian	Spain	hts	negative	f	female	negative	no	no	1	no	Rest	negative	Normal	nonMSM		negative	negative	negative			8.1	soft	2.7	
+SRR3094703	44	hispanic-latin	Spain	msm	positive	m	male	concordant	no	no	3	no	BMA	negative	Normal	MSM	positive	negative	negative	negative	undetectable	828	6.2	soft	2.3	26.6
+SRR3094704	52	caucasian	Spain	pwid	positive	f	female	naive	yes	yes	1	no	Rest	positive	ASCUS	nonMSM	positive	negative	negative	negative	3940	1132	7.3	hard	3.2	28.5
+SRR3094705	42	caucasian	Spain	msm	positive	m	male	concordant	yes	yes	1	no	BCN	positive	ASCUS	MSM	positive	positive	negative	negative	undetectable	1285	6.7	hard	2.5	22.3
+SRR3094706	28	caucasian	Spain	msm	negative	m	male	negative	no	no	2	no	BMA	negative	Normal	MSM	negative	negative	negative	negative			5.3	soft	2.2	21.8
+SRR3094707	53	caucasian	Spain	pwid	positive	f	female	discordant	yes	no	3	no	BCN	negative	LSIL	nonMSM	negative	negative	negative	negative	undetectable	296	4.9	soft	2	19.7
+SRR3094708	43	caucasian	Spain	msm	negative	m	male	negative	yes	no	1	no	BCN	negative	Normal	MSM	negative		negative	negative			3.8	hard		22
+SRR3094709	45	hispanic-latin	Spain	msm	negative	t	male	negative	yes	no	1	no	BCN	negative	ASCUS	MSM	negative	negative					6.9	hard		18.9
+SRR3094710	53	caucasian	Spain	msm	positive	m	male	early_treated	no	yes	1	no	Rest	negative	Normal	MSM	negative	negative	negative	negative	undetectable	724	6.9	soft	1.8	25.2
+SRR3094711	35	caucasian	Spain	hts	positive	m	male	naive	no	yes	1	no	Rest	negative	Normal	nonMSM	negative	negative	negative	negative	13901	558	6.2	soft	3	24.8
+SRR3094712	57	caucasian	Spain	hts	positive	f	female	concordant	yes	no	2	yes	Rest	negative	Normal	nonMSM	negative	negative	negative	negative	undetectable	551	6.6	hard	2.7	27.4
+SRR3094713	48	caucasian	Spain	hts	positive	m	male	concordant	no	yes	2	no	BMA		ASCUS	nonMSM	negative	positive	negative	negative	undetectable	761	5.9	soft	2.3	24.2
+SRR3094714	26	caucasian	Spain	msm	positive	m	male	late_presenters	no	no			Rest	negative		MSM	negative	negative			44567	233	4.8		0.9	23.8
+SRR3094715	50	caucasian	Spain	msm	positive	m	male	concordant	yes	no	1	no	Rest	negative	Normal	MSM		negative			undetectable	952	4.8	soft	2.3	22.6
+SRR3094716	60	caucasian	Spain	pwid	positive	f	female	viremic_controllers	yes	no	1	no	BMA	positive	HSIL	nonMSM		positive			794	580	6.5	hard	2.1	20.9
+SRR3094717	44	hispanic-latin	Spain	hts	positive	f	female	viremic_controllers	no	no	1	no	BMA		Normal	nonMSM					227	1064	7.2	hard	2.9	24.2
+SRR3094718	47	caucasian	Spain	msm	positive	m	male	discordant	yes	no	1	no	BMA	negative	ASCUS	MSM	negative		negative	positive	undetectable	289	4.6	soft	1.9	23.6
+SRR3094719	44	caucasian	Spain	msm	positive	m	male	early_treated	no	no	1	no	BMA	negative	LSIL	MSM	negative	negative	negative	negative	62	853	6.5	hard	2	23.3
+SRR3094720	43	hispanic-latin	Spain	msm	positive	m	male	early_treated	yes	no	1	no	BCN	negative	ASCUS	MSM	positive	negative	negative	negative	undetectable	506	4.3	soft	1.8	26.2
+SRR3094721	34	caucasian	Spain	msm	positive	m	male	late_presenters	no	no	2	no	Rest	negative	Normal	MSM	negative	negative	negative	negative	53095	192	3.7	liquid	1.7	24.3
+SRR3094722	35	caucasian	Spain	msm	positive	m	male	concordant	yes	no	4	no	BCN	negative	LSIL	MSM	negative	negative	negative	negative	51	952	6.6	soft	2	23.5
+SRR3094723	50	caucasian	Spain	hts	positive	f	female	concordant	yes	no	1	no	BMA	negative	LSIL	nonMSM	negative	negative			undetectable	616	4.5	hard	1.5	24.3
+SRR3094724	47	caucasian	Spain	hts	positive	m	male	concordant	no	no	2	no	BMA	positive	Normal	nonMSM	negative	positive	negative	negative	undetectable	1274	7	soft	38.8	26.2
+SRR3094725	46	caucasian	Spain	hts	positive	f	female	concordant	yes	no	2	yes	Rest	negative	Normal	nonMSM	negative				undetectable	871	4.2	soft	1.8	24.7
+SRR3094726	31	caucasian	Spain	msm	positive	m	male	concordant	yes	yes	1	no	BCN	negative	LSIL	MSM			negative	negative	undetectable	775	6.6	soft	2.1	23.6
+SRR3094727	36	hispanic-latin	Spain	msm	positive	m	male	naive	no	no	4	no	BCN	negative	Normal	MSM	negative	negative			29355	842	5.9	hard	2.3	22.1
+SRR3094728	53	caucasian	Spain	msm	positive	m	male	discordant	no	no	1	no	BCN	negative	Normal	MSM	negative	negative	negative	negative	undetectable	280	5	soft	1.6	21.5
+SRR3094729	41	caucasian	Spain	msm	positive	m	male	concordant	yes	no	2	no	BCN	negative	ASCUS	MSM	negative	negative			undetectable	648	5.9	soft	1.6	24.3
+SRR3094730	42	others	Spain	hts	positive	f	female	elite_controllers	no	no	1	no	BCN	negative	Normal	nonMSM	negative	negative	negative	negative	96	1056	5.6	liquid	2.5	28.3
+SRR3094731	34	hispanic-latin	Spain	hts	positive	f	female	viremic_controllers	no	no	2	no	BMA	negative	Normal	nonMSM	negative	negative	negative	negative	696	1380	9.1	soft	3.1	24.9
+SRR3094732	48	others	Spain	msm	positive	m	male	concordant	no	no	1	no	BMA	negative		MSM	negative	negative			undetectable	764	5.3	soft	2.7	24.2
+SRR3094733	44	caucasian	Spain	hts	positive	m	male	late_presenters	no	no	4	yes	BMA	negative	LSIL	nonMSM	negative	negative	negative	negative	74625	3	2.4	liquid		21
+SRR3094734	53	caucasian	Spain	pwid	positive	m	male	discordant	yes	yes	1	no	BCN	negative	LSIL	nonMSM	negative	negative	negative	negative	undetectable	285	5.1	hard	0.9	20.2
+SRR3094735	34	caucasian	Spain	msm	positive	m	male	concordant	yes	no	1	no	BCN	negative	LSIL	MSM	negative	negative	negative	negative	undetectable	998	6.4	soft	2.1	22.4
+SRR3094736	50	hispanic-latin	Spain	msm	positive	m	male	discordant	no	yes	1	no	BMA		Normal	MSM			negative	negative	undetectable	296	4.2	soft	1.3	23.8
+SRR3094737	52	caucasian	Spain	msm	positive	m	male	elite_controllers	no	no	1	no	BMA	negative	Normal	MSM	positive	negative	negative	negative	149	997	9.7	soft	2.8	22.3
+SRR3094738	35	caucasian	Spain	msm	positive	m	male	naive	no	no	2	no	BMA	negative	HSIL	MSM	positive		negative	negative	10080	784	7.8	soft	2.3	28.7
+SRR3094739	36	caucasian	Spain	msm	positive	m	male	viremic_controllers	yes	no	1	no	BCN	negative	HSIL	MSM	positive		negative	negative	2818	462	6.6	soft	1.9	28.68
+SRR3094740	19	caucasian	Spain	msm	positive	m	male	naive	yes	yes	2	no	Rest	negative	ASCUS	MSM	negative	negative	negative	negative	758	1011	10.6	soft	3.2	21.72
+SRR3094741	54	caucasian	Spain	hts	positive	m	male	discordant	yes	no	1	no	BMA	positive	ASCUS	nonMSM	negative	positive	negative	negative	undetectable	289	6.8	soft	2.7	18.6
+SRR3094742	53	caucasian	Spain	msm	positive	m	male	discordant	yes	yes	3	no	Rest	positive	Normal	MSM	positive	positive	negative	negative	undetectable	283	5.6	soft	1.9	29.9
+SRR3094743	23	hispanic-latin	Spain	msm	positive	m	male	late_presenters	no	no	2	no	BMA	negative		MSM	negative	negative	negative	negative	12865	211	4.1	soft	1.4	
+SRR3094744	38	caucasian	Spain	msm	positive	m	male	naive	yes	no	2	no	BMA	negative	LSIL	MSM	negative		negative	negative	2829	570	4.6	hard	1.9	21.8
+SRR3094745	53	caucasian	Spain	pwid	positive	m	male	concordant	no	no	2	no	Rest	positive	Normal	nonMSM	negative	positive	negative	negative	undetectable	1086	5	soft	3	19.1
+SRR3094746	34	hispanic-latin	Spain	msm	positive	m	male	naive	no	no	1	no	BCN	negative	HSIL	MSM	negative		negative	negative	10018	701	5.4	soft	2.1	27.7
+SRR3094747	37	caucasian	Spain	msm	positive	m	male	early_treated	yes	no	1	no	BCN	negative	Normal	MSM	negative	negative	negative	negative	undetectable	517	6.1	soft	2.3	26.7
+SRR3094748	37	caucasian	Spain	msm	positive	m	male	early_treated	no	no	1	no	BMA	negative	Normal	MSM	negative	negative	negative	negative	undetectable	815	4.9	hard	1.9	22.3
+SRR3094749	42	caucasian	Spain	msm	negative	m	male	negative	no	no	1	no	BCN	negative	Normal	MSM	negative	negative	negative	negative			6.7	hard	2	29.9
+SRR3094750	60	caucasian	Spain	msm	negative	m	male	negative	yes	no	1	no	BCN	negative	ASCUS	MSM	positive	negative	negative	negative			7.7	soft	23	26.4
+SRR3094751	37	caucasian	Spain	msm	negative	m	male	negative	yes	no	1	yes	BCN	negative	ASCUS	MSM	negative		negative	negative			7.3	soft	2.1	24.6
+SRR3094752	37	hispanic-latin	Spain	msm	negative	m	male	negative	yes	no	1	no	BCN	negative	LSIL	MSM	negative	negative	negative	negative			5.4	hard	1.6	24.3
+SRR3094753	38	caucasian	Spain	msm	negative	m	male	negative	no	yes	2	no	BCN	negative	Normal	MSM	negative	negative	negative	negative			5.2	soft	2.3	
+SRR3094754	36	caucasian	Spain	msm	negative	m	male	negative	yes	no	1	no	BCN	negative	LSIL	MSM	negative						4.3	soft	1.9	
+SRR3094755	49	caucasian	Spain	hts	positive	m	male	discordant	no	no	1	no	BMA	positive	Normal	nonMSM	negative	positive	negative	negative	undetectable	187	4.6	soft	0.8	22.2
+SRR3094756	38	caucasian	Spain	msm	positive	m	male	late_presenters	no	yes	2	yes	Rest	negative	LSIL	MSM	negative	negative	negative	negative	220148	140	4	soft	1.3	28.6
+SRR3094757	27	caucasian	Spain	msm	positive	m	male	naive	no	yes	1	yes	BMA	negative	LSIL	MSM	negative	negative	negative	negative	2188	708	4.9	soft		25.4
+SRR3094758	32	caucasian	Spain	msm	positive	m	male	early_treated	no	no	1	no	Rest	negative	Normal	MSM	negative	negative	negative	negative	undetectable	866	5.5	hard	2	24.2
+SRR3094759	43	hispanic-latin	Spain	msm	positive	m	male	late_presenters	no	yes	3	yes	BMA	negative	Normal	MSM					2747163	100	4.5	soft	1.7	19.3
+SRR3094760	28	caucasian	Spain	msm	positive	m	male	naive	no	no	2	no	BMA	negative	Normal	MSM	negative	negative	negative	negative	60925	493	11	soft	1.8	26.2
+SRR3094761	46	caucasian	Spain	msm	positive	m	male	early_treated	yes	no	1	no	BCN	negative	ASCUS	MSM	positive	negative			undetectable	479	3.3	soft		
+SRR3094762	34	caucasian	Spain	msm	negative	m	male	negative	yes	no	2	no	BCN		ASCUS	MSM			negative	negative			8.6	soft	26.2	
+SRR3094763	30	caucasian	Spain	msm	positive	m	male	late_presenters	no	no			BCN	negative	LSIL	MSM	negative	negative			384009	85	4.8		1.7	24.9
+SRR3094764	28	hispanic-latin	Spain	msm	positive	m	male	late_presenters	no	no	3	no	Rest	negative	Normal	MSM	negative	negative			70674	185	3.9	soft	1.1	27.3
+SRR3094765	60	caucasian	Spain	hts	positive	m	male	discordant	no	no	1	no	BMA	negative	Normal	nonMSM	negative	negative	negative	positive	undetectable	199	5.4	hard	1.3	31.9
+SRR3094766	58	caucasian	Spain	hts	positive	f	female	concordant	no	no	2	no	BMA	negative	Normal	nonMSM	negative	negative	negative	negative	undetectable	782	4.2	hard	1.3	28.7
+SRR3094767	55	caucasian	Spain	hts	positive	m	male	concordant	yes	yes	1	no	BCN	positive	LSIL	nonMSM	negative	positive	negative	negative	undetectable	602	8.2	soft	3.4	20.9
+SRR3094768	50	caucasian	Spain	hts	positive	m	male	late_presenters	no		2	yes	BMA	negative		nonMSM	negative	negative			178530	22	7.2	soft	0.7	
+SRR3094769	38	caucasian	Spain	msm	positive	m	male	naive	yes	no	4	yes	Rest	negative	LSIL	MSM			negative	positive	56763	855	4.9	soft	2	22.9
+SRR3094770	58	caucasian	Spain	msm	positive	m	male	concordant	no	no	2	no	BCN	positive	ASCUS	MSM	positive	negative	negative	negative	undetectable	730	4.7	soft	1.6	29.8
+SRR3094771	36	caucasian	Spain	msm	positive	m	male	discordant	yes	no	2	no	BCN		LSIL	MSM	negative		negative	positive	undetectable	221	3.4	soft	1.2	21.7
+SRR3094772	32	hispanic-latin	Spain	msm	positive	m	male	early_treated	no	no	1	no	BCN	negative	Normal	MSM	negative	negative	negative	negative	undetectable	828	4.8	hard	1.8	24.4
+SRR3094773	23	caucasian	Spain	msm	positive	m	male	viremic_controllers	no	no	2	no	BCN	negative	Normal	MSM	negative	negative	negative	negative	1223	783	6.7	soft	3	23.2
+SRR3094774	42	caucasian	Spain	pwid	positive	m	male	late_presenters	no	no	1	no	BMA	positive	Normal	nonMSM	negative	negative	negative	negative	296533	33	2.9	soft		23.1
+SRR3094775	37	caucasian	Spain	msm	negative	m	male	negative	no	no	1	no	BMA	negative	Normal	MSM	negative	negative	negative	negative			7.1	hard	1.6	
+SRR3094776	35	caucasian	Spain	msm	negative	m	male	negative	yes	no	1	no	BCN	negative	Normal	MSM	negative	negative	negative	negative			11.1	soft		
+SRR3094777	29	hispanic-latin	Spain	msm	positive	m	male	viremic_controllers	no	no	2	no	BCN	positive	LSIL	MSM	positive	negative	negative	negative	1339	772	7.3	soft		24.9
+SRR3094778	36	hispanic-latin	Spain	msm	positive	m	male	naive	no	no	1	no	BCN	negative		MSM	negative	negative	negative	negative	154816	1207	5.6	soft	2.7	22.6
+SRR3094779	56	caucasian	Spain	msm	positive	m	male	elite_controllers	no	no	1	no	Rest	negative	Normal	MSM	negative	negative	negative	negative	undetectable	951	7.7	soft		23
+SRR3094780	40	caucasian	Spain	hts	positive	m	male	concordant	no	no	1	yes	Rest	negative	Normal	nonMSM	negative	negative	negative	negative	undetectable	855	6.4	soft	1.9	24.7
+SRR3094781	43	caucasian	Spain	msm	positive	m	male	concordant	no	no	2	no	BMA		Normal	MSM			negative	positive	undetectable	860	7.8	soft	2.2	26.3
+SRR3094782	51	caucasian	Spain	msm	positive	m	male	concordant	no	yes	1	no	BMA	positive	Normal	MSM	negative	negative	negative	negative	undetectable	557	9.3	soft	3.2	20.1
+SRR3094783	29	caucasian	Spain	msm	positive	m	male	concordant	yes	yes	1	no	BCN	negative	Normal	MSM	negative	negative	negative	positive	undetectable	688	4.7	soft	1.3	23.7
+SRR3094784	34	hispanic-latin	Spain	hts	positive	f	female	early_treated	no	no	1	yes	BMA	negative		nonMSM	negative	negative			undetectable	1232	7.4	hard	2.6	22.5
+SRR3094785	51	caucasian	Spain	hts	positive	f	female	concordant	yes	no	1	no	BMA	negative	Normal	nonMSM	negative	negative			undetectable	718	4.4	hard	1.5	18.2
+SRR3094786	40	caucasian	Spain	pwid	positive	f	female	viremic_controllers	yes	yes	1	no	Rest	positive		nonMSM	negative	positive			1430	333	4.7	soft	1.5	20.5
+SRR3094787	68	caucasian	Spain	hts	positive	f	female	concordant	no	no	1	no		positive	Normal	nonMSM	negative	positive	negative	negative	undetectable	1085	5.8	hard	3.1	25.9
+SRR3094788	25	caucasian	Spain	msm	positive	m	male	naive	no	no	2	no	BMA	negative	Normal	MSM	negative	negative	negative	negative	30055	631	5.8	soft	2.4	18.6
+SRR3094789	51	caucasian	Spain	msm	negative	m	male	negative	no		1	no		negative	Normal	MSM	negative	negative	negative	negative			10.7	soft	1.8	25.2
+SRR3094790	43	caucasian	Spain	msm	positive	m	male	viremic_controllers	yes	no	3	yes	BCN	negative	ASCUS	MSM	negative	negative			181	471	3.7	soft	1.3	26.1
+SRR3094791	46	hispanic-latin	Spain	msm	positive	m	male	concordant	yes	yes	1			negative	Normal	MSM	positive	negative			undetectable	848	5.7	soft	2	25
+SRR3094792	54	caucasian	Spain	hts	positive	m	male	discordant	no	no	2	no	Rest	negative	LSIL	nonMSM	negative	negative	negative	negative	undetectable	229	9.1	liquid	2.6	21.5
+SRR3094793	26	caucasian	Spain	msm	positive	m	male	late_presenters	no	no	4	yes		negative		MSM	negative	negative			570077	34	4.2	soft		22
+SRR3094794	60	hispanic-latin	Spain	msm	positive	m	male	concordant	yes	no	1	yes	BCN		Normal	MSM	negative	negative	negative	negative	undetectable	750	5.1	soft	2.2	23.8
+SRR3094795	55	caucasian	Spain	pwid	positive	f	female	discordant	yes	no	2	no		positive	ASCUS	nonMSM	negative	positive			undetectable	270	3	hard	1	19.7
+SRR3094796	42	caucasian	Spain	msm	positive	m	male	concordant	no	no	1	no	Rest	negative		MSM	positive	negative	negative	positive	undetectable	717	6.3	soft	2.2	26
+SRR3094797	39	caucasian	Spain	msm	positive	m	male	concordant	no	yes	2	no	BCN	negative	LSIL	MSM	positive	negative	negative	negative	undetectable	752	6.5	soft	2.1	25
+SRR3094798	56	caucasian	Spain	msm	positive	m	male	concordant	yes	no	1	yes	BMA	negative	Normal	MSM	negative	negative	negative	negative	undetectable	875	8.9	soft	3.8	21.8
+SRR3094799	44	caucasian	Spain	hts	positive	m	male	concordant	yes	yes	3	no	BMA	negative	Normal	nonMSM	positive	negative	negative	negative	undetectable	984	5.6	soft	1.9	25.2
+SRR3094800	29	caucasian	Spain	msm	positive	m	male	viremic_controllers	yes	no				negative	Normal	MSM	negative	negative	negative	negative	57	830	5.2		2.1	
+SRR3094801	30	caucasian	Spain	msm	negative	m	male	negative	no	no	2		Rest	negative		MSM		negative	negative	negative			11.1	soft	2.1	
+SRR3094802	47	caucasian	Spain	pwid	positive	m	male	elite_controllers	no	no	1	no	BMA	positive		nonMSM	negative	positive			undetectable	930	7.5	soft	2.8	24.2
+SRR3094803	54	caucasian	Spain	hts	positive	m	male	discordant	no	no	2	no	BCN	positive	Normal	nonMSM	negative	positive	negative	negative	undetectable	98	6.2	soft	1.4	21.5
+SRR3094804	44	hispanic-latin	Spain	msm	positive	m	male	concordant	yes	no	1	yes	BMA	negative		MSM	positive	negative	negative	negative	undetectable	980	4.9	soft	3.1	28.9
+SRR3094805	60	hispanic-latin	Spain	msm	positive	m	male	concordant	yes	yes	2	no	BCN	negative	HSIL	MSM	negative	negative	negative	negative	20		6.2	soft	1.86	
+SRR3094806	46	caucasian	Spain	msm	positive	m	male	naive	no	no	1	no	BMA	negative	Normal	MSM	positive	negative	negative	negative	9794	745	7.4	soft	2.7	29.1
+SRR3094807	41	hispanic-latin	Spain	hts	positive	f	female	concordant	yes	yes	1	no	BMA		Normal	nonMSM			negative	negative	undetectable	578	6	hard	1.8	20.6
+SRR3094808	38	caucasian	Spain	msm	positive	m	male	concordant	yes	no	2	no	Rest		LSIL	MSM					undetectable	932	5.1	soft	2.3	22.7
+SRR3094809	48	caucasian	Spain	msm	negative	m	male	negative	no	yes	1	no	Rest	negative	Normal	MSM	negative	negative	negative	negative			4.6	hard	1.7	25.7
+SRR3094810	52	caucasian	Spain	msm	positive	m	male	concordant	no	no	3	no	Rest	positive	Normal	MSM	negative	negative	negative	negative	undetectable	826	5.6	soft	2.8	23.8
+SRR3094811	34	caucasian	Spain	msm	negative	m	male	negative	no	no	2	no	BCN	negative	Normal	MSM	negative	negative	negative				7.1	hard	2.2	
+SRR3094812	35	caucasian	Spain	msm	positive	m	male	concordant	yes	no	1	no	BMA	negative	LSIL	MSM	negative	negative	negative	negative	undetectable	650	4.9	hard	1.9	22.2
+SRR3094813	28	caucasian	Spain	msm	negative	m	male	negative	yes				BMA	negative	Normal	MSM	negative		negative	negative			8.8		2.4	
+SRR3094814	20	hispanic-latin	Spain	msm	positive	m	male	early_treated	yes	no	2	yes	BMA	negative	LSIL	MSM	negative	negative	negative	positive	63	1238	6.3	soft	2.6	21.8
+SRR3094815	52	caucasian	Spain	msm	positive	m	male	concordant	yes	no	2	no	Rest	negative	ASCUS	MSM	negative	negative	negative	negative	undetectable	140	5.4	hard	2	28
+SRR3094816	47	caucasian	Spain	msm	positive	m	male	early_treated	no	no	2	yes	Rest	negative		MSM	negative	negative	negative	negative	undetectable	480	5.5	hard	1.5	
+SRR3094817	44	caucasian	Spain	msm	positive	m	male	concordant	yes	no	3	no	BMA	negative	LSIL	MSM	negative	negative	negative	negative	undetectable	913	5.8	soft	2.2	24.9
+SRR3094818	37	caucasian	Spain	msm	positive	m	male	early_treated	yes	yes	1	yes	BCN	negative	Normal	MSM	negative	negative	negative	negative	undetectable	500	4.5	hard	1.7	24.5
+SRR3094819	25	caucasian	Spain	msm	positive	m	male	early_treated	yes	no	1	no	BCN	negative		MSM	negative	negative			undetectable	1175	7.6	soft	2.3	20.8
+SRR3094820	33	caucasian	Spain	hts	negative	f	female	negative	no	yes	1	no	BCN	negative	Normal	nonMSM	negative	negative	negative	negative			7.5	hard	2.7	25.1
+SRR3094821	54	caucasian	Spain	pwid	positive	f	female	concordant	yes	no	1	no	BCN	positive	LSIL	nonMSM	positive	positive	negative	negative	undetectable	644	4.1	hard	1.9	24.9
+SRR3094822	60	caucasian	Spain	msm	positive	m	male	concordant	yes	no	2	no	Rest	negative	LSIL	MSM	negative	negative	negative	negative	undetectable	542	4.5	soft	1.9	23.2
+SRR3094823	53	caucasian	Spain	pwid	positive	m	male	concordant	no	no	2	no	Rest	positive	Normal	nonMSM	negative	positive	negative	negative		742	12.6	soft	2.1	20.7
+SRR3094824	26	caucasian	Spain	msm	positive	m	male	viremic_controllers	yes	no	3	no	Rest	negative	LSIL	MSM	negative	negative	negative	negative	1382	598	9.6	hard	1.5	26.5
+SRR3094825	35	caucasian	Spain	hts	negative	m	male	negative	no	no	1	no	BCN	negative		nonMSM	negative	negative	negative	negative			5.2	hard	2.2	28.3
+SRR3094826	54	caucasian	Spain	pwid	positive	m	male	discordant	no	no	2	yes	Rest		LSIL	nonMSM			negative	negative	undetectable	268	4.9	hard	1.3	23.7
+SRR3094827	25	caucasian	Spain	msm	negative	m	male	negative	no	no	1	no	BMA	negative	Normal	MSM	negative	negative	negative	negative			8.3	soft	1.3	21
+SRR3094828	48	caucasian	Spain	msm	positive	m	male	discordant	yes	no	2	yes	Rest	negative	Normal	MSM	negative	negative	negative	negative	undetectable	259	4.6	liquid	1.2	28
+SRR3094829	38	caucasian	Spain	msm	positive	m	male	naive	no	no	1	no		negative	ASCUS	MSM	negative	negative	negative	negative	170000	820	8.04	hard	2.9	30.63
+SRR3094830	53	caucasian	Spain	pwid	positive	m	male	elite_controllers	no	no	1	no		positive		nonMSM		positive			25	580	5.78	hard	1.7	25.64
+SRR3094831	31	hispanic-latin	Spain	hts	positive	f	female	elite_controllers		no	2	no		negative		nonMSM		negative			84	1160	6.98	hard	2.9	23.53
+SRR3094832	47	caucasian	Spain	msm	positive	m	male	elite_controllers	yes	no	2	no		negative	Normal	MSM		negative	negative	positive	38	850	6.32	hard	2.2	
+SRR3094833	46	caucasian	Spain	msm	positive	m	male	viremic_controllers	yes	no	3	no		negative	ASCUS	MSM	negative		negative	negative	260	1010	7.4	hard	2.7	19.59
+SRR3094834	56	caucasian	Spain	hts	positive	f	female	concordant	yes	no	1	yes	Rest	negative	Normal		negative	negative	negative	negative						
+SRR3094835	45	caucasian	Spain	hts	positive	m	male	concordant	no	no	2	no	BMA	negative	HSIL		negative	negative	negative	negative						
+SRR3094836	46	hispanic-latin	Spain	msm	positive	m	male	concordant	yes	no	1	no	BMA	negative	HSIL		negative	negative	negative	negative						
+SRR3094837	33	caucasian	Spain	msm	negative	m	male	negative	no	no	2	no	BMA	negative	LSIL		negative	negative	negative	negative						
+SRR3094838	40	hispanic-latin	Spain	msm	negative	m	male	negative	no	no	1	no	BCN	negative	Normal		negative	negative	negative	negative						
+SRR3094839	42	caucasian	Spain	msm	negative	m	male	negative	no	no	1	no	Rest	negative	LSIL		negative	negative	negative	negative						
+SRR3094840	59	caucasian	Spain	hts	positive	f	female	concordant	no	no	1	no	BCN		ASCUS											
+SRR3094841	52	caucasian	Spain	hts	positive	m	male	concordant	no	no	1	no	BMA	negative	Normal		negative	negative	negative	negative						
+SRR3094842	55	caucasian	Spain	hts	positive	m	male	discordant	no	no	1	no	Rest		Normal											
+SRR3094843	54	caucasian	Spain	msm	negative	m	male	negative	yes	no	3	no	BCN	negative	Normal		negative		negative	negative						
+SRR3094844	52	caucasian	Spain	msm	positive	m	male	concordant	yes	no	1	no	BCN	negative	Normal		negative	negative	negative	negative						
+SRR3094845	49	hispanic-latin	Spain	hts	positive	f	female	concordant	yes	no	1	no	BMA	negative	Normal		negative	negative	negative	negative						
+SRR3094846	40	caucasian	Spain	hts	positive	f	female	concordant	yes	no	1	no	BMA	negative	Normal		negative	negative	negative	negative						
+SRR3094847	56	caucasian	Spain	hts	positive	f	female	discordant	yes	yes	1	no	Rest	negative	Normal		negative	negative	negative	negative						
+SRR3094848	50	caucasian	Spain	hts	positive	f	female	discordant	yes	yes	1	no	BMA	negative	ASCUS		negative	negative	negative	negative						
+SRR3094849	40	hispanic-latin	Spain	hts	negative	f	female	negative	yes	yes	1	no	Rest	negative	ASCUS		negative	negative	negative	negative						
+SRR3094850	46	hispanic-latin	Spain	msm	positive	m	male	concordant	yes		2	no	BMA	negative	Normal		positive	negative	negative	negative						
+SRR3094851	46	caucasian	Spain	msm	negative	m	male	negative	no	no	2	no	BMA	negative	Normal		negative	negative	negative	negative						
+SRR3094852	35	others	Spain	hts	positive	f	female	concordant	no	no	2	no	BMA	negative	Normal		negative	negative	negative	negative						
+SRR3094853	60	caucasian	Spain	hts	positive	f	female	concordant	yes	no	1	no	BMA	negative	Normal		negative	negative	negative	negative						
+SRR3094854	43	caucasian	Spain	pwid	positive	m	male	concordant	no	no	1	no	BMA	positive	Normal		negative	positive	negative	negative						
+SRR3094855	50	caucasian	Spain	hts	negative	f	female	negative	no	no	1	no	Rest	negative	Normal			negative	negative	negative						
+SRR3094856	52	caucasian	Spain	pwid	positive	f	female	naive	yes	yes	1	no	Rest	positive	ASCUS		positive	negative	negative	negative						
+SRR3094857	42	caucasian	Spain	msm	positive	m	male	concordant	yes	yes	1	no	BCN	positive	ASCUS		positive	positive	negative	negative						
+SRR3094858	28	caucasian	Spain	msm	negative	m	male	negative	no	no	2	no	BMA	negative	Normal		negative	negative	negative	negative						
+SRR3094859	53	caucasian	Spain	pwid	positive	f	female	discordant	yes	no	3	no	BCN	negative	LSIL		negative	negative	negative	negative						
+SRR3094860	43	caucasian	Spain	msm	negative	m	male	negative	yes	no	1	no	BCN	negative	Normal		negative		negative	negative						
+SRR3094861	45	hispanic-latin	Spain	msm	negative	t	male	negative	yes	no	1	no	BCN	negative	ASCUS		negative	negative								
+SRR3094862	53	caucasian	Spain	msm	positive	m	male	early_treated	no	yes	1	no	Rest	negative	Normal		negative	negative	negative	negative						
+SRR3094863	35	caucasian	Spain	hts	positive	m	male	naive	no	yes	1	no	Rest	negative	Normal		negative	negative	negative	negative						
+SRR3094864	57	caucasian	Spain	hts	positive	f	female	concordant	yes	no	2	yes	Rest	negative	Normal		negative	negative	negative	negative						
+SRR3094865	48	caucasian	Spain	hts	positive	m	male	concordant	no	yes	2	no	BMA		ASCUS		negative	positive	negative	negative						
+SRR3094866	50	caucasian	Spain	msm	positive	m	male	concordant	yes	no	1	no	Rest	negative	Normal			negative								
+SRR3094867	60	caucasian	Spain	pwid	positive	f	female	viremic_controllers	yes	no	1	no	BMA	positive	HSIL			positive								
+SRR3094868	44	hispanic-latin	Spain	hts	positive	f	female	viremic_controllers	no	no	1	no	BMA		Normal											
+SRR3094869	47	caucasian	Spain	msm	positive	m	male	discordant	yes	no	1	no	BMA	negative	ASCUS		negative		negative	positive						
+SRR3094870	43	hispanic-latin	Spain	msm	positive	m	male	early_treated	yes	no	1	no	BCN	negative	ASCUS		positive	negative	negative	negative						
+SRR3094871	50	caucasian	Spain	hts	positive	f	female	concordant	yes	no	1	no	BMA	negative	LSIL		negative	negative								
+SRR3094872	47	caucasian	Spain	hts	positive	m	male	concordant	no	no	2	no	BMA	positive	Normal		negative	positive	negative	negative						
+SRR3094873	46	caucasian	Spain	hts	positive	f	female	concordant	yes	no	2	yes	Rest	negative	Normal		negative									
+SRR3094874	31	caucasian	Spain	msm	positive	m	male	concordant	yes	yes	1	no	BCN	negative	LSIL				negative	negative						
+SRR3094875	36	hispanic-latin	Spain	msm	positive	m	male	naive	no	no	4	no	BCN	negative	Normal		negative	negative								
+SRR3094876	53	caucasian	Spain	msm	positive	m	male	discordant	no	no	1	no	BCN	negative	Normal		negative	negative	negative	negative						
+SRR3094877	41	caucasian	Spain	msm	positive	m	male	concordant	yes	no	2	no	BCN	negative	ASCUS		negative	negative								
+SRR3094878	42	others	Spain	hts	positive	f	female	elite_controllers	no	no	1	no	BCN	negative	Normal		negative	negative	negative	negative						
+SRR3094879	34	caucasian	Spain	msm	positive	m	male	concordant	yes	no	1	no	BCN	negative	LSIL		negative	negative	negative	negative						
+SRR3094880	50	hispanic-latin	Spain	msm	positive	m	male	discordant	no	yes	1	no	BMA		Normal				negative	negative						
+SRR3094881	52	caucasian	Spain	msm	positive	m	male	elite_controllers	no	no	1	no	BMA	negative	Normal		positive	negative	negative	negative						
+SRR3094882	19	caucasian	Spain	msm	positive	m	male	naive	yes	yes	2	no	Rest	negative	ASCUS		negative	negative	negative	negative						
+SRR3094883	54	caucasian	Spain	hts	positive	m	male	discordant	yes	no	1	no	BMA	positive	ASCUS		negative	positive	negative	negative						
+SRR3094884	53	caucasian	Spain	msm	positive	m	male	discordant	yes	yes	3	no	Rest	positive	Normal		positive	positive	negative	negative						
+SRR3094885	38	caucasian	Spain	msm	positive	m	male	naive	yes	no	2	no	BMA	negative	LSIL		negative		negative	negative						
+SRR3094886	34	hispanic-latin	Spain	msm	positive	m	male	naive	no	no	1	no	BCN	negative	HSIL		negative		negative	negative						
+SRR3094887	37	caucasian	Spain	msm	positive	m	male	early_treated	yes	no	1	no	BCN	negative	Normal		negative	negative	negative	negative						
+SRR3094888	42	caucasian	Spain	msm	negative	m	male	negative	no	no	1	no	BCN	negative	Normal		negative	negative	negative	negative						
+SRR3094889	60	caucasian	Spain	msm	negative	m	male	negative	yes	no	1	no	BCN	negative	ASCUS		positive	negative	negative	negative						
+SRR3094890	37	caucasian	Spain	msm	negative	m	male	negative	yes	no	1	yes	BCN	negative	ASCUS		negative		negative	negative						
+SRR3094891	37	hispanic-latin	Spain	msm	negative	m	male	negative	yes	no	1	no	BCN	negative	LSIL		negative	negative	negative	negative						
+SRR3094892	38	caucasian	Spain	msm	negative	m	male	negative	no	yes	2	no	BCN	negative	Normal		negative	negative	negative	negative						
+SRR3094893	36	caucasian	Spain	msm	negative	m	male	negative	yes	no	1	no	BCN	negative	LSIL		negative									
+SRR3094894	27	caucasian	Spain	msm	positive	m	male	naive	no	yes	1	yes	BMA	negative	LSIL		negative	negative	negative	negative						
+SRR3094895	32	caucasian	Spain	msm	positive	m	male	early_treated	no	no	1	no	Rest	negative	Normal		negative	negative	negative	negative						
+SRR3094896	46	caucasian	Spain	msm	positive	m	male	early_treated	yes	no	1	no	BCN	negative	ASCUS		positive	negative								
+SRR3094897	34	caucasian	Spain	msm	negative	m	male	negative	yes	no	2	no	BCN		ASCUS				negative	negative						
+SRR3094898	30	caucasian	Spain	msm	positive	m	male	late_presenters	no	no			BCN	negative	LSIL		negative	negative								
+SRR3094899	28	hispanic-latin	Spain	msm	positive	m	male	late_presenters	no	no	3	no	Rest	negative	Normal		negative	negative								
+SRR3094900	60	caucasian	Spain	hts	positive	m	male	discordant	no	no	1	no	BMA	negative	Normal		negative	negative	negative	positive						
+SRR3094901	58	caucasian	Spain	hts	positive	f	female	concordant	no	no	2	no	BMA	negative	Normal		negative	negative	negative	negative						
+SRR3094902	55	caucasian	Spain	hts	positive	m	male	concordant	yes	yes	1	no	BCN	positive	LSIL		negative	positive	negative	negative						
+SRR3094903	38	caucasian	Spain	msm	positive	m	male	naive	yes	no	4	yes	Rest	negative	LSIL				negative	positive						
+SRR3094904	58	caucasian	Spain	msm	positive	m	male	concordant	no	no	2	no	BCN	positive	ASCUS		positive	negative	negative	negative						
+SRR3094905	36	caucasian	Spain	msm	positive	m	male	discordant	yes	no	2	no	BCN		LSIL		negative		negative	positive						
+SRR3094906	32	hispanic-latin	Spain	msm	positive	m	male	early_treated	no	no	1	no	BCN	negative	Normal		negative	negative	negative	negative						
+SRR3094907	23	caucasian	Spain	msm	positive	m	male	viremic_controllers	no	no	2	no	BCN	negative	Normal		negative	negative	negative	negative						
+SRR3094908	37	caucasian	Spain	msm	negative	m	male	negative	no	no	1	no	BMA	negative	Normal		negative	negative	negative	negative						
+SRR3094909	35	caucasian	Spain	msm	negative	m	male	negative	yes	no	1	no	BCN	negative	Normal		negative	negative	negative	negative						
+SRR3094910	29	hispanic-latin	Spain	msm	positive	m	male	viremic_controllers	no	no	2	no	BCN	positive	LSIL		positive	negative	negative	negative						
+SRR3094911	56	caucasian	Spain	msm	positive	m	male	elite_controllers	no	no	1	no	Rest	negative	Normal		negative	negative	negative	negative						
+SRR3094912	43	caucasian	Spain	msm	positive	m	male	concordant	no	no	2	no	BMA		Normal				negative	positive						
+SRR3094913	51	caucasian	Spain	msm	positive	m	male	concordant	no	yes	1	no	BMA	positive	Normal		negative	negative	negative	negative						
+SRR3094914	29	caucasian	Spain	msm	positive	m	male	concordant	yes	yes	1	no	BCN	negative	Normal		negative	negative	negative	positive						
+SRR3094915	34	hispanic-latin	Spain	hts	positive	f	female	early_treated	no	no	1	yes	BMA	negative			negative	negative								
+SRR3094916	40	caucasian	Spain	pwid	positive	f	female	viremic_controllers	yes	yes	1	no	Rest	positive			negative	positive								
+SRR3094917	68	caucasian	Spain	hts	positive	f	female	concordant	no	no	1	no		positive	Normal		negative	positive	negative	negative						
+SRR3094918	25	caucasian	Spain	msm	positive	m	male	naive	no	no	2	no	BMA	negative	Normal		negative	negative	negative	negative						
+SRR3094919	43	caucasian	Spain	msm	positive	m	male	viremic_controllers	yes	no	3	yes	BCN	negative	ASCUS		negative	negative								
+SRR3094920	46	hispanic-latin	Spain	msm	positive	m	male	concordant	yes	yes	1			negative	Normal		positive	negative								
+SRR3094921	60	hispanic-latin	Spain	msm	positive	m	male	concordant	yes	no	1	yes	BCN		Normal		negative	negative	negative	negative						
+SRR3094922	56	caucasian	Spain	msm	positive	m	male	concordant	yes	no	1	yes	BMA	negative	Normal		negative	negative	negative	negative						
+SRR3094923	44	caucasian	Spain	hts	positive	m	male	concordant	yes	yes	3	no	BMA	negative	Normal		positive	negative	negative	negative						
+SRR3094924	29	caucasian	Spain	msm	positive	m	male	viremic_controllers	yes	no				negative	Normal		negative	negative	negative	negative						
+SRR3094925	30	caucasian	Spain	msm	negative	m	male	negative	no	no	2		Rest	negative				negative	negative	negative						
+SRR3094926	54	caucasian	Spain	hts	positive	m	male	discordant	no	no	2	no	BCN	positive	Normal		negative	positive	negative	negative						
+SRR3094927	60	hispanic-latin	Spain	msm	positive	m	male	concordant	yes	yes	2	no	BCN	negative	HSIL		negative	negative	negative	negative						
+SRR3094928	46	caucasian	Spain	msm	positive	m	male	naive	no	no	1	no	BMA	negative	Normal		positive	negative	negative	negative						
+SRR3094929	41	hispanic-latin	Spain	hts	positive	f	female	concordant	yes	yes	1	no	BMA		Normal				negative	negative						
+SRR3094930	34	caucasian	Spain	msm	negative	m	male	negative	no	no	2	no	BCN	negative	Normal		negative	negative	negative							
+SRR3094931	35	caucasian	Spain	msm	positive	m	male	concordant	yes	no	1	no	BMA	negative	LSIL		negative	negative	negative	negative						
+SRR3094932	52	caucasian	Spain	msm	positive	m	male	concordant	yes	no	2	no	Rest	negative	ASCUS		negative	negative	negative	negative						
+SRR3094933	44	caucasian	Spain	msm	positive	m	male	concordant	yes	no	3	no	BMA	negative	LSIL		negative	negative	negative	negative						
+SRR3094934	37	caucasian	Spain	msm	positive	m	male	early_treated	yes	yes	1	yes	BCN	negative	Normal		negative	negative	negative	negative						
+SRR3094935	54	caucasian	Spain	pwid	positive	f	female	concordant	yes	no	1	no	BCN	positive	LSIL		positive	positive	negative	negative						
+SRR3094936	60	caucasian	Spain	msm	positive	m	male	concordant	yes	no	2	no	Rest	negative	LSIL		negative	negative	negative	negative						
+SRR3094937	35	caucasian	Spain	hts	negative	m	male	negative	no	no	1	no	BCN	negative			negative	negative	negative	negative						
+SRR3094938	25	caucasian	Spain	msm	negative	m	male	negative	no	no	1	no	BMA	negative	Normal		negative	negative	negative	negative						
+SRR3094939	38	caucasian	Spain	msm	positive	m	male	naive	no	no	1	no		negative	ASCUS		negative	negative	negative	negative						
+SRR3094940	53	caucasian	Spain	pwid	positive	m	male	elite_controllers	no	no	1	no		positive				positive								
+SRR3094941	31	hispanic-latin	Spain	hts	positive	f	female	elite_controllers		no	2	no		negative				negative								
+SRR3094942	47	caucasian	Spain	msm	positive	m	male	elite_controllers	yes	no	2	no		negative	Normal			negative	negative	positive						
+SRR3094943	46	caucasian	Spain	msm	positive	m	male	viremic_controllers	yes	no	3	no		negative	ASCUS		negative		negative	negative						
+SRR3095028	56	caucasian	Spain	hts	positive	f	female	concordant	yes	no	1	yes	Rest	negative	Normal		negative	negative	negative	negative						
+SRR3095029	45	caucasian	Spain	hts	positive	m	male	concordant	no	no	2	no	BMA	negative	HSIL		negative	negative	negative	negative						
+SRR3095030	46	hispanic-latin	Spain	msm	positive	m	male	concordant	yes	no	1	no	BMA	negative	HSIL		negative	negative	negative	negative						
+SRR3095031	33	caucasian	Spain	msm	negative	m	male	negative	no	no	2	no	BMA	negative	LSIL		negative	negative	negative	negative						
+SRR3095032	40	hispanic-latin	Spain	msm	negative	m	male	negative	no	no	1	no	BCN	negative	Normal		negative	negative	negative	negative						
+SRR3095033	42	caucasian	Spain	msm	negative	m	male	negative	no	no	1	no	Rest	negative	LSIL		negative	negative	negative	negative						
+SRR3095034	59	caucasian	Spain	hts	positive	f	female	concordant	no	no	1	no	BCN		ASCUS											
+SRR3095035	52	caucasian	Spain	hts	positive	m	male	concordant	no	no	1	no	BMA	negative	Normal		negative	negative	negative	negative						
+SRR3095036	55	caucasian	Spain	hts	positive	m	male	discordant	no	no	1	no	Rest		Normal											
+SRR3095037	54	caucasian	Spain	msm	negative	m	male	negative	yes	no	3	no	BCN	negative	Normal		negative		negative	negative						
+SRR3095038	52	caucasian	Spain	msm	positive	m	male	concordant	yes	no	1	no	BCN	negative	Normal		negative	negative	negative	negative						
+SRR3095039	49	hispanic-latin	Spain	hts	positive	f	female	concordant	yes	no	1	no	BMA	negative	Normal		negative	negative	negative	negative						
+SRR3095040	40	caucasian	Spain	hts	positive	f	female	concordant	yes	no	1	no	BMA	negative	Normal		negative	negative	negative	negative						
+SRR3095041	56	caucasian	Spain	hts	positive	f	female	discordant	yes	yes	1	no	Rest	negative	Normal		negative	negative	negative	negative						
+SRR3095042	50	caucasian	Spain	hts	positive	f	female	discordant	yes	yes	1	no	BMA	negative	ASCUS		negative	negative	negative	negative						
+SRR3095043	40	hispanic-latin	Spain	hts	negative	f	female	negative	yes	yes	1	no	Rest	negative	ASCUS		negative	negative	negative	negative						
+SRR3095044	46	hispanic-latin	Spain	msm	positive	m	male	concordant	yes		2	no	BMA	negative	Normal		positive	negative	negative	negative						
+SRR3095045	46	caucasian	Spain	msm	negative	m	male	negative	no	no	2	no	BMA	negative	Normal		negative	negative	negative	negative						
+SRR3095046	35	others	Spain	hts	positive	f	female	concordant	no	no	2	no	BMA	negative	Normal		negative	negative	negative	negative						
+SRR3095047	60	caucasian	Spain	hts	positive	f	female	concordant	yes	no	1	no	BMA	negative	Normal		negative	negative	negative	negative						
+SRR3095048	43	caucasian	Spain	pwid	positive	m	male	concordant	no	no	1	no	BMA	positive	Normal		negative	positive	negative	negative						
+SRR3095049	50	caucasian	Spain	hts	negative	f	female	negative	no	no	1	no	Rest	negative	Normal			negative	negative	negative						
+SRR3095050	52	caucasian	Spain	pwid	positive	f	female	naive	yes	yes	1	no	Rest	positive	ASCUS		positive	negative	negative	negative						
+SRR3095051	42	caucasian	Spain	msm	positive	m	male	concordant	yes	yes	1	no	BCN	positive	ASCUS		positive	positive	negative	negative						
+SRR3095052	28	caucasian	Spain	msm	negative	m	male	negative	no	no	2	no	BMA	negative	Normal		negative	negative	negative	negative						
+SRR3095053	53	caucasian	Spain	pwid	positive	f	female	discordant	yes	no	3	no	BCN	negative	LSIL		negative	negative	negative	negative						
+SRR3095054	43	caucasian	Spain	msm	negative	m	male	negative	yes	no	1	no	BCN	negative	Normal		negative		negative	negative						
+SRR3095055	45	hispanic-latin	Spain	msm	negative	t	male	negative	yes	no	1	no	BCN	negative	ASCUS		negative	negative								
+SRR3095056	53	caucasian	Spain	msm	positive	m	male	early_treated	no	yes	1	no	Rest	negative	Normal		negative	negative	negative	negative						
+SRR3095057	35	caucasian	Spain	hts	positive	m	male	naive	no	yes	1	no	Rest	negative	Normal		negative	negative	negative	negative						
+SRR3095058	57	caucasian	Spain	hts	positive	f	female	concordant	yes	no	2	yes	Rest	negative	Normal		negative	negative	negative	negative						
+SRR3095059	48	caucasian	Spain	hts	positive	m	male	concordant	no	yes	2	no	BMA		ASCUS		negative	positive	negative	negative						
+SRR3095060	50	caucasian	Spain	msm	positive	m	male	concordant	yes	no	1	no	Rest	negative	Normal			negative								
+SRR3095061	60	caucasian	Spain	pwid	positive	f	female	viremic_controllers	yes	no	1	no	BMA	positive	HSIL			positive								
+SRR3095062	44	hispanic-latin	Spain	hts	positive	f	female	viremic_controllers	no	no	1	no	BMA		Normal											
+SRR3095063	47	caucasian	Spain	msm	positive	m	male	discordant	yes	no	1	no	BMA	negative	ASCUS		negative		negative	positive						
+SRR3095064	43	hispanic-latin	Spain	msm	positive	m	male	early_treated	yes	no	1	no	BCN	negative	ASCUS		positive	negative	negative	negative						
+SRR3095065	50	caucasian	Spain	hts	positive	f	female	concordant	yes	no	1	no	BMA	negative	LSIL		negative	negative								
+SRR3095066	47	caucasian	Spain	hts	positive	m	male	concordant	no	no	2	no	BMA	positive	Normal		negative	positive	negative	negative						
+SRR3095067	46	caucasian	Spain	hts	positive	f	female	concordant	yes	no	2	yes	Rest	negative	Normal		negative									
+SRR3095068	31	caucasian	Spain	msm	positive	m	male	concordant	yes	yes	1	no	BCN	negative	LSIL				negative	negative						
+SRR3095069	36	hispanic-latin	Spain	msm	positive	m	male	naive	no	no	4	no	BCN	negative	Normal		negative	negative								
+SRR3095070	53	caucasian	Spain	msm	positive	m	male	discordant	no	no	1	no	BCN	negative	Normal		negative	negative	negative	negative						
+SRR3095071	41	caucasian	Spain	msm	positive	m	male	concordant	yes	no	2	no	BCN	negative	ASCUS		negative	negative								
+SRR3095072	42	others	Spain	hts	positive	f	female	elite_controllers	no	no	1	no	BCN	negative	Normal		negative	negative	negative	negative						
+SRR3095073	34	caucasian	Spain	msm	positive	m	male	concordant	yes	no	1	no	BCN	negative	LSIL		negative	negative	negative	negative						
+SRR3095074	50	hispanic-latin	Spain	msm	positive	m	male	discordant	no	yes	1	no	BMA		Normal				negative	negative						
+SRR3095075	52	caucasian	Spain	msm	positive	m	male	elite_controllers	no	no	1	no	BMA	negative	Normal		positive	negative	negative	negative						
+SRR3095076	19	caucasian	Spain	msm	positive	m	male	naive	yes	yes	2	no	Rest	negative	ASCUS		negative	negative	negative	negative						
+SRR3095077	54	caucasian	Spain	hts	positive	m	male	discordant	yes	no	1	no	BMA	positive	ASCUS		negative	positive	negative	negative						
+SRR3095078	53	caucasian	Spain	msm	positive	m	male	discordant	yes	yes	3	no	Rest	positive	Normal		positive	positive	negative	negative						
+SRR3095079	38	caucasian	Spain	msm	positive	m	male	naive	yes	no	2	no	BMA	negative	LSIL		negative		negative	negative						
+SRR3095080	34	hispanic-latin	Spain	msm	positive	m	male	naive	no	no	1	no	BCN	negative	HSIL		negative		negative	negative						
+SRR3095081	37	caucasian	Spain	msm	positive	m	male	early_treated	yes	no	1	no	BCN	negative	Normal		negative	negative	negative	negative						
+SRR3095082	42	caucasian	Spain	msm	negative	m	male	negative	no	no	1	no	BCN	negative	Normal		negative	negative	negative	negative						
+SRR3095083	60	caucasian	Spain	msm	negative	m	male	negative	yes	no	1	no	BCN	negative	ASCUS		positive	negative	negative	negative						
+SRR3095084	37	caucasian	Spain	msm	negative	m	male	negative	yes	no	1	yes	BCN	negative	ASCUS		negative		negative	negative						
+SRR3095085	37	hispanic-latin	Spain	msm	negative	m	male	negative	yes	no	1	no	BCN	negative	LSIL		negative	negative	negative	negative						
+SRR3095086	38	caucasian	Spain	msm	negative	m	male	negative	no	yes	2	no	BCN	negative	Normal		negative	negative	negative	negative						
+SRR3095087	36	caucasian	Spain	msm	negative	m	male	negative	yes	no	1	no	BCN	negative	LSIL		negative									
+SRR3095088	27	caucasian	Spain	msm	positive	m	male	naive	no	yes	1	yes	BMA	negative	LSIL		negative	negative	negative	negative						
+SRR3095089	32	caucasian	Spain	msm	positive	m	male	early_treated	no	no	1	no	Rest	negative	Normal		negative	negative	negative	negative						
+SRR3095090	46	caucasian	Spain	msm	positive	m	male	early_treated	yes	no	1	no	BCN	negative	ASCUS		positive	negative								
+SRR3095091	34	caucasian	Spain	msm	negative	m	male	negative	yes	no	2	no	BCN		ASCUS				negative	negative						
+SRR3095092	30	caucasian	Spain	msm	positive	m	male	late_presenters	no	no			BCN	negative	LSIL		negative	negative								
+SRR3095093	28	hispanic-latin	Spain	msm	positive	m	male	late_presenters	no	no	3	no	Rest	negative	Normal		negative	negative								
+SRR3095094	60	caucasian	Spain	hts	positive	m	male	discordant	no	no	1	no	BMA	negative	Normal		negative	negative	negative	positive						
+SRR3095095	58	caucasian	Spain	hts	positive	f	female	concordant	no	no	2	no	BMA	negative	Normal		negative	negative	negative	negative						
+SRR3095096	55	caucasian	Spain	hts	positive	m	male	concordant	yes	yes	1	no	BCN	positive	LSIL		negative	positive	negative	negative						
+SRR3095097	38	caucasian	Spain	msm	positive	m	male	naive	yes	no	4	yes	Rest	negative	LSIL				negative	positive						
+SRR3095098	58	caucasian	Spain	msm	positive	m	male	concordant	no	no	2	no	BCN	positive	ASCUS		positive	negative	negative	negative						
+SRR3095099	36	caucasian	Spain	msm	positive	m	male	discordant	yes	no	2	no	BCN		LSIL		negative		negative	positive						
+SRR3095100	32	hispanic-latin	Spain	msm	positive	m	male	early_treated	no	no	1	no	BCN	negative	Normal		negative	negative	negative	negative						
+SRR3095101	23	caucasian	Spain	msm	positive	m	male	viremic_controllers	no	no	2	no	BCN	negative	Normal		negative	negative	negative	negative						
+SRR3095102	37	caucasian	Spain	msm	negative	m	male	negative	no	no	1	no	BMA	negative	Normal		negative	negative	negative	negative						
+SRR3095103	35	caucasian	Spain	msm	negative	m	male	negative	yes	no	1	no	BCN	negative	Normal		negative	negative	negative	negative						
+SRR3095104	29	hispanic-latin	Spain	msm	positive	m	male	viremic_controllers	no	no	2	no	BCN	positive	LSIL		positive	negative	negative	negative						
+SRR3095105	56	caucasian	Spain	msm	positive	m	male	elite_controllers	no	no	1	no	Rest	negative	Normal		negative	negative	negative	negative						
+SRR3095106	43	caucasian	Spain	msm	positive	m	male	concordant	no	no	2	no	BMA		Normal				negative	positive						
+SRR3095107	51	caucasian	Spain	msm	positive	m	male	concordant	no	yes	1	no	BMA	positive	Normal		negative	negative	negative	negative						
+SRR3095108	29	caucasian	Spain	msm	positive	m	male	concordant	yes	yes	1	no	BCN	negative	Normal		negative	negative	negative	positive						
+SRR3095109	34	hispanic-latin	Spain	hts	positive	f	female	early_treated	no	no	1	yes	BMA	negative			negative	negative								
+SRR3095110	40	caucasian	Spain	pwid	positive	f	female	viremic_controllers	yes	yes	1	no	Rest	positive			negative	positive								
+SRR3095111	68	caucasian	Spain	hts	positive	f	female	concordant	no	no	1	no		positive	Normal		negative	positive	negative	negative						
+SRR3095112	25	caucasian	Spain	msm	positive	m	male	naive	no	no	2	no	BMA	negative	Normal		negative	negative	negative	negative						
+SRR3095113	43	caucasian	Spain	msm	positive	m	male	viremic_controllers	yes	no	3	yes	BCN	negative	ASCUS		negative	negative								
+SRR3095114	46	hispanic-latin	Spain	msm	positive	m	male	concordant	yes	yes	1			negative	Normal		positive	negative								
+SRR3095115	60	hispanic-latin	Spain	msm	positive	m	male	concordant	yes	no	1	yes	BCN		Normal		negative	negative	negative	negative						
+SRR3095116	56	caucasian	Spain	msm	positive	m	male	concordant	yes	no	1	yes	BMA	negative	Normal		negative	negative	negative	negative						
+SRR3095117	44	caucasian	Spain	hts	positive	m	male	concordant	yes	yes	3	no	BMA	negative	Normal		positive	negative	negative	negative						
+SRR3095118	29	caucasian	Spain	msm	positive	m	male	viremic_controllers	yes	no				negative	Normal		negative	negative	negative	negative						
+SRR3095119	30	caucasian	Spain	msm	negative	m	male	negative	no	no	2		Rest	negative				negative	negative	negative						
+SRR3095120	54	caucasian	Spain	hts	positive	m	male	discordant	no	no	2	no	BCN	positive	Normal		negative	positive	negative	negative						
+SRR3095121	60	hispanic-latin	Spain	msm	positive	m	male	concordant	yes	yes	2	no	BCN	negative	HSIL		negative	negative	negative	negative						
+SRR3095122	46	caucasian	Spain	msm	positive	m	male	naive	no	no	1	no	BMA	negative	Normal		positive	negative	negative	negative						
+SRR3095123	41	hispanic-latin	Spain	hts	positive	f	female	concordant	yes	yes	1	no	BMA		Normal				negative	negative						
+SRR3095124	34	caucasian	Spain	msm	negative	m	male	negative	no	no	2	no	BCN	negative	Normal		negative	negative	negative							
+SRR3095125	35	caucasian	Spain	msm	positive	m	male	concordant	yes	no	1	no	BMA	negative	LSIL		negative	negative	negative	negative						
+SRR3095126	52	caucasian	Spain	msm	positive	m	male	concordant	yes	no	2	no	Rest	negative	ASCUS		negative	negative	negative	negative						
+SRR3095127	44	caucasian	Spain	msm	positive	m	male	concordant	yes	no	3	no	BMA	negative	LSIL		negative	negative	negative	negative						
+SRR3095128	37	caucasian	Spain	msm	positive	m	male	early_treated	yes	yes	1	yes	BCN	negative	Normal		negative	negative	negative	negative						
+SRR3095129	54	caucasian	Spain	pwid	positive	f	female	concordant	yes	no	1	no	BCN	positive	LSIL		positive	positive	negative	negative						
+SRR3095130	60	caucasian	Spain	msm	positive	m	male	concordant	yes	no	2	no	Rest	negative	LSIL		negative	negative	negative	negative						
+SRR3095131	35	caucasian	Spain	hts	negative	m	male	negative	no	no	1	no	BCN	negative			negative	negative	negative	negative						
+SRR3095132	25	caucasian	Spain	msm	negative	m	male	negative	no	no	1	no	BMA	negative	Normal		negative	negative	negative	negative						
+SRR3095133	38	caucasian	Spain	msm	positive	m	male	naive	no	no	1	no		negative	ASCUS		negative	negative	negative	negative						
+SRR3095134	53	caucasian	Spain	pwid	positive	m	male	elite_controllers	no	no	1	no		positive				positive								
+SRR3095135	31	hispanic-latin	Spain	hts	positive	f	female	elite_controllers		no	2	no		negative				negative								
+SRR3095136	47	caucasian	Spain	msm	positive	m	male	elite_controllers	yes	no	2	no		negative	Normal			negative	negative	positive						
+SRR3095137	46	caucasian	Spain	msm	positive	m	male	viremic_controllers	yes	no	3	no		negative	ASCUS		negative		negative	negative						
+SRR6714072	38	caucasian	Spain	msm	positive	m	male	concordant	yes	no	2	no	Rest		LSIL	MSM					undetectable	932	5.1	soft	2.3	22.7
+SRR6714073	48	caucasian	Spain	msm	negative	m	male	negative	no	yes	1	no	Rest	negative	Normal	MSM	negative	negative	negative	negative			4.6	hard	1.7	25.7
+SRR6714074	52	caucasian	Spain	msm	positive	m	male	concordant	no	no	3	no	Rest	positive	Normal	MSM	negative	negative	negative	negative	undetectable	826	5.6	soft	2.8	23.8
+SRR6714075	34	caucasian	Spain	msm	negative	m	male	negative	no	no	2	no	BCN	negative	Normal	MSM	negative	negative	negative				7.1	hard	2.2	
+SRR6714076	35	caucasian	Spain	msm	positive	m	male	concordant	yes	no	1	no	BMA	negative	LSIL	MSM	negative	negative	negative	negative	undetectable	650	4.9	hard	1.9	22.2
+SRR6714077	28	caucasian	Spain	msm	negative	m	male	negative	yes				BMA	negative	Normal	MSM	negative		negative	negative			8.8		2.4	
+SRR6714078	20	hispanic-latin	Spain	msm	positive	m	male	early_treated	yes	no	2	yes	BMA	negative	LSIL	MSM	negative	negative	negative	positive	63	1238	6.3	soft	2.6	21.8
+SRR6714079	52	caucasian	Spain	msm	positive	m	male	concordant	yes	no	2	no	Rest	negative	ASCUS	MSM	negative	negative	negative	negative	undetectable	140	5.4	hard	2	28
+SRR6714080	47	caucasian	Spain	msm	positive	m	male	early_treated	no	no	2	yes	Rest	negative		MSM	negative	negative	negative	negative	undetectable	480	5.5	hard	1.5	
+SRR6714081	44	caucasian	Spain	msm	positive	m	male	concordant	yes	no	3	no	BMA	negative	LSIL	MSM	negative	negative	negative	negative	undetectable	913	5.8	soft	2.2	24.9
+SRR6714082	41	hispanic-latin	Spain	hts	positive	f	female	concordant	yes	yes	1	no	BMA		Normal	nonMSM			negative	negative	undetectable	578	6	hard	1.8	20.6
+SRR6714083	46	caucasian	Spain	msm	positive	m	male	naive	no	no	1	no	BMA	negative	Normal	MSM	positive	negative	negative	negative	9794	745	7.4	soft	2.7	29.1
+SRR6714084	60	hispanic-latin	Spain	msm	positive	m	male	concordant	yes	yes	2	no	BCN	negative	HSIL	MSM	negative	negative	negative	negative	20		6.2	soft	1.86	
+SRR6714085	44	hispanic-latin	Spain	msm	positive	m	male	concordant	yes	no	1	yes	BMA	negative		MSM	positive	negative	negative	negative	undetectable	980	4.9	soft	3.1	28.9
+SRR6714086	54	caucasian	Spain	hts	positive	m	male	discordant	no	no	2	no	BCN	positive	Normal	nonMSM	negative	positive	negative	negative	undetectable	98	6.2	soft	1.4	21.5
+SRR6714087	47	caucasian	Spain	pwid	positive	m	male	elite_controllers	no	no	1	no	BMA	positive		nonMSM	negative	positive			undetectable	930	7.5	soft	2.8	24.2
+SRR6714088	30	caucasian	Spain	msm	negative	m	male	negative	no	no	2		Rest	negative		MSM		negative	negative	negative			11.1	soft	2.1	
+SRR6714089	29	caucasian	Spain	msm	positive	m	male	viremic_controllers	yes	no				negative	Normal	MSM	negative	negative	negative	negative	57	830	5.2		2.1	
+SRR6714090	44	caucasian	Spain	hts	positive	m	male	concordant	yes	yes	3	no	BMA	negative	Normal	nonMSM	positive	negative	negative	negative	undetectable	984	5.6	soft	1.9	25.2
+SRR6714091	56	caucasian	Spain	msm	positive	m	male	concordant	yes	no	1	yes	BMA	negative	Normal	MSM	negative	negative	negative	negative	undetectable	875	8.9	soft	3.8	21.8
+SRR6714092	60	caucasian	Spain	pwid	positive	f	female	viremic_controllers	yes	no	1	no	BMA	positive	HSIL	nonMSM		positive			794	580	6.5	hard	2.1	20.9
+SRR6714093	44	hispanic-latin	Spain	hts	positive	f	female	viremic_controllers	no	no	1	no	BMA		Normal	nonMSM					227	1064	7.2	hard	2.9	24.2
+SRR6714094	57	caucasian	Spain	hts	positive	f	female	concordant	yes	no	2	yes	Rest	negative	Normal	nonMSM	negative	negative	negative	negative	undetectable	551	6.6	hard	2.7	27.4
+SRR6714095	48	caucasian	Spain	hts	positive	m	male	concordant	no	yes	2	no	BMA		ASCUS	nonMSM	negative	positive	negative	negative	undetectable	761	5.9	soft	2.3	24.2
+SRR6714096	26	caucasian	Spain	msm	positive	m	male	late_presenters	no	no			Rest	negative		MSM	negative	negative			44567	233	4.8		0.9	23.8
+SRR6714097	50	caucasian	Spain	msm	positive	m	male	concordant	yes	no	1	no	Rest	negative	Normal	MSM		negative			undetectable	952	4.8	soft	2.3	22.6
+SRR6714098	43	caucasian	Spain	msm	negative	m	male	negative	yes	no	1	no	BCN	negative	Normal	MSM	negative		negative	negative			3.8	hard		22
+SRR6714099	45	hispanic-latin	Spain	msm	negative	t	male	negative	yes	no	1	no	BCN	negative	ASCUS	MSM	negative	negative					6.9	hard		18.9
+SRR6714100	53	caucasian	Spain	msm	positive	m	male	early_treated	no	yes	1	no	Rest	negative	Normal	MSM	negative	negative	negative	negative	undetectable	724	6.9	soft	1.8	25.2
+SRR6714101	35	caucasian	Spain	hts	positive	m	male	naive	no	yes	1	no	Rest	negative	Normal	nonMSM	negative	negative	negative	negative	13901	558	6.2	soft	3	24.8
+SRR6714102	42	caucasian	Spain	msm	positive	m	male	concordant	no	no	1	no	Rest	negative		MSM	positive	negative	negative	positive	undetectable	717	6.3	soft	2.2	26
+SRR6714103	39	caucasian	Spain	msm	positive	m	male	concordant	no	yes	2	no	BCN	negative	LSIL	MSM	positive	negative	negative	negative	undetectable	752	6.5	soft	2.1	25
+SRR6714104	43	caucasian	Spain	msm	positive	m	male	viremic_controllers	yes	no	3	yes	BCN	negative	ASCUS	MSM	negative	negative			181	471	3.7	soft	1.3	26.1
+SRR6714105	46	hispanic-latin	Spain	msm	positive	m	male	concordant	yes	yes	1			negative	Normal	MSM	positive	negative			undetectable	848	5.7	soft	2	25
+SRR6714106	25	caucasian	Spain	msm	positive	m	male	naive	no	no	2	no	BMA	negative	Normal	MSM	negative	negative	negative	negative	30055	631	5.8	soft	2.4	18.6
+SRR6714107	51	caucasian	Spain	msm	negative	m	male	negative	no		1	no		negative	Normal	MSM	negative	negative	negative	negative			10.7	soft	1.8	25.2
+SRR6714108	60	hispanic-latin	Spain	msm	positive	m	male	concordant	yes	no	1	yes	BCN		Normal	MSM	negative	negative	negative	negative	undetectable	750	5.1	soft	2.2	23.8
+SRR6714109	55	caucasian	Spain	pwid	positive	f	female	discordant	yes	no	2	no		positive	ASCUS	nonMSM	negative	positive			undetectable	270	3	hard	1	19.7
+SRR6714110	54	caucasian	Spain	hts	positive	m	male	discordant	no	no	2	no	Rest	negative	LSIL	nonMSM	negative	negative	negative	negative	undetectable	229	9.1	liquid	2.6	21.5
+SRR6714111	26	caucasian	Spain	msm	positive	m	male	late_presenters	no	no	4	yes		negative		MSM	negative	negative			570077	34	4.2	soft		22
+SRR6714112	43	hispanic-latin	Spain	msm	positive	m	male	late_presenters	no	yes	3	yes	BMA	negative	Normal	MSM					2747163	100	4.5	soft	1.7	19.3
+SRR6714113	32	caucasian	Spain	msm	positive	m	male	early_treated	no	no	1	no	Rest	negative	Normal	MSM	negative	negative	negative	negative	undetectable	866	5.5	hard	2	24.2
+SRR6714114	46	caucasian	Spain	msm	positive	m	male	early_treated	yes	no	1	no	BCN	negative	ASCUS	MSM	positive	negative			undetectable	479	3.3	soft		
+SRR6714115	28	caucasian	Spain	msm	positive	m	male	naive	no	no	2	no	BMA	negative	Normal	MSM	negative	negative	negative	negative	60925	493	11	soft	1.8	26.2
+SRR6714116	30	caucasian	Spain	msm	positive	m	male	late_presenters	no	no			BCN	negative	LSIL	MSM	negative	negative			384009	85	4.8		1.7	24.9
+SRR6714117	34	caucasian	Spain	msm	negative	m	male	negative	yes	no	2	no	BCN		ASCUS	MSM			negative	negative			8.6	soft	26.2	
+SRR6714118	60	caucasian	Spain	hts	positive	m	male	discordant	no	no	1	no	BMA	negative	Normal	nonMSM	negative	negative	negative	positive	undetectable	199	5.4	hard	1.3	31.9
+SRR6714119	28	hispanic-latin	Spain	msm	positive	m	male	late_presenters	no	no	3	no	Rest	negative	Normal	MSM	negative	negative			70674	185	3.9	soft	1.1	27.3
+SRR6714120	55	caucasian	Spain	hts	positive	m	male	concordant	yes	yes	1	no	BCN	positive	LSIL	nonMSM	negative	positive	negative	negative	undetectable	602	8.2	soft	3.4	20.9
+SRR6714121	58	caucasian	Spain	hts	positive	f	female	concordant	no	no	2	no	BMA	negative	Normal	nonMSM	negative	negative	negative	negative	undetectable	782	4.2	hard	1.3	28.7
+SRR6714122	37	caucasian	Spain	msm	positive	m	male	early_treated	yes	no	1	no	BCN	negative	Normal	MSM	negative	negative	negative	negative	undetectable	517	6.1	soft	2.3	26.7
+SRR6714123	34	hispanic-latin	Spain	msm	positive	m	male	naive	no	no	1	no	BCN	negative	HSIL	MSM	negative		negative	negative	10018	701	5.4	soft	2.1	27.7
+SRR6714124	53	caucasian	Spain	pwid	positive	m	male	concordant	no	no	2	no	Rest	positive	Normal	nonMSM	negative	positive	negative	negative	undetectable	1086	5	soft	3	19.1
+SRR6714125	38	caucasian	Spain	msm	positive	m	male	naive	yes	no	2	no	BMA	negative	LSIL	MSM	negative		negative	negative	2829	570	4.6	hard	1.9	21.8
+SRR6714126	23	hispanic-latin	Spain	msm	positive	m	male	late_presenters	no	no	2	no	BMA	negative		MSM	negative	negative	negative	negative	12865	211	4.1	soft	1.4	
+SRR6714127	53	caucasian	Spain	msm	positive	m	male	discordant	yes	yes	3	no	Rest	positive	Normal	MSM	positive	positive	negative	negative	undetectable	283	5.6	soft	1.9	29.9
+SRR6714128	54	caucasian	Spain	hts	positive	m	male	discordant	yes	no	1	no	BMA	positive	ASCUS	nonMSM	negative	positive	negative	negative	undetectable	289	6.8	soft	2.7	18.6
+SRR6714129	19	caucasian	Spain	msm	positive	m	male	naive	yes	yes	2	no	Rest	negative	ASCUS	MSM	negative	negative	negative	negative	758	1011	10.6	soft	3.2	21.72
+SRR6714130	36	caucasian	Spain	msm	positive	m	male	viremic_controllers	yes	no	1	no	BCN	negative	HSIL	MSM	positive		negative	negative	2818	462	6.6	soft	1.9	28.68
+SRR6714131	35	caucasian	Spain	msm	positive	m	male	naive	no	no	2	no	BMA	negative	HSIL	MSM	positive		negative	negative	10080	784	7.8	soft	2.3	28.7
+SRR6714132	68	caucasian	Spain	hts	positive	f	female	concordant	no	no	1	no		positive	Normal	nonMSM	negative	positive	negative	negative	undetectable	1085	5.8	hard	3.1	25.9
+SRR6714133	40	caucasian	Spain	pwid	positive	f	female	viremic_controllers	yes	yes	1	no	Rest	positive		nonMSM	negative	positive			1430	333	4.7	soft	1.5	20.5
+SRR6714134	56	caucasian	Spain	msm	positive	m	male	elite_controllers	no	no	1	no	Rest	negative	Normal	MSM	negative	negative	negative	negative	undetectable	951	7.7	soft		23
+SRR6714135	36	hispanic-latin	Spain	msm	positive	m	male	naive	no	no	1	no	BCN	negative		MSM	negative	negative	negative	negative	154816	1207	5.6	soft	2.7	22.6
+SRR6714136	43	caucasian	Spain	msm	positive	m	male	concordant	no	no	2	no	BMA		Normal	MSM			negative	positive	undetectable	860	7.8	soft	2.2	26.3
+SRR6714137	40	caucasian	Spain	hts	positive	m	male	concordant	no	no	1	yes	Rest	negative	Normal	nonMSM	negative	negative	negative	negative	undetectable	855	6.4	soft	1.9	24.7
+SRR6714138	29	caucasian	Spain	msm	positive	m	male	concordant	yes	yes	1	no	BCN	negative	Normal	MSM	negative	negative	negative	positive	undetectable	688	4.7	soft	1.3	23.7
+SRR6714139	51	caucasian	Spain	msm	positive	m	male	concordant	no	yes	1	no	BMA	positive	Normal	MSM	negative	negative	negative	negative	undetectable	557	9.3	soft	3.2	20.1
+SRR6714140	51	caucasian	Spain	hts	positive	f	female	concordant	yes	no	1	no	BMA	negative	Normal	nonMSM	negative	negative			undetectable	718	4.4	hard	1.5	18.2
+SRR6714141	34	hispanic-latin	Spain	hts	positive	f	female	early_treated	no	no	1	yes	BMA	negative		nonMSM	negative	negative			undetectable	1232	7.4	hard	2.6	22.5
+SRR6714142	58	caucasian	Spain	msm	positive	m	male	concordant	no	no	2	no	BCN	positive	ASCUS	MSM	positive	negative	negative	negative	undetectable	730	4.7	soft	1.6	29.8
+SRR6714143	36	caucasian	Spain	msm	positive	m	male	discordant	yes	no	2	no	BCN		LSIL	MSM	negative		negative	positive	undetectable	221	3.4	soft	1.2	21.7
+SRR6714144	50	caucasian	Spain	hts	positive	m	male	late_presenters	no		2	yes	BMA	negative		nonMSM	negative	negative			178530	22	7.2	soft	0.7	
+SRR6714145	38	caucasian	Spain	msm	positive	m	male	naive	yes	no	4	yes	Rest	negative	LSIL	MSM			negative	positive	56763	855	4.9	soft	2	22.9
+SRR6714146	42	caucasian	Spain	pwid	positive	m	male	late_presenters	no	no	1	no	BMA	positive	Normal	nonMSM	negative	negative	negative	negative	296533	33	2.9	soft		23.1
+SRR6714147	37	caucasian	Spain	msm	negative	m	male	negative	no	no	1	no	BMA	negative	Normal	MSM	negative	negative	negative	negative			7.1	hard	1.6	
+SRR6714148	32	hispanic-latin	Spain	msm	positive	m	male	early_treated	no	no	1	no	BCN	negative	Normal	MSM	negative	negative	negative	negative	undetectable	828	4.8	hard	1.8	24.4
+SRR6714149	23	caucasian	Spain	msm	positive	m	male	viremic_controllers	no	no	2	no	BCN	negative	Normal	MSM	negative	negative	negative	negative	1223	783	6.7	soft	3	23.2
+SRR6714150	35	caucasian	Spain	msm	negative	m	male	negative	yes	no	1	no	BCN	negative	Normal	MSM	negative	negative	negative	negative			11.1	soft		
+SRR6714151	29	hispanic-latin	Spain	msm	positive	m	male	viremic_controllers	no	no	2	no	BCN	positive	LSIL	MSM	positive	negative	negative	negative	1339	772	7.3	soft		24.9
+SRR6714152	46	caucasian	Spain	msm	negative	m	male	negative	no	no	2	no	BMA	negative	Normal	MSM	negative	negative	negative	negative			12.7	hard	1.9	29.9
+SRR6714153	45	caucasian	Spain	pwid	positive	f	female	elite_controllers	no	no	1	no	Rest	positive	Normal	nonMSM	negative	positive	negative	negative	undetectable	734	4.7	soft	1.6	18
+SRR6714154	40	caucasian	Spain	hts	positive	f	female	concordant	yes	no	1	no	BMA	negative	Normal	nonMSM	negative	negative	negative	negative	undetectable	777	5	hard	2.1	19.5
+SRR6714155	56	caucasian	Spain	hts	positive	f	female	discordant	yes	yes	1	no	Rest	negative	Normal	nonMSM	negative	negative	negative	negative	undetectable	283	3.7	hard	1.2	22.7
+SRR6714156	52	caucasian	Spain	msm	positive	m	male	concordant	yes	no	1	no	BCN	negative	Normal	MSM	negative	negative	negative	negative	undetectable	687	5.2	hard	1.7	29.4
+SRR6714157	49	hispanic-latin	Spain	hts	positive	f	female	concordant	yes	no	1	no	BMA	negative	Normal	nonMSM	negative	negative	negative	negative	undetectable	603	5.5	hard	1.5	23.5
+SRR6714158	37	caucasian	Spain	msm	positive	m	male	naive	no	yes	1	no	BCN	negative	Normal	MSM	positive	negative			16714	526	6.6	soft	1.6	24.8
+SRR6714159	46	hispanic-latin	Spain	msm	positive	m	male	concordant	yes		2	no	BMA	negative	Normal	MSM	positive	negative	negative	negative	undetectable	530	4.5	soft	1.9	24.5
+SRR6714160	50	caucasian	Spain	hts	positive	f	female	discordant	yes	yes	1	no	BMA	negative	ASCUS	nonMSM	negative	negative	negative	negative	undetectable	242	5.8	hard	1.6	23.4
+SRR6714161	40	hispanic-latin	Spain	hts	negative	f	female	negative	yes	yes	1	no	Rest	negative	ASCUS	nonMSM	negative	negative	negative	negative			7.3	soft	1.9	17.9
+SRR6714162	38	caucasian	Spain	msm	positive	m	male	late_presenters	no	yes	2	yes	Rest	negative	LSIL	MSM	negative	negative	negative	negative	220148	140	4	soft	1.3	28.6
+SRR6714163	27	caucasian	Spain	msm	positive	m	male	naive	no	yes	1	yes	BMA	negative	LSIL	MSM	negative	negative	negative	negative	2188	708	4.9	soft		25.4
+SRR6714164	37	caucasian	Spain	msm	positive	m	male	early_treated	no	no	1	no	BMA	negative	Normal	MSM	negative	negative	negative	negative	undetectable	815	4.9	hard	1.9	22.3
+SRR6714165	42	caucasian	Spain	msm	negative	m	male	negative	no	no	1	no	BCN	negative	Normal	MSM	negative	negative	negative	negative			6.7	hard	2	29.9
+SRR6714166	60	caucasian	Spain	msm	negative	m	male	negative	yes	no	1	no	BCN	negative	ASCUS	MSM	positive	negative	negative	negative			7.7	soft	23	26.4
+SRR6714167	37	caucasian	Spain	msm	negative	m	male	negative	yes	no	1	yes	BCN	negative	ASCUS	MSM	negative		negative	negative			7.3	soft	2.1	24.6
+SRR6714168	37	hispanic-latin	Spain	msm	negative	m	male	negative	yes	no	1	no	BCN	negative	LSIL	MSM	negative	negative	negative	negative			5.4	hard	1.6	24.3
+SRR6714169	38	caucasian	Spain	msm	negative	m	male	negative	no	yes	2	no	BCN	negative	Normal	MSM	negative	negative	negative	negative			5.2	soft	2.3	
+SRR6714170	36	caucasian	Spain	msm	negative	m	male	negative	yes	no	1	no	BCN	negative	LSIL	MSM	negative						4.3	soft	1.9	
+SRR6714171	49	caucasian	Spain	hts	positive	m	male	discordant	no	no	1	no	BMA	positive	Normal	nonMSM	negative	positive	negative	negative	undetectable	187	4.6	soft	0.8	22.2
+SRR6714172	50	caucasian	Spain	hts	positive	f	female	concordant	yes	no	1	no	BMA	negative	LSIL	nonMSM	negative	negative			undetectable	616	4.5	hard	1.5	24.3
+SRR6714173	35	caucasian	Spain	msm	positive	m	male	concordant	yes	no	4	no	BCN	negative	LSIL	MSM	negative	negative	negative	negative	51	952	6.6	soft	2	23.5
+SRR6714174	46	caucasian	Spain	hts	positive	f	female	concordant	yes	no	2	yes	Rest	negative	Normal	nonMSM	negative				undetectable	871	4.2	soft	1.8	24.7
+SRR6714175	47	caucasian	Spain	hts	positive	m	male	concordant	no	no	2	no	BMA	positive	Normal	nonMSM	negative	positive	negative	negative	undetectable	1274	7	soft	38.8	26.2
+SRR6714176	44	caucasian	Spain	msm	positive	m	male	early_treated	no	no	1	no	BMA	negative	LSIL	MSM	negative	negative	negative	negative	62	853	6.5	hard	2	23.3
+SRR6714177	47	caucasian	Spain	msm	positive	m	male	discordant	yes	no	1	no	BMA	negative	ASCUS	MSM	negative		negative	positive	undetectable	289	4.6	soft	1.9	23.6
+SRR6714178	34	caucasian	Spain	msm	positive	m	male	late_presenters	no	no	2	no	Rest	negative	Normal	MSM	negative	negative	negative	negative	53095	192	3.7	liquid	1.7	24.3
+SRR6714179	43	hispanic-latin	Spain	msm	positive	m	male	early_treated	yes	no	1	no	BCN	negative	ASCUS	MSM	positive	negative	negative	negative	undetectable	506	4.3	soft	1.8	26.2
+SRR6714180	36	hispanic-latin	Spain	msm	positive	m	male	naive	no	no	4	no	BCN	negative	Normal	MSM	negative	negative			29355	842	5.9	hard	2.3	22.1
+SRR6714181	31	caucasian	Spain	msm	positive	m	male	concordant	yes	yes	1	no	BCN	negative	LSIL	MSM			negative	negative	undetectable	775	6.6	soft	2.1	23.6
+SRR6714182	53	caucasian	Spain	pwid	positive	m	male	discordant	yes	yes	1	no	BCN	negative	LSIL	nonMSM	negative	negative	negative	negative	undetectable	285	5.1	hard	0.9	20.2
+SRR6714183	34	caucasian	Spain	msm	positive	m	male	concordant	yes	no	1	no	BCN	negative	LSIL	MSM	negative	negative	negative	negative	undetectable	998	6.4	soft	2.1	22.4
+SRR6714184	48	others	Spain	msm	positive	m	male	concordant	no	no	1	no	BMA	negative		MSM	negative	negative			undetectable	764	5.3	soft	2.7	24.2
+SRR6714185	44	caucasian	Spain	hts	positive	m	male	late_presenters	no	no	4	yes	BMA	negative	LSIL	nonMSM	negative	negative	negative	negative	74625	3	2.4	liquid		21
+SRR6714186	42	others	Spain	hts	positive	f	female	elite_controllers	no	no	1	no	BCN	negative	Normal	nonMSM	negative	negative	negative	negative	96	1056	5.6	liquid	2.5	28.3
+SRR6714187	34	hispanic-latin	Spain	hts	positive	f	female	viremic_controllers	no	no	2	no	BMA	negative	Normal	nonMSM	negative	negative	negative	negative	696	1380	9.1	soft	3.1	24.9
+SRR6714188	53	caucasian	Spain	msm	positive	m	male	discordant	no	no	1	no	BCN	negative	Normal	MSM	negative	negative	negative	negative	undetectable	280	5	soft	1.6	21.5
+SRR6714189	41	caucasian	Spain	msm	positive	m	male	concordant	yes	no	2	no	BCN	negative	ASCUS	MSM	negative	negative			undetectable	648	5.9	soft	1.6	24.3
+SRR6714190	50	hispanic-latin	Spain	msm	positive	m	male	discordant	no	yes	1	no	BMA		Normal	MSM			negative	negative	undetectable	296	4.2	soft	1.3	23.8
+SRR6714191	52	caucasian	Spain	msm	positive	m	male	elite_controllers	no	no	1	no	BMA	negative	Normal	MSM	positive	negative	negative	negative	149	997	9.7	soft	2.8	22.3
+SRR6714192	55	caucasian	Spain	hts	positive	m	male	discordant	no	no	1	no	Rest		Normal	nonMSM					undetectable	201	5.5	soft	0.8	21.3
+SRR6714193	54	caucasian	Spain	msm	negative	m	male	negative	yes	no	3	no	BCN	negative	Normal	MSM	negative		negative	negative			5.1	soft	2.2	
+SRR6714194	46	hispanic-latin	Spain	msm	positive	m	male	concordant	yes	no	1	no	BMA	negative	HSIL	MSM	negative	negative	negative	negative	undetectable	767	6.4	soft	2.8	23.7
+SRR6714195	33	caucasian	Spain	msm	negative	m	male	negative	no	no	2	no	BMA	negative	LSIL	MSM	negative	negative	negative	negative			4.6	soft	1.8	22.3
+SRR6714196	56	caucasian	Spain	hts	positive	f	female	concordant	yes	no	1	yes	Rest	negative	Normal	nonMSM	negative	negative	negative	negative	undetectable	561	8.2	hard	2.3	22.4
+SRR6714197	45	caucasian	Spain	hts	positive	m	male	concordant	no	no	2	no	BMA	negative	HSIL	nonMSM	negative	negative	negative	negative	undetectable	1517	10.3	hard	4.1	28
+SRR6714198	59	caucasian	Spain	hts	positive	f	female	concordant	no	no	1	no	BCN		ASCUS	nonMSM					undetectable	678	7	hard	2.8	28.9
+SRR6714199	52	caucasian	Spain	hts	positive	m	male	concordant	no	no	1	no	BMA	negative	Normal	nonMSM	negative	negative	negative	negative	undetectable	1274	10.4	hard	4.5	29
+SRR6714200	40	hispanic-latin	Spain	msm	negative	m	male	negative	no	no	1	no	BCN	negative	Normal	MSM	negative	negative	negative	negative			4.7	hard	2	
+SRR6714201	42	caucasian	Spain	msm	negative	m	male	negative	no	no	1	no	Rest	negative	LSIL	MSM	negative	negative	negative	negative			8.7	hard	3	29.9
+SRR6714202	47	caucasian	Spain	msm	positive	m	male	elite_controllers	yes	no	2	no		negative	Normal	MSM		negative	negative	positive	38	850	6.32	hard	2.2	
+SRR6714203	46	caucasian	Spain	msm	positive	m	male	viremic_controllers	yes	no	3	no		negative	ASCUS	MSM	negative		negative	negative	260	1010	7.4	hard	2.7	19.59
+SRR6714204	53	caucasian	Spain	pwid	positive	m	male	elite_controllers	no	no	1	no		positive		nonMSM		positive			25	580	5.78	hard	1.7	25.64
+SRR6714205	31	hispanic-latin	Spain	hts	positive	f	female	elite_controllers		no	2	no		negative		nonMSM		negative			84	1160	6.98	hard	2.9	23.53
+SRR6714206	48	caucasian	Spain	msm	positive	m	male	discordant	yes	no	2	yes	Rest	negative	Normal	MSM	negative	negative	negative	negative	undetectable	259	4.6	liquid	1.2	28
+SRR6714207	38	caucasian	Spain	msm	positive	m	male	naive	no	no	1	no		negative	ASCUS	MSM	negative	negative	negative	negative	170000	820	8.04	hard	2.9	30.63
+SRR6714208	43	caucasian	Spain	pwid	positive	m	male	concordant	no	no	1	no	BMA	positive	Normal	nonMSM	negative	positive	negative	negative	undetectable	628	5.3	hard	1.5	23.5
+SRR6714209	60	caucasian	Spain	hts	positive	f	female	concordant	yes	no	1	no	BMA	negative	Normal	nonMSM	negative	negative	negative	negative	undetectable	766	6.7	soft	2.3	22.8
+SRR6714210	35	others	Spain	hts	positive	f	female	concordant	no	no	2	no	BMA	negative	Normal	nonMSM	negative	negative	negative	negative	undetectable	686	5.4	hard	2.2	26.6
+SRR6714211	38	asiatic	Spain	hts	positive	f	female	concordant	yes	no	1	yes	BCN	negative	Normal	nonMSM	negative	negative	negative	negative	undetectable	947	8.5	hard	2.1	21.1
+SRR6714212	42	caucasian	Spain	msm	positive	m	male	concordant	yes	yes	1	no	BCN	positive	ASCUS	MSM	positive	positive	negative	negative	undetectable	1285	6.7	hard	2.5	22.3
+SRR6714213	52	caucasian	Spain	pwid	positive	f	female	naive	yes	yes	1	no	Rest	positive	ASCUS	nonMSM	positive	negative	negative	negative	3940	1132	7.3	hard	3.2	28.5
+SRR6714214	44	hispanic-latin	Spain	msm	positive	m	male	concordant	no	no	3	no	BMA	negative	Normal	MSM	positive	negative	negative	negative	undetectable	828	6.2	soft	2.3	26.6
+SRR6714215	50	caucasian	Spain	hts	negative	f	female	negative	no	no	1	no	Rest	negative	Normal	nonMSM		negative	negative	negative			8.1	soft	2.7	
+SRR6714216	53	caucasian	Spain	pwid	positive	f	female	discordant	yes	no	3	no	BCN	negative	LSIL	nonMSM	negative	negative	negative	negative	undetectable	296	4.9	soft	2	19.7
+SRR6714217	28	caucasian	Spain	msm	negative	m	male	negative	no	no	2	no	BMA	negative	Normal	MSM	negative	negative	negative	negative			5.3	soft	2.2	21.8
+SRR6714218	53	caucasian	Spain	pwid	positive	m	male	concordant	no	no	2	no	Rest	positive	Normal	nonMSM	negative	positive	negative	negative		742	12.6	soft	2.1	20.7
+SRR6714219	60	caucasian	Spain	msm	positive	m	male	concordant	yes	no	2	no	Rest	negative	LSIL	MSM	negative	negative	negative	negative	undetectable	542	4.5	soft	1.9	23.2
+SRR6714220	35	caucasian	Spain	hts	negative	m	male	negative	no	no	1	no	BCN	negative		nonMSM	negative	negative	negative	negative			5.2	hard	2.2	28.3
+SRR6714221	26	caucasian	Spain	msm	positive	m	male	viremic_controllers	yes	no	3	no	Rest	negative	LSIL	MSM	negative	negative	negative	negative	1382	598	9.6	hard	1.5	26.5
+SRR6714222	25	caucasian	Spain	msm	positive	m	male	early_treated	yes	no	1	no	BCN	negative		MSM	negative	negative			undetectable	1175	7.6	soft	2.3	20.8
+SRR6714223	37	caucasian	Spain	msm	positive	m	male	early_treated	yes	yes	1	yes	BCN	negative	Normal	MSM	negative	negative	negative	negative	undetectable	500	4.5	hard	1.7	24.5
+SRR6714224	54	caucasian	Spain	pwid	positive	f	female	concordant	yes	no	1	no	BCN	positive	LSIL	nonMSM	positive	positive	negative	negative	undetectable	644	4.1	hard	1.9	24.9
+SRR6714225	33	caucasian	Spain	hts	negative	f	female	negative	no	yes	1	no	BCN	negative	Normal	nonMSM	negative	negative	negative	negative			7.5	hard	2.7	25.1
+SRR6714226	25	caucasian	Spain	msm	negative	m	male	negative	no	no	1	no	BMA	negative	Normal	MSM	negative	negative	negative	negative			8.3	soft	1.3	21
+SRR6714227	54	caucasian	Spain	pwid	positive	m	male	discordant	no	no	2	yes	Rest		LSIL	nonMSM			negative	negative	undetectable	268	4.9	hard	1.3	23.7
+SRR3094944	53	caucasian	Sweden	pwid	positive	m	male									nonMSM					280	250				
+SRR3094945	43	caucasian	Sweden	msm	positive	m	male									MSM					30500	720				
+SRR3094946	35	black	Sweden	hts	positive	f	female									nonMSM					27300	510				
+SRR3094947	45	black	Sweden	hts	positive	f	female									nonMSM					20700	550				
+SRR3094948	30	black	Sweden	hts	positive	f	female									nonMSM					19	940				
+SRR3094949	30	asian	Sweden	hts	positive	f	female									nonMSM					31400	550				
+SRR3094950	65	caucasian	Sweden	hts	positive	m	male									nonMSM					327	720				
+SRR3094951	32	caucasian	Sweden	hts	positive	f	female									nonMSM					19	830				
+SRR3094952	34	black	Sweden	hts	positive	m	male									nonMSM					711	430				
+SRR3094953	26	black	Sweden	hts	positive	f	female									nonMSM					8260	400				
+SRR3094954	67	caucasian	Sweden	pwid	positive	f	female									nonMSM					19	2470				
+SRR3094955	59	caucasian	Sweden	hts	positive	f	female									nonMSM					32000	530				
+SRR3094956	34	black	Sweden	hts	positive	m	male									nonMSM					20800	390				
+SRR3094957	62	caucasian	Sweden	hts	positive	m	male									nonMSM					33300	720				
+SRR3094958	30	caucasian	Sweden	msm	positive	m	male									MSM					2120	530				
+SRR3094959	58	caucasian	Sweden	msm	positive	m	male									MSM					11500	480				
+SRR3094960	61	caucasian	Sweden	hts	positive	m	male									nonMSM					336000	410				
+SRR3094961	48	caucasian	Sweden	pwid	positive	m	male									nonMSM					11800	650				
+SRR3094962	37	caucasian	Sweden	hts	positive	f	female									nonMSM					7670	370				
+SRR3094963	42	caucasian	Sweden	pwid	positive	f	female									nonMSM					52600	370				
+SRR3094964	51	caucasian	Sweden	hts	positive	m	male									nonMSM					11400	594				
+SRR3094965	51	caucasian	Sweden	hts	positive	f	female									nonMSM					1300000	560				
+SRR3094966	41	caucasian	Sweden	pwid	positive	m	male									nonMSM					321	434				
+SRR3094967	45	caucasian	Sweden	hts	positive	m	male									nonMSM					137	380				
+SRR3094968	30	caucasian	Sweden	pwid	positive	m	male									nonMSM					146000	410				
+SRR3094969	33	black	Sweden	hts	positive	f	female									nonMSM					118000	700				
+SRR3094970	34	black	Sweden	hts	positive	m	male									nonMSM					326000	640				
+SRR3094971	41	caucasian	Sweden	msm	positive	m	male									MSM					59600	460				
+SRR3094972	32	caucasian	Sweden	hts	positive	f	female									nonMSM					341	730				
+SRR3094973	63	caucasian	Sweden	msm	positive	m	male									MSM					19	1040				
+SRR3094974	32	black	Sweden	hts	positive	m	male									nonMSM					66700	420				
+SRR3094975	57	caucasian	Sweden	hts	positive	m	male									nonMSM					53900	540				
+SRR3094976	33	black	Sweden	hts	positive	m	male									nonMSM					6020	440				
+SRR3094977	41	black	Sweden	hts	positive	m	male									nonMSM					531000	290				
+SRR3094978	28	caucasian	Sweden	msm	positive	m	male									MSM					13600	500				
+SRR3094979	45	caucasian	Sweden	pwid	positive	m	male									nonMSM					136000	360				
+SRR3094980	48	hispanic-latin	Sweden	msm	positive	m	male									MSM					584	580				
+SRR3094981	27	caucasian	Sweden	hts	positive	f	female									nonMSM					36200	440				
+SRR3094982	47	black	Sweden	hts	positive	f	female									nonMSM					1590	600				
+SRR3094983	27	black	Sweden	hts	positive	f	female									nonMSM					50800	1060				
+SRR3094984	54	black	Sweden	hts	positive	f	female									nonMSM					77000	460				
+SRR3094985	25	black	Sweden	hts	positive	m	male									nonMSM					11000	400				
+SRR3094986	45	black	Sweden	hts	positive	f	female									nonMSM					62	860				
+SRR3094987	78	caucasian	Sweden	msm	positive	m	male									MSM					14900	630				
+SRR3094988	47	caucasian	Sweden	pwid	positive	m	male									nonMSM					152000	560				
+SRR3094989	54	caucasian	Sweden	hts	positive	m	male									nonMSM					713000	530				
+SRR3094990	44	black	Sweden	hts	positive	m	male									nonMSM					11500	990				
+SRR3094991	33	black	Sweden	hts	positive	f	female									nonMSM					11500	740				
+SRR3094992	34	black	Sweden	hts	positive	f	female									nonMSM					19100	430				
+SRR3094993	23	caucasian	Sweden	msm	positive	m	male									MSM					5740	410				
+SRR3094994	25	caucasian	Sweden	msm	positive	m	male									MSM					548	500				
+SRR3094995	58	caucasian	Sweden	msm	positive	m	male									MSM					3350	430				
+SRR3094996	49	caucasian	Sweden	hts	positive	m	male									nonMSM					69900	680				
+SRR3094997	30	caucasian	Sweden	msm	positive	m	male									MSM					45000	400				
+SRR3094998	60	black	Sweden	hts	positive	m	male									nonMSM					15600	424				
+SRR3094999	20	latin	Sweden	msm	positive	m	male									MSM					108000	260				
+SRR3095000	36	caucasian	Sweden	msm	positive	m	male									MSM					132000	340				
+SRR3095001	36	black	Sweden	hts	positive	f	female									nonMSM					19	799				
+SRR3095002	37	caucasian	Sweden	hts	positive	m	male									nonMSM					150	620				
+SRR3095003	30	asian	Sweden	hts	positive	f	female									nonMSM					56300	360				
+SRR3095004	32	caucasian	Sweden	msm	positive	m	male									MSM					31400	610				
+SRR3095005	38	caucasian	Sweden	hts	positive	m	male									nonMSM					406000	230				
+SRR3095006	19	caucasian	Sweden	hts	positive	f	female									nonMSM					82000	330				
+SRR3095007	37	caucasian	Sweden	msm	positive	m	male									MSM					4900	520				
+SRR3095008	33	caucasian	Sweden	msm	positive	m	male									MSM					13800	510				
+SRR3095009	32	caucasian	Sweden	msm	positive	m	male									MSM					135000	350				
+SRR3095010	38	caucasian	Sweden	pwid	positive	f	female									nonMSM					61400	280				
+SRR3095011	38	caucasian	Sweden	msm	positive	m	male									MSM					108000	380				
+SRR3095012	40	black	Sweden	hts	positive	f	female									nonMSM					18700	150				
+SRR3095013	30	black	Sweden	hts	positive	f	female									nonMSM					162000	350				
+SRR3095014	49	caucasian	Sweden	hts	positive	f	female									nonMSM					114	120				
+SRR3095015	52	caucasian	Sweden	hts	positive	m	male									nonMSM					42300	710				
+SRR3095016	40	black	Sweden	hts	positive	f	female									nonMSM					70300	130				
+SRR3095017	38	black	Sweden	hts	positive	f	female									nonMSM					651	790				
+SRR3095018	47	black	Sweden	hts	positive	f	female									nonMSM					144	120				
+SRR3095019	55	caucasian	Sweden	pwid	positive	m	male									nonMSM					19	340				
+SRR3095020	45	caucasian	Sweden	hts	positive	f	female									nonMSM					116000	410				
+SRR3095021	44	black	Sweden	hts	negative	m	male									nonMSM					NA					
+SRR3095022	28	caucasian	Sweden	hts	negative	f	female									nonMSM					NA					
+SRR3095023	46	caucasian	Sweden	hts	negative	m	male									nonMSM					NA					
+SRR3095024	55	caucasian	Sweden	hts	negative	m	male									nonMSM					NA					
+SRR3095025	48	caucasian	Sweden	hts	negative	m	male									nonMSM					NA					
+SRR3095026	43	black	Sweden	hts	negative	m	male									nonMSM					NA					
+SRR3095027	34	caucasian	Sweden	hts	negative	f	female									nonMSM					NA					
+SRR3095138	53	caucasian	Sweden	pwid	positive	m	male									nonMSM					280	250				
+SRR3095139	43	caucasian	Sweden	msm	positive	m	male									MSM					30500	720				
+SRR3095140	35	black	Sweden	hts	positive	f	female									nonMSM					27300	510				
+SRR3095141	45	black	Sweden	hts	positive	f	female									nonMSM					20700	550				
+SRR3095142	30	black	Sweden	hts	positive	f	female									nonMSM					19	940				
+SRR3095143	30	asian	Sweden	hts	positive	f	female									nonMSM					31400	550				
+SRR3095144	65	caucasian	Sweden	hts	positive	m	male									nonMSM					327	720				
+SRR3095145	32	caucasian	Sweden	hts	positive	f	female									nonMSM					19	830				
+SRR3095146	34	black	Sweden	hts	positive	m	male									nonMSM					711	430				
+SRR3095147	26	black	Sweden	hts	positive	f	female									nonMSM					8260	400				
+SRR3095148	67	caucasian	Sweden	pwid	positive	f	female									nonMSM					19	2470				
+SRR3095149	59	caucasian	Sweden	hts	positive	f	female									nonMSM					32000	530				
+SRR3095150	34	black	Sweden	hts	positive	m	male									nonMSM					20800	390				
+SRR3095151	62	caucasian	Sweden	hts	positive	m	male									nonMSM					33300	720				
+SRR3095152	30	caucasian	Sweden	msm	positive	m	male									MSM					2120	530				
+SRR3095153	58	caucasian	Sweden	msm	positive	m	male									MSM					11500	480				
+SRR3095154	61	caucasian	Sweden	hts	positive	m	male									nonMSM					336000	410				
+SRR3095155	48	caucasian	Sweden	pwid	positive	m	male									nonMSM					11800	650				
+SRR3095156	37	caucasian	Sweden	hts	positive	f	female									nonMSM					7670	370				
+SRR3095157	42	caucasian	Sweden	pwid	positive	f	female									nonMSM					52600	370				
+SRR3095158	51	caucasian	Sweden	hts	positive	m	male									nonMSM					11400	594				
+SRR3095159	51	caucasian	Sweden	hts	positive	f	female									nonMSM					1300000	560				
+SRR3095160	41	caucasian	Sweden	pwid	positive	m	male									nonMSM					321	434				
+SRR3095161	45	caucasian	Sweden	hts	positive	m	male									nonMSM					137	380				
+SRR3095162	30	caucasian	Sweden	pwid	positive	m	male									nonMSM					146000	410				
+SRR3095163	33	black	Sweden	hts	positive	f	female									nonMSM					118000	700				
+SRR3095164	34	black	Sweden	hts	positive	m	male									nonMSM					326000	640				
+SRR3095165	41	caucasian	Sweden	msm	positive	m	male									MSM					59600	460				
+SRR3095166	32	caucasian	Sweden	hts	positive	f	female									nonMSM					341	730				
+SRR3095167	63	caucasian	Sweden	msm	positive	m	male									MSM					19	1040				
+SRR3095168	32	black	Sweden	hts	positive	m	male									nonMSM					66700	420				
+SRR3095169	57	caucasian	Sweden	hts	positive	m	male									nonMSM					53900	540				
+SRR3095170	33	black	Sweden	hts	positive	m	male									nonMSM					6020	440				
+SRR3095171	41	black	Sweden	hts	positive	m	male									nonMSM					531000	290				
+SRR3095172	28	caucasian	Sweden	msm	positive	m	male									MSM					13600	500				
+SRR3095173	45	caucasian	Sweden	pwid	positive	m	male									nonMSM					136000	360				
+SRR3095174	48	hispanic-latin	Sweden	msm	positive	m	male									MSM					584	580				
+SRR3095175	27	caucasian	Sweden	hts	positive	f	female									nonMSM					36200	440				
+SRR3095176	47	black	Sweden	hts	positive	f	female									nonMSM					1590	600				
+SRR3095177	27	black	Sweden	hts	positive	f	female									nonMSM					50800	1060				
+SRR3095178	54	black	Sweden	hts	positive	f	female									nonMSM					77000	460				
+SRR3095179	25	black	Sweden	hts	positive	m	male									nonMSM					11000	400				
+SRR3095180	45	black	Sweden	hts	positive	f	female									nonMSM					62	860				
+SRR3095181	78	caucasian	Sweden	msm	positive	m	male									MSM					14900	630				
+SRR3095182	47	caucasian	Sweden	pwid	positive	m	male									nonMSM					152000	560				
+SRR3095183	54	caucasian	Sweden	hts	positive	m	male									nonMSM					713000	530				
+SRR3095184	44	black	Sweden	hts	positive	m	male									nonMSM					11500	990				
+SRR3095185	33	black	Sweden	hts	positive	f	female									nonMSM					11500	740				
+SRR3095186	34	black	Sweden	hts	positive	f	female									nonMSM					19100	430				
+SRR3095187	23	caucasian	Sweden	msm	positive	m	male									MSM					5740	410				
+SRR3095188	25	caucasian	Sweden	msm	positive	m	male									MSM					548	500				
+SRR3095189	58	caucasian	Sweden	msm	positive	m	male									MSM					3350	430				
+SRR3095190	49	caucasian	Sweden	hts	positive	m	male									nonMSM					69900	680				
+SRR3095191	30	caucasian	Sweden	msm	positive	m	male									MSM					45000	400				
+SRR3095192	60	black	Sweden	hts	positive	m	male									nonMSM					15600	424				
+SRR3095193	20	latin	Sweden	msm	positive	m	male									MSM					108000	260				
+SRR3095194	36	caucasian	Sweden	msm	positive	m	male									MSM					132000	340				
+SRR3095195	36	black	Sweden	hts	positive	f	female									nonMSM					19	799				
+SRR3095196	37	caucasian	Sweden	hts	positive	m	male									nonMSM					150	620				
+SRR3095197	30	asian	Sweden	hts	positive	f	female									nonMSM					56300	360				
+SRR3095198	32	caucasian	Sweden	msm	positive	m	male									MSM					31400	610				
+SRR3095199	38	caucasian	Sweden	hts	positive	m	male									nonMSM					406000	230				
+SRR3095200	19	caucasian	Sweden	hts	positive	f	female									nonMSM					82000	330				
+SRR3095201	37	caucasian	Sweden	msm	positive	m	male									MSM					4900	520				
+SRR3095202	33	caucasian	Sweden	msm	positive	m	male									MSM					13800	510				
+SRR3095203	32	caucasian	Sweden	msm	positive	m	male									MSM					135000	350				
+SRR3095204	38	caucasian	Sweden	pwid	positive	f	female									nonMSM					61400	280				
+SRR3095205	38	caucasian	Sweden	msm	positive	m	male									MSM					108000	380				
+SRR3095206	40	black	Sweden	hts	positive	f	female									nonMSM					18700	150				
+SRR3095207	30	black	Sweden	hts	positive	f	female									nonMSM					162000	350				
+SRR3095208	49	caucasian	Sweden	hts	positive	f	female									nonMSM					114	120				
+SRR3095209	52	caucasian	Sweden	hts	positive	m	male									nonMSM					42300	710				
+SRR3095210	40	black	Sweden	hts	positive	f	female									nonMSM					70300	130				
+SRR3095211	38	black	Sweden	hts	positive	f	female									nonMSM					651	790				
+SRR3095212	47	black	Sweden	hts	positive	f	female									nonMSM					144	120				
+SRR3095213	55	caucasian	Sweden	pwid	positive	m	male									nonMSM					19	340				
+SRR3095214	45	caucasian	Sweden	hts	positive	f	female									nonMSM					116000	410				
+SRR3095215	44	black	Sweden	hts	negative	m	male									nonMSM					NA					
+SRR3095216	28	caucasian	Sweden	hts	negative	f	female									nonMSM					NA					
+SRR3095217	46	caucasian	Sweden	hts	negative	m	male									nonMSM					NA					
+SRR3095218	55	caucasian	Sweden	hts	negative	m	male									nonMSM					NA					
+SRR3095219	48	caucasian	Sweden	hts	negative	m	male									nonMSM					NA					
+SRR3095220	43	black	Sweden	hts	negative	m	male									nonMSM					NA					
+SRR3095221	34	caucasian	Sweden	hts	negative	f	female									nonMSM					NA					
