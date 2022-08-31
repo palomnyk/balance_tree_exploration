@@ -19,7 +19,7 @@ from requests import head
 from sklearn import model_selection
 from sklearn import model_selection
 from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
@@ -127,7 +127,7 @@ print("Establishing other constants", flush = True)
 # --------------------------------------------------------------------------
 seed = 7
 scoring = "Accuracy"
-train_percent = options.training
+train_percent = float(options.training)
 main_output_label = f"sklearn_random_forest_manual_{train_percent}train_{project}_data"
 #info for random forest classification
 result_fpath = os.path.join(output_dir, "tables", f"{main_output_label}.csv")
@@ -146,7 +146,6 @@ print("Importing data to working env.", flush = True)
 meta_df = pd.read_csv(os.path.expanduser(os.path.join(home_dir, project, str(options.meta_fn))), \
 	sep=options.delim, header=0, index_col=options.meta_index_col)
 print(meta_df.dtypes, flush=True)
-meta_df = meta_df.select_dtypes(["object", "category", "string"])
 metad_cols = range(len(meta_df.columns))
 #Commented code for scrambling the rownames
 # # meta_df.head
@@ -198,16 +197,20 @@ with open(result_fpath, "w+") as fl:
 				non_nan_vals = np.invert(pd.isna(respns_var.values))#removing nan values
 				my_table = my_table[non_nan_vals]#removing nan values
 				respns_var = respns_var[non_nan_vals]#removing nan values
-				pred_train, pred_test, resp_train, resp_test = model_selection.train_test_split(my_table, respns_var, train_size=float(train_percent), random_state=rand_int, shuffle=True) 
+				pred_train, pred_test, resp_train, resp_test = model_selection.train_test_split(my_table, respns_var, train_size=float(train_percent), random_state=rand_int, shuffle=True)
+				print(f"exp{train_percent*len(my_table)} Ptrain:{len(pred_train)}, Ptest{len(pred_test)}, rtest{len(resp_test)}, rtrain:{len(resp_train)}")
+				print(f"meta{len(meta_df)*train_percent}")
+				print(f"IN {m_c}, iter {i}")
 				if is_string_dtype(respns_var) == True:
-					clf = RandomForestClassifier(max_depth=2, random_state=0)
+					clf = RandomForestClassifier()
 					clf.fit(pred_train, resp_train)
 					resp_pred = clf.predict(pred_test)
-					# if len(set(respns_var)) <= 2:
-					# 	resp_pred = list(x[0:len(resp_pred[1])-1] for x in resp_pred)
-					# my_accuracy[i] = roc_auc_score(y_true = resp_test, y_score=resp_pred, multi_class="ovr", average="weighted")
-					my_accuracy[i] = accuracy_score(resp_test, resp_pred)
-
+				else:
+					print("going to RandomForestRegressor()")
+					clf = RandomForestRegressor()
+					clf.fit(pred_train, resp_train)
+				my_accuracy[i] = clf.score(pred_test, resp_test)
+				print(my_accuracy)
 			final_acc = ",".join(map(str, my_accuracy))
 			print(final_acc)
 			msg = f"{name},{m_c},{color},{final_acc}\n"
