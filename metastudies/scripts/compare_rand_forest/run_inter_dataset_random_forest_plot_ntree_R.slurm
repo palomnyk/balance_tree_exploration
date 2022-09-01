@@ -23,7 +23,9 @@ conda activate testing_pyCaret
 python ~/git/balance_tree_exploration/lib/cml_scripts/metastudy_comparisons/intra_dataset_random_forest_variable_ntree_plot.py \
   --homedir ~/git/balance_tree_exploration \
   --input_file_paradigm wide_random_forest_score_R_20.csv \
-  --label R_randomForest_OOB
+  --label R_randomForest_OOB \
+	--col_name_line trans_group \
+	--col_name_plot metadata_col
 
 conda deactivate
 module unload anaconda3/2020.11
