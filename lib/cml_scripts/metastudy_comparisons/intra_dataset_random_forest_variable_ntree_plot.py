@@ -90,14 +90,14 @@ for project in projects:
 	result_fpath = os.path.join(op_dir, "tables", options.input_file_paradigm)
 	print(result_fpath)
 	my_table = pd.read_csv(result_fpath, sep=',', header=0)
-	my_table = my_table[my_table[options.col_name_lines] =="DaDa2"]
+	my_table = my_table[my_table[options.col_name_line] =="DaDa2"]
 	splits = my_table.columns[my_table.columns.str.startswith('split')].tolist()
 	my_marker = my_markers[projects.index(project)]
-	for meta_d in set(my_table[options.col_name_plots].values):
-		new_table = my_table[my_table[options.col_name_plots]==meta_d]
+	for meta_d in set(my_table[options.col_name_plot].values):
+		new_table = my_table[my_table[options.col_name_plot]==meta_d]
 		means = new_table[splits].agg(mean, axis = 1)
 		assert not means.empty, f"is not in the table from {project}"
-		my_labels = [f"{project}_{feat}" for feat in new_table[options.col_name_plots]]
+		my_labels = [f"{project}_{feat}" for feat in new_table[options.col_name_plot]]
 		ax.scatter(new_table["n_trees"], means, s=70, label=meta_d, marker=my_marker)
 		ax.plot(new_table["n_trees"], means)
 ax.set_xlabel("Number of estimators")
