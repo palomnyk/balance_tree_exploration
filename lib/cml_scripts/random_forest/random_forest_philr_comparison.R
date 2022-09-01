@@ -287,7 +287,7 @@ for (counter in 1:num_cycles) {
           print(length(resp_var_train))
         }
         names(resp_var_test) <- row.names(my_table_test)
-        if (length(levels(resp_var_test)) > 1 & length(resp_var_train) > 1){
+        if (length(resp_var_train) > 1){
           print("There is at least 2 groups and more than one sample in the resp var.")
           rf <- randomForest::randomForest(my_table_train, resp_var_train)
           print("made rf")
