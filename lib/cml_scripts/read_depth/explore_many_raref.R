@@ -57,8 +57,8 @@ opt <- optparse::parse_args(opt_parser);
 print(opt)
 
 print("Establishing directory layout and other constants.")
-home_dir <- "~/git/balance_tree_exploration"
-project <- "Vanderbilt"
+home_dir <- opt$homedir
+project <- opt$project
 output_dir <- file.path(home_dir, project, 'output')
 setwd(file.path(home_dir))
 
