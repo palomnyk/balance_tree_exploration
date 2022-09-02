@@ -58,11 +58,10 @@ print("Establishing directory layout and other constants.")
 home_dir <- opt$homedir
 project <- opt$project
 output_dir <- file.path(home_dir, project, 'output')
-setwd(file.path(home_dir))
 
 ##-Functions--------------------------------------------------------##
-source(file.path(home_dir, "r_libraries", "statistical_functions.R"))
-source(file.path(home_dir, "r_libraries", "table_manipulations.R"))
+source(file.path(home_dir, "lib", "statistical_functions.R"))
+source(file.path(home_dir, "lib", "table_manipulations.R"))
 
 ##-Import tables and data preprocessing-----------------------------##
 asv_table <- readRDS(file.path(output_dir, "r_objects", "ForwardReads_DADA2.rds"))
@@ -114,7 +113,7 @@ for(s in 1:length(min_seq_depths)){
     #create DESeq2 dtaset from new ref ps
     new_DESeq2 <- phyloseq::phyloseq_to_deseq2(new_ref_ps, design= ~ 1)#dataset 5
     new_DESeq2 <- DESeq2::estimateSizeFactors(new_DESeq2)
-    new_DESeq2 <- t(counts(new_DESeq2, normalized=T))
+    new_DESeq2 <- t(DESeq2::counts(new_DESeq2, normalized=T))
     
     print(paste("new DSeq:", paste(dim(new_DESeq2))))
     
