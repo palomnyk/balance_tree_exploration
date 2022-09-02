@@ -208,7 +208,7 @@ for (counter in 1:num_cycles) {
     # print(train_index)
     test_index <- setdiff(test_index, na_or_empty_rows)
     print(length(train_index))
-    # tryCatch({
+    tryCatch({
       for (tabl in tables){
         print(tabl)
         transf_label <- tabl[1]
@@ -254,17 +254,17 @@ for (counter in 1:num_cycles) {
             }#second if
           }#end if (length(levels(resp_var_test))...
         }#for loop
-  #     },#try catch
-  #     error=function(cond) {
-  #       print(paste("Opps, an error2 is thrown with", transf_label))
-  #       message(paste(transf_label, cond))
-  #     },
-  #     warning=function(cond) {
-  #       print(paste("Opps, a warning2 is thrown with", transf_label))
-  #       message(paste(transf_label, cond))
-  #     },
-  #     finally=.Call(CfreadCleanup)
-  #   )
+      },#try catch
+      error=function(cond) {
+        print(paste("Opps, an error2 is thrown with", transf_label))
+        message(paste(transf_label, cond))
+      },
+      warning=function(cond) {
+        print(paste("Opps, a warning2 is thrown with", transf_label))
+        message(paste(transf_label, cond))
+      },
+      finally=.Call(CfreadCleanup)
+    )
   }#for mta
   print(paste("completed loop:", counter))
 }
