@@ -8,8 +8,8 @@
 #SBATCH --mem=50gb                                          		# Memory limit
 #SBATCH --mail-type=ALL                              	# Mail events (NONE, BEGIN, END, FAIL, ALL)
 #SBATCH --mail-user=amyerke@uncc.edu                            	# Specified email address
-#SBATCH --output=/users/amyerke/slurmLogs/Vangay_%x.%j.out     # Set directory for standard output
-#SBATCH --error=/users/amyerke/slurmLogs/Vangay_%x.%j.err      # Set directory for error log
+#SBATCH --output=/users/amyerke/slurmLogs/Vangay_%x.%j.log     # Set directory for standard output
+#SBATCH --error=/users/amyerke/slurmLogs/Vangay_%x.%j.log      # Set directory for error log
 ##SBATCH --uid=amyerke
 #SBATCH --get-user-env
 
@@ -20,7 +20,7 @@ echo Using $SLURM_NTASKS processors across $SLURM_NNODES nodes
 
 module load R
 
-srun Rscript ~/git/balance_tree_exploration/lib/cml_scripts/random_forest/random_forest_philr_comparison.R \
+Rscript ~/git/balance_tree_exploration/lib/cml_scripts/random_forest/random_forest_philr_comparison.R \
   -d ~/git/balance_tree_exploration \
   -p Vangay \
   -m ~/git/balance_tree_exploration/Vangay/patient_metadata.tsv \
