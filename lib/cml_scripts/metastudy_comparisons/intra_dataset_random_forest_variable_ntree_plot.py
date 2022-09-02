@@ -98,8 +98,8 @@ for project in projects:
 		means = new_table[splits].agg(mean, axis = 1)
 		assert not means.empty, f"is not in the table from {project}"
 		my_labels = [f"{project}_{feat}" for feat in new_table[options.col_name_plot]]
-		ax.scatter(new_table["n_trees"], means, s=70, label=meta_d, marker=my_marker)
-		ax.plot(new_table["n_trees"], means)
+		ax.scatter(new_table["ntrees"], means, s=70, label=meta_d, marker=my_marker)
+		ax.plot(new_table["ntrees"], means)
 ax.set_xlabel("Number of estimators")
 ax.set_ylabel("Accuracy")
 fig.tight_layout()
@@ -114,19 +114,24 @@ for project in projects:
 	my_results = {}#use structure {feature: [n_trees, mean_accuracy]}
 	print(f"Adding project {project}")
 	op_dir = os.path.join(home_dir, project, "output")
-	result_fpath = os.path.join(op_dir, "tables", f"sklrn_randmforst_manual_0.75train_variable_ntree.csv")
+	result_fpath = os.path.join(op_dir, "tables", options.input_file_paradigm)
 	print(result_fpath)
 	my_table = pd.read_csv(result_fpath, sep=',', header=0)
-	my_table = my_table[my_table["dataset"]=="DaDa2"]
+	my_table = my_table[my_table[options.col_name_line] =="DaDa2"]
 	splits = my_table.columns[my_table.columns.str.startswith('split')].tolist()
 	my_marker = my_markers[projects.index(project)]
-	for meta_d in set(my_table["metadata"].values):
-		new_table = my_table[my_table["metadata"]==meta_d]
+	for meta_d in set(my_table[options.col_name_plot].values):
+		new_table = my_table[my_table[options.col_name_plot]==meta_d]
 		means = new_table[splits].agg(mean, axis = 1)
 		assert not means.empty, f"is not in the table from {project}"
-		my_labels = [f"{project}_{feat}" for feat in new_table["metadata"]]
-		ax.scatter(new_table["n_trees"].values, means, s=70)
-		# ax.plot(new_table["n_trees"], means)
+		my_labels = [f"{project}_{feat}" for feat in new_table[options.col_name_plot]]
+		ax.scatter(new_table["ntrees"], means, s=70, label=meta_d, marker=my_marker)
+		ax.plot(new_table["ntrees"], means)
+ax.set_xlabel("Number of estimators")
+ax.set_ylabel("Accuracy")
+fig.tight_layout()
+print("Saving figure to pdf", flush = True)
+pdf.savefig( fig )
 ax.set_xlabel("Number of estimators")
 ax.set_ylabel("Accuracy")
 ax.legend(title="Legend", loc="center", mode = "expand", framealpha=1)
