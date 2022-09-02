@@ -263,7 +263,7 @@ for (counter in 1:num_cycles) {
         print(paste("Opps, a warning2 is thrown with", transf_label))
         message(paste(transf_label, cond))
       },
-      finally=.Call(CfreadCleanup)
+      # finally=.Call(CfreadCleanup)
     )
   }#for mta
   print(paste("completed loop:", counter))
