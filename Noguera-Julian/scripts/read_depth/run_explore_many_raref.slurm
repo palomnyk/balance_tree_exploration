@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --partition=Picses                                    		# Partition/queue requested on server
+#SBATCH --partition=Pisces                                    		# Partition/queue requested on server
 #SBATCH --job-name=NJ_explore_many_raref                         	# Job name
 #SBATCH --time=48:00:00                                      		# Time limit (hrs:min:sec)
 #SBATCH --nodes=1                                         			# Number of nodes requested
