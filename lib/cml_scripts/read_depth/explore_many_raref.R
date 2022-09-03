@@ -75,15 +75,14 @@ my_ds_names <- c( "rarefied counts table", "clr", "alr", "lognorm", "PhILR Silva
 
 total_seqs <- rowSums(asv_table)#read depth
 total_seqs <- data.frame(total_seqs, row.names = row.names(asv_table))
-
 median_depth <- stats::median(total_seqs$total_seqs)
-
 mean_depth <- ceiling(base::mean(total_seqs$total_seqs))
-
+max_depth <- base::max(total_seqs$total_seqs)
+min_depth <- base::min(total_seqs$total_seqs)
 print(paste("mean:", mean_depth, "median:", median_depth))
 
-raref_levels <- c(500, seq(1000,mean_depth,ceiling(max(total_seqs$total_seqs)/7)))
-print("min read depths")
+raref_levels <- seq(from = min_depth, to = max_depth, length.out = 11)
+print("rarefaction levels")
 print(raref_levels)
 
 mds_depth <- 5
@@ -215,17 +214,16 @@ for (i in 1:max(result_df$mds_lev)){
                        aes(x=read_depth, y=spear_cor^2, group = ds_nam)) +
     ggplot2::geom_point(aes(color = factor(ds_nam))) +
     ggplot2::geom_line(aes(color = factor(ds_nam))) +
-    ggplot2::annotate("text", x = head(pca_only$read_depth, n = length(my_ds_names)), 
-                      y = head(c(pca_only$spear_cor^2), n = length(my_ds_names)), 
-                      label = head(pca_only$ds_nam, n = length(my_ds_names)),
-                      hjust = -0.1) +
+    ggplot2::annotate("text", x = rep(1000, length(tail(pca_only$read_depth, n = length(my_ds_names)))), 
+                      y = tail(c(pca_only$spear_cor^2), n = length(my_ds_names)), 
+                      label = head(pca_only$ds_nam, n = length(my_ds_names))) +
     ggplot2::ggtitle(paste0(project, ": PCA",  i, " vs read depth after rarefication")) +
     ggplot2::xlab("Rarefication level") +
     ggplot2::ylab(paste0("Read depth to PCA", i, "Spearman Rsq")) +
     ggplot2::xlab("Rarefication level") +
     ggplot2::ylab("R Squared") + 
     ggplot2::labs(fill = "Transformations") +
-    ggplot2::scale_x_continuous(trans='log10') +
+    # ggplot2::scale_x_continuous(trans='log10') +
     ggplot2::theme(axis.text.x = element_text(angle = 90)) +
     ggplot2::theme_minimal()
   print(g)
