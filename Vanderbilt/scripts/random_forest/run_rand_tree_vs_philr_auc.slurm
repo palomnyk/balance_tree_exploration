@@ -15,6 +15,7 @@
 
 ### Display the job context
 echo Job: $SLURM_JOB_NAME with ID $SLURM_JOB_ID
+echo "Submit Dir : $SLURM_SUBMIT_DIR"
 echo Running on host: `hostname`
 echo Using $SLURM_NTASKS processors across $SLURM_NNODES nodes
 
