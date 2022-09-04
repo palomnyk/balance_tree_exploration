@@ -103,7 +103,8 @@ pdf(file = file.path(output_dir, "graphics", "raref_artifact_PCA12345_scatter.pd
 counter <- 1
 for(s in 1:length(raref_levels)){
   seq_d <- raref_levels[s]#new read depth
-  rd_filt_asv <- data.frame(vegan::rrarefy(asv_table, seq_d))#dataset 1 (read depth filtered asv)
+  rd_filt_asv <- asv_table[total_seqs$total_seqs >= seq_d,]#dataset 1 (read depth filtered asv)
+  rd_filt_asv <- data.frame(vegan::rrarefy(rd_filt_asv, seq_d))#dataset 1 (read depth filtered asv)
   rd_filt_rowSums <- base::rowSums(rd_filt_asv)
   print(paste("rd_filt_asv dim:", paste(dim(rd_filt_asv))))
   if (nrow(rd_filt_asv > 2)){
