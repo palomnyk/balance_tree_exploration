@@ -69,28 +69,28 @@ asv_table <- readRDS(file.path(output_dir, "r_objects", "ForwardReads_DADA2.rds"
 ref_ps <- readRDS(file.path(output_dir, "r_objects", "ref_tree_phyloseq_obj.rds"))
 
 my_ds_names <- c( "raw counts table", "clr", "alr", "lognorm", "PhILR Silva Tree", "DESeq2", "ALDEx2.clr")
-min_seq_depths <- c(0, 500, 1000, 5000, 10000, 20000, 30000, 50000, 70000, 90000, 10000)
+min_read_depths <- c(0, 500, 1000, 5000, 10000, 20000, 30000, 50000, 70000, 90000, 10000)
 mds_depth <- 5
 
 total_seqs <- rowSums(asv_table)
 total_seqs <- data.frame(total_seqs, row.names = row.names(asv_table))
 
-kend <- vector(mode = "numeric", length = length(my_ds_names) * length(min_seq_depths) * mds_depth)
-perma_r2 <- vector(mode = "numeric", length = length(my_ds_names) * length(min_seq_depths) * mds_depth)
-ds_num <- vector(mode = "integer", length = length(my_ds_names) * length(min_seq_depths) * mds_depth)
-ds_nam <- vector(mode = "character", length = length(my_ds_names) * length(min_seq_depths) * mds_depth)
-mds_lev <- vector(mode = "integer", length = length(my_ds_names) * length(min_seq_depths) * mds_depth)
-seq_depth <- vector(mode = "integer", length = length(my_ds_names) * length(min_seq_depths) * mds_depth)
-var_exp <- vector(mode = "integer", length = length(my_ds_names) * length(min_seq_depths) * mds_depth)
-spear_cor <- vector(mode = "integer", length = length(my_ds_names) * length(min_seq_depths) * mds_depth)
-samples_left <- vector(mode = "integer", length = length(my_ds_names) * length(min_seq_depths) * mds_depth)
-taxa_left <- vector(mode = "integer", length = length(my_ds_names) * length(min_seq_depths) * mds_depth)
-zero_count <- vector(mode = "integer", length = length(my_ds_names) * length(min_seq_depths) * mds_depth)
+kend <- vector(mode = "numeric", length = length(my_ds_names) * length(min_read_depths) * mds_depth)
+perma_r2 <- vector(mode = "numeric", length = length(my_ds_names) * length(min_read_depths) * mds_depth)
+ds_num <- vector(mode = "integer", length = length(my_ds_names) * length(min_read_depths) * mds_depth)
+ds_nam <- vector(mode = "character", length = length(my_ds_names) * length(min_read_depths) * mds_depth)
+mds_lev <- vector(mode = "integer", length = length(my_ds_names) * length(min_read_depths) * mds_depth)
+read_depth <- vector(mode = "integer", length = length(my_ds_names) * length(min_read_depths) * mds_depth)
+var_exp <- vector(mode = "integer", length = length(my_ds_names) * length(min_read_depths) * mds_depth)
+spear_cor <- vector(mode = "integer", length = length(my_ds_names) * length(min_read_depths) * mds_depth)
+samples_left <- vector(mode = "integer", length = length(my_ds_names) * length(min_read_depths) * mds_depth)
+taxa_left <- vector(mode = "integer", length = length(my_ds_names) * length(min_read_depths) * mds_depth)
+zero_count <- vector(mode = "integer", length = length(my_ds_names) * length(min_read_depths) * mds_depth)
 
-pdf(file = file.path(output_dir, "graphics", "seq_depth_artifact_PCA12345_scatter.pdf"))
+pdf(file = file.path(output_dir, "graphics", "read_depth_artifact_PCA12345_scatter.pdf"))
 counter <- 1
-for(s in 1:length(min_seq_depths)){
-  seq_d <- min_seq_depths[s]#new read depth
+for(s in 1:length(min_read_depths)){
+  seq_d <- min_read_depths[s]#new read depth
   rd_filt_asv <- asv_table[total_seqs$total_seqs >= seq_d,]#dataset 1 (read depth filtered asv)
   print(paste("rd_filt_asv dim:", paste(dim(rd_filt_asv))))
   if (nrow(rd_filt_asv > 2)){
@@ -155,7 +155,7 @@ for(s in 1:length(min_seq_depths)){
         ds_num[counter] <- ds
         ds_nam[counter] <- my_ds_names[ds]
         mds_lev[counter] <- md
-        seq_depth[counter] <- seq_d
+        read_depth[counter] <- seq_d
         var_exp[counter] <- my_var_exp[md]
         spear_cor[counter] <- cor(total_seqs[total_seqs >= seq_d], myPCA[,md], method = "spearman")
         samples_left[counter] <- nrow(my_table)
@@ -171,7 +171,7 @@ for(s in 1:length(min_seq_depths)){
   }
 }
 dev.off()
-result_df <- data.frame(ds_num, ds_nam, perma_r2, mds_lev, seq_depth, var_exp, spear_cor, samples_left, zero_count, taxa_left)
+result_df <- data.frame(ds_num, ds_nam, perma_r2, mds_lev, read_depth, var_exp, spear_cor, samples_left, zero_count, taxa_left)
 print("created resulting DF")
 
 write.table(result_df, 
@@ -180,11 +180,11 @@ write.table(result_df,
 result_df <- read.table(file = file.path(output_dir, "tables", paste0(project, "_PCA_seqdep_filt_results.csv")),
                         sep = ",")
 
-pdf(file = file.path(output_dir, "graphics", "seq_depth_artifact_PCA12345_bar.pdf"))
+pdf(file = file.path(output_dir, "graphics", "read_depth_artifact_PCA12345_bar.pdf"))
 for (i in 1:max(result_df$mds_lev)){
   pca_only <- result_df[mds_lev == i, ]
   g <- ggplot2::ggplot(pca_only,
-                       aes(x=as.factor(seq_depth), y=spear_cor^2, fill=ds_nam)) +
+                       aes(x=as.factor(read_depth), y=spear_cor^2, fill=ds_nam)) +
     ggplot2::geom_bar(width = 0.8, position=position_dodge(width = 1), stat="identity",) +
     ggplot2::ggtitle(paste0(project, ": PCA",  i, " vs total reads per sample")) +
     ggplot2::xlab("Min read depth per sample") +
@@ -194,14 +194,14 @@ for (i in 1:max(result_df$mds_lev)){
 dev.off()
 print("made bar charts")
 
-pdf(file = file.path(output_dir, "graphics", "seq_depth_artifact_PCA12345_line.pdf"))
+pdf(file = file.path(output_dir, "graphics", "read_depth_artifact_PCA12345_line.pdf"))
 for (i in 1:max(result_df$mds_lev)){
   pca_only <- result_df[result_df$mds_lev == i, ]
   g <- ggplot2::ggplot(pca_only, 
-                       aes(x=seq_depth, y=spear_cor^2, group = ds_nam)) +
+                       aes(x=read_depth, y=spear_cor^2, group = ds_nam)) +
     ggplot2::geom_point(aes(color = factor(ds_nam))) +
     ggplot2::geom_line(aes(color = factor(ds_nam))) +
-    ggplot2::annotate("text", x = head(pca_only$seq_depth, n = length(my_ds_names)), 
+    ggplot2::annotate("text", x = head(pca_only$read_depth, n = length(my_ds_names)), 
                       y = head(c(pca_only$spear_cor^2), n = length(my_ds_names)), 
                       label = head(pca_only$ds_nam, n = length(my_ds_names)),
                       hjust = -0.1) +
@@ -216,7 +216,7 @@ for (i in 1:max(result_df$mds_lev)){
   
   #plot remaining taxa
   g <- ggplot2::ggplot(pca_only, 
-                       aes(x=seq_depth, y=taxa_left, group = ds_nam)) +
+                       aes(x=read_depth, y=taxa_left, group = ds_nam)) +
     ggplot2::geom_point(aes(color = factor(ds_nam))) +
     ggplot2::geom_line(aes(color = factor(ds_nam))) +
     ggplot2::ggtitle(paste0(project, ": PCA",  i, " vs total reads per sample")) +
@@ -230,7 +230,7 @@ for (i in 1:max(result_df$mds_lev)){
   
   #plot remaining samples
   g <- ggplot2::ggplot(pca_only, 
-                       aes(x=seq_depth, y=samples_left, group = ds_nam)) +
+                       aes(x=read_depth, y=samples_left, group = ds_nam)) +
     ggplot2::geom_point(aes(color = factor(ds_nam))) +
     ggplot2::geom_line(aes(color = factor(ds_nam))) +
     ggplot2::ggtitle(paste0(project, ": PCA",  i, " vs total reads per sample")) +
@@ -244,7 +244,7 @@ for (i in 1:max(result_df$mds_lev)){
   
   #plot percentage of zeros
   g <- ggplot2::ggplot(pca_only,
-                       aes(x=seq_depth, y=zero_count/samples_left*taxa_left, group = ds_nam)) +
+                       aes(x=read_depth, y=zero_count/samples_left*taxa_left, group = ds_nam)) +
     ggplot2::geom_point(aes(color = factor(ds_nam))) +
     ggplot2::geom_line(aes(color = factor(ds_nam))) +
     ggplot2::ggtitle(paste0(project, ": PCA",  i, " vs total reads per sample")) +
