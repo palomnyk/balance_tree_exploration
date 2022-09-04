@@ -1,0 +1,60 @@
+---
+title: "Exploringvegan's rrarefy"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r}
+library("vegan")
+set.seed(36)
+fake_data <- ceiling(data.frame("a" = rnorm(n=10, mean=2000, sd=1000),
+                       "b" = runif(n=10, max=10000, min=4000),
+                       "c" = rbinom(n=10, size=100, prob=0.1),
+                       "d" = rnorm(n=10, mean=50000, sd = 10000)))
+
+read_depth <- rowSums(fake_data)
+read_depth
+```
+
+Now we get to the main question: what does vegan::rarefy() do?
+
+Make some rarefication levels based on the counts in the table:
+```{r}
+median_depth <- stats::median(read_depth)
+mean_depth <- ceiling(base::mean(read_depth))
+max_depth <- base::max(read_depth)
+min_depth <- base::min(read_depth)
+print(paste("mean:", mean_depth, "median:", median_depth))
+
+raref_levels <- seq(from = min_depth, to = max_depth, length.out = 4)
+print("rarefaction levels")
+print(raref_levels)
+```
+
+Now test out the rarefy function if we leave in the samples that are too low:
+```{r}
+for(s in 1:length(raref_levels)){
+  seq_d <- raref_levels[s]#new read depth
+  rd_filt_asv <- data.frame(vegan::rrarefy(fake_data, seq_d))#dataset 1 (read depth filtered asv)
+  rd_filt_rowSums <- base::rowSums(rd_filt_asv)
+  print(rd_filt_rowSums)
+}
+```
+Now test out the rarefy function if we eleminate samples below the threshold:
+```{r}
+for(s in 1:length(raref_levels)){
+  seq_d <- raref_levels[s]#new read depth
+  rd_filt_asv <- fake_data[read_depth >= seq_d,]
+  print(nrow(rd_filt_asv))
+  rd_filt_asv <- data.frame(vegan::rrarefy(rd_filt_asv, seq_d))#dataset 1 (read depth filtered asv)
+  rd_filt_rowSums <- base::rowSums(rd_filt_asv)
+  print(rd_filt_rowSums)
+}
+```
+
+
+
+
