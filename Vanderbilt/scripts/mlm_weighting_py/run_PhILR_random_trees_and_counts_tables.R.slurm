@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --partition=Orion                                    		# Partition/queue requested on server
+#SBATCH --partition=Pisces                                    		# Partition/queue requested on server
 #SBATCH --job-name=Vanderbilt_PhILR_random_trees_and_counts_tables  # Job name
 #SBATCH --time=24:00:00                                      		# Time limit (hrs:min:sec)
 #SBATCH --nodes=1                                         			# Number of nodes requested
@@ -19,7 +19,7 @@ echo Running on host: `hostname`
 echo Using $SLURM_NTASKS processors across $SLURM_NNODES nodes
 
 module load R
-srun Rscript ~/git/balance_tree_exploration/lib/cml_scripts/mlm_metrics/PhILR_random_trees_and_counts_tables.R\
+Rscript ~/git/balance_tree_exploration/lib/cml_scripts/mlm_metrics/PhILR_random_trees_and_counts_tables.R\
   -p Vanderbilt \
   -d ~/git/balance_tree_exploration/
 
