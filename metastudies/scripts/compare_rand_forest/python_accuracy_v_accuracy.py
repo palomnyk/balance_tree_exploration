@@ -34,6 +34,7 @@ print("Establishing directory layout.", flush = True)
 # --------------------------------------------------------------------------
 home_dir = os.path.expanduser(options.homedir)
 projects = ["Vanderbilt", "Vangay", "Zeller", "Noguera-Julian"]
+projects = ["Vanderbilt"]
 output_dir = os.path.join(home_dir, "metastudies", "output")
 assert os.path.exists(output_dir)
 plot_pdf_fpath = os.path.join(output_dir, "accuracy_vs_accuracy_python_by_transformation.pdf")
@@ -114,10 +115,28 @@ for ds1 in comp_ds:
 			ax.plot(ds1_lst, a*ds1_lst+b, color = "green", label = "accuracy polyfit")
 			ax.set_xlabel(f"Accuracy {ds1}")
 			ax.set_ylabel(f"Accuracy {ds2}")
-			ax.legend(title="Legend", loc="upper left", framealpha=1)
+			# ax.legend(title="Legend", loc="upper left", framealpha=1)
 			fig.tight_layout()
 			print("Saving figure to pdf", flush = True)
 			pdf.savefig( fig )
+print("Making seperate legend.")
+fig = plt.figure(figsize=(11,11))
+fig.suptitle(f"Legend {train_percent}training Python RF accuracy vs accuracy")
+plt.subplots_adjust(bottom=0.8)
+ax = fig.add_subplot(1,1,1)
+ax.plot([0,1], [0,1], color = "r", label = "expected")
+ax.plot(ds1_lst, a*ds1_lst+b, color = "green", label = "accuracy polyfit")
+fig.tight_layout()
+my_projects = list(set(list(map(lambda x: x[1], list(ds2_score.values())))))#pulling second element from each dict.value
+my_markers = ["o", "s", "P", "v", "x"]
+for i, label in enumerate(list(ds2_score.keys())):
+	my_proj = ds2_score[label][1]
+	print(f"{my_proj} {ds1_lst[i]} {ds2_lst[i]}, {list(ds2_score.keys())[i]}")
+	my_marker = my_markers[my_projects.index(my_proj)]
+	ax.scatter(0, 0, s=70, label=list(ds2_score.keys())[i], marker=my_marker)
+	ax.legend(title="Legend",  loc="center", framealpha=1, mode = "expand", markerscale=2)
+print("Saving figure to pdf", flush = True)
+pdf.savefig( fig, bbox_inches='tight' )
 
 print("Saving pdf", flush = True)
 pdf.close()
