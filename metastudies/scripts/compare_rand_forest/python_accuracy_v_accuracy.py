@@ -34,7 +34,6 @@ print("Establishing directory layout.", flush = True)
 # --------------------------------------------------------------------------
 home_dir = os.path.expanduser(options.homedir)
 projects = ["Vanderbilt", "Vangay", "Zeller", "Noguera-Julian"]
-
 output_dir = os.path.join(home_dir, "metastudies", "output")
 assert os.path.exists(output_dir)
 plot_pdf_fpath = os.path.join(output_dir, "accuracy_vs_accuracy_python_by_transformation.pdf")
@@ -82,7 +81,8 @@ for ds1 in comp_ds:
 				means = ds1_table[splits].agg(mean, axis = 1)
 				assert not means.empty, f"{ds1} is not in the table from {project}"
 				for feat, ave in zip(list(ds1_table["metadata"].values) ,list(means)):
-					ds1_score[f"{project}_{feat}"] = [ave, project]
+					if ave >= 0:
+						ds1_score[f"{project}_{feat}"] = [ave, project]
 				#table 2
 				ds2_table = my_table.loc[my_table["dataset"] == ds2,]
 				splits = ds2_table.columns[ds2_table.columns.str.startswith('split')].tolist()
@@ -90,11 +90,12 @@ for ds1 in comp_ds:
 				assert not means.empty, f"{ds2} is not in the table from {project}"
 				# print(my_table)
 				for feat, ave in zip(list(ds2_table["metadata"].values) ,list(means)):
-					ds2_score[f"{project}_{feat}"] = [ave, project]
+					if ave >= 0:
+						ds2_score[f"{project}_{feat}"] = [ave, project]
 			print("build graphic")
-			# same_keys = set(ds2_score.keys()).intersection(set(ds1_score.keys()))
-			# ds1_score = {key:ds1_score[key] for key in same_keys}
-			# ds2_score = {key:ds2_score[key] for key in same_keys}
+			same_keys = set(ds2_score.keys()).intersection(set(ds1_score.keys()))
+			ds1_score = {key:ds1_score[key] for key in same_keys}
+			ds2_score = {key:ds2_score[key] for key in same_keys}
 			ds1_lst = np.array(list(map(lambda x: x[0], list(ds1_score.values()))))
 			ds2_lst = np.array(list(map(lambda x: x[0], list(ds2_score.values()))))
 			a, b = np.polyfit(ds1_lst, ds2_lst, 1)
@@ -106,11 +107,10 @@ for ds1 in comp_ds:
 			my_projects = list(set(list(map(lambda x: x[1], list(ds2_score.values())))))#pulling second element from each dict.value
 			my_markers = ["o", "s", "P", "v", "x"]
 			for i, label in enumerate(list(ds2_score.keys())):
-				if ds1_lst[i] >= 0 & ds2_lst[i] >= 0:
-					my_proj = ds2_score[label][1]
-					print(f"{my_proj} {ds1_lst[i]} {ds2_lst[i]}, {list(ds2_score.keys())[i]}")
-					my_marker = my_markers[my_projects.index(my_proj)]
-					ax.scatter(ds1_lst[i], ds2_lst[i], s=70, label=list(ds2_score.keys())[i], marker=my_marker)
+				my_proj = ds2_score[label][1]
+				print(f"{my_proj} {ds1_lst[i]} {ds2_lst[i]}, {list(ds2_score.keys())[i]}")
+				my_marker = my_markers[my_projects.index(my_proj)]
+				ax.scatter(ds1_lst[i], ds2_lst[i], s=70, label=list(ds2_score.keys())[i], marker=my_marker)
 			# plt.annotate(label, (x_lst[i], y_lst[i]))
 			ax.plot([0,1], [0,1], color = "r", label = "expected")
 			ax.plot(ds1_lst, a*ds1_lst+b, color = "green", label = "accuracy polyfit")
