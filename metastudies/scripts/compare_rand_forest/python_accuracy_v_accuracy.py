@@ -34,7 +34,6 @@ print("Establishing directory layout.", flush = True)
 # --------------------------------------------------------------------------
 home_dir = os.path.expanduser(options.homedir)
 projects = ["Vanderbilt", "Vangay", "Zeller", "Noguera-Julian"]
-projects = ["Vanderbilt"]
 
 output_dir = os.path.join(home_dir, "metastudies", "output")
 assert os.path.exists(output_dir)
