@@ -106,7 +106,7 @@ for ds1 in comp_ds:
 			my_projects = list(set(list(map(lambda x: x[1], list(ds2_score.values())))))#pulling second element from each dict.value
 			my_markers = ["o", "s", "P", "v", "x"]
 			for i, label in enumerate(list(ds2_score.keys())):
-				if ds1_lst[i] > 0 and ds2_lst[i] > 0:
+				if ds1_lst[i] >= 0 & ds2_lst[i] >= 0:
 					my_proj = ds2_score[label][1]
 					print(f"{my_proj} {ds1_lst[i]} {ds2_lst[i]}, {list(ds2_score.keys())[i]}")
 					my_marker = my_markers[my_projects.index(my_proj)]
