@@ -34,6 +34,8 @@ print("Establishing directory layout.", flush = True)
 # --------------------------------------------------------------------------
 home_dir = os.path.expanduser(options.homedir)
 projects = ["Vanderbilt", "Vangay", "Zeller", "Noguera-Julian"]
+projects = ["Vanderbilt"]
+
 output_dir = os.path.join(home_dir, "metastudies", "output")
 assert os.path.exists(output_dir)
 plot_pdf_fpath = os.path.join(output_dir, "accuracy_vs_accuracy_python_by_transformation.pdf")
@@ -105,10 +107,11 @@ for ds1 in comp_ds:
 			my_projects = list(set(list(map(lambda x: x[1], list(ds2_score.values())))))#pulling second element from each dict.value
 			my_markers = ["o", "s", "P", "v", "x"]
 			for i, label in enumerate(list(ds2_score.keys())):
-				my_proj = ds2_score[label][1]
-				print(f"{my_proj} {ds1_lst[i]} {ds2_lst[i]}, {list(ds2_score.keys())[i]}")
-				my_marker = my_markers[my_projects.index(my_proj)]
-				ax.scatter(ds1_lst[i], ds2_lst[i], s=70, label=list(ds2_score.keys())[i], marker=my_marker)
+				if ds1_lst[i] > 0 and ds2_lst[i] > 0:
+					my_proj = ds2_score[label][1]
+					print(f"{my_proj} {ds1_lst[i]} {ds2_lst[i]}, {list(ds2_score.keys())[i]}")
+					my_marker = my_markers[my_projects.index(my_proj)]
+					ax.scatter(ds1_lst[i], ds2_lst[i], s=70, label=list(ds2_score.keys())[i], marker=my_marker)
 			# plt.annotate(label, (x_lst[i], y_lst[i]))
 			ax.plot([0,1], [0,1], color = "r", label = "expected")
 			ax.plot(ds1_lst, a*ds1_lst+b, color = "green", label = "accuracy polyfit")
