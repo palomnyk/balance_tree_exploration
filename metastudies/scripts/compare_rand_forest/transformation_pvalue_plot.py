@@ -35,7 +35,6 @@ print("Establishing directory layout.", flush = True)
 # --------------------------------------------------------------------------
 home_dir = os.path.expanduser(options.homedir)
 projects = ["Vanderbilt", "Vangay", "Zeller", "Noguera-Julian"]
-projects = ["Vanderbilt", "Noguera-Julian"]
 output_dir = os.path.join(home_dir, "metastudies", "output")
 assert os.path.exists(output_dir)
 plot_pdf_fpath = os.path.join(output_dir, "pval_acc_vs_acc_python_by_transformation.pdf")
@@ -102,7 +101,7 @@ for ds1 in comp_ds:
 		my_marker = my_markers[projects.index(my_proj)]
 		ax.scatter(ave_diff[i], math.log10(pvalues[i]), s=70, label=my_label)
 	# plt.annotate(label, (x_lst[i], y_lst[i]))
-	plt.axhline(y = math.log10(0.05), color = 'r', label="p=0.05")
+	plt.axhline(y = math.log10(0.1), color = 'r', label="p=0.05")
 	# ax.plot([0], [0,1], color = "r", label = "expected")
 	ax.set_xlabel(f"mean difference in accuracy between {ds1} and others")
 	ax.set_ylabel(f"log10 pvalue")
