@@ -25,7 +25,7 @@ echo Using $SLURM_NTASKS processors across $SLURM_NNODES nodes
 
 module load anaconda3/2020.11
 conda activate testing_pyCaret
-python ~/git/balance_tree_exploration/metastudies/compare_rand_forest/accuracy_v_accuracy.py\
+python ~/git/balance_tree_exploration/metastudies/scripts/compare_rand_forest/python_accuracy_v_accuracy.py\
   -d ~/git/balance_tree_exploration
 
 conda deactivate
