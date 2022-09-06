@@ -35,6 +35,7 @@ print("Establishing directory layout.", flush = True)
 # --------------------------------------------------------------------------
 home_dir = os.path.expanduser(options.homedir)
 projects = ["Vanderbilt", "Vangay", "Zeller", "Noguera-Julian"]
+projects = ["Vanderbilt", "Noguera-Julian"]
 output_dir = os.path.join(home_dir, "metastudies", "output")
 assert os.path.exists(output_dir)
 plot_pdf_fpath = os.path.join(output_dir, "pval_acc_vs_acc_python_by_transformation.pdf")
@@ -88,13 +89,6 @@ for ds1 in comp_ds:
 				ave_diff.append(sum(ds1_means) - sum(ds2_means)) #ds1_ave - ds2_ave
 				proj.append(project)
 				transform.append(ds2)
-					# stats.ttest_ind(df['bp_after'][df['sex'] == 'Male'],
-          #       df['bp_after'][df['sex'] == 'Female'])
-	# print(ave_diff)
-	print(pvalues )
-	# print(ds1_name)
-	# print(ds2_name)
-	# print(proj)
 	print("build graphic")
 	fig = plt.figure(figsize=(11,11))
 	fig.suptitle(f"Metastudy {train_percent}training {ds1} vs others by accuracy, Python only")
@@ -104,36 +98,31 @@ for ds1 in comp_ds:
 	my_transforms = list(set(transform))
 	for i in range(len(proj)):
 		my_proj = proj[i]
-		# my_label
+		my_label = f"{ds2_name[i]}_{proj[i]}"
 		my_marker = my_markers[projects.index(my_proj)]
-		ax.scatter(ave_diff[i], math.log10(pvalues[i]), s=70, label=my_transforms[my_transforms.index(transform[i])])
+		ax.scatter(ave_diff[i], math.log10(pvalues[i]), s=70, label=my_label)
 	# plt.annotate(label, (x_lst[i], y_lst[i]))
 	plt.axhline(y = math.log10(0.05), color = 'r', label="p=0.05")
 	# ax.plot([0], [0,1], color = "r", label = "expected")
 	ax.set_xlabel(f"mean difference in accuracy between {ds1} and others")
 	ax.set_ylabel(f"log10 pvalue")
-	ax.legend(title="Legend", loc="lower right", framealpha=1)
+	# ax.legend(title="Legend", loc="lower right", framealpha=1)
 	fig.tight_layout()
 	print("Saving figure to pdf", flush = True)
 	pdf.savefig( fig )
-# print("Making seperate legend.")
-# fig = plt.figure(figsize=(11,11))
-# fig.suptitle(f"Legend {train_percent}training Python RF accuracy vs accuracy")
-# plt.subplots_adjust(bottom=0.8)
-# ax = fig.add_subplot(1,1,1)
-# ax.plot([0,1], [0,1], color = "r", label = "expected")
-# ax.plot(ds1_lst, a*ds1_lst+b, color = "green", label = "accuracy polyfit")
-# fig.tight_layout()
-# my_projects = list(set(list(map(lambda x: x[1], list(ds2_score.values())))))#pulling second element from each dict.value
-# my_markers = ["o", "s", "P", "v", "x"]
-# for i, label in enumerate(list(ds2_score.keys())):
-# 	my_proj = ds2_score[label][1]
-# 	print(f"{my_proj} {ds1_lst[i]} {ds2_lst[i]}, {list(ds2_score.keys())[i]}")
-# 	my_marker = my_markers[my_projects.index(my_proj)]
-# 	ax.scatter(0, 0, s=70, label=list(ds2_score.keys())[i], marker=my_marker)
-# 	ax.legend(title="Legend",  loc="center", framealpha=1, mode = "expand", markerscale=2)
-# print("Saving figure to pdf", flush = True)
-# pdf.savefig( fig, bbox_inches='tight' )
+print("Making seperate legend.")
+fig.suptitle(f"Metastudy {train_percent}training {ds1} vs others by accuracy, Python only")
+plt.subplots_adjust(bottom=0.8)
+ax = fig.add_subplot(1,1,1)
+for i in range(len(proj)):
+	my_proj = proj[i]
+	my_label = f"{ds2_name[i]}_{proj[i]}"
+	my_marker = my_markers[projects.index(my_proj)]
+	ax.scatter(ave_diff[i], math.log10(pvalues[i]), s=70, label=my_label)
+ax.legend(title="Legend", loc="center", mode="expand", framealpha=1)
+fig.tight_layout()
+print("Saving figure to pdf", flush = True)
+pdf.savefig( fig )
 
 print("Saving pdf", flush = True)
 pdf.close()
