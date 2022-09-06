@@ -7,7 +7,6 @@ print("Loading external libraries.",flush = True)
 import os, sys
 import time
 from scipy import stats
-import researchpy as rp
 from statistics import mean
 from matplotlib import markers
 import math as math
