@@ -113,7 +113,7 @@ for ds1 in comp_ds:
 	# ax.plot([0], [0,1], color = "r", label = "expected")
 	ax.set_xlabel(f"mean difference in accuracy between {ds1} and others")
 	ax.set_ylabel(f"log10 pvalue")
-	ax.legend(title="Legend", loc="bottom right", framealpha=1)
+	ax.legend(title="Legend", loc="lower right", framealpha=1)
 	fig.tight_layout()
 	print("Saving figure to pdf", flush = True)
 	pdf.savefig( fig )
