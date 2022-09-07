@@ -122,19 +122,19 @@ for ds1 in comp_ds:
 	fig.tight_layout()
 	print("Saving figure to pdf", flush = True)
 	pdf.savefig( fig )
-print("Making seperate legend.")
-fig.suptitle(f"Metastudy {train_percent}training {ds1} vs others by accuracy, Python only")
-plt.subplots_adjust(bottom=0.8)
-ax = fig.add_subplot(1,1,1)
-for i in range(len(proj)):
-	my_proj = proj[i]
-	my_label = f"{ds2_name[i]}_{proj[i]}"
-	my_marker = my_markers[projects.index(my_proj)]
-	ax.scatter(ave_diff[i], math.log10(pvalues[i]), s=70, label=my_label)
-ax.legend(title="Legend", loc="center", mode="expand", framealpha=1)
-fig.tight_layout()
-print("Saving figure to pdf", flush = True)
-pdf.savefig( fig )
+# print("Making seperate legend.")
+# fig.suptitle(f"Metastudy {train_percent}training {ds1} vs others by accuracy, Python only")
+# plt.subplots_adjust(bottom=0.8)
+# ax = fig.add_subplot(1,1,1)
+# for i in range(len(proj)):
+# 	my_proj = proj[i]
+# 	my_label = f"{ds2_name[i]}_{proj[i]}"
+# 	my_marker = my_markers[projects.index(my_proj)]
+# 	ax.scatter(ave_diff[i], math.log10(pvalues[i]), s=70, label=my_label)
+# ax.legend(title="Legend", loc="center", mode="expand", framealpha=1)
+# fig.tight_layout()
+# print("Saving figure to pdf", flush = True)
+# pdf.savefig( fig )
 
 print("Saving pdf", flush = True)
 pdf.close()
