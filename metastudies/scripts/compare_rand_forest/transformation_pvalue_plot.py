@@ -6,6 +6,7 @@ print("Loading external libraries.",flush = True)
 # --------------------------------------------------------------------------
 import os, sys
 import time
+from turtle import left
 from scipy import stats
 from statistics import mean
 from matplotlib import markers
@@ -46,7 +47,9 @@ comp_ds = ['alr_DADA2', 'clr_DADA2', 'DaDa2', 'Filtered_IQtree', \
 	'Filtered_Silva_DADA2_blw.sqrt_enorm', 'Filtered_UPGMA_DADA2', \
 	'Filtered_UPGMA_DADA2_blw.sqrt_enorm', 'lognorm_DADA2', 'Silva_DADA2', \
 	'Silva_DADA2_blw.sqrt_enorm']
-
+my_colors = plt.cm.get_cmap("tab10", 10)
+my_markers = ["o", "s", "P", "v", "X", "x", "1", "*", "+", "_", "D", "|"]
+train_percent = 0.75
 pdf = matplotlib.backends.backend_pdf.PdfPages(plot_pdf_fpath)
 #set font sizes
 plt.rc('font', size=15) 
@@ -64,8 +67,6 @@ for ds1 in comp_ds:
 	proj = []
 	for ds2 in comp_ds:
 		if (ds1 != ds2):
-			print(ds2)
-			train_percent = 0.75
 			print(f"{ds1} {ds2}")
 			for project in projects:
 				print(f"Adding project {project}")
@@ -91,50 +92,37 @@ for ds1 in comp_ds:
 	print("build graphic")
 	fig = plt.figure(figsize=(11,11))
 	fig.suptitle(f"Metastudy {train_percent}training {ds1} vs others by accuracy, Python only")
-	plt.subplots_adjust(bottom=0.8)
+	plt.subplots_adjust(bottom=0.8, left=0.8)
 	ax = fig.add_subplot(1,1,1)
-	my_markers = ["o", "s", "P", "v", "x", "1", "*", "+", "_", "D", "|"]
-	my_transforms = list(set(transform))
 	for i in range(len(proj)):
 		my_proj = proj[i]
-		my_transform = my_markers[my_transforms.index(transform[i])]
+		my_trans = my_markers[comp_ds.index(transform[i])]
 		my_label = f"{ds2_name[i]}_{proj[i]}"
-		my_marker = my_markers[projects.index(my_proj)]
-		ax.scatter(ave_diff[i], math.log10(pvalues[i]), s=70, label=transform[i], marker=my_transform)
+		my_colr = my_colors.colors[projects.index(my_proj)]
+		ax.scatter(ave_diff[i], math.log10(pvalues[i]), s=70, color=my_colr, marker=my_trans)
 	# plt.annotate(label, (x_lst[i], y_lst[i]))
 	plt.axhline(y = math.log10(0.1), color = 'r', label="p=0.10")
-	# ax.plot([0], [0,1], color = "r", label = "expected")
+	plt.axvline(x=0, color='r', label="No difference")
 	ax.set_xlabel(f"mean difference in accuracy between {ds1} and others")
 	ax.set_ylabel(f"log10 pvalue")
-	plt.axvline(x=0, color='r', label="No difference")
-	# ax.legend(title="Legend", loc="lower right", framealpha=1)
+	# ax.legend(my_transforms, title="Legend", loc="lower right", framealpha=0.1, prop={'size': 2})
 	fig.tight_layout()
 	print("Saving figure to pdf", flush = True)
 	pdf.savefig( fig )
-	ax = fig.add_subplot(1,1,1)
-	for i in range(len(proj)):
-		my_proj = proj[i]
-		my_transform = my_markers[my_transforms.index(transform[i])]
-		my_label = f"{ds2_name[i]}_{proj[i]}"
-		my_marker = my_markers[projects.index(my_proj)]
-		ax.scatter(ave_diff[i], math.log10(pvalues[i]), s=70, label=transform[i], marker=my_transform)
-	ax.legend(title="Legend", loc="center", mode="expand", framealpha=1)
-	fig.tight_layout()
-	print("Saving figure to pdf", flush = True)
-	pdf.savefig( fig )
-# print("Making seperate legend.")
-# fig.suptitle(f"Metastudy {train_percent}training {ds1} vs others by accuracy, Python only")
-# plt.subplots_adjust(bottom=0.8)
-# ax = fig.add_subplot(1,1,1)
-# for i in range(len(proj)):
-# 	my_proj = proj[i]
-# 	my_label = f"{ds2_name[i]}_{proj[i]}"
-# 	my_marker = my_markers[projects.index(my_proj)]
-# 	ax.scatter(ave_diff[i], math.log10(pvalues[i]), s=70, label=my_label)
-# ax.legend(title="Legend", loc="center", mode="expand", framealpha=1)
-# fig.tight_layout()
-# print("Saving figure to pdf", flush = True)
-# pdf.savefig( fig )
+
+print("Making seperate legend.")
+fig.suptitle(f"Metastudy {train_percent}training {ds1} vs others by accuracy, Python only")
+ax = fig.add_subplot(1,1,1)
+for i in range(len(comp_ds)):
+	ax.scatter(0, 0, s=70, label=comp_ds[i], color="black", marker=my_markers[i])
+for i in range(len(projects)):
+	ax.scatter(0, 0, s=70, label=projects[i], color=my_colors.colors[i], marker=my_markers[0])
+plt.axvline(x=0, color='r', label="No difference")
+plt.axhline(y = math.log10(0.1), color = 'r', label="p=0.10")
+ax.legend(title="Legend", loc="center", mode="expand", framealpha=1)
+fig.tight_layout()
+print("Saving figure to pdf", flush = True)
+pdf.savefig( fig )
 
 print("Saving pdf", flush = True)
 pdf.close()
