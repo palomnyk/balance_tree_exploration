@@ -102,26 +102,26 @@ for ds1 in comp_ds:
 		my_marker = my_markers[projects.index(my_proj)]
 		ax.scatter(ave_diff[i], math.log10(pvalues[i]), s=70, label=transform[i], marker=my_transform)
 	# plt.annotate(label, (x_lst[i], y_lst[i]))
-	plt.axhline(y = math.log10(0.1), color = 'r', label="p=0.05")
+	plt.axhline(y = math.log10(0.1), color = 'r', label="p=0.10")
 	# ax.plot([0], [0,1], color = "r", label = "expected")
 	ax.set_xlabel(f"mean difference in accuracy between {ds1} and others")
 	ax.set_ylabel(f"log10 pvalue")
+	plt.axvline(x=0, color='r', label="No difference")
 	# ax.legend(title="Legend", loc="lower right", framealpha=1)
 	fig.tight_layout()
 	print("Saving figure to pdf", flush = True)
 	pdf.savefig( fig )
-	# ax = fig.add_subplot(1,1,1)
-	# for i in range(len(proj)):
-	# 	my_proj = proj[i]
-	# 	my_transform = my_markers[my_transforms.index(transform[i])]
-	# 	my_label = f"{ds2_name[i]}_{proj[i]}"
-	# 	my_marker = my_markers[projects.index(my_proj)]
-	# 	ax.scatter(ave_diff[i], math.log10(pvalues[i]), s=70, label=transform[i], marker=my_transform)
-
-	# ax.legend(title="Legend", loc="center", mode="expand", framealpha=1)
-	# fig.tight_layout()
-	# print("Saving figure to pdf", flush = True)
-	# pdf.savefig( fig )
+	ax = fig.add_subplot(1,1,1)
+	for i in range(len(proj)):
+		my_proj = proj[i]
+		my_transform = my_markers[my_transforms.index(transform[i])]
+		my_label = f"{ds2_name[i]}_{proj[i]}"
+		my_marker = my_markers[projects.index(my_proj)]
+		ax.scatter(ave_diff[i], math.log10(pvalues[i]), s=70, label=transform[i], marker=my_transform)
+	ax.legend(title="Legend", loc="center", mode="expand", framealpha=1)
+	fig.tight_layout()
+	print("Saving figure to pdf", flush = True)
+	pdf.savefig( fig )
 print("Making seperate legend.")
 fig.suptitle(f"Metastudy {train_percent}training {ds1} vs others by accuracy, Python only")
 plt.subplots_adjust(bottom=0.8)
