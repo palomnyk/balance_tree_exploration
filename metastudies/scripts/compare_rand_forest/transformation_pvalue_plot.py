@@ -1,7 +1,13 @@
 #!/usr/bin/env python
 # Author: Aaron Yerke, aaronyerke@gmail.com
-# This is a script for comparing random forest output to pvalues
+
+#This is a script for comparing R and Python random forest output
 # --------------------------------------------------------------------------
+print(f"""Running {__file__}.
+This is a script for comparing random forest output with pvalues. Currently only works for the python outp""")
+# --------------------------------------------------------------------------
+
+#--------------------------------------------------------------------------
 print("Loading external libraries.",flush = True)
 # --------------------------------------------------------------------------
 import os, sys
@@ -36,6 +42,8 @@ print("Establishing directory layout.", flush = True)
 # --------------------------------------------------------------------------
 home_dir = os.path.expanduser(options.homedir)
 projects = ["Vanderbilt", "Vangay", "Zeller", "Noguera-Julian"]
+projects = ["Vanderbilt","Noguera-Julian"]
+
 output_dir = os.path.join(home_dir, "metastudies", "output")
 assert os.path.exists(output_dir)
 plot_pdf_fpath = os.path.join(output_dir, "pval_acc_vs_acc_python_by_transformation.pdf")
@@ -102,7 +110,7 @@ for ds1 in comp_ds:
 		ax.scatter(ave_diff[i], math.log10(pvalues[i]), s=70, color=my_colr, marker=my_trans)
 	# plt.annotate(label, (x_lst[i], y_lst[i]))
 	plt.axhline(y = math.log10(0.1), color = 'r', label="p=0.10")
-	plt.axvline(x=0, color='r', label="No difference")
+	plt.axvline(x=0, color='r', label="No difference", linestyle="--")
 	ax.set_xlabel(f"mean difference in accuracy between {ds1} and others")
 	ax.set_ylabel(f"log10 pvalue")
 	# ax.legend(my_transforms, title="Legend", loc="lower right", framealpha=0.1, prop={'size': 2})
@@ -117,7 +125,7 @@ for i in range(len(comp_ds)):
 	ax.scatter(0, 0, s=70, label=comp_ds[i], color="black", marker=my_markers[i])
 for i in range(len(projects)):
 	ax.scatter(0, 0, s=70, label=projects[i], color=my_colors.colors[i], marker=my_markers[0])
-plt.axvline(x=0, color='r', label="No difference")
+plt.axvline(x=0, color='r', label="No difference", linestyle="--")
 plt.axhline(y = math.log10(0.1), color = 'r', label="p=0.10")
 ax.legend(title="Legend", loc="center", mode="expand", framealpha=1)
 fig.tight_layout()
@@ -127,3 +135,4 @@ pdf.savefig( fig )
 print("Saving pdf", flush = True)
 pdf.close()
 
+print(f"{__file__} complete!")
