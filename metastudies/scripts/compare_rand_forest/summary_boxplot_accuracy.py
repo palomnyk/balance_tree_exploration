@@ -27,6 +27,7 @@ import matplotlib.pyplot as plt
 import matplotlib.backends.backend_pdf
 import argparse
 import random
+import seaborn as sns
 
 # --------------------------------------------------------------------------
 print("Reading commmandline input with optparse.", flush = True)
@@ -94,11 +95,12 @@ for ds1 in comp_ds:
 		else:
 			plotdata.loc[ds1,ds2] = 0
 print("build graphic")
+
 fig = plt.figure(figsize=(11,11))
-fig.suptitle(f"Metastudy {train_percent}training {ds1} vs others by accuracy, Python only")
+fig.suptitle(f"Metastudy {train_percent}training each dataset vs others by accuracy, Sklearn RF")
 plt.subplots_adjust(bottom=0.8, left=0.8)
 ax = fig.add_subplot(1,1,1)
-ax.boxplot(plotdata, labels=plotdata.columns)
+ax.boxplot(plotdata, labels=plotdata.columns, showfliers=False)
 ax.set_xticklabels(labels = plotdata.columns, rotation=90)
 # plt.annotate(label, (x_lst[i], y_lst[i]))
 plt.axhline(y = math.log10(0.1), color = 'r', label="p=0.10")
@@ -107,6 +109,10 @@ plt.axhline(y = -math.log10(0.1), color = 'r', label="-p=0.10")
 # ax.set_xlabel(f"mean difference in accuracy between {ds1} and others")
 # ax.set_ylabel(f"log10 pvalue")
 # ax.legend(my_transforms, title="Legend", loc="lower right", framealpha=0.1, prop={'size': 2})
+for i in range(len(plotdata.columns)):
+    y = plotdata.iloc[:,i]
+    x = np.random.normal(1+i, 0.04, size=len(y))
+    ax.plot(x, y, "bo", alpha=0.5)
 fig.tight_layout()
 print("Saving figure to pdf", flush = True)
 pdf.savefig( fig )
