@@ -24,6 +24,7 @@ import math as math
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle
 import matplotlib.backends.backend_pdf
 import argparse
 import random
@@ -46,9 +47,10 @@ print("Establishing directory layout.", flush = True)
 # --------------------------------------------------------------------------
 home_dir = os.path.expanduser(options.homedir)
 projects = ["Vanderbilt", "Vangay", "Zeller", "Noguera-Julian"]
+projects = ["Vanderbilt", "Noguera-Julian"]
 output_dir = os.path.join(home_dir, "metastudies", "output")
 assert os.path.exists(output_dir)
-plot_pdf_fpath = os.path.join(output_dir, "summary_pval_acc_vs_acc_python_by_transformation.pdf")
+plot_pdf_fpath = os.path.join(output_dir, "shade_summary_pval_acc_vs_acc_python_by_transformation.pdf")
 # --------------------------------------------------------------------------
 print("Establishing other constants.", flush = True)
 # --------------------------------------------------------------------------
@@ -67,8 +69,10 @@ plt.rc('xtick', labelsize=20)
 plt.rc('ytick', labelsize=20) 
 plt.rc('axes', labelsize=20) 
 plt.rc('axes', titlesize=50)
+# --------------------------------------------------------------------------
+print("Generating Data.", flush = True)
+# --------------------------------------------------------------------------
 plotdata = pd.DataFrame(columns=comp_ds, index=comp_ds)
-
 for ds1 in comp_ds:
 	for ds2 in comp_ds:
 		if (ds1 != ds2):
@@ -82,11 +86,10 @@ for ds1 in comp_ds:
 				#table 1
 				ds1_table = my_table.loc[my_table["dataset"] == ds1,]
 				splits = ds1_table.columns[ds1_table.columns.str.startswith('split')].tolist()
-				# print(ds1_table[splits])
 				ds1_means = ds1_table[splits].agg(mean, axis = 1)
 				ds2_table = my_table.loc[my_table["dataset"] == ds2,]
 				ds2_means = ds2_table[splits].agg(mean, axis = 1)
-				my_tpval = stats.ttest_rel(ds1_means, ds2_means,).pvalue
+				my_tpval = stats.wilcoxon(ds1_means, ds2_means,).pvalue
 				ave_diff = sum(ds1_means) - sum(ds2_means) #ds1_ave - ds2_ave
 				if ave_diff > 0:
 					plotdata.loc[ds1,ds2] = math.log10(my_tpval)
@@ -94,8 +97,9 @@ for ds1 in comp_ds:
 					plotdata.loc[ds1,ds2] = -math.log10(my_tpval)
 		else:
 			plotdata.loc[ds1,ds2] = 0
-print("build graphic")
-
+#--------------------------------------------------------------------------
+print("Generating graphic")
+#--------------------------------------------------------------------------
 fig = plt.figure(figsize=(11,11))
 fig.suptitle(f"Metastudy {train_percent}training each dataset vs others by accuracy, Sklearn RF")
 plt.subplots_adjust(bottom=0.8, left=0.8)
@@ -103,12 +107,16 @@ ax = fig.add_subplot(1,1,1)
 ax.boxplot(plotdata, labels=plotdata.columns, showfliers=False)
 ax.set_xticklabels(labels = plotdata.columns, rotation=90)
 # plt.annotate(label, (x_lst[i], y_lst[i]))
-plt.axhline(y = math.log10(0.1), color = 'r', label="p=0.10")
-plt.axhline(y = -math.log10(0.1), color = 'r', label="-p=0.10")
+plt.axhline(y = math.log10(0.05), color = 'r', label="p=0.05")
+plt.axhline(y = 0, color = 'y', label="no difference", linestyle="--")
+plt.axhline(y = -math.log10(0.05), color = 'g', label="-p=0.05")
+# ax.fill_between(x=[0,], y1=math.log10(0.5), y2=5, color="green", alpha=0.1)
+# ax.add_patch(Rectangle(xy=[0,math.log10(0.5)], width=len(plotdata.columns), height=5, facecolor = "green", fill=True))
+# ax.add_patch(Rectangle(xy=[0,-math.log10(0.5)], width=len(plotdata.columns), height=-5, facecolor = "red", fill=True))
 # plt.axvline(x=0, color='r', label="No difference", linestyle="--")
-# ax.set_xlabel(f"mean difference in accuracy between {ds1} and others")
-# ax.set_ylabel(f"log10 pvalue")
-# ax.legend(my_transforms, title="Legend", loc="lower right", framealpha=0.1, prop={'size': 2})
+ax.set_xlabel(f"Wilcoxen pairwise pvalues")
+ax.set_ylabel(f"log10 pvalue")
+ax.legend(title="Legend", loc="lower right", framealpha=0.1, prop={'size': 2})
 for i in range(len(plotdata.columns)):
     y = plotdata.iloc[:,i]
     x = np.random.normal(1+i, 0.04, size=len(y))
