@@ -54,10 +54,10 @@ plot_pdf_fpath = os.path.join(output_dir, "shade_summary_pval_acc_vs_acc_python_
 # --------------------------------------------------------------------------
 print("Establishing other constants.", flush = True)
 # --------------------------------------------------------------------------
-comp_ds = ['alr_DADA2', 'clr_DADA2', 'DaDa2', 'Filtered_IQtree', \
-	'Filtered_IQtree_blw.sqrt_enorm', 'Filtered_Silva_DADA2', \
+comp_ds = ['alr_DADA2', 'clr_DADA2', 'DaDa2', 'lognorm_DADA2', \
+	'Filtered_Silva_DADA2','Silva_DADA2', 'Filtered_IQtree',  \
 	'Filtered_Silva_DADA2_blw.sqrt_enorm', 'Filtered_UPGMA_DADA2', \
-	'Filtered_UPGMA_DADA2_blw.sqrt_enorm', 'lognorm_DADA2', 'Silva_DADA2', \
+	'Filtered_UPGMA_DADA2_blw.sqrt_enorm', 'Filtered_IQtree_blw.sqrt_enorm',\
 	'Silva_DADA2_blw.sqrt_enorm']
 my_colors = plt.cm.get_cmap("tab10", 10)
 my_markers = ["o", "s", "P", "v", "X", "x", "1", "*", "+", "_", "D", "|"]
@@ -116,7 +116,7 @@ plt.axhline(y = -math.log10(0.05), color = 'g', label="-p=0.05")
 # plt.axvline(x=0, color='r', label="No difference", linestyle="--")
 ax.set_xlabel(f"Wilcoxen pairwise pvalues")
 ax.set_ylabel(f"log10 pvalue")
-ax.legend(title="Legend", loc="lower right", framealpha=0.1, prop={'size': 2})
+ax.legend(loc="upper center", framealpha=0.1, prop={'size': 8})
 for i in range(len(plotdata.columns)):
     y = plotdata.iloc[:,i]
     x = np.random.normal(1+i, 0.04, size=len(y))
