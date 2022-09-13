@@ -68,7 +68,7 @@ for d1 in range(len(comp_ds)):
 	print(ds1)
 	if d1 < len(comp_ds):
 		for d2 in range(d1+1,len(comp_ds)):
-			ds2 = comp_ds[d1]
+			ds2 = comp_ds[d2]
 			train_percent = 0.75
 			ds1_score = {}
 			ds2_score = {}
