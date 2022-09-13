@@ -69,68 +69,66 @@ for d1 in range(len(comp_ds)):
 	if d1 < len(comp_ds):
 		for d2 in range(d1+1,len(comp_ds)):
 			ds2 = comp_ds[d1]
-			if (ds1 != ds2):
-				print(ds2)
-				train_percent = 0.75
-				ds1_score = {}
-				ds2_score = {}
-				features = []
-				proj = []
-				print(f"{ds1} {ds2}")
-				for project in projects:
-					print(f"Adding project {project}")
-					main_output_label = f"sklearn_random_forest_manual_{train_percent}train"
-					op_dir = os.path.join(home_dir, project, "output")
-					result_fpath = os.path.join(op_dir, "tables", f"{main_output_label}.csv")
-					print(result_fpath)
-					my_table = pd.read_csv(result_fpath, sep=',', header=0)
-					#table 1
-					ds1_table = my_table.loc[my_table["dataset"] == ds1,]
-					# print(ds1_table)
-					splits = ds1_table.columns[ds1_table.columns.str.startswith('split')].tolist()
-					# print(ds1_table[splits])
-					means = ds1_table[splits].agg(mean, axis = 1)
-					assert not means.empty, f"{ds1} is not in the table from {project}"
-					for feat, ave in zip(list(ds1_table["metadata"].values) ,list(means)):
-						if ave >= 0:
-							ds1_score[f"{project}_{feat}"] = [ave, project]
-					#table 2
-					ds2_table = my_table.loc[my_table["dataset"] == ds2,]
-					splits = ds2_table.columns[ds2_table.columns.str.startswith('split')].tolist()
-					means = ds2_table[splits].agg(mean, axis = 1)
-					assert not means.empty, f"{ds2} is not in the table from {project}"
-					# print(my_table)
-					for feat, ave in zip(list(ds2_table["metadata"].values) ,list(means)):
-						if ave >= 0:
-							ds2_score[f"{project}_{feat}"] = [ave, project]
-				print("build graphic")
-				same_keys = set(ds2_score.keys()).intersection(set(ds1_score.keys()))
-				ds1_score = {key:ds1_score[key] for key in same_keys}
-				ds2_score = {key:ds2_score[key] for key in same_keys}
-				ds1_lst = np.array(list(map(lambda x: x[0], list(ds1_score.values()))))
-				ds2_lst = np.array(list(map(lambda x: x[0], list(ds2_score.values()))))
-				a, b = np.polyfit(ds1_lst, ds2_lst, 1)
-				# print(a, b)
-				fig = plt.figure(figsize=(11,11))
-				fig.suptitle(f"Metastudy {train_percent}training {ds1} vs {ds2} by accuracy, Python only")
-				plt.subplots_adjust(bottom=0.8)
-				ax = fig.add_subplot(1,1,1)
-				my_projects = list(set(list(map(lambda x: x[1], list(ds2_score.values())))))#pulling second element from each dict.value
-				my_markers = ["o", "s", "P", "v", "x"]
-				for i, label in enumerate(list(ds2_score.keys())):
-					my_proj = ds2_score[label][1]
-					print(f"{my_proj} {ds1_lst[i]} {ds2_lst[i]}, {list(ds2_score.keys())[i]}")
-					my_marker = my_markers[my_projects.index(my_proj)]
-					ax.scatter(ds1_lst[i], ds2_lst[i], s=70, label=list(ds2_score.keys())[i], marker=my_marker)
-				# plt.annotate(label, (x_lst[i], y_lst[i]))
-				ax.plot([0,1], [0,1], color = "r", label = "expected")
-				ax.plot(ds1_lst, a*ds1_lst+b, color = "green", label = "accuracy polyfit")
-				ax.set_xlabel(f"Accuracy {ds1}")
-				ax.set_ylabel(f"Accuracy {ds2}")
-				# ax.legend(title="Legend", loc="upper left", framealpha=1)
-				fig.tight_layout()
-				print("Saving figure to pdf", flush = True)
-				pdf.savefig( fig )
+			train_percent = 0.75
+			ds1_score = {}
+			ds2_score = {}
+			features = []
+			proj = []
+			print(f"{ds1} {ds2}")
+			for project in projects:
+				print(f"Adding project {project}")
+				main_output_label = f"sklearn_random_forest_manual_{train_percent}train"
+				op_dir = os.path.join(home_dir, project, "output")
+				result_fpath = os.path.join(op_dir, "tables", f"{main_output_label}.csv")
+				print(result_fpath)
+				my_table = pd.read_csv(result_fpath, sep=',', header=0)
+				#table 1
+				ds1_table = my_table.loc[my_table["dataset"] == ds1,]
+				# print(ds1_table)
+				splits = ds1_table.columns[ds1_table.columns.str.startswith('split')].tolist()
+				# print(ds1_table[splits])
+				means = ds1_table[splits].agg(mean, axis = 1)
+				assert not means.empty, f"{ds1} is not in the table from {project}"
+				for feat, ave in zip(list(ds1_table["metadata"].values) ,list(means)):
+					if ave >= 0:
+						ds1_score[f"{project}_{feat}"] = [ave, project]
+				#table 2
+				ds2_table = my_table.loc[my_table["dataset"] == ds2,]
+				splits = ds2_table.columns[ds2_table.columns.str.startswith('split')].tolist()
+				means = ds2_table[splits].agg(mean, axis = 1)
+				assert not means.empty, f"{ds2} is not in the table from {project}"
+				# print(my_table)
+				for feat, ave in zip(list(ds2_table["metadata"].values) ,list(means)):
+					if ave >= 0:
+						ds2_score[f"{project}_{feat}"] = [ave, project]
+			print("build graphic")
+			same_keys = set(ds2_score.keys()).intersection(set(ds1_score.keys()))
+			ds1_score = {key:ds1_score[key] for key in same_keys}
+			ds2_score = {key:ds2_score[key] for key in same_keys}
+			ds1_lst = np.array(list(map(lambda x: x[0], list(ds1_score.values()))))
+			ds2_lst = np.array(list(map(lambda x: x[0], list(ds2_score.values()))))
+			a, b = np.polyfit(ds1_lst, ds2_lst, 1)
+			# print(a, b)
+			fig = plt.figure(figsize=(11,11))
+			fig.suptitle(f"Metastudy {train_percent}training {ds1} vs {ds2} by accuracy, Python only")
+			plt.subplots_adjust(bottom=0.8)
+			ax = fig.add_subplot(1,1,1)
+			my_projects = list(set(list(map(lambda x: x[1], list(ds2_score.values())))))#pulling second element from each dict.value
+			my_markers = ["o", "s", "P", "v", "x"]
+			for i, label in enumerate(list(ds2_score.keys())):
+				my_proj = ds2_score[label][1]
+				print(f"{my_proj} {ds1_lst[i]} {ds2_lst[i]}, {list(ds2_score.keys())[i]}")
+				my_marker = my_markers[my_projects.index(my_proj)]
+				ax.scatter(ds1_lst[i], ds2_lst[i], s=70, label=list(ds2_score.keys())[i], marker=my_marker)
+			# plt.annotate(label, (x_lst[i], y_lst[i]))
+			ax.plot([0,1], [0,1], color = "r", label = "expected")
+			ax.plot(ds1_lst, a*ds1_lst+b, color = "green", label = "accuracy polyfit")
+			ax.set_xlabel(f"Accuracy {ds1}")
+			ax.set_ylabel(f"Accuracy {ds2}")
+			# ax.legend(title="Legend", loc="upper left", framealpha=1)
+			fig.tight_layout()
+			print("Saving figure to pdf", flush = True)
+			pdf.savefig( fig )
 print("Making seperate legend.")
 fig = plt.figure(figsize=(11,11))
 fig.suptitle(f"Legend {train_percent}training Python RF accuracy vs accuracy")
