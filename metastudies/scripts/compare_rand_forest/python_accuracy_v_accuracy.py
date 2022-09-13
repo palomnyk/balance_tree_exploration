@@ -136,8 +136,6 @@ fig = plt.figure(figsize=(11,11))
 fig.suptitle(f"Legend {train_percent}training Python RF accuracy vs accuracy")
 plt.subplots_adjust(bottom=0.8)
 ax = fig.add_subplot(1,1,1)
-ax.plot([0,1], [0,1], color = "r", label = "expected")
-ax.plot(ds1_lst, a*ds1_lst+b, color = "green", label = "accuracy polyfit")
 fig.tight_layout()
 my_projects = list(set(list(map(lambda x: x[1], list(ds2_score.values())))))#pulling second element from each dict.value
 my_markers = ["o", "s", "P", "v", "x"]
