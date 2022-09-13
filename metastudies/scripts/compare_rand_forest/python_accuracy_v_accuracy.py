@@ -47,14 +47,16 @@ comp_ds = ['alr_DADA2', 'clr_DADA2', 'DaDa2', 'Filtered_IQtree', \
 	'Filtered_IQtree_blw.sqrt_enorm', 'Shuffle1_PhILR_Filtered_IQtree_blw.sqrt_enorm',\
 	'Shuffle2_PhILR_Filtered_IQtree_blw.sqrt_enorm', 'Shuffle3_PhILR_Filtered_IQtree_blw.sqrt_enorm',\
 	'Filtered_Silva_DADA2', 'Filtered_Silva_DADA2_blw.sqrt_enorm', \
-	'Shuffle1_Filtered_Silva_DADA2_blw.sqrt_enorm', \
-	'Shuffle2_Filtered_Silva_DADA2_blw.sqrt_enorm', 'Shuffle3_Filtered_Silva_DADA2_blw.sqrt_enorm',\
+	'Shuffle1_PhILR_Filtered_Silva_DADA2_blw.sqrt_enorm', \
+	'Shuffle2_PhILR_Filtered_Silva_DADA2_blw.sqrt_enorm', \
+	'Shuffle3_PhILR_Filtered_Silva_DADA2_blw.sqrt_enorm',\
 	'Filtered_UPGMA_DADA2', \
-	'Filtered_UPGMA_DADA2_blw.sqrt_enorm', 'Filtered_UPGMA_DADA2_blw.sqrt_enorm',\
-	'Filtered_UPGMA_DADA2_blw.sqrt_enorm', 'Filtered_UPGMA_DADA2_blw.sqrt_enorm',\
+	'Filtered_UPGMA_DADA2_blw.sqrt_enorm', 'Shuffle1_PhILR_Filtered_UPGMA_DADA2_blw.sqrt_enorm',\
+	'Shuffle2_PhILR_Filtered_UPGMA_DADA2_blw.sqrt_enorm', 
+	'Shuffle3_PhILR_Filtered_UPGMA_DADA2_blw.sqrt_enorm',\
 	'lognorm_DADA2', 'Silva_DADA2', \
-	'Silva_DADA2_blw.sqrt_enorm', 'Shuffle1_Silva_DADA2_blw.sqrt_enorm', \
-	'Shuffle2_Silva_DADA2_blw.sqrt_enorm', 'Shuffle3_Silva_DADA2_blw.sqrt_enorm']
+	'Silva_DADA2_blw.sqrt_enorm', 'Shuffle1_PhILR_Silva_DADA2_blw.sqrt_enorm', \
+	'Shuffle2_PhILR_Silva_DADA2_blw.sqrt_enorm', 'Shuffle3_PhILR_Silva_DADA2_blw.sqrt_enorm']
 
 pdf = matplotlib.backends.backend_pdf.PdfPages(plot_pdf_fpath)
 #set font sizes
