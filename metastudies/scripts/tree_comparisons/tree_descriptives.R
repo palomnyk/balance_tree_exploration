@@ -116,6 +116,7 @@ for (project in projects) {
     #tree
     my_phy <- phylo_objects[[phy]]
     my_tree <- my_phy@phy_tree
+    project_name <- c(project_name, project)
     tree_name <- c(tree_name, phylo_objects_names[phy])
     ave_branch_length <- c(ave_branch_length, mean(my_tree$edge.length))
     var_branch_length <- c(var_branch_length, var(my_tree$edge.length))
@@ -127,16 +128,16 @@ for (project in projects) {
 }
 
 print("forming dataframes from tree data")
-my_trees <- data.frame(tree_name,
+my_trees <- data.frame(project_name,
+                       tree_name,
                        num_nodes,
                        num_tips,
-                       # ave_branch_length,
-                       philr_ncol,
-                       is_ultrametric,
-                       philr_ncol)
+                       ave_branch_length,
+                       var_branch_length,
+                       is_ultrametric)
 
 write.table(my_trees,
             sep = ",",
             row.names = FALSE,
-            file = file.path(output_dir, "tables", paste0(project, "tree_descriptves", ".csv")))
+            file = file.path(home_dir,"metastudies","output", "tree_descriptives.csv"))
 
