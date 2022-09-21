@@ -60,13 +60,13 @@ plot_pdf_fpath = os.path.join(output_dir, f"inter_ds_comp_{options.x_axis_label}
 # --------------------------------------------------------------------------
 print("Establishing other constants.", flush = True)
 # --------------------------------------------------------------------------
-comp_ds = ['alr_DADA2', 'clr_DADA2', 'DaDa2', 'Filtered_IQtree', \
+comp_ds = ['alr_DADA2', 'clr_DADA2', 'Raw_DADA2', 'Filtered_IQtree', \
 	'Filtered_IQtree_blw.sqrt_enorm', 'Filtered_Silva_DADA2', \
 	'Filtered_Silva_DADA2_blw.sqrt_enorm', 'Filtered_UPGMA_DADA2', \
 	'Filtered_UPGMA_DADA2_blw.sqrt_enorm', 'lognorm_DADA2', 'Silva_DADA2', \
 	'Silva_DADA2_blw.sqrt_enorm']
 
-# comp_ds = ['alr_DADA2', 'clr_DADA2', 'DaDa2', 'Filtered_IQtree', 'Filtered_Silva_DADA2',
+# comp_ds = ['alr_DADA2', 'clr_DADA2', 'Raw_DADA2', 'Filtered_IQtree', 'Filtered_Silva_DADA2',
 #  'Filtered_UPGMA_DADA2', 'lognorm_DADA2', 'Silva_DADA2']
 
 pdf = matplotlib.backends.backend_pdf.PdfPages(plot_pdf_fpath)

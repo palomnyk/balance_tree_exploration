@@ -57,13 +57,11 @@ plot_pdf_fpath = os.path.join(output_dir, f"{options.label}_num_estimators_vs_ac
 # --------------------------------------------------------------------------
 print("Establishing other constants.", flush = True)
 # --------------------------------------------------------------------------
-comp_ds = ['alr_DADA2', 'clr_DADA2', 'DaDa2', 'Filtered_IQtree', \
+comp_ds = ['alr_DADA2', 'clr_DADA2', 'Raw_DADA2', 'Filtered_IQtree', \
 	'Filtered_IQtree_mean.descendants_enorm', 'Filtered_Silva_DADA2', \
 	'Filtered_Silva_DADA2_mean.descendants_enorm', 'Filtered_UPGMA_DADA2', \
 	'Filtered_UPGMA_DADA2_mean.descendants_enorm', 'lognorm_DADA2', 'Silva_DADA2', \
 	'Silva_DADA2_mean.descendants_enorm']
-
-comp_ds = ['DADA2']
 
 my_markers = ["o", "s", "P", "v", "x"]
 
