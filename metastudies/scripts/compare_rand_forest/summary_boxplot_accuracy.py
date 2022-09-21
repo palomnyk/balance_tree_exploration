@@ -53,9 +53,9 @@ plot_pdf_fpath = os.path.join(output_dir, "summary_pval_acc_vs_acc_python_by_tra
 # --------------------------------------------------------------------------
 print("Establishing other constants.", flush = True)
 # --------------------------------------------------------------------------
-comp_ds = ['alr_DADA2', 'clr_DADA2', 'DaDa2', 	'lognorm_DADA2', 'Silva_DADA2', \
+comp_ds = ['alr_DADA2', 'clr_DADA2', 'RawDADA2', 'lognorm_DADA2', 'Silva_DADA2', \
 	'Silva_DADA2_blw.sqrt_enorm', 'Shuffle1_PhILR_Silva_DADA2_blw.sqrt_enorm', \
-	'Shuffle2_PhILR_Silva_DADA2_blw.sqrt_enorm', 'Shuffle3_PhILR_Silva_DADA2_blw.sqrt_enorm' \
+	'Shuffle2_PhILR_Silva_DADA2_blw.sqrt_enorm', 'Shuffle3_PhILR_Silva_DADA2_blw.sqrt_enorm', \
 	'Filtered_IQtree', 'Filtered_IQtree_blw.sqrt_enorm', \
 	'Shuffle1_PhILR_Filtered_IQtree_blw.sqrt_enorm',\
 	'Shuffle2_PhILR_Filtered_IQtree_blw.sqrt_enorm', 'Shuffle3_PhILR_Filtered_IQtree_blw.sqrt_enorm',\
@@ -67,7 +67,7 @@ comp_ds = ['alr_DADA2', 'clr_DADA2', 'DaDa2', 	'lognorm_DADA2', 'Silva_DADA2', \
 	'Shuffle1_PhILR_Filtered_UPGMA_DADA2_blw.sqrt_enorm',\
 	'Shuffle2_PhILR_Filtered_UPGMA_DADA2_blw.sqrt_enorm', \
 	'Shuffle3_PhILR_Filtered_UPGMA_DADA2_blw.sqrt_enorm',]
-# comp_ds = ['alr_DADA2', 'clr_DADA2', 'Raw DADA2', 'lognorm_DADA2', \
+# comp_ds = ['alr_DADA2', 'clr_DADA2', 'Raw_DADA2', 'lognorm_DADA2', \
 # 	'Filtered_Silva_DADA2','Silva_DADA2', 'Filtered_IQtree', \
 # 	'Filtered_Silva_DADA2_blw.sqrt_enorm', 'Filtered_UPGMA_DADA2', \
 # 	'Filtered_UPGMA_DADA2_blw.sqrt_enorm', 'Filtered_IQtree_blw.sqrt_enorm', \
@@ -90,29 +90,31 @@ plotdata = pd.DataFrame(columns=comp_ds, index=comp_ds)
 for ds1 in comp_ds:
 	for ds2 in comp_ds:
 		if (ds1 != ds2):
-			print(f"{ds1} {ds2}")
-			ds1_means = []
-			ds2_means = []
 			for project in projects:
-				# print(f"Adding project {project}")
-				op_dir = os.path.join(home_dir, project, "output")
-				result_fpath = os.path.join(op_dir, "tables", f"sklearn_random_forest_manual_{train_percent}train.csv")
-				# print(result_fpath)
-				my_table = pd.read_csv(result_fpath, sep=',', header=0)
-				#table 1
-				ds1_table = my_table.loc[my_table["dataset"] == ds1,]
-				splits = ds1_table.columns[ds1_table.columns.str.startswith('split')].tolist()
-				ds1_means.extend(ds1_table[splits].agg(mean, axis = 1).values)
-				ds2_table = my_table.loc[my_table["dataset"] == ds2,]
-				ds2_means.extend(ds2_table[splits].agg(mean, axis = 1).values)
-			my_tpval = stats.wilcoxon(ds1_means, ds2_means,).pvalue
-			ave_diff = sum(ds1_means) - sum(ds2_means) #ds1_ave - ds2_ave
-			if ave_diff > 0:
-				plotdata.loc[ds1,ds2] = math.log10(my_tpval)
-			else:
-				plotdata.loc[ds1,ds2] = -math.log10(my_tpval)
-		else:
-			plotdata.loc[ds1,ds2] = 0
+				if (ds1 != ds2):
+					print(f"{ds1} {ds2}")
+					ds1_means = []
+					ds2_means = []
+					for project in projects:
+						# print(f"Adding project {project}")
+						op_dir = os.path.join(home_dir, project, "output")
+						result_fpath = os.path.join(op_dir, "tables", f"sklearn_random_forest_manual_{train_percent}train.csv")
+						# print(result_fpath)
+						my_table = pd.read_csv(result_fpath, sep=',', header=0)
+						#table 1
+						ds1_table = my_table.loc[my_table["dataset"] == ds1,]
+						splits = ds1_table.columns[ds1_table.columns.str.startswith('split')].tolist()
+						ds1_means.extend(ds1_table[splits].agg(mean, axis = 1).values)
+						ds2_table = my_table.loc[my_table["dataset"] == ds2,]
+						ds2_means.extend(ds2_table[splits].agg(mean, axis = 1).values)
+					my_tpval = stats.wilcoxon(ds1_means, ds2_means,).pvalue
+					ave_diff = sum(ds1_means) - sum(ds2_means) #ds1_ave - ds2_ave
+					if ave_diff > 0:
+						plotdata.loc[ds1,ds2] = math.log10(my_tpval)
+					else:
+						plotdata.loc[ds1,ds2] = -math.log10(my_tpval)
+				else:
+					plotdata.loc[ds1,ds2] = 0
 #--------------------------------------------------------------------------
 print("Generating graphic")
 #--------------------------------------------------------------------------

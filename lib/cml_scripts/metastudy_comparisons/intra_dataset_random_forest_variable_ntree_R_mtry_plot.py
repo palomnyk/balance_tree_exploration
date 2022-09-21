@@ -76,7 +76,7 @@ for project in projects:
 	result_fpath = os.path.join(op_dir, "tables", f"sklrn_randmforst_manual_0.75train_variable_ntree_R_mtry.csv")
 	print(result_fpath)
 	my_table = pd.read_csv(result_fpath, sep=',', header=0)
-	my_table = my_table[my_table["dataset"]=="DaDa2"]
+	my_table = my_table[my_table["dataset"]=="Raw_DADA2"]
 	splits = my_table.columns[my_table.columns.str.startswith('split')].tolist()
 	my_marker = my_markers[projects.index(project)]
 	for meta_d in set(my_table["metadata"].values):
@@ -103,7 +103,7 @@ for project in projects:
 	result_fpath = os.path.join(op_dir, "tables", f"sklrn_randmforst_manual_0.75train_variable_ntree_R_mtry.csv")
 	print(result_fpath)
 	my_table = pd.read_csv(result_fpath, sep=',', header=0)
-	my_table = my_table[my_table["dataset"]=="DaDa2"]
+	my_table = my_table[my_table["dataset"]=="Raw_DADA2"]
 	splits = my_table.columns[my_table.columns.str.startswith('split')].tolist()
 	my_marker = my_markers[projects.index(project)]
 	for meta_d in set(my_table["metadata"].values):

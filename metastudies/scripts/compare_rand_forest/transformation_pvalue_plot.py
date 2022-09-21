@@ -12,16 +12,13 @@ print("Loading external libraries.",flush = True)
 # --------------------------------------------------------------------------
 import os, sys
 import time
-from turtle import left
 from scipy import stats
 from statistics import mean
-from matplotlib import markers
 import math as math
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.backends.backend_pdf
-from sklearn.metrics import accuracy_score, roc_auc_score
 import argparse
 import random
 
@@ -48,7 +45,7 @@ plot_pdf_fpath = os.path.join(output_dir, "pval_acc_vs_acc_python_by_transformat
 # --------------------------------------------------------------------------
 print("Establishing other constants.", flush = True)
 # --------------------------------------------------------------------------
-comp_ds = ['alr_DADA2', 'clr_DADA2', 'DaDa2', 'Filtered_IQtree', \
+comp_ds = ['alr_DADA2', 'clr_DADA2', 'Raw_DADA2', 'Filtered_IQtree', \
 	'Filtered_IQtree_blw.sqrt_enorm', 'Filtered_Silva_DADA2', \
 	'Filtered_Silva_DADA2_blw.sqrt_enorm', 'Filtered_UPGMA_DADA2', \
 	'Filtered_UPGMA_DADA2_blw.sqrt_enorm', 'lognorm_DADA2', 'Silva_DADA2', \

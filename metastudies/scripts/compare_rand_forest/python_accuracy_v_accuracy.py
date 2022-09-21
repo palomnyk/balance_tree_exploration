@@ -43,7 +43,7 @@ print("Establishing other constants.", flush = True)
 # --------------------------------------------------------------------------
 font1 = {'family':'serif','color':'blue','size':20}
 font2 = {'family':'serif','color':'darkred','size':15}
-comp_ds = ['alr_DADA2', 'clr_DADA2', 'DaDa2', 'Filtered_IQtree', \
+comp_ds = ['alr_DADA2', 'clr_DADA2', 'Raw_DADA2', 'Filtered_IQtree', \
 	'Filtered_IQtree_blw.sqrt_enorm', 'Shuffle1_PhILR_Filtered_IQtree_blw.sqrt_enorm',\
 	'Shuffle2_PhILR_Filtered_IQtree_blw.sqrt_enorm', 'Shuffle3_PhILR_Filtered_IQtree_blw.sqrt_enorm',\
 	'Filtered_Silva_DADA2', 'Filtered_Silva_DADA2_blw.sqrt_enorm', \

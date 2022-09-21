@@ -67,7 +67,7 @@ print("Setting up tables to feed the random forest model.")
 # --------------------------------------------------------------------------
 tables = []
 tables.append(("HashSeq", hashseq_df))
-tables.append(("DaDa2", asv_table))
+tables.append(("Raw_DADA2", asv_table))
 tables.append(("lognorm_DADA2", ln_table))
 tables.append(("lognorm_HashSeq", ln_hs_tab))
 tables.append(("alr_DADA2", alr_table))

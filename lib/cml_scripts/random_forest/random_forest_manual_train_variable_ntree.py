@@ -166,7 +166,7 @@ metad_cols = range(len(meta_df.columns))
 print("Setting up tables to feed the random forest model.", flush = True)
 # --------------------------------------------------------------------------
 tables = []
-tables.append(("DaDa2",(os.path.join(output_dir, "tables", "ForwardReads_DADA2.txt"),"\t"),"r"))
+tables.append(("Raw_DADA2",(os.path.join(output_dir, "tables", "ForwardReads_DADA2.txt"),"\t"),"r"))
 # tables.append(("HashSeq", (os.path.join(output_dir,  "hashseq", "hashseq.csv"),","), "r"))
 tables.append(("lognorm_DADA2", (os.path.join(output_dir, "tables", "lognorm_dada2.csv"), ","), "y"))
 # tables.append(("lognorm_HashSeq", (os.path.join(output_dir,"tables", "lognorm_hashseq.csv"), ","), "y"))
@@ -236,7 +236,6 @@ print("Finished recording accuracy.", flush = True)
 # --------------------------------------------------------------------------
 print(f"Building scatterplot PDF.", flush = True)
 # --------------------------------------------------------------------------
-# Setup for building boxplots
 result_df = pd.read_csv(result_fpath, sep=',', header=0, index_col=0)
 metadata_cats = list(set(result_df["metadata"]))
 my_datasets = list(set(result_df["datasets"]))

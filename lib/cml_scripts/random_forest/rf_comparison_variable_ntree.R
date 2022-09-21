@@ -167,7 +167,7 @@ rf_cols <- 1:ncol(metadata)#hack so I don't have to fix this in the function
 
 
 tables <- list()
-tables[[length(tables) + 1]] <- c("DaDa2",file.path(output_dir, "tables", "ForwardReads_DADA2.txt"),"\t","r")
+tables[[length(tables) + 1]] <- c("Raw_DADA2",file.path(output_dir, "tables", "ForwardReads_DADA2.txt"),"\t","r")
 # tables[[length(tables) + 1]] <- c("lognorm_DADA2", file.path(output_dir, "tables", "lognorm_dada2.csv"), ",", "y")
 # # tables[[length(tables) + 1]] <- c("lognorm_HashSeq", file.path(output_dir,"tables", "lognorm_hashseq.csv"), ",", "y")
 # tables[[length(tables) + 1]] <- c("alr_DADA2", file.path(output_dir, "tables", "alr_asv.csv"), ",", "g")
