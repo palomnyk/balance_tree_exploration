@@ -23,36 +23,38 @@ export PYTHONUNBUFFERED=TRUE #lets print statements show up without flush=True
 module load anaconda3/2020.11
 conda activate testing_pyCaret
 python ~/git/balance_tree_exploration/lib/cml_scripts/random_forest/random_forest_manual_train.py\
-  -p Vanderbilt \
-  -a True \
-  -f patient_metadata.tsv \
-  -i Run \
-  -t 0.75
+  --project Vanderbilt \
+  --use_all_meta True \
+  --metada_fn patient_metadata.tsv \
+  --meta_index_col Run \
+  --training 0.75
 conda deactivate
 module unload anaconda3/2020.11
-# usage: sklearn_model_metrics.py [-h] [-m] [-d homedir] [-p project]
-#                                 [-a use_all_meta] [-f meta_fn] [-l delim]
-#                                 [-i meta_index_col]
+# usage: random_forest_manual_train.py [-h] [-m] [-d homedir] [-p project]
+#                                      [-a use_all_meta] [-f meta_fn] [-l delim]
+#                                      [-i meta_index_col] [-t training]
 
-# Process some integers.
+# This script runs a random forest test on various datasets.
 
 # optional arguments:
 #   -h, --help            show this help message and exit
 #   -m, --metadata_cols   Metadata columns to analyse
 #   -d homedir, --homedir homedir
-#                         dataset dir path
+#                         path to git balance treee exploration git repository
 #   -p project, --project project
 #                         project folder
 #   -a use_all_meta, --use_all_meta use_all_meta
 #                         use all metadata
-#   -f meta_fn, --metada-fn meta_fn
+#   -f meta_fn, --metada_fn meta_fn
 #                         Name of file at the top of the project folder to use
 #                         as metadata.
 #   -l delim, --delimiter delim
-#                         File delimiting symbol for metadata.
+#                         File delimiting symbol for metadata. Default is tab.
 #   -i meta_index_col, --meta_index_col meta_index_col
 #                         Name of column to use as row name for metadata
-
+#   -t training, --training training
+#                         Percentating of table to use for training. The rest
+#                         will be used for testing.
 echo ""
 echo "======================================================"
 echo "End Time   : $(date)"
