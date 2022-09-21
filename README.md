@@ -4,15 +4,15 @@
 
 ## Datasets used in this project:
 > All the datasets in the project are publicly available 16S datasets
-### Noguera-Julian
+* Noguera-Julian
   - Accession: [PRJNA307231](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA307231)
-### ~~Fodor~~
+* ~~Fodor~~
   - ~~Accession: [PRJNA391915](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA391915)~~
-### Vangay
+* Vangay
   - Accession: [PRJEB28687](https://www.ncbi.nlm.nih.gov/bioproject/PRJEB28687)
-### Jones
+* Jones
   - Accession: [PRJNA397450](https://www.ebi.ac.uk/ena/browser/view/PRJNA397450)
-### Zeller
+* Zeller
   - Accession: [PRJNA397450](https://www.ebi.ac.uk/ena/browser/view/PRJEB6070)
 
 ## Transformations used in this project
