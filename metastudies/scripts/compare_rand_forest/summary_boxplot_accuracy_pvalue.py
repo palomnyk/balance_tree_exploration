@@ -154,7 +154,7 @@ plt.axvline(x=0, color='r', label="No difference", linestyle="--")
 plt.axhline(y = math.log10(0.1), color = 'r', label="p=0.10")
 ax.legend(title="Legend", loc="center", mode="expand", framealpha=1)
 fig.tight_layout()
-print("Saving figure to pdf", flush = True)
+print(f"Saving figure to pdf at {plot_pdf_fpath}", flush = True)
 pdf.savefig( fig )
 
 print("Saving pdf", flush = True)
