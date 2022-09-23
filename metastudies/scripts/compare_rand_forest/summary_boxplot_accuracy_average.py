@@ -53,7 +53,7 @@ plot_pdf_fpath = os.path.join(output_dir, "summary_ave_acc_vs_acc_python_by_tran
 # --------------------------------------------------------------------------
 print("Establishing other constants.", flush = True)
 # --------------------------------------------------------------------------
-comp_ds = ['alr_DADA2', 'clr_DADA2', 'RawDADA2', 'lognorm_DADA2', 'Silva_DADA2', \
+comp_ds = ['alr_DADA2', 'clr_DADA2', 'raw_DADA2', 'lognorm_DADA2', 'Silva_DADA2', \
 	'Silva_DADA2_blw.sqrt_enorm', 'Shuffle1_PhILR_Silva_DADA2_blw.sqrt_enorm', \
 	'Shuffle2_PhILR_Silva_DADA2_blw.sqrt_enorm', 'Shuffle3_PhILR_Silva_DADA2_blw.sqrt_enorm', \
 	'Filtered_IQtree', 'Filtered_IQtree_blw.sqrt_enorm', \
@@ -86,9 +86,10 @@ plt.rc('axes', titlesize=50)
 # --------------------------------------------------------------------------
 print("Generating Data.", flush = True)
 # --------------------------------------------------------------------------
-all_means = []
+all_means = {}
 for ds1 in comp_ds:
 	ds1_means = []
+	print(f"running {ds1}")
 	for project in projects:
 		# print(f"Adding project {project}")
 		op_dir = os.path.join(home_dir, project, "output")
@@ -99,9 +100,10 @@ for ds1 in comp_ds:
 		ds1_table = my_table.loc[my_table["dataset"] == ds1,]
 		splits = ds1_table.columns[ds1_table.columns.str.startswith('split')].tolist()
 		ds1_means.extend(ds1_table[splits].agg(mean, axis = 1).values)
-	all_means.append(ds1_means)
-
-plotdata = pd.DataFrame(all_means, columns=comp_ds)
+	if len(ds1_means) < 1:
+		print("This one is broken")
+	all_means[ds1] = ds1_means
+plotdata = pd.DataFrame(all_means)
 
 #--------------------------------------------------------------------------
 print("Generating graphic")
@@ -135,7 +137,7 @@ plt.axvline(x=0, color='r', label="No difference", linestyle="--")
 plt.axhline(y = math.log10(0.1), color = 'r', label="p=0.10")
 ax.legend(title="Legend", loc="center", mode="expand", framealpha=1)
 fig.tight_layout()
-print("Saving figure to pdf", flush = True)
+print(f"Saving figure to pdf at {plot_pdf_fpath}", flush = True)
 pdf.savefig( fig )
 
 print("Saving pdf", flush = True)
