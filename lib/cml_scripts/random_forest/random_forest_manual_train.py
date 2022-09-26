@@ -24,7 +24,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.naive_bayes import GaussianNB
-from sklearn.metrics import accuracy_score, roc_auc_score
+from sklearn.metrics import accuracy_score, roc_auc_score, r2_score
 import argparse
 import random
 
@@ -205,11 +205,14 @@ with open(result_fpath, "w+") as fl:
 					clf = RandomForestClassifier()
 					clf.fit(pred_train, resp_train)
 					resp_pred = clf.predict(pred_test)
+					my_score = clf.score(resp_pred, resp_test)
 				else:
 					print("going to RandomForestRegressor()")
 					clf = RandomForestRegressor()
 					clf.fit(pred_train, resp_train)
-				my_accuracy[i] = clf.score(pred_test, resp_test)
+					resp_pred = clf.predict(pred_test)
+					my_score = r2_score(resp_test, resp_pred)
+				my_accuracy[i] = my_score
 				print(my_accuracy)
 			final_acc = ",".join(map(str, my_accuracy))
 			print(final_acc)
