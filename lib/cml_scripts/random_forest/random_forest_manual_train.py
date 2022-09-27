@@ -211,7 +211,7 @@ with open(result_fpath, "w+") as fl:
 					clf = RandomForestClassifier()
 					clf.fit(pred_train, resp_train)
 					resp_pred = clf.predict(pred_test)
-					my_score = clf.score(resp_pred, resp_test)
+					my_score = clf.score(pred_test, resp_test)
 				my_accuracy[i] = my_score
 				print(my_accuracy)
 			final_acc = ",".join(map(str, my_accuracy))
