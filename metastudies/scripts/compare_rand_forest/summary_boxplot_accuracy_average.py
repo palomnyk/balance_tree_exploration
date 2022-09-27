@@ -89,7 +89,7 @@ print("Generating Data.", flush = True)
 all_means = {}
 for ds1 in comp_ds:
 	ds1_means = []
-	print(f"running {ds1}")
+	print(f"Running {ds1}")
 	for project in projects:
 		# print(f"Adding project {project}")
 		op_dir = os.path.join(home_dir, project, "output")
@@ -101,10 +101,11 @@ for ds1 in comp_ds:
 		splits = ds1_table.columns[ds1_table.columns.str.startswith('split')].tolist()
 		ds1_means.extend(ds1_table[splits].agg(mean, axis = 1).values)
 	if len(ds1_means) < 1:
-		print("This one is broken")
+		print(f"There was a problem with {ds1}")
 	all_means[ds1] = ds1_means
 plotdata = pd.DataFrame(all_means)
 
+print(plotdata)
 #--------------------------------------------------------------------------
 print("Generating graphic")
 #--------------------------------------------------------------------------
@@ -133,8 +134,8 @@ for i in range(len(comp_ds)):
 	ax.scatter(0, 0, s=70, label=comp_ds[i], color="black", marker=my_markers[i])
 for i in range(len(projects)):
 	ax.scatter(0, 0, s=70, label=projects[i], color=my_colors.colors[i], marker=my_markers[0])
-plt.axvline(x=0, color='r', label="No difference", linestyle="--")
-plt.axhline(y = math.log10(0.1), color = 'r', label="p=0.10")
+# plt.axvline(x=0, color='r', label="No difference", linestyle="--")
+# plt.axhline(y = math.log10(0.1), color = 'r', label="p=0.10")
 ax.legend(title="Legend", loc="center", mode="expand", framealpha=1)
 fig.tight_layout()
 print(f"Saving figure to pdf at {plot_pdf_fpath}", flush = True)
