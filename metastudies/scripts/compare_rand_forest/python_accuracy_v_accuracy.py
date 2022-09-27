@@ -1,21 +1,21 @@
 #!/usr/bin/env python
 # Author: Aaron Yerke, aaronyerke@gmail.com
 # This is a script for comparing random forest output to pvalues
+
+print(f"""Running {__file__}.
+This is a script for comparing random forest output with pvalues.
+""")
 # --------------------------------------------------------------------------
 print("Loading external libraries.",flush = True)
 # --------------------------------------------------------------------------
-import os, sys
-import time
+import os
 from statistics import mean
-from matplotlib import markers
-import math as math
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.backends.backend_pdf
-from sklearn.metrics import accuracy_score, roc_auc_score
+from scipy.stats import linregress
 import argparse
-import random
 
 # --------------------------------------------------------------------------
 print("Reading commmandline input with optparse.", flush = True)
@@ -37,13 +37,14 @@ projects = ["Vanderbilt", "Vangay", "Zeller", "Noguera-Julian"]
 output_dir = os.path.join(home_dir, "metastudies", "output")
 assert os.path.exists(output_dir)
 plot_pdf_fpath = os.path.join(output_dir, "accuracy_vs_accuracy_python_by_transformation.pdf")
+r_sq_boxplot_pdf_fpath = os.path.join(output_dir, "rsq_accuracy_v_accuracy_py_by_transf.pdf")
 train_percent = 0.75
 # --------------------------------------------------------------------------
 print("Establishing other constants.", flush = True)
 # --------------------------------------------------------------------------
 font1 = {'family':'serif','color':'blue','size':20}
 font2 = {'family':'serif','color':'darkred','size':15}
-comp_ds = ['alr_DADA2', 'clr_DADA2', 'Raw_DADA2', 'Filtered_IQtree', \
+comp_ds = ['alr_DADA2', 'clr_DADA2', 'raw_DADA2', 'Filtered_IQtree', \
 	'Filtered_IQtree_blw.sqrt_enorm', 'Shuffle1_PhILR_Filtered_IQtree_blw.sqrt_enorm',\
 	'Shuffle2_PhILR_Filtered_IQtree_blw.sqrt_enorm', 'Shuffle3_PhILR_Filtered_IQtree_blw.sqrt_enorm',\
 	'Filtered_Silva_DADA2', 'Filtered_Silva_DADA2_blw.sqrt_enorm', \
@@ -65,6 +66,8 @@ plt.rc('xtick', labelsize=20)
 plt.rc('ytick', labelsize=20) 
 plt.rc('axes', labelsize=20) 
 plt.rc('axes', titlesize=50)
+
+r_sq = []
 for d1 in range(len(comp_ds)):
 	ds1 = comp_ds[d1]
 	print(ds1)
@@ -109,6 +112,8 @@ for d1 in range(len(comp_ds)):
 			ds2_score = {key:ds2_score[key] for key in same_keys}
 			ds1_lst = np.array(list(map(lambda x: x[0], list(ds1_score.values()))))
 			ds2_lst = np.array(list(map(lambda x: x[0], list(ds2_score.values()))))
+			slope, intercept, r_value, p_value, std_err = linregress(ds1_lst, ds2_lst)
+			r_sq.append(r_value**2)
 			a, b = np.polyfit(ds1_lst, ds2_lst, 1)
 			# print(a, b)
 			fig = plt.figure(figsize=(11,11))
@@ -125,6 +130,7 @@ for d1 in range(len(comp_ds)):
 			# plt.annotate(label, (x_lst[i], y_lst[i]))
 			ax.plot([0,1], [0,1], color = "r", label = "expected")
 			ax.plot(ds1_lst, a*ds1_lst+b, color = "green", label = "accuracy polyfit")
+			ax.text(0.1, 0.8, f"r squared: {r_value**2}", fontsize=12)
 			ax.set_xlabel(f"Accuracy {ds1}")
 			ax.set_ylabel(f"Accuracy {ds2}")
 			# ax.legend(title="Legend", loc="upper left", framealpha=1)
@@ -150,3 +156,17 @@ pdf.savefig( fig, bbox_inches='tight' )
 print("Saving pdf", flush = True)
 pdf.close()
 
+print(f"Accuracy vs accuracy R squared plots")
+pdf = matplotlib.backends.backend_pdf.PdfPages(r_sq_boxplot_pdf_fpath)
+fig = plt.figure(figsize=(11,11))
+fig.suptitle(f"Accuracy vs accuracy R squared")
+plt.subplots_adjust(bottom=0.8)
+ax = fig.add_subplot(1,1,1)
+bp = ax.boxplot(r_sq)
+fig.tight_layout()
+pdf.savefig( fig )
+
+print("Saving pdf", flush = True)
+pdf.close()
+
+print(f"{__file__} complete!")
