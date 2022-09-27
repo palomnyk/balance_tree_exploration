@@ -14,7 +14,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.backends.backend_pdf
 import matplotlib.colors as mcolors
-from pandas.api.types import is_string_dtype
+from pandas.api.types import is_numeric_dtype
 from requests import head
 from sklearn import model_selection
 from sklearn import model_selection
@@ -201,17 +201,17 @@ with open(result_fpath, "w+") as fl:
 				print(f"exp{train_percent*len(my_table)} Ptrain:{len(pred_train)}, Ptest{len(pred_test)}, rtest{len(resp_test)}, rtrain:{len(resp_train)}")
 				print(f"meta{len(meta_df)*train_percent}")
 				print(f"IN {m_c}, iter {i}")
-				if is_string_dtype(respns_var) == True:
-					clf = RandomForestClassifier()
-					clf.fit(pred_train, resp_train)
-					resp_pred = clf.predict(pred_test)
-					my_score = clf.score(resp_pred, resp_test)
-				else:
+				if is_numeric_dtype(respns_var) == True:
 					print("going to RandomForestRegressor()")
 					clf = RandomForestRegressor()
 					clf.fit(pred_train, resp_train)
 					resp_pred = clf.predict(pred_test)
 					my_score = r2_score(resp_test, resp_pred)
+				else:
+					clf = RandomForestClassifier()
+					clf.fit(pred_train, resp_train)
+					resp_pred = clf.predict(pred_test)
+					my_score = clf.score(resp_pred, resp_test)
 				my_accuracy[i] = my_score
 				print(my_accuracy)
 			final_acc = ",".join(map(str, my_accuracy))
