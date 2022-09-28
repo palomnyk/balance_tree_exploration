@@ -166,7 +166,7 @@ tables.append(("clr_DADA2", (os.path.join(output_dir, "tables", "clr_asv.csv"), 
 # tables.append(("clr_HashSeq", (os.path.join(output_dir,"tables", "clr_hashseq.csv"), ","), "m"))
 tables.append(("Silva_DADA2", (os.path.join(output_dir,"tables", "Silva_DADA2", "Silva_DADA2.csv"), ","), "white"))
 tables = add_PhILR_dfs_to_table(tables, os.path.join(output_dir, "tables", "Silva_DADA2"), "Silva_DADA2", color = "#050598")
-tables = add_random_tree_PhILRs_to_table(tables, os.path.join(output_dir, "tables", "Silva_DADA2"), "Silva_DADA2", color = "#1474aa", num_rand_trees=5)
+tables = add_random_tree_PhILRs_to_table(tables, os.path.join(output_dir, "tables", "Silva_DADA2"), "Silva_DADA2", color = "#f7d8a0", num_rand_trees=5)
 tables.append(("Filtered_Silva_DADA2", (os.path.join(output_dir,"tables", "Filtered_Silva_DADA2", "Filtered_Silva_DADA2.csv"), ","), "white"))
 tables = add_PhILR_dfs_to_table(tables, os.path.join(output_dir, "tables", "Filtered_Silva_DADA2"), "Filtered_Silva_DADA2", color = "#050598")
 tables = add_random_tree_PhILRs_to_table(tables, os.path.join(output_dir, "tables", "Filtered_Silva_DADA2"), "Filtered_Silva_DADA2", color = "#f7d8a0", num_rand_trees=5)
