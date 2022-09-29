@@ -56,23 +56,22 @@ print("Establishing other constants.", flush = True)
 comp_ds = ['alr_DADA2', 'clr_DADA2', 'raw_DADA2', 'lognorm_DADA2', 'Silva_DADA2', \
 	'Silva_DADA2_blw.sqrt_enorm', 'Shuffle1_PhILR_Silva_DADA2_blw.sqrt_enorm', \
 	'Shuffle2_PhILR_Silva_DADA2_blw.sqrt_enorm', 'Shuffle3_PhILR_Silva_DADA2_blw.sqrt_enorm', \
-	'Filtered_IQtree', 'Filtered_IQtree_blw.sqrt_enorm', \
-	'Shuffle1_PhILR_Filtered_IQtree_blw.sqrt_enorm',\
-	'Shuffle2_PhILR_Filtered_IQtree_blw.sqrt_enorm', 'Shuffle3_PhILR_Filtered_IQtree_blw.sqrt_enorm',\
+	'Shuffle4_PhILR_Silva_DADA2_blw.sqrt_enorm', 'Shuffle5_PhILR_Silva_DADA2_blw.sqrt_enorm', \
 	'Filtered_Silva_DADA2', 'Filtered_Silva_DADA2_blw.sqrt_enorm', \
 	'Shuffle1_PhILR_Filtered_Silva_DADA2_blw.sqrt_enorm', \
 	'Shuffle2_PhILR_Filtered_Silva_DADA2_blw.sqrt_enorm', \
-	'Shuffle3_PhILR_Filtered_Silva_DADA2_blw.sqrt_enorm',\
-	'Filtered_UPGMA_DADA2', 'Filtered_UPGMA_DADA2_blw.sqrt_enorm', \
-	'Shuffle1_PhILR_Filtered_UPGMA_DADA2_blw.sqrt_enorm',\
-	'Shuffle2_PhILR_Filtered_UPGMA_DADA2_blw.sqrt_enorm', \
-	'Shuffle3_PhILR_Filtered_UPGMA_DADA2_blw.sqrt_enorm',]
-# comp_ds = ['alr_DADA2', 'clr_DADA2', 'Raw_DADA2', 'lognorm_DADA2', \
-# 	'Filtered_Silva_DADA2','Silva_DADA2', 'Filtered_IQtree', \
-# 	'Filtered_Silva_DADA2_blw.sqrt_enorm', 'Filtered_UPGMA_DADA2', \
-# 	'Filtered_UPGMA_DADA2_blw.sqrt_enorm', 'Filtered_IQtree_blw.sqrt_enorm', \
-# 	'Silva_DADA2_blw.sqrt_enorm']
-my_colors = ['white', 'white', 'white', 'y', 'white', '#050598', '#f7d8a0', '#f7d8a0', '#f7d8a0', 'white', '#050598', '#f7d8a0', '#f7d8a0', '#f7d8a0', 'white', '#050598', '#f7d8a0', '#f7d8a0', '#f7d8a0', 'white', '#050598', '#f7d8a0', '#f7d8a0', '#f7d8a0']
+	'Shuffle3_PhILR_Filtered_Silva_DADA2_blw.sqrt_enorm', 'Shuffle4_PhILR_Filtered_Silva_DADA2_blw.sqrt_enorm', \
+	'Shuffle5_PhILR_Filtered_Silva_DADA2_blw.sqrt_enorm', 'Filtered_UPGMA_DADA2', \
+	'Filtered_UPGMA_DADA2_blw.sqrt_enorm', 'Shuffle1_PhILR_Filtered_UPGMA_DADA2_blw.sqrt_enorm', \
+	'Shuffle2_PhILR_Filtered_UPGMA_DADA2_blw.sqrt_enorm', 'Shuffle3_PhILR_Filtered_UPGMA_DADA2_blw.sqrt_enorm', \
+	'Shuffle4_PhILR_Filtered_UPGMA_DADA2_blw.sqrt_enorm', 'Shuffle5_PhILR_Filtered_UPGMA_DADA2_blw.sqrt_enorm', 'Filtered_IQtree', \
+	'Filtered_IQtree_blw.sqrt_enorm', 'Shuffle1_PhILR_Filtered_IQtree_blw.sqrt_enorm', 'Shuffle2_PhILR_Filtered_IQtree_blw.sqrt_enorm',\
+	'Shuffle3_PhILR_Filtered_IQtree_blw.sqrt_enorm', 'Shuffle4_PhILR_Filtered_IQtree_blw.sqrt_enorm', 'Shuffle5_PhILR_Filtered_IQtree_blw.sqrt_enorm']
+
+my_colors = ['white', 'white', 'white', 'y', 'white', '#050598', '#f7d8a0', '#f7d8a0', \
+'#f7d8a0', '#f7d8a0', '#f7d8a0', 'white', '#050598', '#f7d8a0', '#f7d8a0', '#f7d8a0', \
+'#f7d8a0', '#f7d8a0', 'white', '#050598', '#f7d8a0', '#f7d8a0', '#f7d8a0', '#f7d8a0', \
+'#f7d8a0', 'white', '#050598', '#f7d8a0', '#f7d8a0', '#f7d8a0', '#f7d8a0', '#f7d8a0']
 my_markers = "o"*len(comp_ds)
 # my_markers = ["o", "s", "P", "v", "X", "x", "1", "*", "+", "_", "D", "|"]
 train_percent = 0.75
@@ -129,20 +128,6 @@ ax.axhline(y = plotdata.stack().median(), color = "g", label="median")
 fig.tight_layout()
 print("Saving figure to pdf", flush = True)
 pdf.savefig( fig )
-
-# print("Making seperate legend.")
-# fig.suptitle(f"Metastudy {train_percent}training {ds1} vs others by accuracy, Python only")
-# ax = fig.add_subplot(1,1,1)
-# for i in range(len(comp_ds)):
-# 	ax.scatter(0, 0, s=70, label=comp_ds[i], color="black", marker=my_markers[i])
-# for i in range(len(projects)):
-# 	ax.scatter(0, 0, s=70, label=projects[i], color=my_colors.colors[i], marker=my_markers[0])
-# # plt.axvline(x=0, color='r', label="No difference", linestyle="--")
-# # plt.axhline(y = math.log10(0.1), color = 'r', label="p=0.10")
-# ax.legend(title="Legend", loc="center", mode="expand", framealpha=1)
-# fig.tight_layout()
-# print(f"Saving figure to pdf at {plot_pdf_fpath}", flush = True)
-# pdf.savefig( fig )
 
 print("Saving pdf", flush = True)
 pdf.close()
