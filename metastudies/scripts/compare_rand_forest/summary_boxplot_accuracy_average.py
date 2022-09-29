@@ -72,7 +72,7 @@ comp_ds = ['alr_DADA2', 'clr_DADA2', 'raw_DADA2', 'lognorm_DADA2', 'Silva_DADA2'
 # 	'Filtered_Silva_DADA2_blw.sqrt_enorm', 'Filtered_UPGMA_DADA2', \
 # 	'Filtered_UPGMA_DADA2_blw.sqrt_enorm', 'Filtered_IQtree_blw.sqrt_enorm', \
 # 	'Silva_DADA2_blw.sqrt_enorm']
-my_colors = plt.cm.get_cmap("tab10", 10)
+my_colors = ['white', 'white', 'white', 'y', 'white', '#050598', '#f7d8a0', '#f7d8a0', '#f7d8a0', 'white', '#050598', '#f7d8a0', '#f7d8a0', '#f7d8a0', 'white', '#050598', '#f7d8a0', '#f7d8a0', '#f7d8a0', 'white', '#050598', '#f7d8a0', '#f7d8a0', '#f7d8a0']
 my_markers = "o"*len(comp_ds)
 # my_markers = ["o", "s", "P", "v", "X", "x", "1", "*", "+", "_", "D", "|"]
 train_percent = 0.75
@@ -83,6 +83,7 @@ plt.rc('xtick', labelsize=20)
 plt.rc('ytick', labelsize=20) 
 plt.rc('axes', labelsize=20) 
 plt.rc('axes', titlesize=50)
+median_props = {"color" : "red", "linewidth" : 3}
 # --------------------------------------------------------------------------
 print("Generating Data.", flush = True)
 # --------------------------------------------------------------------------
@@ -99,47 +100,49 @@ for ds1 in comp_ds:
 		#table 1
 		ds1_table = my_table.loc[my_table["dataset"] == ds1,]
 		splits = ds1_table.columns[ds1_table.columns.str.startswith('split')].tolist()
-		ds1_means.extend(ds1_table[splits].agg(mean, axis = 1).values)
+		my_means = ds1_table[splits].agg(mean, axis = 1).values
+		# my_means = [0 if x < 0 else x for x in my_means]
+		ds1_means.extend(my_means)
 	if len(ds1_means) < 1:
 		print(f"There was a problem with {ds1}")
 	all_means[ds1] = ds1_means
 plotdata = pd.DataFrame(all_means)
 
-print(plotdata)
+print(f"My mean: {plotdata.mean()}")
 #--------------------------------------------------------------------------
 print("Generating graphic")
 #--------------------------------------------------------------------------
-fig = plt.figure(figsize=(11,11))
+fig = plt.figure(figsize=(11,19))
 fig.suptitle(f"Metastudy {train_percent}training each dataset vs others by accuracy, Sklearn RF")
 plt.subplots_adjust(bottom=0.8, left=0.8)
 ax = fig.add_subplot(1,1,1)
-ax.boxplot(plotdata, labels=plotdata.columns, showfliers=False)
+# ax.boxplot(plotdata, labels=plotdata.columns, showfliers=False, medianprops=median_props)
 ax.set_xticklabels(labels = plotdata.columns, rotation=90)
 # plt.annotate(label, (x_lst[i], y_lst[i]))
 ax.set_xlabel(f"Transformations")
 ax.set_ylabel(f"Average accuracy for each metadata feature")
 # ax.legend(loc="upper center", framealpha=0.1, prop={'size': 8})
-for i in range(len(plotdata.columns)):
-	y = plotdata.iloc[:,i]
-	x = np.random.normal(1+i, 0.04, size=len(y))
-	ax.plot(x, y, "bo", alpha=0.5)
+bp = ax.boxplot(plotdata, patch_artist = True, labels=plotdata.columns,showfliers=False, medianprops=median_props)
+for patch, color in zip(bp['boxes'], my_colors):
+	patch.set_facecolor(color)
+ax.axhline(y = plotdata.stack().median(), color = "g", label="median")
 fig.tight_layout()
 print("Saving figure to pdf", flush = True)
 pdf.savefig( fig )
 
-print("Making seperate legend.")
-fig.suptitle(f"Metastudy {train_percent}training {ds1} vs others by accuracy, Python only")
-ax = fig.add_subplot(1,1,1)
-for i in range(len(comp_ds)):
-	ax.scatter(0, 0, s=70, label=comp_ds[i], color="black", marker=my_markers[i])
-for i in range(len(projects)):
-	ax.scatter(0, 0, s=70, label=projects[i], color=my_colors.colors[i], marker=my_markers[0])
-# plt.axvline(x=0, color='r', label="No difference", linestyle="--")
-# plt.axhline(y = math.log10(0.1), color = 'r', label="p=0.10")
-ax.legend(title="Legend", loc="center", mode="expand", framealpha=1)
-fig.tight_layout()
-print(f"Saving figure to pdf at {plot_pdf_fpath}", flush = True)
-pdf.savefig( fig )
+# print("Making seperate legend.")
+# fig.suptitle(f"Metastudy {train_percent}training {ds1} vs others by accuracy, Python only")
+# ax = fig.add_subplot(1,1,1)
+# for i in range(len(comp_ds)):
+# 	ax.scatter(0, 0, s=70, label=comp_ds[i], color="black", marker=my_markers[i])
+# for i in range(len(projects)):
+# 	ax.scatter(0, 0, s=70, label=projects[i], color=my_colors.colors[i], marker=my_markers[0])
+# # plt.axvline(x=0, color='r', label="No difference", linestyle="--")
+# # plt.axhline(y = math.log10(0.1), color = 'r', label="p=0.10")
+# ax.legend(title="Legend", loc="center", mode="expand", framealpha=1)
+# fig.tight_layout()
+# print(f"Saving figure to pdf at {plot_pdf_fpath}", flush = True)
+# pdf.savefig( fig )
 
 print("Saving pdf", flush = True)
 pdf.close()
