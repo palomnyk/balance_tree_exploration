@@ -143,7 +143,7 @@ for philr_group in philr_groups:
 		fl.write("\n")
 		for pw in philr_part_weights:
 			for iw in philr_ilr_weights:
-				table_fn = f"{philr_dir}_{iw}_{pw}.csv"
+				table_fn = f"{philr_group}_{iw}_{pw}.csv"
 				my_df = pd.read_csv(os.path.join(philr_dir, table_fn), sep=',', header=0, index_col=0)
 				meta_df = meta_df.loc[list(my_df.index.values)]#drops rows from metadata that aren't in my_df
 				assert list(my_df.index.values) == list(meta_df.index.values) #making sure I'm indexing correctly
