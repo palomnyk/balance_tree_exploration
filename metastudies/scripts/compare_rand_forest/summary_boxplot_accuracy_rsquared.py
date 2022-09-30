@@ -20,14 +20,11 @@ print("Loading external libraries.",flush = True)
 import os, sys
 from scipy import stats
 from statistics import mean
-import math as math
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from matplotlib.patches import Rectangle
 import matplotlib.backends.backend_pdf
 import argparse
-import random
 from scipy.stats import linregress
 
 # --------------------------------------------------------------------------
@@ -49,32 +46,31 @@ home_dir = os.path.expanduser(options.homedir)
 projects = ["Vanderbilt", "Vangay", "Zeller", "Noguera-Julian"]
 output_dir = os.path.join(home_dir, "metastudies", "output")
 assert os.path.exists(output_dir)
-plot_pdf_fpath = os.path.join(output_dir, "r_summary_pval_acc_vs_acc_python_by_transformation.pdf")
+plot_pdf_fpath = os.path.join(output_dir, "r_sq_summary_pval_acc_vs_acc_python_by_transformation.pdf")
 # --------------------------------------------------------------------------
 print("Establishing other constants.", flush = True)
 # --------------------------------------------------------------------------
-comp_ds = ['alr_DADA2', 'clr_DADA2', 'RawDADA2', 'lognorm_DADA2', 'Silva_DADA2', \
+comp_ds = ['alr_DADA2', 'clr_DADA2', 'raw_DADA2', 'lognorm_DADA2', 'Silva_DADA2', \
 	'Silva_DADA2_blw.sqrt_enorm', 'Shuffle1_PhILR_Silva_DADA2_blw.sqrt_enorm', \
 	'Shuffle2_PhILR_Silva_DADA2_blw.sqrt_enorm', 'Shuffle3_PhILR_Silva_DADA2_blw.sqrt_enorm', \
-	'Filtered_IQtree', 'Filtered_IQtree_blw.sqrt_enorm', \
-	'Shuffle1_PhILR_Filtered_IQtree_blw.sqrt_enorm',\
-	'Shuffle2_PhILR_Filtered_IQtree_blw.sqrt_enorm', 'Shuffle3_PhILR_Filtered_IQtree_blw.sqrt_enorm',\
 	'Filtered_Silva_DADA2', 'Filtered_Silva_DADA2_blw.sqrt_enorm', \
 	'Shuffle1_PhILR_Filtered_Silva_DADA2_blw.sqrt_enorm', \
 	'Shuffle2_PhILR_Filtered_Silva_DADA2_blw.sqrt_enorm', \
-	'Shuffle3_PhILR_Filtered_Silva_DADA2_blw.sqrt_enorm',\
+	'Shuffle3_PhILR_Filtered_Silva_DADA2_blw.sqrt_enorm', \
 	'Filtered_UPGMA_DADA2', 'Filtered_UPGMA_DADA2_blw.sqrt_enorm', \
-	'Shuffle1_PhILR_Filtered_UPGMA_DADA2_blw.sqrt_enorm',\
+	'Shuffle1_PhILR_Filtered_UPGMA_DADA2_blw.sqrt_enorm', \
 	'Shuffle2_PhILR_Filtered_UPGMA_DADA2_blw.sqrt_enorm', \
-	'Shuffle3_PhILR_Filtered_UPGMA_DADA2_blw.sqrt_enorm',]
-# comp_ds = ['alr_DADA2', 'clr_DADA2', 'Raw_DADA2', 'lognorm_DADA2', \
-# 	'Filtered_Silva_DADA2','Silva_DADA2', 'Filtered_IQtree', \
-# 	'Filtered_Silva_DADA2_blw.sqrt_enorm', 'Filtered_UPGMA_DADA2', \
-# 	'Filtered_UPGMA_DADA2_blw.sqrt_enorm', 'Filtered_IQtree_blw.sqrt_enorm', \
-# 	'Silva_DADA2_blw.sqrt_enorm']
-my_colors = plt.cm.get_cmap("tab10", 10)
-my_markers = "o"*len(comp_ds)
-# my_markers = ["o", "s", "P", "v", "X", "x", "1", "*", "+", "_", "D", "|"]
+	'Shuffle3_PhILR_Filtered_UPGMA_DADA2_blw.sqrt_enorm', \
+	'Filtered_IQtree', 'Filtered_IQtree_blw.sqrt_enorm', \
+	'Shuffle1_PhILR_Filtered_IQtree_blw.sqrt_enorm', \
+	'Shuffle2_PhILR_Filtered_IQtree_blw.sqrt_enorm',\
+	'Shuffle3_PhILR_Filtered_IQtree_blw.sqrt_enorm']
+
+my_colors = ['white', 'white', 'white', 'y', 'white', '#050598', \
+'#f7d8a0', '#f7d8a0', '#f7d8a0', 'white', '#050598', '#f7d8a0', \
+'#f7d8a0', '#f7d8a0', 'white', '#050598', '#f7d8a0', '#f7d8a0', \
+'#f7d8a0', 'white', '#050598', '#f7d8a0', '#f7d8a0', '#f7d8a0']
+
 train_percent = 0.75
 pdf = matplotlib.backends.backend_pdf.PdfPages(plot_pdf_fpath)
 #set font sizes
@@ -83,6 +79,7 @@ plt.rc('xtick', labelsize=20)
 plt.rc('ytick', labelsize=20) 
 plt.rc('axes', labelsize=20) 
 plt.rc('axes', titlesize=50)
+median_props = {"color" : "red", "linewidth" : 3}
 # --------------------------------------------------------------------------
 print("Generating Data.", flush = True)
 # --------------------------------------------------------------------------
@@ -109,17 +106,17 @@ for ds1 in comp_ds:
 						ds2_means.extend(ds2_table[splits].agg(mean, axis = 1).values)
 					slope, intercept, r_value, p_value, std_err = linregress(ds1_means, ds2_means)
 					r_sq = r_value**2
-					plotdata.loc[ds1,ds2] = r_value
+					plotdata.loc[ds1,ds2] = r_sq
 				else:
 					plotdata.loc[ds1,ds2] = 0
 #--------------------------------------------------------------------------
 print("Generating graphic")
 #--------------------------------------------------------------------------
 fig = plt.figure(figsize=(11,11))
-fig.suptitle(f"Metastudy {train_percent}training each dataset vs others by R value, Sklearn RF")
+fig.suptitle(f"Metastudy {train_percent}training each dataset vs others by slope, Sklearn RF")
 plt.subplots_adjust(bottom=0.8, left=0.8)
 ax = fig.add_subplot(1,1,1)
-ax.boxplot(plotdata, labels=plotdata.columns, showfliers=False)
+ax.boxplot(plotdata, labels=plotdata.columns, showfliers=False, medianprops=median_props)
 ax.set_xticklabels(labels = plotdata.columns, rotation=90)
 # plt.annotate(label, (x_lst[i], y_lst[i]))
 ax.set_xlabel(f"Tranformations")
@@ -129,28 +126,14 @@ ax.axhline(y = plotdata.stack().median(), color = "g", label="median")
 for i in range(len(plotdata.columns)):
 	y = plotdata.iloc[:,i]
 	x = np.random.normal(1+i, 0.04, size=len(y))
-	ax.plot(x, y, "bo", alpha=0.5)
+	ax.plot(x, y, color=my_colors[i], marker=".", alpha=0.5)
 fig.tight_layout()
 print("Saving figure to pdf", flush = True)
-pdf.savefig( fig )
-
-print("Making seperate legend.")
-fig.suptitle(f"Metastudy {train_percent}training {ds1} vs others by accuracy, Python only")
-ax = fig.add_subplot(1,1,1)
-for i in range(len(comp_ds)):
-	ax.scatter(0, 0, s=70, label=comp_ds[i], color="black", marker=my_markers[i])
-for i in range(len(projects)):
-	ax.scatter(0, 0, s=70, label=projects[i], color=my_colors.colors[i], marker=my_markers[0])
-# plt.axvline(x=0, color='r', label="No difference", linestyle="--")
-plt.axhline(y = math.log10(0.1), color = 'r', label="p=0.10")
-ax.legend(title="Legend", loc="center", mode="expand", framealpha=1)
-fig.tight_layout()
-print(f"Saving figure to pdf at {plot_pdf_fpath}", flush = True)
 pdf.savefig( fig )
 
 print("Saving pdf", flush = True)
 pdf.close()
 
-plotdata.to_csv(os.path.join(home_dir,"metastudies","output","summary_pvalue_plot.csv"))
+plotdata.to_csv(os.path.join(home_dir,"metastudies","output","summary_r_sq_plot.csv"))
 
 print(f"{__file__} complete!")
