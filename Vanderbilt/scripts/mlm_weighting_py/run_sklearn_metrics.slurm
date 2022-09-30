@@ -18,6 +18,8 @@ echo Job: $SLURM_JOB_NAME with ID $SLURM_JOB_ID
 echo Running on host: `hostname`
 echo Using $SLURM_NTASKS processors across $SLURM_NNODES nodes
 
+export PYTHONUNBUFFERED=TRUE #lets print statements show up without flush=True
+
 module load anaconda3/2020.11
 conda activate testing_pyCaret
 srun python ~/git/balance_tree_exploration/lib/cml_scripts/mlm_metrics/sklearn_model_metrics.py\
