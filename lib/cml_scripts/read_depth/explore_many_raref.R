@@ -51,14 +51,13 @@ option_list <- list(
 ); 
 
 opt_parser <- optparse::OptionParser(option_list=option_list);
-
 opt <- optparse::parse_args(opt_parser);
 
 print(opt)
 
 print("Establishing directory layout and other constants.")
 home_dir <- opt$homedir
-project <- opt$project
+project <- "Vanderbilt"
 output_dir <- file.path(home_dir, project, 'output')
 setwd(file.path(home_dir))
 
@@ -72,20 +71,23 @@ asv_table <- readRDS(file.path(output_dir, "r_objects", "ForwardReads_DADA2.rds"
 ref_ps <- readRDS(file.path(output_dir, "r_objects", "ref_tree_phyloseq_obj.rds"))
 
 my_ds_names <- c( "rarefied counts table", "clr", "alr", "lognorm", "PhILR Silva Tree", "DESeq2", "ALDEx2.clr")
+my_ds_names <- c( "rarefied counts table", "clr")
 
-total_seqs <- rowSums(asv_table)#read depth
-total_seqs <- data.frame(total_seqs, row.names = row.names(asv_table))
+total_seqs <- base::rowSums(asv_table)#read depth
+total_seqs <- base::data.frame(total_seqs, row.names = row.names(asv_table))
 median_depth <- stats::median(total_seqs$total_seqs)
-mean_depth <- ceiling(base::mean(total_seqs$total_seqs))
+mean_depth <- base::ceiling(base::mean(total_seqs$total_seqs))
 max_depth <- base::max(total_seqs$total_seqs)
 min_depth <- base::min(total_seqs$total_seqs)
+p75 <- base::ceiling(max_depth*0.75)
+third_depth <- base::sort(total_seqs$total_seqs, decreasing = TRUE)[3]
 print(paste("mean:", mean_depth, "median:", median_depth))
 
-raref_levels <- seq(from = min_depth, to = max_depth, length.out = 11)
+raref_levels <- seq(from = min_depth, to = p75, length.out = 10)
 print("rarefaction levels")
 print(raref_levels)
 
-mds_depth <- 5
+mds_depth <- 3
 
 kend <- vector(mode = "numeric", length = length(my_ds_names) * length(raref_levels) * mds_depth)
 perma_r2 <- vector(mode = "numeric", length = length(my_ds_names) * length(raref_levels) * mds_depth)
@@ -104,8 +106,11 @@ counter <- 1
 for(s in 1:length(raref_levels)){
   seq_d <- raref_levels[s]#new read depth
   rd_filt_asv <- asv_table[total_seqs$total_seqs >= seq_d,]#dataset 1 (read depth filtered asv)
+  print(paste("Iteration:", s, "Cut off is", seq_d, "Nrow:", nrow(rd_filt_asv)))
   rd_filt_asv <- data.frame(vegan::rrarefy(rd_filt_asv, seq_d))#dataset 1 (read depth filtered asv)
   rd_filt_rowSums <- base::rowSums(rd_filt_asv)
+  print("rd_filt_rowSums")
+  print(length(rd_filt_rowSums))
   print(paste("rd_filt_asv dim:", paste(dim(rd_filt_asv))))
   if (nrow(rd_filt_asv > 2)){
     safe_rns <- intersect(row.names(ref_ps@otu_table), row.names(rd_filt_asv)) #rows for this iterate
@@ -115,35 +120,36 @@ for(s in 1:length(raref_levels)){
     my_zeros <- apply(rd_filt_asv, 2, function(x) {
       return(sum(x == 0))
     })
-    alr_col <- which(my_zeros == min(my_zeros))[1]
-    ##------------------------------------------------------------------##
-    my_alr <- as.data.frame(rgr::alr(as.matrix(rd_filt_asv + 1), j = as.numeric(alr_col)))#dataset 3
-    ##-Update philr tree------------------------------------------------##
-    new_tree <- phyloseq::prune_taxa(colnames(rd_filt_asv), ref_ps@phy_tree)#update tree for new phyloseq obj
-    new_ref_ps <- phyloseq::prune_samples(safe_rns, ref_ps) #remove non-safe rows from ps
-    new_ref_ps <- munge_ref_ps(new_ref_ps)
-    print(paste("new dim ref ps:", dim(data.frame(new_ref_ps@otu_table))))
-    ##------------------------------------------------------------------##
-    #create DESeq2 dtaset from new ref ps
-    new_DESeq2 <- phyloseq::phyloseq_to_deseq2(new_ref_ps, design= ~ 1)#dataset 5
-    new_DESeq2 <- DESeq2::estimateSizeFactors(new_DESeq2)
-    new_DESeq2 <- t(DESeq2::counts(new_DESeq2, normalized=T))
+    # alr_col <- which(my_zeros == min(my_zeros))[1]
+    # ##------------------------------------------------------------------##
+    # my_alr <- as.data.frame(rgr::alr(as.matrix(rd_filt_asv + 1), j = as.numeric(alr_col)))#dataset 3
+    # ##-Update philr tree------------------------------------------------##
+    # new_tree <- phyloseq::prune_taxa(colnames(rd_filt_asv), ref_ps@phy_tree)#update tree for new phyloseq obj
+    # new_ref_ps <- phyloseq::prune_samples(safe_rns, ref_ps) #remove non-safe rows from ps
+    # new_ref_ps <- munge_ref_ps(new_ref_ps)
+    # print(paste("new dim ref ps:", dim(data.frame(new_ref_ps@otu_table))))
+    # ##------------------------------------------------------------------##
+    # #create DESeq2 dtaset from new ref ps
+    # new_DESeq2 <- phyloseq::phyloseq_to_deseq2(new_ref_ps, design= ~ 1)#dataset 5
+    # new_DESeq2 <- DESeq2::estimateSizeFactors(new_DESeq2)
+    # new_DESeq2 <- t(DESeq2::counts(new_DESeq2, normalized=T))
+    # 
+    # print(paste("new DSeq:", paste(dim(new_DESeq2))))
+    # 
+    # ref_philr <- philr::philr(new_ref_ps@otu_table, new_ref_ps@phy_tree,
+    #                           part.weights='enorm.x.gm.counts',
+    #                           ilr.weights='blw.sqrt')#dataset 4
+    # print(paste("made new philr", dim(as.data.frame(ref_philr))))
+    # 
+    # ln_asv <- lognorm(rd_filt_asv)#dataset 6
+    # 
+    # ald <- ALDEx2::aldex.clr(rd_filt_asv, mc.samples=12, denom="all", verbose=F)
+    # ald <- data.frame(ald@analysisData)#dataset 7
+    # print(paste("size of ald:", object.size(ald)))
+    # print(paste("ald dim:", paste(dim(ald))))
     
-    print(paste("new DSeq:", paste(dim(new_DESeq2))))
-    
-    ref_philr <- philr::philr(new_ref_ps@otu_table, new_ref_ps@phy_tree,
-                              part.weights='enorm.x.gm.counts',
-                              ilr.weights='blw.sqrt')#dataset 4
-    print(paste("made new philr", dim(as.data.frame(ref_philr))))
-    
-    ln_asv <- lognorm(rd_filt_asv)#dataset 6
-    
-    ald <- ALDEx2::aldex.clr(rd_filt_asv, mc.samples=12, denom="all", verbose=F)
-    ald <- data.frame(ald@analysisData)#dataset 7
-    print(paste("size of ald:", object.size(ald)))
-    print(paste("ald dim:", paste(dim(ald))))
-    
-    my_datasets <- list(rd_filt_asv, my_clr, my_alr, ln_asv, ref_philr, new_DESeq2, ald)
+    # my_datasets <- list(rd_filt_asv, my_clr, my_alr, ln_asv, ref_philr, new_DESeq2, ald)
+    my_datasets <- list(rd_filt_asv, my_clr)
     
     print(paste("finished seq depth filter:", s))
     

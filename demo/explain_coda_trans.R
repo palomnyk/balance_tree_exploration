@@ -32,7 +32,8 @@ g.rowMeans <- function(y, p=rep(1, nrow(y))){
 
 ##-Load Depencencies------------------------------------------------##
 if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
-if (!requireNamespace("ALDEx2", quietly = TRUE)) BiocManager::install("ALDEx2")
+# if (!requireNamespace("ALDEx2", quietly = TRUE)) BiocManager::install("ALDEx2")
+# library("ALDEx2")
 if (!require("RColorBrewer")) install.packages("RColorBrewer")
 library("RColorBrewer")
 library("compositions")
@@ -41,7 +42,6 @@ library("phyloseq")
 # library("DESeq2")
 library("philr")
 library("ape")
-# library("ALDEx2")
 library("ggplot2")
 library("ape")
 
@@ -53,106 +53,96 @@ output_dir <- file.path(home_dir, project, 'output')
 setwd(file.path(home_dir))
 
 ##-Functions--------------------------------------------------------##
-source(file.path(home_dir, "r_libraries", "statistical_functions.R"))
-source(file.path(home_dir, "r_libraries", "table_manipulations.R"))
+source(file.path(home_dir, "lib", "statistical_functions.R"))
+source(file.path(home_dir, "lib", "table_manipulations.R"))
 
 ##-Import tables and data preprocessing-----------------------------##
 
 # The palette with black:
-cbbPalette <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#0000000")
+cbbPalette <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#000000")
 
 
 ##-Create demo data-------------------------------------------------##
 set.seed(77)
 samp_size <- 8
+alr_denom <- samp_size
 raw_reads <- base::sample(0:100, size=samp_size, replace = T)
-names(raw_reads) <- letters[1:samp_size]
-alr_reads <- compositions::alr(raw_reads)
-print(log((raw_reads[1]/raw_reads[8])))
+names(raw_reads) <- cbbPalette
+alr_reads <- compositions::alr(raw_reads, ivar=alr_denom)
+##------------------------------------------------------------------##
+print(paste0("The alr denominator is index ", alr_denom, " and the raw read valule is ", raw_reads[alr_denom], "."))
+##------------------------------------------------------------------##
+print(paste0("Manual check of first value of alr transform: ", log((raw_reads[1]/raw_reads[alr_denom])) == alr_reads[1],"."))
+##------------------------------------------------------------------##
 
 clr_reads <- compositions::clr(raw_reads)
-names(clr_reads) <- names(raw_reads)
-
 ##-Test the testing data----------------------------------------------##
 
-n_alr_reads <- c()
+n_alr_reads <- raw_reads[! raw_reads %in% raw_reads[alr_denom]]
 
 for(i in 1:length(raw_reads)-1){
-  n_alr_reads[i] <- log(raw_reads[i]/raw_reads[8])
-  names(n_alr_reads)[i] <- names(raw_reads)[i]
+  n_alr_reads[i] <- log(n_alr_reads[i]/raw_reads[alr_denom])
 }
 
+##------------------------------------------------------------------##
+print(paste0("Another check of alr transform: ",base::identical(alr_reads, n_alr_reads),"."))
+##------------------------------------------------------------------##
+
+##------------------------------------------------------------------##
+print(paste0("Check of clr transform (these should all be the same):"))
+##------------------------------------------------------------------##
 for(i in 1:length(raw_reads)){
-  print(paste( log((raw_reads[i]/compositions::geometricmean(raw_reads))), 
-               raw_reads[i] ))
+  print(paste( log((raw_reads[i]/compositions::geometricmean(raw_reads))), clr_reads[i] ))
 }
-
-ilr_reads <- compositions::ilr(raw_reads)
-test <- compositions::ilr(1:3)
-test <- compositions::alr(raw_reads[1:2])
-
 
 ##-Make some graphs-------------------------------------------------##
 palette( RColorBrewer::brewer.pal(8,"Dark2") )
 
+##------------------------------------------------------------------##
+print(paste0("Finding min and max for graphs to keep them on the same scale."))
+##------------------------------------------------------------------##
+min_y <- min(c(raw_reads,alr_reads,clr_reads))
+max_y <- max(c(raw_reads,alr_reads,clr_reads))
+#I ultimately decided not to use min/max y as I didn't like the aesthetic. Might go back later.
+make_dot_plots <- function(named_num_vec, 
+                           title_text, 
+                           pdf_name,
+                           min_y = min_y,
+                           max_y = max_y) {
+  dat <- data.frame("data" = as.numeric(named_num_vec), 
+                    "colrs" = names(named_num_vec),
+                    "x_ax" = rep(1,length(named_num_vec)))
+  g <- ggplot2::ggplot(data = dat,
+                       aes(x=x_ax, y=data, col=colrs)) +
+    ggplot2::geom_point(show.legend = FALSE, size = 5) +
+    # ggplot2::scale_color_brewer(palette="Dark2") +
+    ggplot2::ggtitle(title_text) +
+    ggplot2:: scale_colour_manual("named_num_vec", values=as.character(names(named_num_vec))) +
+    # ggplot2::geom_text() +
+    ggplot2::scale_x_continuous(breaks = NULL) +
+    scale_fill_manual(values=as.character(names(named_num_vec))) + 
+    ggplot2::theme(axis.ticks.x = element_blank(),
+                   axis.title.x = element_blank(),
+                   axis.text.x = element_blank()) +
+    ggplot2::theme_bw()
+  ggplot2::ggsave(filename = file.path(output_dir, pdf_name),
+                  height = 4, width = 1, plot = g)
+  # print(g)
+}
 
-dat <- data.frame("data" = as.numeric(raw_reads), 
-                  "colrs" = names(raw_reads),
-                  "x_ax" = rep(1,8))
-g <- ggplot2::ggplot(data = dat,
-                     aes(x=x_ax, y=data, col = as.factor(colrs),
-                         label=as.factor(colrs)))  +
-  ggplot2::geom_point(show.legend = FALSE, size = 5) +
-  ggplot2::scale_color_brewer(palette="Dark2") +
-  ggplot2::ggtitle(paste0("raw", "_Explain CODA")) +
-  ggplot2::geom_text() +
-  ggplot2::scale_x_continuous(breaks = NULL) +
-  ggplot2::theme(axis.ticks.x = element_blank(),
-        axis.title.x = element_blank(),
-        axis.text.x = element_blank()) +
-  ggplot2::theme_bw()
-ggplot2::ggsave(filename = file.path(output_dir, 
-                                     paste0(project, "_raw_data_demo.pdf")),
-                height = 4, width = 1, plot = g)
-print(g)
+##------------------------------------------------------------------##
+print(paste0("Finding min and max for graphs to keep them on the same scale."))
+##------------------------------------------------------------------##
+make_dot_plots(named_num_vec = raw_reads,
+               title_text = "raw",
+               pdf_name = paste0(project, "_new1_raw_demo.pdf"))
+make_dot_plots(named_num_vec = alr_reads,
+               title_text = "alr",
+               pdf_name = paste0(project, "_new1_alr_demo.pdf"))
+make_dot_plots(named_num_vec = clr_reads,
+               title_text = "clr",
+               pdf_name = paste0(project, "_new1_clr_demo.pdf"))
 
-dat <- data.frame("data" = as.numeric(alr_reads), 
-                  "colrs" = names(alr_reads),
-                  "x_ax" = rep(1,7))
-g <- ggplot2::ggplot(data = dat,
-                     aes(x="x_ax", y=data, col = as.factor(colrs),
-                         label=as.factor(colrs))) +
-  ggplot2::geom_point(show.legend = FALSE, size = 5) +
-  ggplot2::scale_color_brewer(palette="Dark2") +
-  ggplot2::ggtitle(paste0("ALR", "_Explain CODA" )) +
-  # ggplot2::geom_text(aes(color = "black")) +
-  ggplot2::theme(axis.ticks.x = element_blank(),
-        axis.title.x = element_blank(),
-        axis.text.x = element_blank()) +
-  ggplot2::theme_bw()
-ggplot2::ggsave(filename = file.path(output_dir, 
-                                     paste0(project, "_ralr_demo.pdf")),
-                height = 4, width = 1, plot = g)
-print(g)
-
-dat <- data.frame("data" = as.numeric(clr_reads), 
-                  "colrs" = names(clr_reads),
-                  "x_ax" = rep(1,8))
-g <- ggplot2::ggplot(data = dat,
-                     aes(x="x_ax", y=data, col = as.factor(colrs),
-                         label=as.factor(colrs))) +
-  ggplot2::geom_point(show.legend = FALSE, size = 5) +
-  ggplot2::scale_color_brewer(palette="Dark2") +
-  ggplot2::ggtitle(paste0("CLR", "_Explain CODA" )) +
-  # ggplot2::geom_text(aes(color = "black")) +
-  ggplot2::theme(axis.ticks.x = element_blank(),
-        axis.title.x = element_blank(),
-        axis.text.x = element_blank()) +
-  ggplot2::theme_bw()
-ggplot2::ggsave(filename = file.path(output_dir, 
-                                     paste0(project, "_clr_demo.pdf")),
-                height = 4, width = 1, plot = g)
-print(g)
 
 ##-Import tables and data preprocessing-----------------------------##
 
@@ -235,7 +225,7 @@ ggplot2::ggsave(filename = file.path(output_dir,
 print(g)
 
 ##-recreating steps of philr----------------------------------------##
-#change everything to a propotion that adds to 1
+#change everything to a proportion that adds to 1
 demo_minicl <- philr::miniclo(t(demo_phylo@otu_table))
 make_1d_graph( df_1d = demo_minicl@.Data, 
                m_title = "minclos", 

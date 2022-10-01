@@ -101,25 +101,25 @@ print("Making boxplots ordered by pval.")
 dFrame <- read.csv(file=file.path(output_dir, "tables", paste0(project, "_pValuesUnivariate_sequenceVmetadata.csv")), 
                    sep=",")
 
-pdf(file = file.path(output_dir, "graphics", paste0("univariate_pval_seq_", project,".pdf")))
-for( rw in 1:nrow(dFrame)){
-  taxon <- dFrame$asv_name[rw]
-  my_meta <- metadata[,dFrame$meta_name[rw]]
-  boxplot(asv_table[,taxon] ~ my_meta,
-  main=paste(project, dFrame$meta_name[rw], base::formatC(dFrame$pval[rw],format="e", digits=6)),
-  sub=taxon, las=2, xlab = taxon, ylab = "sequence:")
-}
-dev.off()
-
-pdf(file = file.path(output_dir, "graphics", paste0("top_100_univariate_pval_seq_", project,".pdf")))
-for( rw in 1:100){
-  taxon <- dFrame$asv_name[rw]
-  my_meta <- metadata[,dFrame$meta_name[rw]]
-  boxplot(asv_table[,taxon] ~ my_meta,
-          main=paste(project, dFrame$meta_name[rw], base::formatC(dFrame$pval[rw],format="e", digits=6)),
-          sub=taxon, las=2, xlab = taxon, ylab = "sequence:")
-}
-dev.off()
+# pdf(file = file.path(output_dir, "graphics", paste0("univariate_pval_seq_", project,".pdf")))
+# for( rw in 1:nrow(dFrame)){
+#   taxon <- dFrame$asv_name[rw]
+#   my_meta <- metadata[,dFrame$meta_name[rw]]
+#   boxplot(asv_table[,taxon] ~ my_meta,
+#   main=paste(project, dFrame$meta_name[rw], base::formatC(dFrame$pval[rw],format="e", digits=6)),
+#   sub=taxon, las=2, xlab = taxon, ylab = "sequence:")
+# }
+# dev.off()
+# 
+# pdf(file = file.path(output_dir, "graphics", paste0("top_100_univariate_pval_seq_", project,".pdf")))
+# for( rw in 1:100){
+#   taxon <- dFrame$asv_name[rw]
+#   my_meta <- metadata[,dFrame$meta_name[rw]]
+#   boxplot(asv_table[,taxon] ~ my_meta,
+#           main=paste(project, dFrame$meta_name[rw], base::formatC(dFrame$pval[rw],format="e", digits=6)),
+#           sub=taxon, las=2, xlab = taxon, ylab = "sequence:")
+# }
+# dev.off()
 
 # --------------------------------------------------------------------------
 print("Create pvalue table that only has bimodal categories.")
@@ -132,7 +132,7 @@ for (rw in 1:nrow(dFrame)) {
   my_cats <- unique(na.omit(metadata[,my_meta]))
   my_cats <- lapply(my_cats, function(x) x[!x %in% ""])
   if (length(my_cats) == 2){
-    rbind(bi_dFrame, dFrame[rw,])
+    bi_dFrame <- rbind(bi_dFrame, dFrame[rw,])
   }
 }
 

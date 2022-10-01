@@ -44,3 +44,7 @@ rsconnect/
 *.fastq
 # Output should not be added either
 */output/*
+/ava_c/*
+/McDonald/*
+/Bian/*
+/Literature/

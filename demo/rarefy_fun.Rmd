@@ -1,5 +1,5 @@
 ---
-title: "Exploringvegan's rrarefy"
+title: "Exploring vegan's rrarefy"
 output: html_notebook
 ---
 
@@ -43,18 +43,20 @@ for(s in 1:length(raref_levels)){
   print(rd_filt_rowSums)
 }
 ```
-Now test out the rarefy function if we eleminate samples below the threshold:
+
+Testing out DESEQ2 
 ```{r}
-for(s in 1:length(raref_levels)){
-  seq_d <- raref_levels[s]#new read depth
-  rd_filt_asv <- fake_data[read_depth >= seq_d,]
-  print(nrow(rd_filt_asv))
-  rd_filt_asv <- data.frame(vegan::rrarefy(rd_filt_asv, seq_d))#dataset 1 (read depth filtered asv)
-  rd_filt_rowSums <- base::rowSums(rd_filt_asv)
-  print(rd_filt_rowSums)
-}
+libary("deseq2")
+
 ```
 
+
+Some python for text manipulation for my dissertation
+```{python}
+my_str = """Recruitment.Location, Researcher, Sub.Study, Birth.Year, Age, Highest.Education, Ethnicity, Religion, Birth.Location, Type.Birth.Location, Arrival.in.US, Years.in.US, Location.before.US, Type.location.before.US, Years.lived.in.Location.before.US, Tobacco.Use, Alcohol.Use, Height	Weight, Waist, BMI, BMI.Class, Breastfed, Age.at.Arrival, Sample.Group, Waist.Height.Ratio, Age, BMI, Genotype, sex, Treatment, Visit, type, Age, host_subject_id, geographic_location_(country_and/or_sea region), Host_Age, ETHNICITY, geo_loc_name_country, HIV_RiskGroup, HIV_serostatus, host_other_gender, host_sex, HIV_Profile, PCR_human_papilloma_virus, host_allergy, host_deposition_frequency_per_day, host_abdominal_transit_alterations, host_Residency_Area, HCV_coinfection, Anal_cytology, host_sexual_orientation, Syphilis_serology, HBV_coinfection, PCR_Neisseria_gonorrhoeae, PCR_Chlamydia_trachomatis, HIV_viral_load, CD4+_Tcell_counts, leukocytes, stool_consistency, lymphocytes, host_body_mass_index"""
+my_list = my_str.split(", ")
+len(my_list)
+```
 
 
 
