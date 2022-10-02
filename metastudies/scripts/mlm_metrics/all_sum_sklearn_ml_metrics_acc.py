@@ -136,32 +136,32 @@ for proj in range(len(projects)):
 		print(f"Building {scoring} scores for each weighing scheme.\
 			Results found at {result_fpath} for {philr_group}.")
 		# --------------------------------------------------------------------------
-		if not os.path.exists(result_fpath):
-			with open(result_fpath, "w+") as fl:
-				fl.write(",".join(col_names))
-				fl.write("\n")
-				for pw in philr_part_weights:
-					for iw in philr_ilr_weights:
-						table_fn = f"{philr_group}_{iw}_{pw}.csv"
-						my_df = pd.read_csv(os.path.join(philr_dir, table_fn), sep=',', header=0, index_col=0)
-						meta_df = meta_df.loc[list(my_df.index.values)]#drops rows from metadata that aren't in my_df
-						assert list(my_df.index.values) == list(meta_df.index.values) #making sure I'm indexing correctly
-						for meta_c in range(len(meta_df.columns)):
-							m_c = list(meta_df.columns)[meta_c]
-							# print(m_c)
-							spetz_var = meta_df[m_c]#metadata var to test
-							# print(spetz_var.dtype)
-							# assert is_string_dtype(spetz_var)
-							# if spetz_var.dtype.name == "object":
-							if is_string_dtype(spetz_var) == True and spetz_var.isnull().sum() < 5:
-								print("evaluate each model in turn.")
-								for name, model in models:
-									kfold = model_selection.KFold(n_splits=10, random_state=seed, shuffle=True)
-									cv_results = model_selection.cross_val_score(model, my_df, spetz_var, cv=kfold, scoring=scoring)
-									# result_str = np.array2string(cv_results, separator=",",suffix="/n")
-									result_str = ",".join(map(str, cv_results.tolist()))
-									msg = f"{m_c},{iw},{pw},{name},{result_str}\n"
-									fl.write(msg)
+		# if not os.path.exists(result_fpath):
+		with open(result_fpath, "w+") as fl:
+			fl.write(",".join(col_names))
+			fl.write("\n")
+			for pw in philr_part_weights:
+				for iw in philr_ilr_weights:
+					table_fn = f"{philr_group}_{iw}_{pw}.csv"
+					my_df = pd.read_csv(os.path.join(philr_dir, table_fn), sep=',', header=0, index_col=0)
+					meta_df = meta_df.loc[list(my_df.index.values)]#drops rows from metadata that aren't in my_df
+					assert list(my_df.index.values) == list(meta_df.index.values) #making sure I'm indexing correctly
+					for meta_c in range(len(meta_df.columns)):
+						m_c = list(meta_df.columns)[meta_c]
+						# print(m_c)
+						spetz_var = meta_df[m_c]#metadata var to test
+						# print(spetz_var.dtype)
+						# assert is_string_dtype(spetz_var)
+						# if spetz_var.dtype.name == "object":
+						if is_string_dtype(spetz_var) == True and spetz_var.isnull().sum() < 5:
+							print("evaluate each model in turn.")
+							for name, model in models:
+								kfold = model_selection.KFold(n_splits=10, random_state=seed, shuffle=True)
+								cv_results = model_selection.cross_val_score(model, my_df, spetz_var, cv=kfold, scoring=scoring)
+								# result_str = np.array2string(cv_results, separator=",",suffix="/n")
+								result_str = ",".join(map(str, cv_results.tolist()))
+								msg = f"{m_c},{iw},{pw},{name},{result_str}\n"
+								fl.write(msg)
 		# --------------------------------------------------------------------------
 		print(f"Finished recording accuracy. Heading towards boxplot creation for {philr_group} {project}.")
 		# --------------------------------------------------------------------------
@@ -325,8 +325,8 @@ for proj in range(len(projects)):
 		sub_plot_counter = 0
 		page_counter = 1
 		for met in range(0,len(metadata_cats)):
-			print(f"met val: {met}, numrows {num_rows}")
 			meta_c = metadata_cats[met]
+			print(f"met val: {met}, numrows {num_rows}, meta: {meta_c}")
 			meta_result_df = pd.DataFrame(result_df[result_df["metadata"] == meta_c])
 			fig_means = dict() #to hold data for summary boxplot figure
 			flat_num_only = pd.DataFrame(meta_result_df.iloc[:,5:]).to_numpy().flatten()
