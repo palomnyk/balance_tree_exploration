@@ -69,7 +69,7 @@ plt.rc('axes', titlesize=50)
 
 r_sq = []
 
-ds1 = "lognorm"
+ds1 = "lognorm_DADA2"
 for d2 in range(len(comp_ds)):
 	ds2 = comp_ds[d2]
 	train_percent = 0.75
@@ -87,9 +87,7 @@ for d2 in range(len(comp_ds)):
 		my_table = pd.read_csv(result_fpath, sep=',', header=0)
 		#table 1
 		ds1_table = my_table.loc[my_table["dataset"] == ds1,]
-		# print(ds1_table)
 		splits = ds1_table.columns[ds1_table.columns.str.startswith('split')].tolist()
-		# print(ds1_table[splits])
 		means = ds1_table[splits].agg(mean, axis = 1)
 		assert not means.empty, f"{ds1} is not in the table from {project}"
 		for feat, ave in zip(list(ds1_table["metadata"].values) ,list(means)):
