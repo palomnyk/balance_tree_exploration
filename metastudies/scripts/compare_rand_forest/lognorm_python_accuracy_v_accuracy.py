@@ -137,7 +137,7 @@ print("Making seperate legend.")
 fig = plt.figure(figsize=(11,11))
 plt.subplots_adjust(bottom=0.8)
 ax = fig.add_subplot(1,1,1)
-fig.tight_layout()
+# fig.tight_layout()
 my_markers = ["o", "s", "P", "v", "x"]
 for i, label in enumerate(list(ds2_score.keys())):
 	my_proj = ds2_score[label][1]
@@ -146,7 +146,7 @@ for i, label in enumerate(list(ds2_score.keys())):
 	ax.scatter(0, 0, s=70, label=list(ds2_score.keys())[i], marker=my_marker)
 	ax.legend(title="",  loc="center", framealpha=0, mode = "expand", markerscale=2)
 print("Saving figure to pdf", flush = True)
-pdf.savefig( fig, bbox_inches='tight' )
+pdf.savefig( fig, bbox_inches='tight')
 
 print("Saving pdf", flush = True)
 pdf.close()
@@ -159,7 +159,7 @@ plt.subplots_adjust(bottom=0.8)
 ax = fig.add_subplot(1,1,1)
 bp = ax.boxplot(r_sq)
 fig.tight_layout()
-pdf.savefig( fig )
+pdf.savefig( fig, bbox_inches='tight')
 
 print("Saving pdf", flush = True)
 pdf.close()
