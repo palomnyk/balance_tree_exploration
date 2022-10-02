@@ -44,7 +44,7 @@ lib/cml_scripts/random_forest/random_forest_manual_train.py
 #### Example command: 
 ```
 python ~/git/balance_tree_exploration/lib/cml_scripts/random_forest/random_forest_manual_train.py \
-  --project Vanderbilt \
+  --project Jones \
   --use_all_meta True \
   --metada_fn patient_metadata.tsv \
   --meta_index_col Run \

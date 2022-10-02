@@ -14,7 +14,7 @@ option_list <- list(
   optparse::make_option(c("-d", "--homedir"), type="character", 
                         default=file.path('~','git','balance_tree_exploration'), 
                         help="dataset dir path", metavar="character"),
-  optparse::make_option(c("-p", "--project"), type="character", default="Vanderbilt", 
+  optparse::make_option(c("-p", "--project"), type="character", default="Jones", 
                         help="project folder", metavar="character"),
   optparse::make_option(c("-t", "--taxonomic_level"), type="numeric", default="6",
                         help="taxonimic level for making otu table 1-6", metavar="numeric"),
