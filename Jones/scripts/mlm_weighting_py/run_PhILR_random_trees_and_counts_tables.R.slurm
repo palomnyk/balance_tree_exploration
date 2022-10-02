@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --partition=Pisces                                    		# Partition/queue requested on server
-#SBATCH --job-name=Vanderbilt_PhILR_random_trees_and_counts_tables  # Job name
+#SBATCH --job-name=Jones_PhILR_random_trees_and_counts_tables  # Job name
 #SBATCH --time=24:00:00                                      		# Time limit (hrs:min:sec)
 #SBATCH --nodes=1                                         			# Number of nodes requested
 #SBATCH --ntasks-per-node=1                          			# Number of CPUs (processor cores/tasks)
@@ -20,7 +20,7 @@ echo Using $SLURM_NTASKS processors across $SLURM_NNODES nodes
 
 module load R
 Rscript ~/git/balance_tree_exploration/lib/cml_scripts/mlm_metrics/PhILR_random_trees_and_counts_tables.R\
-  -p Vanderbilt \
+  -p Jones \
   -d ~/git/balance_tree_exploration/
 
 echo ""

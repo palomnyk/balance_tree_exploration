@@ -19,7 +19,7 @@ from pycaret.classification import *
 
 print("Establishing directory layout.")
 home_dir = os.path.join("~", "git", "balance_tree_exploration")
-project = "Vanderbilt"
+project = "Jones"
 output_dir = os.path.join(home_dir, project, 'output')
 
 print("Establishing other constants.")

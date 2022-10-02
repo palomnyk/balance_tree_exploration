@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --partition=Pisces                                    		# Partition/queue requested on server
-#SBATCH --job-name=Vanderbilt_R_rand_forest_var_ntree       		# Job name
+#SBATCH --job-name=Jones_R_rand_forest_var_ntree       		# Job name
 #SBATCH --time=200:00:00                                      		# Time limit (hrs:min:sec)
 #SBATCH --nodes=1                                         			# Number of nodes requested
 #SBATCH --ntasks-per-node=1                          			# Number of CPUs (processor cores/tasks)
@@ -23,8 +23,8 @@ module load R
 
 Rscript ~/git/balance_tree_exploration/lib/cml_scripts/random_forest/rf_comparison_variable_ntree.R \
   -d ~/git/balance_tree_exploration \
-  -p Vanderbilt \
-  -m ~/git/balance_tree_exploration/Vanderbilt/patient_metadata.tsv \
+  -p Jones \
+  -m ~/git/balance_tree_exploration/Jones/patient_metadata.tsv \
   -r Run \
   -n 20 \
   -s 100 \

@@ -28,7 +28,7 @@ python ~/git/balance_tree_exploration/lib/cml_scripts/metastudy_comparisons/inte
 	--y_axis_label Sklearn_ntree500_mtry0.333 \
 	--x_axis_col_name trans_group \
 	--y_axis_col_name dataset \
-	--project_list Vanderbilt Zeller Vangay Noguera-Julian
+	--project_list Jones Zeller Vangay Noguera-Julian
 
 conda deactivate
 module unload anaconda3/2020.11

@@ -30,7 +30,7 @@ python ~/git/balance_tree_exploration/lib/cml_scripts/metastudy_comparisons/inte
 	--x_axis_col_name dataset \
 	--y_axis_metadata_col_name metadata_col \
 	--x_axis_metadata_col_name metadata \
-	--project_list Vanderbilt Zeller Vangay Noguera-Julian
+	--project_list Jones Zeller Vangay Noguera-Julian
 
 conda deactivate
 module unload anaconda3/2020.11

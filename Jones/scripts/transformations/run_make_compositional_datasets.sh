@@ -22,8 +22,8 @@ module load R
 
 Rscript ~/git/balance_tree_exploration/lib/cml_scripts/transformations/make_compositional_datasets.R \
   -d ~/git/balance_tree_exploration \
-  -p Vanderbilt \
-  -m ~/git/balance_tree_exploration/Vanderbilt/patient_metadata.tsv \
+  -p Jones \
+  -m ~/git/balance_tree_exploration/Jones/patient_metadata.tsv \
   -r Run \
   -n 20
 

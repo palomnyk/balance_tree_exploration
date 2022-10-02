@@ -9,7 +9,7 @@ if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocMana
 
 ##-Establish directory layout---------------------------------------##
 home_dir <- file.path('~','git','balance_tree_exploration')
-project <- "Vanderbilt"
+project <- "Jones"
 #home_dir <- file.path('cloud','project')
 output_dir <- file.path(home_dir, project, 'output')
 setwd(file.path(home_dir))

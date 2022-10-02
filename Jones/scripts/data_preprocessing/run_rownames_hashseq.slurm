@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --partition=Orion                                    		# Partition/queue requested on server
-#SBATCH --job-name=Vanderbilt_rownames_hashseq                                   		# Job name
+#SBATCH --job-name=Jones_rownames_hashseq                                   		# Job name
 #SBATCH --time=5:00:00                                      		# Time limit (hrs:min:sec)
 #SBATCH --nodes=1                                         			# Number of nodes requested
 #SBATCH --ntasks-per-node=1                          			# Number of CPUs (processor cores/tasks)
@@ -22,7 +22,7 @@ module load R
 
 srun Rscript ~/git/balance_tree_exploration/lib/cml_scripts/data_preprocessing/rownames_hashseq.R \
   -d ~/git/balance_tree_exploration \
-  -p Vanderbilt
+  -p Jones
 
 echo ""
 echo "======================================================"

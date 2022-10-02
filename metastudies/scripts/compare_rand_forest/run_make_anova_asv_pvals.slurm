@@ -19,12 +19,12 @@ echo Using $SLURM_NTASKS processors across $SLURM_NNODES nodes
 
 module load R
 
-echo launching Vanderbilt
+echo launching Jones
 
 srun --nodes=1 Rscript ~/git/balance_tree_exploration/lib/cml_scripts/univariate_statistics/asv_pvalues.R \
   -d ~/git/balance_tree_exploration \
-  -p Vanderbilt \
-  -m ~/git/balance_tree_exploration/Vanderbilt/patient_metadata.tsv \
+  -p Jones \
+  -m ~/git/balance_tree_exploration/Jones/patient_metadata.tsv \
   -r Run
 
 echo launching Vangay

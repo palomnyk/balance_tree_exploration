@@ -22,8 +22,8 @@ module load R
 
 srun Rscript ~/git/balance_tree_exploration/lib/cml_scripts/transformations/p6_iqtree2phyloseq_obj.R \
 -d ~/git/balance_tree_exploration \
--p Vanderbilt \
--m ~/git/balance_tree_exploration/Vanderbilt/SraRunTable.txt \
+-p Jones \
+-m ~/git/balance_tree_exploration/Jones/SraRunTable.txt \
 -l , \
 -r Run
 

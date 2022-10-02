@@ -26,7 +26,7 @@ print("Finished loading libraries")
 
 print("Establishng directory constants.")
 home_dir <- file.path('~','git','balance_tree_exploration')
-project <- "Vanderbilt"
+project <- "Jones"
 output_dir <- file.path(home_dir, project, 'output')
 setwd(file.path(home_dir))
 

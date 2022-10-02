@@ -17,7 +17,7 @@ echo Job: $SLURM_JOB_NAME with ID $SLURM_JOB_ID
 echo Running on host: `hostname`
 echo Using $SLURM_NTASKS processors across $SLURM_NNODES nodes
 
-srun bash ~/git/balance_tree_exploration/r_libraries/cml_scripts/transformations/p5_make_iqtree.sh ~/git/balance_tree_exploration Vanderbilt
+srun bash ~/git/balance_tree_exploration/r_libraries/cml_scripts/transformations/p5_make_iqtree.sh ~/git/balance_tree_exploration Jones
 
 echo ""
 echo "======================================================"

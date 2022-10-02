@@ -26,7 +26,7 @@ print("finished loading libraries")
 
 ##-Establish directory layout---------------------------------------##
 home_dir <- file.path('~','git','balance_tree_exploration')
-projects <- c("Vanderbilt", "Vangay", "Zeller", "Noguera-Julian")
+projects <- c("Jones", "Vangay", "Zeller", "Noguera-Julian")
 
 ##-Functions--------------------------------------------------------##
 raw_ps_to_clean_ps <- function(ps) {
