@@ -135,7 +135,6 @@ for d2 in range(len(comp_ds)):
 	pdf.savefig( fig )
 print("Making seperate legend.")
 fig = plt.figure(figsize=(11,11))
-fig.suptitle(f"Legend {train_percent}training Python RF accuracy vs accuracy")
 plt.subplots_adjust(bottom=0.8)
 ax = fig.add_subplot(1,1,1)
 fig.tight_layout()
@@ -145,7 +144,7 @@ for i, label in enumerate(list(ds2_score.keys())):
 	print(f"{my_proj} {ds1_lst[i]} {ds2_lst[i]}, {list(ds2_score.keys())[i]}")
 	my_marker = my_markers[projects.index(my_proj)]
 	ax.scatter(0, 0, s=70, label=list(ds2_score.keys())[i], marker=my_marker)
-	ax.legend(title="Legend",  loc="center", framealpha=1, mode = "expand", markerscale=2)
+	ax.legend(title="",  loc="center", framealpha=0, mode = "expand", markerscale=2)
 print("Saving figure to pdf", flush = True)
 pdf.savefig( fig, bbox_inches='tight' )
 
