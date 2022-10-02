@@ -130,7 +130,7 @@ for d1 in range(len(comp_ds)):
 			# plt.annotate(label, (x_lst[i], y_lst[i]))
 			ax.plot([0,1], [0,1], color = "r", label = "expected")
 			ax.plot(ds1_lst, a*ds1_lst+b, color = "green", label = "accuracy polyfit")
-			ax.text(0.1, 0.8, f"r squared: {r_value**2}", fontsize=12)
+			ax.text(0.1, 0.8, f"r squared: {round(r_value**2, 4)}", fontsize=20)
 			ax.set_xlabel(f"Accuracy {ds1}")
 			ax.set_ylabel(f"Accuracy {ds2}")
 			# ax.legend(title="Legend", loc="upper left", framealpha=1)
