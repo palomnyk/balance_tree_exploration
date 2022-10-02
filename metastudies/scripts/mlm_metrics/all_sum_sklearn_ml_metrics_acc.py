@@ -67,6 +67,9 @@ print("Establishing directory layout.")
 
 home_dir = options.homedir
 projects = ["Jones", "Zeller","Vangay", "Noguera-Julian"]
+proj_metaname = ["patient_metadata.tsv", "patient_metadata.csv", "patient_metadata.tsv", "patient_metadata.tsv"]
+proj_meta_delim = ["\t",",","\t","\t"]
+proj_meta_colname = ["Run", "Run", "run_accession", "Run"]
 final_output_dir = os.path.join(home_dir, "metastudies", "output")
 assert os.path.exists(final_output_dir)
 
@@ -82,9 +85,10 @@ scoring = "accuracy"
 col_names = ["metadata", "ilr_weight", "part_weight", "model", "split1", "split2", "split3", "split4", "split5", "split6", "split7", "split8", "split9", "split10"]
 model_symbols = ["|", "<", "*", "x", "o", "^", ","]
 
-sum_pdf_fpath = os.path.join(final_output_dir, "graphics", f"sum_{output_label}.pdf")
+sum_pdf_fpath = os.path.join(final_output_dir, f"sum_{output_label}.pdf")
 pdf = matplotlib.backends.backend_pdf.PdfPages(sum_pdf_fpath)
-for project in projects:
+for proj in range(len(projects)):
+	project = projects[proj]
 	output_dir = os.path.join(home_dir, project, "output")
 	for philr_group in philr_groups:
 		main_output_label = f"{output_label}_{philr_group}"
@@ -99,19 +103,14 @@ for project in projects:
 		print("Importing metadata to working env.")
 		# --------------------------------------------------------------------------
 
-		meta_df = pd.read_csv(os.path.join(home_dir, project, options.meta_fn), \
-			sep=options.delim, header=0, index_col=options.meta_index_col)
-
-		if options.use_all_meta.lower() == "true":
-			metad_cols = range(len(meta_df.columns))
-		else:
-			metad_cols = options.meta_col
+		meta_df = pd.read_csv(os.path.join(home_dir, project, proj_metaname[proj]), \
+			sep=proj_meta_delim[proj], header=0, index_col=proj_meta_colname[proj])
 
 		# --------------------------------------------------------------------------
 		print(f"Establishing other constants {philr_group}.")
 		# --------------------------------------------------------------------------
 
-		result_fpath = os.path.join(output_dir, "tables", f"{main_output_label}_{project}_data.csv")
+		result_fpath = os.path.join(output_dir, "tables", f"{main_output_label}_{project}_{philr_group}_data.csv")
 		pdf_fpath = os.path.join(output_dir, "graphics", f"bp_{main_output_label}_{project}.pdf")
 		algo_table_fpath = os.path.join(output_dir, "tables", f"algo_{main_output_label}_{project}.csv")
 		weight_fpath = os.path.join(output_dir, "tables", f"weight_{main_output_label}_{project}.csv")
@@ -121,47 +120,48 @@ for project in projects:
 
 		# prepare configuration for cross validation test harness
 		seed = 7
-		# # --------------------------------------------------------------------------
-		# print(f"Preparing models for {philr_group}.")
-		# # --------------------------------------------------------------------------
-		# models = []
-		# models.append(('LR', LogisticRegression(max_iter=1000)))
-		# models.append(('LDA', LinearDiscriminantAnalysis()))
-		# models.append(('KNN', KNeighborsClassifier()))
-		# models.append(('DTREE', DecisionTreeClassifier()))
-		# models.append(('RF', RandomForestClassifier()))
-		# models.append(('GausNB', GaussianNB()))
-		# models.append(('SVM', SVC()))
+		# --------------------------------------------------------------------------
+		print(f"Preparing models for {philr_group}.")
+		# --------------------------------------------------------------------------
+		models = []
+		models.append(('LR', LogisticRegression(max_iter=1000)))
+		models.append(('LDA', LinearDiscriminantAnalysis()))
+		models.append(('KNN', KNeighborsClassifier()))
+		models.append(('DTREE', DecisionTreeClassifier()))
+		models.append(('RF', RandomForestClassifier()))
+		models.append(('GausNB', GaussianNB()))
+		models.append(('SVM', SVC()))
 
 		# --------------------------------------------------------------------------
 		print(f"Building {scoring} scores for each weighing scheme.\
 			Results found at {result_fpath} for {philr_group}.")
 		# --------------------------------------------------------------------------
-		# with open(result_fpath, "w+") as fl:
-		# 	fl.write(",".join(col_names))
-		# 	fl.write("\n")
-		# 	for pw in philr_part_weights:
-		# 		for iw in philr_ilr_weights:
-		# 			table_fn = f"{philr_group}_{iw}_{pw}.csv"
-		# 			my_df = pd.read_csv(os.path.join(philr_dir, table_fn), sep=',', header=0, index_col=0)
-		# 			meta_df = meta_df.loc[list(my_df.index.values)]#drops rows from metadata that aren't in my_df
-		# 			assert list(my_df.index.values) == list(meta_df.index.values) #making sure I'm indexing correctly
-		# 			for meta_c in metad_cols:
-		# 				m_c = list(meta_df.columns)[meta_c]
-		# 				# print(m_c)
-		# 				spetz_var = meta_df[m_c]#metadata var to test
-		# 				# print(spetz_var.dtype)
-		# 				# assert is_string_dtype(spetz_var)
-		# 				# if spetz_var.dtype.name == "object":
-		# 				if is_string_dtype(spetz_var) == True and spetz_var.isnull().sum() < 5:
-		# 					print("evaluate each model in turn.")
-		# 					for name, model in models:
-		# 						kfold = model_selection.KFold(n_splits=10, random_state=seed, shuffle=True)
-		# 						cv_results = model_selection.cross_val_score(model, my_df, spetz_var, cv=kfold, scoring=scoring)
-		# 						# result_str = np.array2string(cv_results, separator=",",suffix="/n")
-		# 						result_str = ",".join(map(str, cv_results.tolist()))
-		# 						msg = f"{m_c},{iw},{pw},{name},{result_str}\n"
-		# 						fl.write(msg)
+		if not os.path.exists(result_fpath):
+			with open(result_fpath, "w+") as fl:
+				fl.write(",".join(col_names))
+				fl.write("\n")
+				for pw in philr_part_weights:
+					for iw in philr_ilr_weights:
+						table_fn = f"{philr_group}_{iw}_{pw}.csv"
+						my_df = pd.read_csv(os.path.join(philr_dir, table_fn), sep=',', header=0, index_col=0)
+						meta_df = meta_df.loc[list(my_df.index.values)]#drops rows from metadata that aren't in my_df
+						assert list(my_df.index.values) == list(meta_df.index.values) #making sure I'm indexing correctly
+						for meta_c in range(len(meta_df.columns)):
+							m_c = list(meta_df.columns)[meta_c]
+							# print(m_c)
+							spetz_var = meta_df[m_c]#metadata var to test
+							# print(spetz_var.dtype)
+							# assert is_string_dtype(spetz_var)
+							# if spetz_var.dtype.name == "object":
+							if is_string_dtype(spetz_var) == True and spetz_var.isnull().sum() < 5:
+								print("evaluate each model in turn.")
+								for name, model in models:
+									kfold = model_selection.KFold(n_splits=10, random_state=seed, shuffle=True)
+									cv_results = model_selection.cross_val_score(model, my_df, spetz_var, cv=kfold, scoring=scoring)
+									# result_str = np.array2string(cv_results, separator=",",suffix="/n")
+									result_str = ",".join(map(str, cv_results.tolist()))
+									msg = f"{m_c},{iw},{pw},{name},{result_str}\n"
+									fl.write(msg)
 		# --------------------------------------------------------------------------
 		print(f"Finished recording accuracy. Heading towards boxplot creation for {philr_group} {project}.")
 		# --------------------------------------------------------------------------
@@ -350,6 +350,7 @@ for project in projects:
 					#side loop to get means of each
 					fig_means[algo] = list(plot_data.mean(axis=0))
 				my_means = pd.DataFrame.from_dict(fig_means)
+				print(my_means)
 				new_labs = [f"{x}\n{y}" for x,y in zip(fig_df.loc[:,"ilr_weight"].values, fig_df.loc[:,"part_weight"].values)]
 				ax = fig.add_subplot(num_rows, num_cols, sub_plot_counter)
 				ax.set_ylabel(scoring)
@@ -363,25 +364,25 @@ for project in projects:
 									linewidth=1, 
 									markersize=2)
 				# ax.title.set_text(f"Algorithm by weight, {scoring} mean, {meta_c}")
-				ax.set_title(f"Algorithm by weight, {scoring} mean, {meta_c}", fontsize=10)
+				ax.set_title(f"Algorithm averages by PhILR weighting {scoring} mean, {meta_c}", fontsize=10)
 				ax.set_xticks(ticks=range(0,my_means.shape[0]), labels=fig_df.loc[:,"ilr_weight"].tolist(), rotation=90)
 				ax.set_xticklabels(new_labs, rotation=90)
 				ax.tick_params(axis='x', which='major', labelsize=6)
 				# ax.set_yticks(ticks=my_range)
 				ax.set_yticks(ticks=[0.55,0.65,0.75,0.85,0.95])
 
-		# --------------------------------------------------------------------------
-		print(f"Creating legend for {sum_pdf_fpath}.")
-		# --------------------------------------------------------------------------
-		ax = fig.add_subplot(num_rows, num_cols, sub_plot_counter + 1)
-		for co in range(0,my_means.shape[1]):
-			# ax.scatter(0,0, label=my_means.columns[co], marker=model_symbols[co],)
-			ax.plot(0,0, label=my_means.columns[co], marker=model_symbols[co])
-		ax.get_xaxis().set_visible(False)
-		ax.get_yaxis().set_visible(False)
-		ax.legend(title="Algorithm", loc="center", framealpha=1, mode = "expand", markerscale=2)
-		fig.tight_layout()
-		pdf.savefig( fig )
+			# --------------------------------------------------------------------------
+			print(f"Creating legend for {sum_pdf_fpath}.")
+			# --------------------------------------------------------------------------
+			ax = fig.add_subplot(num_rows, num_cols, sub_plot_counter + 1)
+			for co in range(0,my_means.shape[1]):
+				# ax.scatter(0,0, label=my_means.columns[co], marker=model_symbols[co],)
+				ax.plot(0,0, label=my_means.columns[co], marker=model_symbols[co])
+			ax.get_xaxis().set_visible(False)
+			ax.get_yaxis().set_visible(False)
+			ax.legend(title="Algorithm", loc="center", framealpha=1, mode = "expand", markerscale=2)
+			fig.tight_layout()
+			pdf.savefig( fig )
 # --------------------------------------------------------------------------
 print(f"Saved summary scatterplot to {sum_pdf_fpath}.")
 # --------------------------------------------------------------------------
