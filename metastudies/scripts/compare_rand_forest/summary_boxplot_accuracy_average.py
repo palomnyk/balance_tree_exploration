@@ -56,22 +56,21 @@ print("Establishing other constants.", flush = True)
 comp_ds = ['alr_DADA2', 'clr_DADA2', 'raw_DADA2', 'lognorm_DADA2', 'Silva_DADA2', \
 	'Silva_DADA2_blw.sqrt_enorm', 'Shuffle1_PhILR_Silva_DADA2_blw.sqrt_enorm', \
 	'Shuffle2_PhILR_Silva_DADA2_blw.sqrt_enorm', 'Shuffle3_PhILR_Silva_DADA2_blw.sqrt_enorm', \
-	'Shuffle4_PhILR_Silva_DADA2_blw.sqrt_enorm', 'Shuffle5_PhILR_Silva_DADA2_blw.sqrt_enorm', \
 	'Filtered_Silva_DADA2', 'Filtered_Silva_DADA2_blw.sqrt_enorm', \
 	'Shuffle1_PhILR_Filtered_Silva_DADA2_blw.sqrt_enorm', \
 	'Shuffle2_PhILR_Filtered_Silva_DADA2_blw.sqrt_enorm', \
-	'Shuffle3_PhILR_Filtered_Silva_DADA2_blw.sqrt_enorm', 'Shuffle4_PhILR_Filtered_Silva_DADA2_blw.sqrt_enorm', \
-	'Shuffle5_PhILR_Filtered_Silva_DADA2_blw.sqrt_enorm', 'Filtered_UPGMA_DADA2', \
+	'Shuffle3_PhILR_Filtered_Silva_DADA2_blw.sqrt_enorm', 'Filtered_UPGMA_DADA2', \
 	'Filtered_UPGMA_DADA2_blw.sqrt_enorm', 'Shuffle1_PhILR_Filtered_UPGMA_DADA2_blw.sqrt_enorm', \
 	'Shuffle2_PhILR_Filtered_UPGMA_DADA2_blw.sqrt_enorm', 'Shuffle3_PhILR_Filtered_UPGMA_DADA2_blw.sqrt_enorm', \
-	'Shuffle4_PhILR_Filtered_UPGMA_DADA2_blw.sqrt_enorm', 'Shuffle5_PhILR_Filtered_UPGMA_DADA2_blw.sqrt_enorm', 'Filtered_IQtree', \
-	'Filtered_IQtree_blw.sqrt_enorm', 'Shuffle1_PhILR_Filtered_IQtree_blw.sqrt_enorm', 'Shuffle2_PhILR_Filtered_IQtree_blw.sqrt_enorm',\
-	'Shuffle3_PhILR_Filtered_IQtree_blw.sqrt_enorm', 'Shuffle4_PhILR_Filtered_IQtree_blw.sqrt_enorm', 'Shuffle5_PhILR_Filtered_IQtree_blw.sqrt_enorm']
+	'Filtered_IQtree', 'Filtered_IQtree_blw.sqrt_enorm', \
+	'Shuffle1_PhILR_Filtered_IQtree_blw.sqrt_enorm',\
+	'Shuffle2_PhILR_Filtered_IQtree_blw.sqrt_enorm',\
+	'Shuffle3_PhILR_Filtered_IQtree_blw.sqrt_enorm']
 
 my_colors = ['white', 'white', 'white', 'y', 'white', '#050598', '#f7d8a0', '#f7d8a0', \
-'#f7d8a0', '#f7d8a0', '#f7d8a0', 'white', '#050598', '#f7d8a0', '#f7d8a0', '#f7d8a0', \
-'#f7d8a0', '#f7d8a0', 'white', '#050598', '#f7d8a0', '#f7d8a0', '#f7d8a0', '#f7d8a0', \
-'#f7d8a0', 'white', '#050598', '#f7d8a0', '#f7d8a0', '#f7d8a0', '#f7d8a0', '#f7d8a0']
+'#f7d8a0', 'white', '#050598', '#f7d8a0', '#f7d8a0', '#f7d8a0', \
+'white', '#050598', '#f7d8a0', '#f7d8a0', '#f7d8a0', \
+'white', '#050598', '#f7d8a0', '#f7d8a0', '#f7d8a0']
 my_markers = "o"*len(comp_ds)
 # my_markers = ["o", "s", "P", "v", "X", "x", "1", "*", "+", "_", "D", "|"]
 train_percent = 0.75
