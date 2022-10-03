@@ -44,20 +44,9 @@ print("Establishing other constants.", flush = True)
 # --------------------------------------------------------------------------
 font1 = {'family':'serif','color':'blue','size':20}
 font2 = {'family':'serif','color':'darkred','size':15}
-comp_ds = ['alr_DADA2', 'clr_DADA2', 'raw_DADA2', 'Filtered_IQtree', \
-	'Filtered_IQtree_blw.sqrt_enorm', 'Shuffle1_PhILR_Filtered_IQtree_blw.sqrt_enorm',\
-	'Shuffle2_PhILR_Filtered_IQtree_blw.sqrt_enorm', 'Shuffle3_PhILR_Filtered_IQtree_blw.sqrt_enorm',\
+comp_ds = ['alr_DADA2', 'clr_DADA2', 'raw_DADA2', 'Filtered_IQtree_blw.sqrt_enorm', \
 	'Filtered_Silva_DADA2', 'Filtered_Silva_DADA2_blw.sqrt_enorm', \
-	'Shuffle1_PhILR_Filtered_Silva_DADA2_blw.sqrt_enorm', \
-	'Shuffle2_PhILR_Filtered_Silva_DADA2_blw.sqrt_enorm', \
-	'Shuffle3_PhILR_Filtered_Silva_DADA2_blw.sqrt_enorm',\
-	'Filtered_UPGMA_DADA2', \
-	'Filtered_UPGMA_DADA2_blw.sqrt_enorm', 'Shuffle1_PhILR_Filtered_UPGMA_DADA2_blw.sqrt_enorm',\
-	'Shuffle2_PhILR_Filtered_UPGMA_DADA2_blw.sqrt_enorm', 
-	'Shuffle3_PhILR_Filtered_UPGMA_DADA2_blw.sqrt_enorm',\
-	'lognorm_DADA2', 'Silva_DADA2', \
-	'Silva_DADA2_blw.sqrt_enorm', 'Shuffle1_PhILR_Silva_DADA2_blw.sqrt_enorm', \
-	'Shuffle2_PhILR_Silva_DADA2_blw.sqrt_enorm', 'Shuffle3_PhILR_Silva_DADA2_blw.sqrt_enorm']
+	'Filtered_UPGMA_DADA2_blw.sqrt_enorm', 'Silva_DADA2', 'Silva_DADA2_blw.sqrt_enorm']
 
 pdf = matplotlib.backends.backend_pdf.PdfPages(plot_pdf_fpath)
 #set font sizes
@@ -65,10 +54,14 @@ plt.rc('font', size=15)
 plt.rc('xtick', labelsize=20) 
 plt.rc('ytick', labelsize=20) 
 plt.rc('axes', labelsize=20) 
-plt.rc('axes', titlesize=50)
+plt.rc('axes', titlesize=25)
 
 r_sq = []
 
+fig = plt.figure(figsize=(17,17))
+num_rows = 3
+num_cols = 3
+ax_count = 1
 ds1 = "lognorm_DADA2"
 for d2 in range(len(comp_ds)):
 	ds2 = comp_ds[d2]
@@ -112,30 +105,32 @@ for d2 in range(len(comp_ds)):
 	r_sq.append(r_value**2)
 	a, b = np.polyfit(ds1_lst, ds2_lst, 1)
 	# print(a, b)
-	fig = plt.figure(figsize=(11,11))
-	fig.suptitle(f"Metastudy {train_percent}training {ds1} vs {ds2} by accuracy, Python only")
+	# fig.suptitle(f"Metastudy {train_percent}training {ds1} vs {ds2} by accuracy, Python only")
 	plt.subplots_adjust(bottom=0.8)
-	ax = fig.add_subplot(1,1,1)
+	ax = fig.add_subplot(num_rows,num_cols, ax_count)
 	my_projects = list(set(list(map(lambda x: x[1], list(ds2_score.values())))))#pulling second element from each dict.value
 	my_markers = ["o", "s", "P", "v", "x"]
 	for i, label in enumerate(list(ds2_score.keys())):
 		my_proj = ds2_score[label][1]
 		print(f"{my_proj} {ds1_lst[i]} {ds2_lst[i]}, {list(ds2_score.keys())[i]}")
 		my_marker = my_markers[my_projects.index(my_proj)]
-		ax.scatter(ds1_lst[i], ds2_lst[i], s=70, label=list(ds2_score.keys())[i], marker=my_marker)
+		ax.scatter(ds1_lst[i], ds2_lst[i], s=100, label=list(ds2_score.keys())[i], marker=my_marker)
 	# plt.annotate(label, (x_lst[i], y_lst[i]))
 	ax.plot([0,1], [0,1], color = "r", label = "expected")
 	ax.plot(ds1_lst, a*ds1_lst+b, color = "green", label = "accuracy polyfit")
 	ax.text(0.1, 0.8, f"r squared: {round(r_value**2, 4)}", fontsize=20)
-	ax.set_xlabel(f"Accuracy {ds1}")
-	ax.set_ylabel(f"Accuracy {ds2}")
+	ax.set_xlabel(f"{ds1}")
+	ax.set_ylabel(f"{ds2}")
+	ax.set_title("Scores")
+	ax_count += 1
 	# ax.legend(title="Legend", loc="upper left", framealpha=1)
-	fig.tight_layout()
-	print("Saving figure to pdf", flush = True)
-	pdf.savefig( fig )
+fig.tight_layout(pad = 1, h_pad=1, w_pad=2)
+plt.subplots_adjust(left=0.1)
+print("Saving figure to pdf", flush = True)
+pdf.savefig( fig )
 print("Making seperate legend.")
-fig = plt.figure(figsize=(11,11))
-plt.subplots_adjust(bottom=0.8)
+fig = plt.figure(figsize=(11,26))
+# plt.subplots_adjust(bottom=0.8)
 ax = fig.add_subplot(1,1,1)
 # fig.tight_layout()
 my_markers = ["o", "s", "P", "v", "x"]
@@ -146,7 +141,7 @@ for i, label in enumerate(list(ds2_score.keys())):
 	ax.scatter(0, 0, s=70, label=list(ds2_score.keys())[i], marker=my_marker)
 	ax.legend(title="",  loc="center", framealpha=1, mode = "expand", markerscale=2)
 print("Saving figure to pdf", flush = True)
-pdf.savefig( fig, bbox_inches='tight')
+pdf.savefig( fig)
 
 print("Saving pdf", flush = True)
 pdf.close()

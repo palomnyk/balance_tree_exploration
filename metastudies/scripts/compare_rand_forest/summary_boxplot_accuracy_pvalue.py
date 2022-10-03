@@ -53,26 +53,29 @@ plot_pdf_fpath = os.path.join(output_dir, "summary_pval_acc_vs_acc_python_by_tra
 # --------------------------------------------------------------------------
 print("Establishing other constants.", flush = True)
 # --------------------------------------------------------------------------
-comp_ds = ['alr_DADA2', 'clr_DADA2', 'RawDADA2', 'lognorm_DADA2', 'Silva_DADA2', \
+comp_ds = ['alr_DADA2', 'clr_DADA2', 'raw_DADA2', 'lognorm_DADA2', 'Silva_DADA2', \
 	'Silva_DADA2_blw.sqrt_enorm', 'Shuffle1_PhILR_Silva_DADA2_blw.sqrt_enorm', \
 	'Shuffle2_PhILR_Silva_DADA2_blw.sqrt_enorm', 'Shuffle3_PhILR_Silva_DADA2_blw.sqrt_enorm', \
-	'Filtered_IQtree', 'Filtered_IQtree_blw.sqrt_enorm', \
-	'Shuffle1_PhILR_Filtered_IQtree_blw.sqrt_enorm',\
-	'Shuffle2_PhILR_Filtered_IQtree_blw.sqrt_enorm', 'Shuffle3_PhILR_Filtered_IQtree_blw.sqrt_enorm',\
 	'Filtered_Silva_DADA2', 'Filtered_Silva_DADA2_blw.sqrt_enorm', \
 	'Shuffle1_PhILR_Filtered_Silva_DADA2_blw.sqrt_enorm', \
 	'Shuffle2_PhILR_Filtered_Silva_DADA2_blw.sqrt_enorm', \
-	'Shuffle3_PhILR_Filtered_Silva_DADA2_blw.sqrt_enorm',\
-	'Filtered_UPGMA_DADA2', 'Filtered_UPGMA_DADA2_blw.sqrt_enorm', \
-	'Shuffle1_PhILR_Filtered_UPGMA_DADA2_blw.sqrt_enorm',\
-	'Shuffle2_PhILR_Filtered_UPGMA_DADA2_blw.sqrt_enorm', \
-	'Shuffle3_PhILR_Filtered_UPGMA_DADA2_blw.sqrt_enorm',]
+	'Shuffle3_PhILR_Filtered_Silva_DADA2_blw.sqrt_enorm', 'Filtered_UPGMA_DADA2', \
+	'Filtered_UPGMA_DADA2_blw.sqrt_enorm', 'Shuffle1_PhILR_Filtered_UPGMA_DADA2_blw.sqrt_enorm', \
+	'Shuffle2_PhILR_Filtered_UPGMA_DADA2_blw.sqrt_enorm', 'Shuffle3_PhILR_Filtered_UPGMA_DADA2_blw.sqrt_enorm', \
+	'Filtered_IQtree', 'Filtered_IQtree_blw.sqrt_enorm', \
+	'Shuffle1_PhILR_Filtered_IQtree_blw.sqrt_enorm',\
+	'Shuffle2_PhILR_Filtered_IQtree_blw.sqrt_enorm',\
+	'Shuffle3_PhILR_Filtered_IQtree_blw.sqrt_enorm']
+
+my_colors = ['white', 'white', 'white', 'y', 'white', '#050598', '#f7d8a0', '#f7d8a0', \
+'#f7d8a0', 'white', '#050598', '#f7d8a0', '#f7d8a0', '#f7d8a0', \
+'white', '#050598', '#f7d8a0', '#f7d8a0', '#f7d8a0', \
+'white', '#050598', '#f7d8a0', '#f7d8a0', '#f7d8a0']
 # comp_ds = ['alr_DADA2', 'clr_DADA2', 'Raw_DADA2', 'lognorm_DADA2', \
 # 	'Filtered_Silva_DADA2','Silva_DADA2', 'Filtered_IQtree', \
 # 	'Filtered_Silva_DADA2_blw.sqrt_enorm', 'Filtered_UPGMA_DADA2', \
 # 	'Filtered_UPGMA_DADA2_blw.sqrt_enorm', 'Filtered_IQtree_blw.sqrt_enorm', \
 # 	'Silva_DADA2_blw.sqrt_enorm']
-my_colors = plt.cm.get_cmap("tab10", 10)
 my_markers = "o"*len(comp_ds)
 # my_markers = ["o", "s", "P", "v", "X", "x", "1", "*", "+", "_", "D", "|"]
 train_percent = 0.75
@@ -122,7 +125,9 @@ fig = plt.figure(figsize=(11,11))
 fig.suptitle(f"Metastudy {train_percent}training each dataset vs others by accuracy, Sklearn RF")
 plt.subplots_adjust(bottom=0.8, left=0.8)
 ax = fig.add_subplot(1,1,1)
-ax.boxplot(plotdata, labels=plotdata.columns, showfliers=False)
+bp = ax.boxplot(plotdata, patch_artist = True, labels=plotdata.columns,showfliers=False)
+for patch, color in zip(bp['boxes'], my_colors):
+	patch.set_facecolor(color)
 ax.set_xticklabels(labels = plotdata.columns, rotation=90)
 # plt.annotate(label, (x_lst[i], y_lst[i]))
 plt.axhline(y = math.log10(0.05), color = 'r', label="Significantly worse accuracy below")
@@ -138,24 +143,24 @@ ax.set_ylabel(f"log10 pvalue")
 for i in range(len(plotdata.columns)):
 	y = plotdata.iloc[:,i]
 	x = np.random.normal(1+i, 0.04, size=len(y))
-	ax.plot(x, y, "bo", alpha=0.5)
+	ax.plot(x, y, color="b",marker=".", linestyle = "None", alpha=0.5)
 fig.tight_layout()
 print("Saving figure to pdf", flush = True)
 pdf.savefig( fig )
 
-print("Making seperate legend.")
-fig.suptitle(f"Metastudy {train_percent}training {ds1} vs others by accuracy, Python only")
-ax = fig.add_subplot(1,1,1)
-for i in range(len(comp_ds)):
-	ax.scatter(0, 0, s=70, label=comp_ds[i], color="black", marker=my_markers[i])
-for i in range(len(projects)):
-	ax.scatter(0, 0, s=70, label=projects[i], color=my_colors.colors[i], marker=my_markers[0])
-plt.axvline(x=0, color='r', label="No difference", linestyle="--")
-plt.axhline(y = math.log10(0.1), color = 'r', label="p=0.10")
-ax.legend(title="Legend", loc="center", mode="expand", framealpha=1)
-fig.tight_layout()
-print(f"Saving figure to pdf at {plot_pdf_fpath}", flush = True)
-pdf.savefig( fig )
+# print("Making seperate legend.")
+# fig.suptitle(f"Metastudy {train_percent}training {ds1} vs others by accuracy, Python only")
+# ax = fig.add_subplot(1,1,1)
+# for i in range(len(comp_ds)):
+# 	ax.scatter(0, 0, s=70, label=comp_ds[i], color="black", marker=my_markers[i])
+# for i in range(len(projects)):
+# 	ax.scatter(0, 0, s=70, label=projects[i], color=my_colors, marker=my_markers[0])
+# plt.axvline(x=0, color='r', label="No difference", linestyle="--")
+# plt.axhline(y = math.log10(0.1), color = 'r', label="p=0.10")
+# ax.legend(title="Legend", loc="center", mode="expand", framealpha=1)
+# fig.tight_layout()
+# print(f"Saving figure to pdf at {plot_pdf_fpath}", flush = True)
+# pdf.savefig( fig )
 
 print("Saving pdf", flush = True)
 pdf.close()
