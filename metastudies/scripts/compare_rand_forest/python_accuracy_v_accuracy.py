@@ -134,7 +134,7 @@ for d1 in range(len(comp_ds)):
 			ax.set_xlabel(f"Accuracy {ds1}")
 			ax.set_ylabel(f"Accuracy {ds2}")
 			# ax.legend(title="Legend", loc="upper left", framealpha=1)
-			# fig.tight_layout()
+			fig.tight_layout()
 			print("Saving figure to pdf", flush = True)
 			pdf.savefig( fig, bbox_inches='tight')
 print("Making seperate legend.")
