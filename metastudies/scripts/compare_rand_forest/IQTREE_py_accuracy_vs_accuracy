@@ -57,9 +57,9 @@ plt.rc('axes', titlesize=25)
 
 r_sq = []
 
-fig = plt.figure(figsize=(17,17))
-num_rows = 1
-num_cols = 3
+fig = plt.figure(figsize=(8, 24))
+num_rows = 3
+num_cols = 1
 ax_count = 1
 ds1 = "Filtered_IQtree_blw.sqrt_enorm"
 for d2 in range(len(comp_ds)):
@@ -123,7 +123,7 @@ for d2 in range(len(comp_ds)):
 	ax.set_title("Scores")
 	ax_count += 1
 	# ax.legend(title="Legend", loc="upper left", framealpha=1)
-fig.tight_layout(pad = 1, h_pad=1, w_pad=2)
+fig.tight_layout(pad = 1, h_pad=1, w_pad=1)
 plt.subplots_adjust(left=0.1)
 print("Saving figure to pdf", flush = True)
 pdf.savefig( fig )
