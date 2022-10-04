@@ -20,8 +20,7 @@ echo Using $SLURM_NTASKS processors across $SLURM_NNODES nodes
 
 module load anaconda3/2020.11
 conda activate testing_pyCaret
-python metastudies/scripts/mlm_metrics/all_sum_sklearn_ml_metrics_acc.py\
-  -d ~/git/balance_tree_exploration
+python metastudies/scripts/mlm_metrics/all_sum_sklearn_ml_metrics_acc.py \
 
 echo ""
 echo "======================================================"
