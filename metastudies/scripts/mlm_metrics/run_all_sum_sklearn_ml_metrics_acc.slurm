@@ -2,7 +2,7 @@
 
 #SBATCH --partition=Pisces                                    		# Partition/queue requested on server
 #SBATCH --job-name=all_sum_sklearn                                   		# Job name
-#SBATCH --time=5:00:00                                      		# Time limit (hrs:min:sec)
+#SBATCH --time=40:00:00                                      		# Time limit (hrs:min:sec)
 #SBATCH --nodes=1                                         			# Number of nodes requested
 #SBATCH --ntasks-per-node=1                          			# Number of CPUs (processor cores/tasks)
 #SBATCH --mem=60gb                                          		# Memory limit

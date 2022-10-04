@@ -154,8 +154,8 @@ for proj in range(len(projects)):
 						# assert is_string_dtype(spetz_var)
 						# if spetz_var.dtype.name == "object":
 						if is_string_dtype(spetz_var) == True and spetz_var.isnull().sum() < 5:
-							print("evaluate each model in turn.")
 							for name, model in models:
+								print(f"Evaluating {name} with {spetz_var}.")
 								kfold = model_selection.KFold(n_splits=10, random_state=seed, shuffle=True)
 								cv_results = model_selection.cross_val_score(model, my_df, spetz_var, cv=kfold, scoring=scoring)
 								# result_str = np.array2string(cv_results, separator=",",suffix="/n")
