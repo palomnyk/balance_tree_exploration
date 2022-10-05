@@ -90,6 +90,7 @@ pdf = matplotlib.backends.backend_pdf.PdfPages(sum_pdf_fpath)
 for proj in range(len(projects)):
 	project = projects[proj]
 	output_dir = os.path.join(home_dir, project, "output")
+	my_plots = []
 	for philr_group in philr_groups:
 		main_output_label = f"{output_label}_{philr_group}"
 		philr_dir = os.path.join(output_dir, "tables", philr_group)
@@ -136,35 +137,35 @@ for proj in range(len(projects)):
 		print(f"Building {scoring} scores for each weighing scheme.\
 			Results found at {result_fpath} for {philr_group}.")
 		# --------------------------------------------------------------------------
-		# if not os.path.exists(result_fpath):
-		with open(result_fpath, "w+") as fl:
-			fl.write(",".join(col_names))
-			fl.write("\n")
-			for pw in philr_part_weights:
-				for iw in philr_ilr_weights:
-					table_fn = f"{philr_group}_{iw}_{pw}.csv"
-					my_df = pd.read_csv(os.path.join(philr_dir, table_fn), sep=',', header=0, index_col=0)
-					meta_df = meta_df.loc[list(my_df.index.values)]#drops rows from metadata that aren't in my_df
-					assert list(my_df.index.values) == list(meta_df.index.values) #making sure I'm indexing correctly
-					for meta_c in range(len(meta_df.columns)):
-						m_c = list(meta_df.columns)[meta_c]
-						# print(m_c)
-						spetz_var = meta_df[m_c]#metadata var to test
-						# print(spetz_var.dtype)
-						# assert is_string_dtype(spetz_var)
-						# if spetz_var.dtype.name == "object":
-						if is_string_dtype(spetz_var) == True and spetz_var.isnull().sum() < 5:
-							for name, model in models:
-								print(f"Evaluating {name} with {spetz_var}.")
-								kfold = model_selection.KFold(n_splits=10, random_state=seed, shuffle=True)
-								cv_results = model_selection.cross_val_score(model, my_df, spetz_var, cv=kfold, scoring=scoring)
-								# result_str = np.array2string(cv_results, separator=",",suffix="/n")
-								result_str = ",".join(map(str, cv_results.tolist()))
-								msg = f"{m_c},{iw},{pw},{name},{result_str}\n"
-								fl.write(msg)
-		# --------------------------------------------------------------------------
-		print(f"Finished recording accuracy. Heading towards boxplot creation for {philr_group} {project}.")
-		# --------------------------------------------------------------------------
+		if not os.path.exists(result_fpath):
+			with open(result_fpath, "w+") as fl:
+				fl.write(",".join(col_names))
+				fl.write("\n")
+				for pw in philr_part_weights:
+					for iw in philr_ilr_weights:
+						table_fn = f"{philr_group}_{iw}_{pw}.csv"
+						my_df = pd.read_csv(os.path.join(philr_dir, table_fn), sep=',', header=0, index_col=0)
+						meta_df = meta_df.loc[list(my_df.index.values)]#drops rows from metadata that aren't in my_df
+						assert list(my_df.index.values) == list(meta_df.index.values) #making sure I'm indexing correctly
+						for meta_c in range(len(meta_df.columns)):
+							m_c = list(meta_df.columns)[meta_c]
+							# print(m_c)
+							spetz_var = meta_df[m_c]#metadata var to test
+							# print(spetz_var.dtype)
+							# assert is_string_dtype(spetz_var)
+							# if spetz_var.dtype.name == "object":
+							if is_string_dtype(spetz_var) == True and spetz_var.isnull().sum() < 5:
+								for name, model in models:
+									print(f"Evaluating {name} with {spetz_var}.")
+									kfold = model_selection.KFold(n_splits=10, random_state=seed, shuffle=True)
+									cv_results = model_selection.cross_val_score(model, my_df, spetz_var, cv=kfold, scoring=scoring)
+									# result_str = np.array2string(cv_results, separator=",",suffix="/n")
+									result_str = ",".join(map(str, cv_results.tolist()))
+									msg = f"{m_c},{iw},{pw},{name},{result_str}\n"
+									fl.write(msg)
+			# --------------------------------------------------------------------------
+			print(f"Finished recording accuracy. Heading towards boxplot creation for {philr_group} {project}.")
+			# --------------------------------------------------------------------------
 		#Setup for building boxplots
 		result_df = pd.read_csv(result_fpath, sep=',', header=0)
 		print(result_df.head())
@@ -320,7 +321,7 @@ for proj in range(len(projects)):
 		num_rows = 5
 		max_plots_per_page = 8
 		fig = plt.figure(figsize=(11,12))
-		fig.suptitle(f"{project} Algorithm by PhILR weighting {scoring} mean or {philr_group}", fontsize = 20)
+		fig.suptitle(f"{project} | average accuracy by PhILR weights | {philr_group}", fontsize = 20)
 		# plt.subplots_adjust(bottom=0.8)
 		sub_plot_counter = 0
 		page_counter = 1
@@ -364,25 +365,25 @@ for proj in range(len(projects)):
 									linewidth=1, 
 									markersize=2)
 				# ax.title.set_text(f"Algorithm by weight, {scoring} mean, {meta_c}")
-				ax.set_title(f"Algorithm averages by PhILR weighting {scoring} mean, {meta_c}", fontsize=10)
+				ax.set_title(f"{meta_c}", fontsize=10)
 				ax.set_xticks(ticks=range(0,my_means.shape[0]), labels=fig_df.loc[:,"ilr_weight"].tolist(), rotation=90)
 				ax.set_xticklabels(new_labs, rotation=90)
 				ax.tick_params(axis='x', which='major', labelsize=6)
 				# ax.set_yticks(ticks=my_range)
 				ax.set_yticks(ticks=[0.55,0.65,0.75,0.85,0.95])
 
-			# --------------------------------------------------------------------------
-			print(f"Creating legend for {sum_pdf_fpath}.")
-			# --------------------------------------------------------------------------
-			ax = fig.add_subplot(num_rows, num_cols, sub_plot_counter + 1)
-			for co in range(0,my_means.shape[1]):
-				# ax.scatter(0,0, label=my_means.columns[co], marker=model_symbols[co],)
-				ax.plot(0,0, label=my_means.columns[co], marker=model_symbols[co])
-			ax.get_xaxis().set_visible(False)
-			ax.get_yaxis().set_visible(False)
-			ax.legend(title="Algorithm", loc="center", framealpha=1, mode = "expand", markerscale=2)
-			fig.tight_layout()
-			pdf.savefig( fig )
+		# --------------------------------------------------------------------------
+		print(f"Creating legend for {sum_pdf_fpath}.")
+		# --------------------------------------------------------------------------
+		ax = fig.add_subplot(num_rows, num_cols, sub_plot_counter + 1)
+		for co in range(0,my_means.shape[1]):
+			# ax.scatter(0,0, label=my_means.columns[co], marker=model_symbols[co],)
+			ax.plot(0,0, label=my_means.columns[co], marker=model_symbols[co])
+		ax.get_xaxis().set_visible(False)
+		ax.get_yaxis().set_visible(False)
+		ax.legend(title="Algorithm", loc="center", framealpha=1, mode = "expand", markerscale=2)
+		fig.tight_layout()
+		pdf.savefig( fig )
 # --------------------------------------------------------------------------
 print(f"Saved summary scatterplot to {sum_pdf_fpath}.")
 # --------------------------------------------------------------------------
