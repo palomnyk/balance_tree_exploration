@@ -77,7 +77,8 @@ percent_max_read_depth <- c(0, 0.0001, 0.01, 0.05, 0.1, 0.2, 0.4, 0.6, 0.8, 0.99
 # min_read_depths <- c(0, 500, 1000, 5000, 10000, 20000, 30000, 50000, 70000, 90000, 10000)
 min_read_depths <- max_depth*percent_max_read_depth
 mds_depth <- 5
-
+print("min_read_depths")
+print(min_read_depths)
 mean_read_depth <- base::mean(total_seqs$total_seqs)
 print(paste("Mean read depth:", mean_read_depth, "Max read depth:", max_depth))
 
