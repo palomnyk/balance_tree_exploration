@@ -100,7 +100,7 @@ for(s in 1:length(min_read_depths)){
   seq_d <- min_read_depths[s]#new read depth
   rd_filt_asv <- asv_table[total_seqs$total_seqs >= seq_d,]#dataset 1 (read depth filtered asv)
   print(paste("rd_filt_asv dim:", paste(dim(rd_filt_asv))))
-  if (total_seqs$total_seqs >= seq_d > 2){
+  if (length(total_seqs$total_seqs >= seq_d) > 2){
     safe_rns <- intersect(row.names(ref_ps@otu_table), row.names(rd_filt_asv)) #rows for this iterate
     ts <- rowSums(rd_filt_asv[safe_rns,]) #sample read depths
     my_clr <- as.data.frame(rgr::clr(as.matrix(rd_filt_asv + 1)))#dataset 2
