@@ -71,15 +71,17 @@ ref_ps <- readRDS(file.path(output_dir, "r_objects", "ref_tree_phyloseq_obj.rds"
 total_seqs <- rowSums(asv_table)
 total_seqs <- data.frame(total_seqs, row.names = row.names(asv_table))
 max_depth <- base::max(total_seqs$total_seqs)
+mean_read_depth <- base::mean(total_seqs$total_seqs)
+median_read_depth <- stats::median(total_seqs$total_seqs)
 # my_ds_names <- c( "raw DADA2", "clr", "alr", "lognorm", "PhILR Silva Tree", "DESeq2", "ALDEx2.clr")
 my_ds_names <- c( "raw DADA2", "clr", "alr", "lognorm", "PhILR Silva Tree", "ALDEx2.clr")
-percent_max_read_depth <- c(0, 0.00001, 0.001, 0.01, 0.02, 0.05, 0.08, 0.15, 0.25, 0.4, 0.6)
+percent_max_read_depth <- c(0, 0.00001, 0.0001, 0.001, 0.01, 0.02, 0.05, 0.08, 0.15, 0.25, 0.45, 0.6, 0.8)
 # min_read_depths <- c(0, 500, 1000, 5000, 10000, 20000, 30000, 50000, 70000, 90000, 10000)
-min_read_depths <- max_depth*percent_max_read_depth
+min_read_depths <- median_read_depth*percent_max_read_depth
 mds_depth <- 5
 print("min_read_depths")
 print(min_read_depths)
-mean_read_depth <- base::mean(total_seqs$total_seqs)
+
 print(paste("Mean read depth:", mean_read_depth, "Max read depth:", max_depth))
 
 kend <- vector(mode = "numeric", length = length(my_ds_names) * length(min_read_depths) * mds_depth)
