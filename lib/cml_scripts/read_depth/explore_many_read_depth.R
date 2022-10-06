@@ -78,6 +78,8 @@ percent_max_read_depth <- c(0, 0.0001, 0.01, 0.05, 0.1, 0.2, 0.4, 0.6, 0.8, 0.99
 min_read_depths <- max_depth*percent_max_read_depth
 mds_depth <- 5
 
+mean_read_depth <- base::mean(total_seqs$total_seqs)
+print(paste("Mean read depth:", mean_read_depth, "Max read depth:", max_depth))
 
 kend <- vector(mode = "numeric", length = length(my_ds_names) * length(min_read_depths) * mds_depth)
 perma_r2 <- vector(mode = "numeric", length = length(my_ds_names) * length(min_read_depths) * mds_depth)
