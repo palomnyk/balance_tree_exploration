@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --partition=Pisces                                    		# Partition/queue requested on server
-#SBATCH --job-name=NJ_explore_many_seq_depth_filter                                   		# Job name
+#SBATCH --job-name=Zeller_explore_many_seq_depth_filter                                   		# Job name
 #SBATCH --time=48:00:00                                      		# Time limit (hrs:min:sec)
 #SBATCH --nodes=1                                         			# Number of nodes requested
 #SBATCH --ntasks-per-node=1                          			# Number of CPUs (processor cores/tasks)
@@ -21,7 +21,7 @@ echo Using $SLURM_NTASKS processors across $SLURM_NNODES nodes
 module load R
 
 Rscript ~/git/balance_tree_exploration/lib/cml_scripts/read_depth/explore_many_read_depth.R \
--p Noguera-Julian \
+-p Zeller \
 -d ~/git/balance_tree_exploration/
 
 
