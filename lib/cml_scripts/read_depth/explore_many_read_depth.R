@@ -68,12 +68,16 @@ asv_table <- readRDS(file.path(output_dir, "r_objects", "ForwardReads_DADA2.rds"
 
 ref_ps <- readRDS(file.path(output_dir, "r_objects", "ref_tree_phyloseq_obj.rds"))
 
-my_ds_names <- c( "raw counts table", "clr", "alr", "lognorm", "PhILR Silva Tree", "DESeq2", "ALDEx2.clr")
-min_read_depths <- c(0, 500, 1000, 5000, 10000, 20000, 30000, 50000, 70000, 90000, 10000)
-mds_depth <- 5
-
 total_seqs <- rowSums(asv_table)
 total_seqs <- data.frame(total_seqs, row.names = row.names(asv_table))
+max_depth <- base::max(total_seqs$total_seqs)
+# my_ds_names <- c( "raw DADA2", "clr", "alr", "lognorm", "PhILR Silva Tree", "DESeq2", "ALDEx2.clr")
+my_ds_names <- c( "raw DADA2", "clr", "alr", "lognorm", "PhILR Silva Tree", "ALDEx2.clr")
+percent_max_read_depth <- c(0, 0.0001, 0.01, 0.05, 0.1, 0.2, 0.4, 0.6, 0.8, 0.999)
+# min_read_depths <- c(0, 500, 1000, 5000, 10000, 20000, 30000, 50000, 70000, 90000, 10000)
+min_read_depths <- max_depth*percent_max_read_depth
+mds_depth <- 5
+
 
 kend <- vector(mode = "numeric", length = length(my_ds_names) * length(min_read_depths) * mds_depth)
 perma_r2 <- vector(mode = "numeric", length = length(my_ds_names) * length(min_read_depths) * mds_depth)
@@ -110,10 +114,10 @@ for(s in 1:length(min_read_depths)){
     new_ref_ps <- munge_ref_ps(new_ref_ps)
     print(paste("new dim ref ps:", dim(data.frame(new_ref_ps@otu_table))))
     ##------------------------------------------------------------------##
-    #create DESeq2 dtaset from new ref ps
-    new_DESeq2 <- phyloseq::phyloseq_to_deseq2(new_ref_ps, design= ~ 1)#dataset 5
-    new_DESeq2 <- DESeq2::estimateSizeFactors(new_DESeq2)
-    new_DESeq2 <- t(DESeq2::counts(new_DESeq2, normalized=T))
+    # #create DESeq2 dtaset from new ref ps
+    # new_DESeq2 <- phyloseq::phyloseq_to_deseq2(new_ref_ps, design= ~ 1)#dataset 5
+    # new_DESeq2 <- DESeq2::estimateSizeFactors(new_DESeq2)
+    # new_DESeq2 <- t(DESeq2::counts(new_DESeq2, normalized=T))
     
     print(paste("new DSeq:", paste(dim(new_DESeq2))))
     
@@ -129,8 +133,8 @@ for(s in 1:length(min_read_depths)){
     print(paste("size of ald:", object.size(ald)))
     print(paste("ald dim:", paste(dim(ald))))
     
-    my_datasets <- list(rd_filt_asv, my_clr, my_alr, ln_asv, ref_philr, new_DESeq2, ald)
-    
+    # my_datasets <- list(rd_filt_asv, my_clr, my_alr, ln_asv, ref_philr, new_DESeq2, ald)
+    my_datasets <- list(rd_filt_asv, my_clr, my_alr, ln_asv, ref_philr, ald)
     print(paste("finished seq depth filter:", s))
     
     for( ds in 1:length(my_datasets)){
