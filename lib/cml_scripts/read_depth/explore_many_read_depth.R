@@ -156,18 +156,20 @@ for(s in 1:length(min_read_depths)){
       print("Creating proportion of variance explained")
       my_var_exp <- my_prcmp$sdev^2/sum(my_prcmp$sdev^2)
       for (md in 1:mds_depth){
-        print(paste("Updating result holding vectors for MDS", md))
-        # kend[counter] <- cor.test(log10(total_seqs[total_seqs > seq_d]), myPCA[,md], method = "kendall")$estimate
-        ds_num[counter] <- ds
-        ds_nam[counter] <- my_ds_names[ds]
-        mds_lev[counter] <- md
-        read_depth[counter] <- seq_d
-        var_exp[counter] <- my_var_exp[md]
-        spear_cor[counter] <- cor(total_seqs[total_seqs >= seq_d], myPCA[,md], method = "spearman")
-        samples_left[counter] <- nrow(my_table)
-        taxa_left[counter] <- ncol(my_table)
-        zero_count[counter] <- zeros
-        counter <- counter + 1
+        if (ncol(myPCA) >= md){
+          print(paste("Updating result holding vectors for MDS", md))
+          # kend[counter] <- cor.test(log10(total_seqs[total_seqs > seq_d]), myPCA[,md], method = "kendall")$estimate
+          ds_num[counter] <- ds
+          ds_nam[counter] <- my_ds_names[ds]
+          mds_lev[counter] <- md
+          read_depth[counter] <- seq_d
+          var_exp[counter] <- my_var_exp[md]
+          spear_cor[counter] <- cor(total_seqs[total_seqs >= seq_d], myPCA[,md], method = "spearman")
+          samples_left[counter] <- nrow(my_table)
+          taxa_left[counter] <- ncol(my_table)
+          zero_count[counter] <- zeros
+          counter <- counter + 1
+        }
       }
       print(paste("finished ds:", my_ds_names[ds], "read depth:", seq_d))
     }
