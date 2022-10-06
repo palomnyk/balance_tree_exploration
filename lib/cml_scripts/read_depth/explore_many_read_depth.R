@@ -120,8 +120,7 @@ for(s in 1:length(min_read_depths)){
     # new_DESeq2 <- phyloseq::phyloseq_to_deseq2(new_ref_ps, design= ~ 1)#dataset 5
     # new_DESeq2 <- DESeq2::estimateSizeFactors(new_DESeq2)
     # new_DESeq2 <- t(DESeq2::counts(new_DESeq2, normalized=T))
-    
-    print(paste("new DSeq:", paste(dim(new_DESeq2))))
+    # print(paste("new DSeq:", paste(dim(new_DESeq2))))
     
     ref_philr <- philr::philr(new_ref_ps@otu_table, new_ref_ps@phy_tree,
                               part.weights='enorm.x.gm.counts',
