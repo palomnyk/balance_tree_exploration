@@ -109,37 +109,48 @@ print("made line charts")
 
 #for summary figure
 mds_axis <- c()
-transformation <- c()
+Transformation <- c()
 AUC <- c()
 for (i in 1:max(result_df$mds_lev)){
   pca_only <- result_df[result_df$mds_lev == i, ]
-  for (trans in pca_only$ds_nam) {
+  for (trans in unique(pca_only$ds_nam)) {
     my_r2 <- pca_only[pca_only$ds_nam == trans, "spear_cor"]^2
     my_rd <- pca_only[pca_only$ds_nam == trans, "read_depth"]
     my_auc <- pracma::trapz(my_rd, my_r2)
-
+    
     #filling vectors
     AUC <- c(AUC, my_auc)
-    transformation <- c(transformation, paste0(trans))
+    Transformation <- c(Transformation, paste0(trans))
     mds_axis <- c(mds_axis, paste0("PCA",i))
   }
 }
 
-df1 <- base::data.frame(mds_axis, transformation, AUC)
+df1 <- base::data.frame(mds_axis, Transformation, AUC)
 
-pdf(file = file.path(output_dir, "graphics", "read_depth_artifact_PCA12345_bar.pdf"))
-ggplot2::ggplot(df1, aes(x = mds_axis, y=AUC, fill = transformation)) +
+pdf(file = file.path(output_dir, "graphics", "read_depth_artifact_PCA12345_bar.pdf"),
+    width = 9, height = 5)
+ggplot2::ggplot(df1, aes(x = mds_axis, y=AUC, fill = Transformation)) +
   # geom_bar(position = "dodge", stat = "identity") +
-  ggplot2::geom_col(position=position_dodge(0.5), width=0.5, color="black") +
-  ggplot2::ggtitle(paste0(project, ": each transformation's AUC for each PCA axis")) +
+  ggplot2::geom_col(position="dodge", width=0.85, color="black") +
+  ggplot2::ggtitle(paste0(project, ": transformation AUC by PCA axis")) +
   ggplot2::xlab("PCA Axes") +
   ggplot2::ylab("Area Under Curve") +
   ggplot2::theme_minimal() +
   ggplot2::theme(axis.line = element_line(color="black"),
                  axis.ticks = element_line(color="black"),
-                 panel.border = element_blank())
+                 panel.border = element_blank()) +
+  ggplot2::theme(axis.line = element_line(color="black"),
+                 axis.ticks = element_line(color="black"),
+                 panel.border = element_blank()) +
+  theme(text=element_text(size=15), #change font size of all text
+        axis.text=element_text(size=15), #change font size of axis text
+        axis.title=element_text(size=17), #change font size of axis titles
+        plot.title=element_text(size=17), #change font size of plot title
+        legend.text=element_text(size=15), #change font size of legend text
+        legend.title=element_text(size=16)) #change font size of legend title 
 dev.off()
 print("made bar charts")
+
 
 
 
