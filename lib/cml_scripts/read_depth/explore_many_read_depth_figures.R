@@ -42,7 +42,8 @@ output_dir <- file.path(home_dir, project, 'output')
 result_df <- read.table(file = file.path(output_dir, "tables", paste0(project, "_PCA_seqdep_filt_results.csv")),
                         sep = ",")
 
-pdf(file = file.path(output_dir, "graphics", "read_depth_artifact_PCA12345_line.pdf"))
+pdf(file = file.path(output_dir, "graphics", "read_depth_artifact_PCA12345_line.pdf"),
+    width = 7, height = 7)
 for (i in 1:max(result_df$mds_lev)){
   pca_only <- result_df[result_df$mds_lev == i, ]
   g <- ggplot2::ggplot(pca_only,
@@ -53,13 +54,23 @@ for (i in 1:max(result_df$mds_lev)){
                       y = head(c(pca_only$spear_cor^2), n = length(pca_only$my_ds_names)),
                       label = head(pca_only$ds_nam, n = length(pca_only$my_ds_names)),
                       hjust = -0.1) +
-    ggplot2::ggtitle(paste0(project, ": Correlation PCA",  i, " vs read depth")) +
+    ggplot2::ggtitle(paste0(project, ": Correlation PCA",  i, " vs read depth by read depth threshold")) +
     ggplot2::xlab("Min read depth per sample") +
     ggplot2::ylab("R Squared") +
     ggplot2::labs(color = "Transformations") +
     ggplot2::scale_x_continuous(trans='log10') +
     ggplot2::theme(axis.text.x = element_text(angle = 90)) +
-    ggplot2::theme_minimal()
+    ggplot2::theme_minimal() +
+    ggplot2::theme(axis.line = element_line(color="black"),
+                   axis.ticks = element_line(color="black"),
+                   panel.border = element_blank()) +
+    ggplot2::theme(text=element_text(size=15), #change font size of all text
+                   axis.text=element_text(size=15), #change font size of axis text
+                   axis.title=element_text(size=17), #change font size of axis titles
+                   plot.title=element_text(size=17), #change font size of plot title
+                   legend.text=element_text(size=15), #change font size of legend text
+                   legend.title=element_text(size=16)) #change font size of legend title 
+  
   print(g)
 
   #plot remaining taxa
@@ -86,7 +97,14 @@ for (i in 1:max(result_df$mds_lev)){
     ggplot2::ylab("Samples") +
     ggplot2::labs(fill = "Transformations") +
     ggplot2::theme(axis.text.x = element_text(angle = 90)) +
-    ggplot2::theme_minimal()
+    ggplot2::theme_minimal() +
+    ggplot2::theme(text=element_text(size=15), #change font size of all text
+                   axis.text=element_text(size=15), #change font size of axis text
+                   axis.title=element_text(size=17), #change font size of axis titles
+                   plot.title=element_text(size=17), #change font size of plot title
+                   legend.text=element_text(size=15), #change font size of legend text
+                   legend.title=element_text(size=16)) #change font size of legend title 
+  
   g
   print(g)
 
@@ -139,10 +157,7 @@ ggplot2::ggplot(df1, aes(x = mds_axis, y=AUC, fill = Transformation)) +
   ggplot2::theme(axis.line = element_line(color="black"),
                  axis.ticks = element_line(color="black"),
                  panel.border = element_blank()) +
-  ggplot2::theme(axis.line = element_line(color="black"),
-                 axis.ticks = element_line(color="black"),
-                 panel.border = element_blank()) +
-  theme(text=element_text(size=15), #change font size of all text
+  ggplot2::theme(text=element_text(size=15), #change font size of all text
         axis.text=element_text(size=15), #change font size of axis text
         axis.title=element_text(size=17), #change font size of axis titles
         plot.title=element_text(size=17), #change font size of plot title
