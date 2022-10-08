@@ -194,17 +194,18 @@ pdf(file = file.path(output_dir, "graphics", "read_depth_artifact_PCA12345_line.
 for (i in 1:max(result_df$mds_lev)){
   pca_only <- result_df[result_df$mds_lev == i, ]
   g <- ggplot2::ggplot(pca_only,
-                       aes(x=read_depth, y=spear_cor^2, group = ds_nam)) +
-    ggplot2::geom_point(aes(color = factor(ds_nam))) +
-    ggplot2::geom_line(aes(color = factor(ds_nam))) +
-    ggplot2::annotate("text", x = head(pca_only$read_depth, n = length(pca_only$my_ds_names)),
-                      y = head(c(pca_only$spear_cor^2), n = length(pca_only$my_ds_names)),
-                      label = head(pca_only$ds_nam, n = length(pca_only$my_ds_names)),
-                      hjust = -0.1) +
+                       aes(x=read_depth, y=spear_cor^2, color = ds_nam, shape = ds_nam)) +
+    ggplot2::geom_point(size = 3) +
+    ggplot2::geom_line(size = 1) +
+    # ggplot2::annotate("text", x = head(pca_only$read_depth, n = length(unique(pca_only$ds_nam))),
+    #                   y = head(c(pca_only$spear_cor^2), n = length(unique(pca_only$ds_nam))),
+    #                   label = head(pca_only$ds_nam, n = length(unique(pca_only$ds_nam))),
+    #                   hjust = -0.1, size = 5) +
     ggplot2::ggtitle(paste0(project, ": Correlation PCA",  i, " vs read depth by read depth threshold")) +
     ggplot2::xlab("Min read depth per sample") +
     ggplot2::ylab("R Squared") +
-    ggplot2::labs(color = "Transformations") +
+    # ggplot2::scale_fill_discrete(name = "Transformations") +
+    # ggplot2::labs(shape = "Transformations") +
     ggplot2::scale_x_continuous(trans='log10') +
     ggplot2::theme(axis.text.x = element_text(angle = 90)) +
     ggplot2::theme_minimal() +
@@ -217,7 +218,6 @@ for (i in 1:max(result_df$mds_lev)){
                    plot.title=element_text(size=17), #change font size of plot title
                    legend.text=element_text(size=15), #change font size of legend text
                    legend.title=element_text(size=16)) #change font size of legend title 
-  
   print(g)
   
   #plot remaining taxa
