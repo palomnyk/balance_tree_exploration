@@ -71,7 +71,6 @@ for (i in 1:max(result_df$mds_lev)){
                    plot.title=element_text(size=17), #change font size of plot title
                    legend.text=element_text(size=15), #change font size of legend text
                    legend.title=element_text(size=16)) #change font size of legend title 
-  
   print(g)
 
   #plot remaining taxa

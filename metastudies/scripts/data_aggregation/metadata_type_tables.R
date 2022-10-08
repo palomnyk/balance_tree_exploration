@@ -24,25 +24,32 @@ continous_meta <- c()
 for (proj in 1:length(projects)) {
 	project <- projects[proj]
 	print(project)
-	metadata <- data.frame(data.table::fread(file = file.path(home_dir, project, proj_metaname[proj]),
+	proj_out <- file.path(home_dir, prj, "output")
+	metadata <- data.frame(data.table::fread(file = file.path(proj_out, proj_metaname[proj]),
 																					header=TRUE, data.table=FALSE), row.names = proj_meta_colname[proj])
-	# meta_str <- str(metadata)
-	# print(meta_str)[1]
+	my_table <- readRDS(file.path(proj_out, "r_objects", "ForwardReads_DADA2.rds"))
+	read_depth <- base::rowSums(my_table)
+	metadata <- metadata[row.names(my_table),]
+	
+	#Correlations for continuous data and pvalues for factors
+	corr_meta <- c()
+	corr_value <- c()
+	pval_meta <- c()
+	pval_val <- c()
+	pval_adj_pval <- c()
+	
 	meta_class <- sapply(metadata,class)
-	# print(meta_class[1])
 	for (colmn in 1:ncol(metadata)){
 		if (meta_class[colmn] == "integer" || meta_class[colmn] == "numeric"){
+		  corr_meta <- meta_class
 			continous_meta <- c(continous_meta, colnames(metadata)[colmn])
 		}else{
 		  # print(unique(metadata)[,colmn])
-			if (length(unique(metadata[,colmn], incomparables = c("",NA, NaN))) > 2){
-				multi_meta <- c(multi_meta, colnames(metadata)[colmn])
-			}else{
-				binary_meta <- c(binary_meta, colnames(metadata)[colmn])
+			
+
 			}
 		}
 	}
 }
-print(paste("Bi:",length(binary_meta)))
-print(paste("Multi:",length(multi_meta)))
-print(paste("Cont:",length(continous_meta)))
+
+
