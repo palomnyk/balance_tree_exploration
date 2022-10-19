@@ -123,7 +123,7 @@ for (feat in metadata){
     print(paste("resp_test:", nrow(resp_test)))
     rf <- randomForest::randomForest(x = pred_train, y = resp_train[,feat])
     print("made rf")
-    pred <- predict(rf, pred_test[,feat])
+    pred <- predict(rf, pred_test)
     # roc_data <- data.frame(pred = pred, resp_test = resp_test[,feat])
     # if (is.factor(resp_var_train)){
     #   # print(paste("nlevl resp_test:" length(levels(resp_var_test)))
@@ -131,7 +131,7 @@ for (feat in metadata){
     #   levels(pred) <- my_union#hack for when the levels are different
     #   levels(resp_var_test) <- my_union
     # }
-    score <- MLmetrics::Accuracy(pred, resp_test)
+    score <- MLmetrics::Accuracy(pred, resp_test[,feat])
     print(paste("score:", score))
     my_df <- rf$importance
     maxImp <- max(rf$importance)
