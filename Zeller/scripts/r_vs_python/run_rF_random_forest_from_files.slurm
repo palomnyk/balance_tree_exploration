@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --partition=Orion                                    		# Partition/queue requested on server
+#SBATCH --partition=Pisces                                    		# Partition/queue requested on server
 #SBATCH --job-name=Zeller_rF_random_forest_from_file                                   		# Job name
 #SBATCH --time=200:00:00                                      		# Time limit (hrs:min:sec)
 #SBATCH --nodes=1                                         			# Number of nodes requested
@@ -21,7 +21,7 @@ echo Using $SLURM_NTASKS processors across $SLURM_NNODES nodes
 
 module load R
 
-Rscript ~/git/balance_tree_exploration/lib/cml_scripts/r_vs_python/rF_random_forest_from_file.R \
+Rscript ~/git/balance_tree_exploration/lib/cml_scripts/r_vs_python/rF_random_forest_from_files.R \
   -d ~/git/balance_tree_exploration \
   -p Zeller 
 
