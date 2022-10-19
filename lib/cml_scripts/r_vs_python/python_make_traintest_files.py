@@ -153,7 +153,7 @@ print(f"Building train/testing files.", flush = True)
 
 file_names = []
 for meta_c in metad_cols:
-	m_c = list(meta_df.columns)[meta_c]
+	m_c = list(meta_df.columns)[meta_c].replace("/","∕")
 	# meta_df = meta_df.loc[list(my_table.index.values)
 	for name, table_info, color in tables:
 		my_table = df_factory(table_info[0], table_info[1])
@@ -167,16 +167,16 @@ for meta_c in metad_cols:
 			respns_var = respns_var[non_nan_vals]#removing nan values
 			pred_train, pred_test, resp_train, resp_test = model_selection.train_test_split(my_table, respns_var, train_size=float(train_percent), random_state=rand_int, shuffle=True)
 			#file name: metadatafeature_iteration_num_response/predictor_train/test
-			my_filename = f"{m_c}_{i}_pred_train.csv"
+			my_filename = f"{m_c}_{i}_pred_train.csv".replace("/","∕")
 			file_names.append(my_filename)
 			pred_train.to_csv(os.path.join( result_table_dir, my_filename))
-			my_filename = f"{m_c}_{i}_pred_test.csv"
+			my_filename = f"{m_c}_{i}_pred_test.csv".replace("/","∕")
 			file_names.append(my_filename)
 			pred_test.to_csv( os.path.join(result_table_dir, my_filename))
-			my_filename = f"{m_c}_{i}_resp_train.csv"
+			my_filename = f"{m_c}_{i}_resp_train.csv".replace("/","∕")
 			file_names.append(my_filename)
 			resp_train.to_csv( os.path.join(result_table_dir, my_filename))
-			my_filename = f"{m_c}_{i}_resp_test.csv"
+			my_filename = f"{m_c}_{i}_resp_test.csv".replace("/","∕")
 			file_names.append(my_filename)
 			resp_test.to_csv( os.path.join(result_table_dir, my_filename))
 print(f"""
