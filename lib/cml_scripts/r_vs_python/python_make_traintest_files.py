@@ -153,7 +153,7 @@ print(f"Building train/testing files.", flush = True)
 
 file_names = []
 for meta_c in metad_cols:
-	m_c = list(meta_df.columns)[meta_c].replace("/","∕")
+	m_c = list(meta_df.columns)[meta_c]
 	# meta_df = meta_df.loc[list(my_table.index.values)
 	for name, table_info, color in tables:
 		my_table = df_factory(table_info[0], table_info[1])
