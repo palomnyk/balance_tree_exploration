@@ -89,7 +89,6 @@ for (filen in my_files){
   # if iteration_min is NaN, then make iteration, otherwise leave it iteration_min
   iteration_min <- base::ifelse(base::is.nan(iteration_min), iteration, iteration_min)
   iteration_max <- base::ifelse(base::is.nan(iteration_max), iteration, iteration_max)
-  
   iteration_min <- base::ifelse(iteration < iteration_min, iteration, iteration_min)
   iteration_max <- base::ifelse(iteration > iteration_max, iteration, iteration_max)
 }
@@ -103,8 +102,6 @@ cat(main_header,
     file = main_output_fpath,
     append=FALSE)
 
-counter <- 0
-
 for (feat in metadata){
   for (i in iteration_min:iteration_max){
     print(paste(feat, i))
@@ -115,64 +112,39 @@ for (feat in metadata){
                                                header=TRUE, data.table=FALSE), row.names = 1)
     print(paste("pred_test:", nrow(pred_test)))
     resp_train <- data.frame(data.table::fread(file = paste(feat, i,"resp_train.csv", sep = "_"),
-                                               header=TRUE, data.table=FALSE), row.names = 1)
+                                               header=TRUE, data.table=FALSE,
+                                               stringsAsFactors = TRUE), row.names = 1)
     print(paste("resp_train:", nrow(resp_train)))
     resp_test <- read.csv(paste(feat, i,"resp_test.csv", sep = "_"), 
                           header = TRUE,
-                          row.names = 1)
+                          row.names = 1,
+                          stringsAsFactors = TRUE)
+    if (class(resp_train[,feat]) == "character"){
+      resp_train[,feat] <- factor(resp_train[,feat])
+      resp_test[,feat] <- factor(resp_test[,feat])
+    }
     print(paste("resp_test:", nrow(resp_test)))
-    rf <- randomForest::randomForest(x = pred_train, y = resp_train[,feat])
+    rf <- randomForest::randomForest(pred_train, resp_train[row.names(pred_train),feat])
     print("made rf")
     pred <- predict(rf, pred_test)
-    # roc_data <- data.frame(pred = pred, resp_test = resp_test[,feat])
-    # if (is.factor(resp_var_train)){
-    #   # print(paste("nlevl resp_test:" length(levels(resp_var_test)))
-    #   my_union <- base::union(levels(pred), levels(resp_var_test))
-    #   levels(pred) <- my_union#hack for when the levels are different
-    #   levels(resp_var_test) <- my_union
-    # }
-    score <- MLmetrics::Accuracy(pred, resp_test[,feat])
+    score <- MLmetrics::Accuracy(pred, resp_test[row.names(pred_test),feat])
     print(paste("score:", score))
     my_df <- rf$importance
     maxImp <- max(rf$importance)
     maxRow <- which(rf$importance == maxImp)
     
-    #Check its existence
-    # if (file.exists(main_output_fpath)) {
-    #   print(paste0("Writing output to ", main_output_fpath, " ."))
-    #   # main_header <- "all_score,	metadata_col,	rf_imp_se, rf_type, rf_ntree, trans_group, random_batch, cycle"
-    #   cat(paste(paste0("\n", score), colnames(metadata)[mta], row.names(my_df)[maxRow], rf$type, #ilr_weight,	rf_imp_se, rf_type,
-    #             rf$ntree, transf_label, counter, #rf_ntree, trans_group, cycle
-    #             sep = ","),
-    #       file = main_output_fpath,
-    #       append=TRUE)
-    # }
-    
+    # Check its existence
+    if (file.exists(main_output_fpath)) {
+      print(paste0("Writing output to ", main_output_fpath, " ."))
+      # main_header <- "all_score,	metadata_col,	rf_imp_se, rf_type, rf_ntree, trans_group, random_batch, cycle"
+      cat(paste(paste0("\n", score), feat, row.names(my_df)[maxRow], rf$type, #ilr_weight,	rf_imp_se, rf_type,
+                rf$ntree, "raw_DADA2", i, #rf_ntree, trans_group, cycle
+                sep = ","),
+          file = main_output_fpath,
+          append=TRUE)
+    }
   }
 }
-
-
-
-print(paste("Counter:", counter, " entering main loop"))
-for (counter in 1:num_cycles) {
-  ##-Create training/testing sets-------------------------------------##
-  train_index <- row.names(rowname_table)[sample(x = nrow(rowname_table), size = 0.75*nrow(rowname_table), replace=FALSE)]
-  test_index <- row.names(rowname_table)[c(1:nrow(rowname_table))[!(1:nrow(rowname_table) %in% train_index)]]
-  for(mta in rf_cols){
-    print(paste("starting metadata col:", mta, colnames(metadata)[mta]))
-    print(paste("Finding rows where", colnames(metadata)[mta], "has NA or Empty values from training and testing selectors."))
-    na_or_empty_index <- which(is.na(metadata[,mta]) | metadata[,mta] == "")
-    na_or_empty_rows <- row.names(metadata)[na_or_empty_index]
-    print(length(train_index))
-    train_index <- setdiff(train_index, na_or_empty_rows)
-    # print(train_index)
-    test_index <- setdiff(test_index, na_or_empty_rows)
-    print(length(train_index))
-    
-  }#for mta
-  print(paste("completed loop:", counter))
-}
-
 
 # --------------------------------------------------------------------------
 print("Reshaping data from long to wide format")
@@ -181,7 +153,7 @@ print("Reading in data from file.")
 all_plot_data <- data.frame(read.table(file = main_output_fpath,
                                        sep = ",", header = TRUE))
 print("Building wide df.")
-data_cols <- unlist(lapply(1:num_cycles, function(x) paste0("split",x)))
+data_cols <- unlist(lapply(iteration_min:iteration_max, function(x) paste0("split",x)))
 wide_header <- c("metadata_col", "trans_group", "color", data_cols)
 wide_result_df <- data.frame(matrix(nrow = length(unique(all_plot_data$metadata_col)) * length(unique(all_plot_data$trans_group)),
                                     ncol = length(wide_header)))
@@ -196,6 +168,6 @@ for (ro in 1:nrow(all_plot_data)){
 print(wide_result_df)
 
 write.table(wide_result_df, row.names = FALSE, sep = ",",
-            file = file.path(output_dir, "tables", paste0("wide_",main_output_label, ".csv")))
+            file = file.path(output_dir, "tables", paste0("wide_", main_output_text, ".csv")))
 
-
+print("Completed script!")
