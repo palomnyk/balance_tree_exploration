@@ -25,9 +25,11 @@ conda activate testing_pyCaret
 python ~/git/balance_tree_exploration/lib/cml_scripts/r_vs_python/python_make_traintest_files.py \
   --project Zeller \
   --use_all_meta True \
-  --metada_fn patient_metadata.tsv \
+  --metada_fn patient_metadata.csv \
+  --delimiter , \
   --meta_index_col Run \
   --training 0.75
+
 conda deactivate
 module unload anaconda3/2020.11
 # usage: random_forest_manual_train.py [-h] [-m] [-d homedir] [-p project]
