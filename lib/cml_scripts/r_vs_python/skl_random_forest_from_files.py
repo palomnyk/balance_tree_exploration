@@ -82,7 +82,7 @@ metadata = []
 iteration_min = float("nan")
 iteration_max = float("nan")
 for filen in my_files:
-  my_splits = filen.split( "_")
+  my_splits = filen.split("(_)")
   meta = my_splits[0]
   iteration = int(my_splits[1])
   print(type( iteration))
@@ -103,10 +103,10 @@ with open(result_fpath, "w+") as fl:
 		my_accuracy = [0] * len(range(iteration_min,iteration_max))
 		for i in range(iteration_min,iteration_max):
 			print(f"{m_c}, {i}")
-			pred_train = pd.read_csv(f"{m_c}_{i}_pred_train.csv", header=0, index_col=0)
-			pred_test = pd.read_csv(f"{m_c}_{i}_pred_test.csv", header=0, index_col=0)
-			resp_train = pd.read_csv(f"{m_c}_{i}_resp_train.csv", header=0, index_col=0)
-			resp_test = pd.read_csv(f"{m_c}_{i}_resp_test.csv", header=0, index_col=0)
+			pred_train = pd.read_csv(f"{m_c}(_){i}(_)pred(_)train.csv", header=0, index_col=0)
+			pred_test = pd.read_csv(f"{m_c}(_){i}(_)pred(_)test.csv", header=0, index_col=0)
+			resp_train = pd.read_csv(f"{m_c}(_){i}(_)resp(_)train.csv", header=0, index_col=0)
+			resp_test = pd.read_csv(f"{m_c}(_){i}(_)resp(_)test.csv", header=0, index_col=0)
 			if is_numeric_dtype(resp_test[m_c]) == True:
 				print("going to RandomForestRegressor()")
 				clf = RandomForestRegressor()
