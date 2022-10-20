@@ -80,8 +80,8 @@ metadata <- c()
 iteration_min <- NaN
 iteration_max <- NaN
 for (filen in my_files){
-  print(filen)
-  my_splits = unlist(strsplit(filen, "(_)"))
+  # print(filen)
+  my_splits = unlist(strsplit(filen, split="(_)", fixed=TRUE))
   meta <- my_splits[1]
   iteration <- base::as.integer( my_splits[2] )
   if (! meta %in% metadata){
