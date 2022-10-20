@@ -106,17 +106,17 @@ cat(main_header,
 for (feat in metadata){
   for (i in iteration_min:iteration_max){
     print(paste(feat, i))
-    pred_train <- data.frame(data.table::fread(file = paste(feat, i,"pred_train.csv", sep = "_"),
+    pred_train <- data.frame(data.table::fread(file = paste(feat, i,"pred", "train.csv", sep = "(_)"),
                                             header=TRUE, data.table=FALSE), row.names = 1)
     print(paste("pred_train:", nrow(pred_train)))
-    pred_test <- data.frame(data.table::fread(file = paste(feat, i,"pred_test.csv", sep = "_"),
+    pred_test <- data.frame(data.table::fread(file = paste(feat, i,"pred", "test.csv", sep = "(_)"),
                                                header=TRUE, data.table=FALSE), row.names = 1)
     print(paste("pred_test:", nrow(pred_test)))
-    resp_train <- data.frame(data.table::fread(file = paste(feat, i,"resp_train.csv", sep = "_"),
+    resp_train <- data.frame(data.table::fread(file = paste(feat, i,"resp", "train.csv", sep = "(_)"),
                                                header=TRUE, data.table=FALSE,
                                                stringsAsFactors = TRUE), row.names = 1)
     print(paste("resp_train:", nrow(resp_train)))
-    resp_test <- read.csv(paste(feat, i,"resp_test.csv", sep = "_"), 
+    resp_test <- read.csv(paste(feat, i,"resp", "test.csv", sep = "(_)"), 
                           header = TRUE,
                           row.names = 1,
                           stringsAsFactors = TRUE)
