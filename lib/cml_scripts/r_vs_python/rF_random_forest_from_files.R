@@ -112,14 +112,17 @@ for (feat in metadata){
     pred_test <- data.frame(data.table::fread(file = paste(feat, i,"pred", "test.csv", sep = "(_)"),
                                                header=TRUE, data.table=FALSE), row.names = 1)
     print(paste("pred_test:", nrow(pred_test)))
-    resp_train <- data.frame(data.table::fread(file = paste(feat, i,"resp", "train.csv", sep = "(_)"),
-                                               header=TRUE, data.table=FALSE,
-                                               stringsAsFactors = TRUE), row.names = 1)
+    resp_train <- read.csv(paste(feat, i,"resp", "train.csv", sep = "(_)"), 
+                           header = TRUE,
+                           row.names = 1,
+                           stringsAsFactors = TRUE,
+                           check.names = FALSE)
     print(paste("resp_train:", nrow(resp_train)))
     resp_test <- read.csv(paste(feat, i,"resp", "test.csv", sep = "(_)"), 
                           header = TRUE,
                           row.names = 1,
-                          stringsAsFactors = TRUE)
+                          stringsAsFactors = TRUE,
+                          check.names = FALSE)
     if (class(resp_train[,feat]) == "character"){
       resp_train[,feat] <- factor(resp_train[,feat])
       resp_test[,feat] <- factor(resp_test[,feat])
