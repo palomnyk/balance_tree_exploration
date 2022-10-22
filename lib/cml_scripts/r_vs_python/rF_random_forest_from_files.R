@@ -123,15 +123,25 @@ for (feat in metadata){
                           row.names = 1,
                           stringsAsFactors = TRUE,
                           check.names = FALSE)
-    if (class(resp_train[,feat]) == "character"){
-      resp_train[,feat] <- factor(resp_train[,feat])
-      resp_test[,feat] <- factor(resp_test[,feat])
+    feat_sub = gsub("∕","/",feat)
+    if (class(resp_train[,feat_sub]) == "character"){
+      resp_train[,feat_sub] <- factor(resp_train[,feat_sub])
+      resp_test[,feat_sub] <- factor(resp_test[,feat_sub])
     }
     print(paste("resp_test:", nrow(resp_test)))
-    rf <- randomForest::randomForest(pred_train, resp_train[row.names(pred_train),feat])
+    rf <- randomForest::randomForest(pred_train, resp_train[row.names(pred_train),feat_sub])
     print("made rf")
     pred <- predict(rf, pred_test)
-    score <- MLmetrics::Accuracy(pred, resp_test[row.names(pred_test),feat])
+    print("pred")
+    if (is.factor(resp_train[,feat_sub])){
+      # print(paste("nlevl resp_test:" length(levels(resp_var_test)))
+      all_levels <- base::union(levels(pred), levels(resp_test[,feat_sub]))
+      levels(pred) <- all_levels#hack for when the levels are different
+      levels(resp_test[,feat_sub]) <- all_levels
+    }
+    my_test <- resp_test[row.names(pred_test),feat_sub]
+    names(my_test) <- row.names(pred_test)
+    score <- MLmetrics::Accuracy(pred, my_test)
     print(paste("score:", score))
     my_df <- rf$importance
     maxImp <- max(rf$importance)
@@ -149,6 +159,8 @@ for (feat in metadata){
     }
   }
 }
+
+
 
 # --------------------------------------------------------------------------
 print("Reshaping data from long to wide format")
@@ -175,3 +187,4 @@ write.table(wide_result_df, row.names = FALSE, sep = ",",
             file = file.path(output_dir, "tables", paste0("wide_", main_output_text, ".csv")))
 
 print("Completed script!")
+
