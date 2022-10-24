@@ -75,24 +75,26 @@ print(labels)
 # --------------------------------------------------------------------------
 print(f"Reading train/testing files.", flush = True)
 # --------------------------------------------------------------------------
-my_files = os.listdir( input_dir)
-# print(my_files)
+my_files = os.listdir(input_dir)
+print(f"number of files: {len(my_files)}")
 
 metadata = []
 iteration_min = float("nan")
 iteration_max = float("nan")
 for filen in my_files:
-  my_splits = filen.split("(_)")
-  meta = my_splits[0]
-  iteration = int(my_splits[1])
-  print(type( iteration))
-  if not meta in metadata:
-    metadata.append(meta)
-  # if iteration_min is NaN, then make iteration, otherwise leave it iteration_min
-  iteration_min = iteration if math.isnan(iteration_min) else iteration_min
-  iteration_max = iteration if math.isnan(iteration_max) else iteration_max
-  iteration_min = iteration if iteration < iteration_min else iteration_min
-  iteration_max = iteration if iteration > iteration_max else iteration_max
+	if filen.endswith(".csv"):
+		my_splits = filen.split("(_)")
+		print(my_splits)
+		meta = my_splits[0]
+		iteration = int(my_splits[1])
+		print( iteration)
+		if not meta in metadata:
+			metadata.append(meta)
+		# if iteration_min is NaN, then make iteration, otherwise leave it iteration_min
+		iteration_min = iteration if math.isnan(iteration_min) else iteration_min
+		iteration_max = iteration if math.isnan(iteration_max) else iteration_max
+		iteration_min = iteration if iteration < iteration_min else iteration_min
+		iteration_max = iteration if iteration > iteration_max else iteration_max
 print(metadata)
 print(f"min{iteration_min} max{iteration_max}")
 
@@ -107,17 +109,18 @@ with open(result_fpath, "w+") as fl:
 			pred_test = pd.read_csv(f"{m_c}(_){i}(_)pred(_)test.csv", header=0, index_col=0)
 			resp_train = pd.read_csv(f"{m_c}(_){i}(_)resp(_)train.csv", header=0, index_col=0)
 			resp_test = pd.read_csv(f"{m_c}(_){i}(_)resp(_)test.csv", header=0, index_col=0)
-			if is_numeric_dtype(resp_test[m_c]) == True:
+			new_m_c = m_c.replace("∕","/")
+			if is_numeric_dtype(resp_test[new_m_c]) == True:
 				print("going to RandomForestRegressor()")
 				clf = RandomForestRegressor()
-				clf.fit(pred_train, resp_train)
+				clf.fit(pred_train, resp_train[new_m_c])
 				resp_pred = clf.predict(pred_test)
-				my_score = r2_score(resp_test[m_c], resp_pred, sample_weight=None)
+				my_score = r2_score(resp_test[new_m_c], resp_pred, sample_weight=None)
 			else:
 				clf = RandomForestClassifier()
-				clf.fit(pred_train, resp_train[m_c])
+				clf.fit(pred_train, resp_train[new_m_c])
 				resp_pred = clf.predict(pred_test)
-				my_score = clf.score(pred_test, resp_test[m_c], sample_weight=None)
+				my_score = clf.score(pred_test, resp_test[new_m_c], sample_weight=None)
 			my_accuracy[i] = my_score
 			print(my_accuracy)
 		final_acc = ",".join(map(str, my_accuracy))
