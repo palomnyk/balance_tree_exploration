@@ -102,8 +102,8 @@ with open(result_fpath, "w+") as fl:
 	fl.write(",".join(col_names))
 	fl.write("\n")
 	for m_c in metadata:
-		my_accuracy = [0] * len(range(iteration_min,iteration_max))
-		for i in range(iteration_min,iteration_max):
+		my_accuracy = [0] * len(range(iteration_min,iteration_max + 1))
+		for i in range(iteration_min,iteration_max + 1):
 			print(f"{m_c}, {i}")
 			pred_train = pd.read_csv(f"{m_c}(_){i}(_)pred(_)train.csv", header=0, index_col=0)
 			pred_test = pd.read_csv(f"{m_c}(_){i}(_)pred(_)test.csv", header=0, index_col=0)
