@@ -131,7 +131,7 @@ for (feat in metadata){
     if (is.factor(resp_train[,feat_sub])){
       # print(paste("nlevl resp_test:" length(levels(resp_var_test)))
       all_levels <- base::union(levels(pred_train), levels(resp_train[,feat_sub]))
-      pred_train <- all_levels#hack for when the levels are different
+      levels(pred_train) <- all_levels#hack for when the levels are different
       levels(resp_train[,feat_sub]) <- all_levels
     }
     print(paste("resp_test:", nrow(resp_test)))
