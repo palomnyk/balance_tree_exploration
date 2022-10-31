@@ -24,8 +24,7 @@ Rscript ~/git/balance_tree_exploration/lib/cml_scripts/transformations/make_comp
   -d ~/git/balance_tree_exploration \
   -p Jones \
   -m ~/git/balance_tree_exploration/Jones/patient_metadata.tsv \
-  -r Run \
-  -n 20
+  -r Run
 
 echo ""
 echo "======================================================"

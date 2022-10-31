@@ -20,13 +20,12 @@ echo Using $SLURM_NTASKS processors across $SLURM_NNODES nodes
 
 module load R
 
-srun Rscript ~/git/balance_tree_exploration/lib/cml_scripts/transformations/make_compositional_datasets.R \
+Rscript ~/git/balance_tree_exploration/lib/cml_scripts/transformations/make_compositional_datasets.R \
   -d ~/git/balance_tree_exploration \
   -p Zeller \
   -m ~/git/balance_tree_exploration/Zeller/patient_metadata.csv \
   -l , \
-  -r Run \
-  -n 20
+  -r Run
 
 echo ""
 echo "======================================================"

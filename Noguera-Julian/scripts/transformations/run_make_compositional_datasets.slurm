@@ -25,8 +25,7 @@ Rscript ~/git/balance_tree_exploration/lib/cml_scripts/transformations/make_comp
   -p Noguera-Julian \
   -m ~/git/balance_tree_exploration/Noguera-Julian/patient_metadata.csv \
   -l , \
-  -r Run \
-  -n 20
+  -r Run
 
 echo ""
 echo "======================================================"
