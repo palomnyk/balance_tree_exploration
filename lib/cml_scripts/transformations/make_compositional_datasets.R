@@ -17,7 +17,7 @@ raw_ps_to_clean_ps <- function(ps) {
 }
 
 ##-Load Depencencies------------------------------------------------##
-if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")å
+if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
 if (!requireNamespace("rgr", quietly = TRUE)) install.packages("rgr")
 library("rgr")
 if (!requireNamespace("data.table", quietly = TRUE)) BiocManager::install("data.table")
