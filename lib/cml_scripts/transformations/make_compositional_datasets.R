@@ -1,6 +1,6 @@
 # Author: Aaron Yerke (aaronyerke@gmail.com)
-# Script for making tables to run through my 
-# Requires UPGMA_Tree, Silva_tree, Iqtree, and metadata
+# Script for making lognorm and coda tables to run through my random forest
+# Requires raw data2 output
 
 rm(list = ls()) #clear workspace
 
@@ -17,23 +17,9 @@ raw_ps_to_clean_ps <- function(ps) {
 }
 
 ##-Load Depencencies------------------------------------------------##
-if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
-if (!requireNamespace("ape", quietly = TRUE)) BiocManager::install("ape")
-library("ape")
-if (!requireNamespace("philr", quietly = TRUE)) BiocManager::install("philr")
-library("philr")
-if (!requireNamespace("randomForest", quietly = TRUE)) BiocManager::install("randomForest")
-library("randomForest")
-if (!requireNamespace("ggpubr", quietly = TRUE)) BiocManager::install("ggpubr")
-library("ggpubr")
-if (!requireNamespace("phyloseq", quietly = TRUE)) BiocManager::install("phyloseq")
-library("phyloseq")
-if (!requireNamespace("ggplot2", quietly = TRUE)) BiocManager::install("ggplot2")
-library("ggplot2")
+if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")å
 if (!requireNamespace("rgr", quietly = TRUE)) install.packages("rgr")
 library("rgr")
-if (!requireNamespace("pROC", quietly = TRUE)) BiocManager::install("pROC")
-library("pROC")
 if (!requireNamespace("data.table", quietly = TRUE)) BiocManager::install("data.table")
 library("data.table")
 if (!requireNamespace("optparse", quietly = TRUE)){
@@ -84,6 +70,12 @@ if (!dir.exists(file.path(output_dir,"r_objects", "lognorm_asv.rds"))) {
   df <- lognorm(initial_table)
   saveRDS(df, file = file.path(output_dir,"r_objects", "lognorm_asv.rds"))
   write.csv(df, file = file.path(output_dir,"tables", "lognorm_dada2.csv"))
+}
+if (!dir.exists(file.path(output_dir,"r_objects", "silva_lognorm.rds"))) {
+  silva_ps_robj <- readRDS(file.path(output_dir, "r_objects","ref_tree_phyloseq_obj.rds"))
+  df <- lognorm(silva_ps_robj@otu_table)
+  saveRDS(df, file = file.path(output_dir,"r_objects", "lognorm_Silva.rds"))
+  write.csv(df, file = file.path(output_dir,"tables", "lognorm_Silva.csv"))
 }
 my_zeros <- apply(initial_table, 2, function(x) {
   return(sum(x == 0))
