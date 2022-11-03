@@ -73,7 +73,8 @@ if (!dir.exists(file.path(output_dir,"r_objects", "lognorm_asv.rds"))) {
 }
 if (!dir.exists(file.path(output_dir,"r_objects", "silva_lognorm.rds"))) {
   silva_ps_robj <- readRDS(file.path(output_dir, "r_objects","ref_tree_phyloseq_obj.rds"))
-  df <- lognorm(silva_ps_robj@otu_table)
+  df <- na.omit(silva_ps_robj@otu_table) 
+  df <- lognorm(df)
   saveRDS(df, file = file.path(output_dir,"r_objects", "lognorm_Silva.rds"))
   write.csv(df, file = file.path(output_dir,"tables", "lognorm_Silva.csv"))
 }
