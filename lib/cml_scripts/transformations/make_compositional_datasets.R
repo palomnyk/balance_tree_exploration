@@ -32,7 +32,7 @@ option_list <- list(
   optparse::make_option(c("-d", "--homedir"), type="character", 
                         default=file.path('~','git','balance_tree_exploration'), 
                         help="dataset dir path", metavar="character"),
-  optparse::make_option(c("-p", "--project"), type="character", default=NULL, 
+  optparse::make_option(c("-p", "--project"), type="character", default="Vangay", 
                         help="project folder", metavar="character"),
   optparse::make_option(c("-m", "--metadata"), type="character", default=NULL,
                         help="metadata file path with filename", metavar="character"),
@@ -71,13 +71,13 @@ if (!dir.exists(file.path(output_dir,"r_objects", "lognorm_asv.rds"))) {
   saveRDS(df, file = file.path(output_dir,"r_objects", "lognorm_asv.rds"))
   write.csv(df, file = file.path(output_dir,"tables", "lognorm_dada2.csv"))
 }
-if (!dir.exists(file.path(output_dir,"r_objects", "silva_lognorm.rds"))) {
+# if (!dir.exists(file.path(output_dir,"r_objects", "silva_lognorm.rds"))) {
   silva_ps_robj <- readRDS(file.path(output_dir, "r_objects","ref_tree_phyloseq_obj.rds"))
   df <- na.omit(silva_ps_robj@otu_table) 
-  df <- lognorm(df)
+  df <- na.omit(lognorm(df))
   saveRDS(df, file = file.path(output_dir,"r_objects", "lognorm_Silva.rds"))
   write.csv(df, file = file.path(output_dir,"tables", "lognorm_Silva.csv"))
-}
+# }
 my_zeros <- apply(initial_table, 2, function(x) {
   return(sum(x == 0))
 })
