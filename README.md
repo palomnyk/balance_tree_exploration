@@ -32,6 +32,15 @@
 No. 	Model         	-LnL         	df  AIC          	AICc       	 BIC
 8	GTR+F+R5      	1688897.219	56065 3489924.438	6290170504.438	3806380.010
 ```
+## Transformations
+![Transformations](lib/readme_images/transfomrations_map.jpg)
+Blue boxes are different transformations that are tested.
+
+### 1. Silva LTP Reference Tree
+![Silva steps](lib/readme_images/ref_tree_steps.jpg)
+### 2. IQTREE2
+### 3. UPGMA
+### 3. Lognorm, ALR, and CLR
 
 ## Steps for Accuracy Metastudies
 
