@@ -45,7 +45,7 @@ print("Establishing other constants.", flush = True)
 font1 = {'family':'serif','color':'blue','size':20}
 font2 = {'family':'serif','color':'darkred','size':15}
 comp_ds = ['alr_DADA2', 'clr_DADA2', 'raw_DADA2', 'Filtered_IQtree_blw.sqrt_enorm', \
-	'Filtered_Silva_DADA2', 'Filtered_Silva_DADA2_blw.sqrt_enorm', \
+	"lognorm_Silva_DADA2", 'Filtered_Silva_DADA2', 'Filtered_Silva_DADA2_blw.sqrt_enorm', \
 	'Filtered_UPGMA_DADA2_blw.sqrt_enorm', 'Silva_DADA2', 'Silva_DADA2_blw.sqrt_enorm']
 
 pdf = matplotlib.backends.backend_pdf.PdfPages(plot_pdf_fpath)
@@ -58,9 +58,9 @@ plt.rc('axes', titlesize=25)
 
 r_sq = []
 
-fig = plt.figure(figsize=(17,17))
-num_rows = 3
-num_cols = 3
+fig = plt.figure(figsize=(10,20))
+num_rows = 5
+num_cols = 2
 ax_count = 1
 ds1 = "lognorm_DADA2"
 for d2 in range(len(comp_ds)):
