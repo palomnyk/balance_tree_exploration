@@ -130,7 +130,7 @@ print("Establishing other constants", flush = True)
 seed = 7
 scoring = "Accuracy"
 train_percent = float(options.training)
-num_iterations = options.iterations
+num_iterations = int(options.iterations)
 main_output_label = f"sklearn_random_forest_manual_{train_percent}train_{num_iterations}"
 #info for random forest classification
 result_fpath = os.path.join(output_dir, "tables", f"{main_output_label}.csv")
