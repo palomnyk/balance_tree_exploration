@@ -53,7 +53,7 @@ home_dir = os.path.expanduser(options.homedir)
 projects = ["Jones", "Vangay", "Zeller", "Noguera-Julian"]
 output_dir = os.path.join(home_dir, "metastudies", "output")
 assert os.path.exists(output_dir)
-plot_pdf_fpath = os.path.join(output_dir, "summary_ave_acc_vs_acc_python_by_transformation{options.input_file_name}.pdf")
+plot_pdf_fpath = os.path.join(output_dir, "summary_ave_acc_vs_acc_python_by_transformation{options.input_file_tail}.pdf")
 # --------------------------------------------------------------------------
 print("Establishing other constants.", flush = True)
 # --------------------------------------------------------------------------
@@ -135,6 +135,6 @@ pdf.savefig( fig )
 print("Saving pdf", flush = True)
 pdf.close()
 
-plotdata.to_csv(os.path.join(home_dir,"metastudies","output","summary_pvalue_plot{options.input_file_name}.csv"))
+plotdata.to_csv(os.path.join(home_dir,"metastudies","output","summary_pvalue_plot{options.input_file_tail}.csv"))
 
 print(f"{__file__} complete!")
