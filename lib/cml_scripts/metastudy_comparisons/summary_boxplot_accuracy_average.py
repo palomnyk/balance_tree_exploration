@@ -43,7 +43,7 @@ parser.add_argument("-d", "--homedir",
 parser.add_argument("-n", "--input_file_tail",
                   default="",
                   help="Should be one file with this name in the output/tables/ dir in each project", 
-									dest="input_file_name", metavar="input_file_tail")
+									dest="input_file_tail", metavar="input_file_tail")
 options, unknown = parser.parse_known_args()
 
 # --------------------------------------------------------------------------
