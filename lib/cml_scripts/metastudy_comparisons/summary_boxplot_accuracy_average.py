@@ -135,6 +135,6 @@ pdf.savefig( fig )
 print("Saving pdf", flush = True)
 pdf.close()
 
-plotdata.to_csv(os.path.join(home_dir,"metastudies","output","summary_pvalue_plot{options.input_file_tail}.csv"))
+plotdata.to_csv(os.path.join(home_dir,"metastudies","output",f"summary_pvalue_plot{options.input_file_tail}.csv"))
 
 print(f"{__file__} complete!")
