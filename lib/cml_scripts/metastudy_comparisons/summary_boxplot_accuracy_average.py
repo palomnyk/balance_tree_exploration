@@ -43,7 +43,7 @@ parser.add_argument("-d", "--homedir",
 parser.add_argument("-n", "--input_file_tail",
                   default="",
                   help="Should be one file with this name in the output/tables/ dir in each project", 
-									dest="input_file_name", metavar="input_file_name")
+									dest="input_file_name", metavar="input_file_tail")
 options, unknown = parser.parse_known_args()
 
 # --------------------------------------------------------------------------
@@ -53,7 +53,7 @@ home_dir = os.path.expanduser(options.homedir)
 projects = ["Jones", "Vangay", "Zeller", "Noguera-Julian"]
 output_dir = os.path.join(home_dir, "metastudies", "output")
 assert os.path.exists(output_dir)
-plot_pdf_fpath = os.path.join(output_dir, "summary_ave_acc_vs_acc_python_by_transformation{options.input_file_tail}.pdf")
+plot_pdf_fpath = os.path.join(output_dir, f"summary_ave_acc_vs_acc_python_by_transformation{options.input_file_tail}.pdf")
 # --------------------------------------------------------------------------
 print("Establishing other constants.", flush = True)
 # --------------------------------------------------------------------------
@@ -96,7 +96,7 @@ for ds1 in comp_ds:
 	for project in projects:
 		# print(f"Adding project {project}")
 		op_dir = os.path.join(home_dir, project, "output")
-		result_fpath = os.path.join(op_dir, "tables", f"sklearn_random_forest_manual_{train_percent}train{options.input_file_name}.csv")
+		result_fpath = os.path.join(op_dir, "tables", f"sklearn_random_forest_manual_{train_percent}train{options.input_file_tail}.csv")
 		# print(result_fpath)
 		my_table = pd.read_csv(result_fpath, sep=',', header=0)
 		#table 1
