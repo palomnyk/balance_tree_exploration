@@ -141,7 +141,15 @@ metad_cols = range(len(meta_df.columns))
 print("Setting up tables to feed the random forest model.", flush = True)
 # --------------------------------------------------------------------------
 tables = []
+tables.append(("clr_DADA2", (os.path.join(output_dir, "tables", "clr_asv.csv"), ","), "white"))
+# tables.append(("clr_HashSeq", (os.path.join(output_dir,"tables", "clr_hashseq.csv"), ","), "m"))
 tables.append(("raw_DADA2",(os.path.join(output_dir, "tables", "ForwardReads_DADA2.txt"),"\t"),"white"))
+# tables.append(("HashSeq", (os.path.join(output_dir,  "hashseq", "hashseq.csv"),","), "r"))
+tables.append(("lognorm_DADA2", (os.path.join(output_dir, "tables", "lognorm_dada2.csv"), ","), "y"))
+tables.append(("lognorm_Silva_DADA2", (os.path.join(output_dir, "tables", "lognorm_Silva.csv"), ","), "y"))
+tables.append(("Silva_DADA2", (os.path.join(output_dir,"tables", "Silva_DADA2", "Silva_DADA2.csv"), ","), "white"))
+tables = add_PhILR_dfs_to_table(tables, os.path.join(output_dir, "tables", "Silva_DADA2"), "Silva_DADA2", color = "#050598")
+tables = add_random_tree_PhILRs_to_table(tables, os.path.join(output_dir, "tables", "Silva_DADA2"), "Silva_DADA2", color = "#f7d8a0", num_rand_trees=3)
 
 colors = list([sublist[-1] for sublist in tables])
 print(colors)
@@ -167,16 +175,16 @@ for meta_c in metad_cols:
 			respns_var = respns_var[non_nan_vals]#removing nan values
 			pred_train, pred_test, resp_train, resp_test = model_selection.train_test_split(my_table, respns_var, train_size=float(train_percent), random_state=rand_int, shuffle=True)
 			#file name: metadatafeature_iteration_num_response/predictor_train/test
-			my_filename = f"{m_c}(_){i}(_)pred(_)train.csv".replace("/","∕")
+			my_filename = f"{name}(_){m_c}(_){i}(_)pred(_)train.csv".replace("/","∕")
 			file_names.append(my_filename)
 			pred_train.to_csv(os.path.join( result_table_dir, my_filename))
-			my_filename = f"{m_c}(_){i}(_)pred(_)test.csv".replace("/","∕")
+			my_filename = f"{name}(_){m_c}(_){i}(_)pred(_)test.csv".replace("/","∕")
 			file_names.append(my_filename)
 			pred_test.to_csv( os.path.join(result_table_dir, my_filename))
-			my_filename = f"{m_c}(_){i}(_)resp(_)train.csv".replace("/","∕")
+			my_filename = f"{name}(_){m_c}(_){i}(_)resp(_)train.csv".replace("/","∕")
 			file_names.append(my_filename)
 			resp_train.to_csv( os.path.join(result_table_dir, my_filename))
-			my_filename = f"{m_c}(_){i}(_)resp(_)test.csv".replace("/","∕")
+			my_filename = f"{name}(_){m_c}(_){i}(_)resp(_)test.csv".replace("/","∕")
 			file_names.append(my_filename)
 			resp_test.to_csv( os.path.join(result_table_dir, my_filename))
 print(f"""

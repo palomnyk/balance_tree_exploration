@@ -77,13 +77,15 @@ print(paste("Reading files at ", input_dir))
 ##-Import tables and data preprocessing-----------------------------##
 my_files <- list.files(path = input_dir)
 metadata <- c()
+tables <- c()
 iteration_min <- NaN
 iteration_max <- NaN
 for (filen in my_files){
   # print(filen)
   my_splits = unlist(strsplit(filen, split="(_)", fixed=TRUE))
-  meta <- my_splits[1]
-  iteration <- base::as.integer( my_splits[2] )
+	table <- my_splits[1]
+  meta <- my_splits[2]
+  iteration <- base::as.integer( my_splits[3] )
   if (! meta %in% metadata){
     metadata <- c(metadata, meta)
   }
@@ -94,78 +96,79 @@ for (filen in my_files){
   iteration_max <- base::ifelse(iteration > iteration_max, iteration, iteration_max)
 }
 
-# ##-Import tables and data preprocessing-----------------------------##
-# print(paste("Iterating through files at ", input_dir))
-# ##-Import tables and data preprocessing-----------------------------##
-# print(paste("Initilizing", main_output_fpath, "."))
-# print(paste("File header: ", main_header))
-# cat(main_header,
-#     file = main_output_fpath,
-#     append=FALSE)
+##-Import tables and data preprocessing-----------------------------##
+print(paste("Iterating through files at ", input_dir))
+##-Import tables and data preprocessing-----------------------------##
+print(paste("Initilizing", main_output_fpath, "."))
+print(paste("File header: ", main_header))
+cat(main_header,
+    file = main_output_fpath,
+    append=FALSE)
 
-# for (feat in metadata){
-#   for (i in iteration_min:iteration_max){
-#     print(paste(feat, i))
-#     pred_train <- data.frame(data.table::fread(file = paste(feat, i,"pred", "train.csv", sep = "(_)"),
-#                                             header=TRUE, data.table=FALSE), row.names = 1)
-#     print(paste("pred_train:", nrow(pred_train)))
-#     pred_test <- data.frame(data.table::fread(file = paste(feat, i,"pred", "test.csv", sep = "(_)"),
-#                                                header=TRUE, data.table=FALSE), row.names = 1)
-#     print(paste("pred_test:", nrow(pred_test)))
-#     resp_train <- read.csv(paste(feat, i,"resp", "train.csv", sep = "(_)"), 
-#                            header = TRUE,
-#                            row.names = 1,
-#                            stringsAsFactors = TRUE,
-#                            check.names = FALSE)
-#     print(paste("resp_train:", nrow(resp_train)))
-#     resp_test <- read.csv(paste(feat, i,"resp", "test.csv", sep = "(_)"), 
-#                           header = TRUE,
-#                           row.names = 1,
-#                           stringsAsFactors = TRUE,
-#                           check.names = FALSE)
-#     feat_sub = gsub("∕","/",feat)
-#     if (class(resp_train[,feat_sub]) == "character"){
-#       resp_train[,feat_sub] <- factor(resp_train[,feat_sub])
-#       resp_test[,feat_sub] <- factor(resp_test[,feat_sub])
-#     }
-#     if (is.factor(resp_train[,feat_sub])){
-#       # print(paste("nlevl resp_test:" length(levels(resp_var_test)))
-#       all_levels <- base::union(levels(pred_train), levels(resp_train[,feat_sub]))
-#       levels(pred_train) <- all_levels#hack for when the levels are different
-#       levels(resp_train[,feat_sub]) <- all_levels
-#     }
-#     print(paste("resp_test:", nrow(resp_test)))
-#     rf <- randomForest::randomForest(pred_train, resp_train[row.names(pred_train),feat_sub])
-#     print("made rf")
-#     pred <- predict(rf, pred_test)
-#     print("pred")
-#     if (is.factor(resp_train[,feat_sub])){
-#       # print(paste("nlevl resp_test:" length(levels(resp_var_test)))
-#       all_levels <- base::union(levels(pred), levels(resp_test[,feat_sub]))
-#       levels(pred) <- all_levels#hack for when the levels are different
-#       levels(resp_test[,feat_sub]) <- all_levels
-#     }
-#     my_test <- resp_test[row.names(pred_test),feat_sub]
-#     names(my_test) <- row.names(pred_test)
-#     score <- MLmetrics::Accuracy(pred, my_test)
-#     print(paste("score:", score))
-#     my_df <- rf$importance
-#     maxImp <- max(rf$importance)
-#     maxRow <- which(rf$importance == maxImp)
-    
-#     # Check its existence
-#     if (file.exists(main_output_fpath)) {
-#       print(paste0("Writing output to ", main_output_fpath, " ."))
-#       # main_header <- "all_score,	metadata_col,	rf_imp_se, rf_type, rf_ntree, trans_group, random_batch, cycle"
-#       cat(paste(paste0("\n", score), feat, row.names(my_df)[maxRow], rf$type, #ilr_weight,	rf_imp_se, rf_type,
-#                 rf$ntree, "raw_DADA2", i, #rf_ntree, trans_group, cycle
-#                 sep = ","),
-#           file = main_output_fpath,
-#           append=TRUE)
-#     }
-#   }
-# }
-
+for (tab in tables){
+	for (feat in metadata){
+		for (i in iteration_min:iteration_max){
+			print(paste(feat, i))
+			pred_train <- data.frame(data.table::fread(file = paste(tab, feat, i,"pred", "train.csv", sep = "(_)"),
+																							header=TRUE, data.table=FALSE), row.names = 1)
+			print(paste("pred_train:", nrow(pred_train)))
+			pred_test <- data.frame(data.table::fread(file = paste(tab, feat, i,"pred", "test.csv", sep = "(_)"),
+																								header=TRUE, data.table=FALSE), row.names = 1)
+			print(paste("pred_test:", nrow(pred_test)))
+			resp_train <- read.csv(paste(tab, feat, i,"resp", "train.csv", sep = "(_)"), 
+														header = TRUE,
+														row.names = 1,
+														stringsAsFactors = TRUE,
+														check.names = FALSE)
+			print(paste("resp_train:", nrow(resp_train)))
+			resp_test <- read.csv(paste(tab, feat, i,"resp", "test.csv", sep = "(_)"), 
+														header = TRUE,
+														row.names = 1,
+														stringsAsFactors = TRUE,
+														check.names = FALSE)
+			feat_sub = gsub("∕","/",feat)
+			if (class(resp_train[,feat_sub]) == "character"){
+				resp_train[,feat_sub] <- factor(resp_train[,feat_sub])
+				resp_test[,feat_sub] <- factor(resp_test[,feat_sub])
+			}
+			if (is.factor(resp_train[,feat_sub])){
+				# print(paste("nlevl resp_test:" length(levels(resp_var_test)))
+				all_levels <- base::union(levels(pred_train), levels(resp_train[,feat_sub]))
+				levels(pred_train) <- all_levels#hack for when the levels are different
+				levels(resp_train[,feat_sub]) <- all_levels
+			}
+			print(paste("resp_test:", nrow(resp_test)))
+			rf <- randomForest::randomForest(pred_train, resp_train[row.names(pred_train),feat_sub])
+			print("made rf")
+			pred <- predict(rf, pred_test)
+			print("pred")
+			if (is.factor(resp_train[,feat_sub])){
+				# print(paste("nlevl resp_test:" length(levels(resp_var_test)))
+				all_levels <- base::union(levels(pred), levels(resp_test[,feat_sub]))
+				levels(pred) <- all_levels#hack for when the levels are different
+				levels(resp_test[,feat_sub]) <- all_levels
+			}
+			my_test <- resp_test[row.names(pred_test),feat_sub]
+			names(my_test) <- row.names(pred_test)
+			score <- MLmetrics::Accuracy(pred, my_test)
+			print(paste("score:", score))
+			my_df <- rf$importance
+			maxImp <- max(rf$importance)
+			maxRow <- which(rf$importance == maxImp)
+			
+			# Check its existence
+			if (file.exists(main_output_fpath)) {
+				print(paste0("Writing output to ", main_output_fpath, " ."))
+				# main_header <- "all_score,	metadata_col,	rf_imp_se, rf_type, rf_ntree, trans_group, random_batch, cycle"
+				cat(paste(paste0("\n", score), feat, row.names(my_df)[maxRow], rf$type, #ilr_weight,	rf_imp_se, rf_type,
+									rf$ntree, tab, i, #rf_ntree, trans_group, cycle
+									sep = ","),
+						file = main_output_fpath,
+						append=TRUE)
+			}
+		}
+	}
+}
 
 
 # --------------------------------------------------------------------------
