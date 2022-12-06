@@ -81,9 +81,9 @@ tables <- c()
 iteration_min <- NaN
 iteration_max <- NaN
 for (filen in my_files){
-  # print(filen)
+  print(filen)
   my_splits = unlist(strsplit(filen, split="(_)", fixed=TRUE))
-	table <- my_splits[1]
+	tables <- c(tables, my_splits[1])
   meta <- my_splits[2]
   iteration <- base::as.integer( my_splits[3] )
   if (! meta %in% metadata){
@@ -105,10 +105,11 @@ cat(main_header,
     file = main_output_fpath,
     append=FALSE)
 
-for (tab in tables){
+for (tab in unique(tables)){
+	print(paste("Table:", tab))
 	for (feat in metadata){
 		for (i in iteration_min:iteration_max){
-			print(paste(feat, i))
+			print(paste(tab, feat, i))
 			pred_train <- data.frame(data.table::fread(file = paste(tab, feat, i,"pred", "train.csv", sep = "(_)"),
 																							header=TRUE, data.table=FALSE), row.names = 1)
 			print(paste("pred_train:", nrow(pred_train)))
