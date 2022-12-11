@@ -78,23 +78,20 @@ print(paste("Reading files at ", input_dir))
 my_files <- list.files(path = input_dir)
 metadata <- c()
 tables <- c()
-iteration_min <- NaN
-iteration_max <- NaN
+iterations <- c()
 for (filen in my_files){
-  print(filen)
+  # print(filen)
   my_splits = unlist(strsplit(filen, split="(_)", fixed=TRUE))
-	tables <- c(tables, my_splits[1])
+  tables <- c(tables, my_splits[1])
   meta <- my_splits[2]
   iteration <- base::as.integer( my_splits[3] )
+  iterations <-  base::unique(c(iterations, iteration))
   if (! meta %in% metadata){
     metadata <- c(metadata, meta)
   }
-  # if iteration_min is NaN, then make iteration, otherwise leave it iteration_min
-  iteration_min <- base::ifelse(base::is.nan(iteration_min), iteration, iteration_min)
-  iteration_max <- base::ifelse(base::is.nan(iteration_max), iteration, iteration_max)
-  iteration_min <- base::ifelse(iteration < iteration_min, iteration, iteration_min)
-  iteration_max <- base::ifelse(iteration > iteration_max, iteration, iteration_max)
 }
+iteration_min <- base::min(iterations, na.rm = TRUE)
+iteration_max <- base::max(iterations, na.rm = TRUE)
 
 ##-Import tables and data preprocessing-----------------------------##
 print(paste("Iterating through files at ", input_dir))
