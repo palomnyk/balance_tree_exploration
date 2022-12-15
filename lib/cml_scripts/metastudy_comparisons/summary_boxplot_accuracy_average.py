@@ -69,20 +69,7 @@ plot_pdf_fpath = os.path.join(output_dir, f"summary_ave_acc_vs_acc_python_by_tra
 print("Establishing other constants.", flush = True)
 # --------------------------------------------------------------------------
 if options.comparison_list == "True":
-	comp_ds = ['alr_DADA2', 'clr_DADA2', 'DaDa2', 'lognorm_DADA2', 'Silva_DADA2', \
-	'Silva_DADA2_blw.sqrt_enorm', 'Shuffle1_PhILR_Silva_DADA2_blw.sqrt_enorm', \
-	'Shuffle2_PhILR_Silva_DADA2_blw.sqrt_enorm', 'Shuffle3_PhILR_Silva_DADA2_blw.sqrt_enorm', \
-	'Filtered_Silva_DADA2', 'Filtered_Silva_DADA2_blw.sqrt_enorm', \
-	'Shuffle1_PhILR_Filtered_Silva_DADA2_blw.sqrt_enorm', \
-	'Shuffle2_PhILR_Filtered_Silva_DADA2_blw.sqrt_enorm', \
-	'Shuffle3_PhILR_Filtered_Silva_DADA2_blw.sqrt_enorm', 'Filtered_UPGMA_DADA2', \
-	'Filtered_UPGMA_DADA2_blw.sqrt_enorm', 'Shuffle1_PhILR_Filtered_UPGMA_DADA2_blw.sqrt_enorm', \
-	'Shuffle2_PhILR_Filtered_UPGMA_DADA2_blw.sqrt_enorm', 'Shuffle3_PhILR_Filtered_UPGMA_DADA2_blw.sqrt_enorm', \
-	'Filtered_IQtree', 'Filtered_IQtree_blw.sqrt_enorm', \
-	'Shuffle1_PhILR_Filtered_IQtree_blw.sqrt_enorm',\
-	'Shuffle2_PhILR_Filtered_IQtree_blw.sqrt_enorm',\
-	'Shuffle3_PhILR_Filtered_IQtree_blw.sqrt_enorm']
-	# comp_ds = ['alr_DADA2', 'clr_DADA2', 'raw_DADA2', 'lognorm_DADA2', "lognorm_Silva_DADA2",'Silva_DADA2', \
+	# comp_ds = ['alr_DADA2', 'clr_DADA2', 'DaDa2', 'lognorm_DADA2', 'Silva_DADA2', \
 	# 'Silva_DADA2_blw.sqrt_enorm', 'Shuffle1_PhILR_Silva_DADA2_blw.sqrt_enorm', \
 	# 'Shuffle2_PhILR_Silva_DADA2_blw.sqrt_enorm', 'Shuffle3_PhILR_Silva_DADA2_blw.sqrt_enorm', \
 	# 'Filtered_Silva_DADA2', 'Filtered_Silva_DADA2_blw.sqrt_enorm', \
@@ -95,6 +82,23 @@ if options.comparison_list == "True":
 	# 'Shuffle1_PhILR_Filtered_IQtree_blw.sqrt_enorm',\
 	# 'Shuffle2_PhILR_Filtered_IQtree_blw.sqrt_enorm',\
 	# 'Shuffle3_PhILR_Filtered_IQtree_blw.sqrt_enorm']
+	comp_ds = ['alr_DADA2', 'clr_DADA2', 'raw_DADA2', 'lognorm_DADA2','Silva_DADA2', \
+	'Silva_DADA2_blw.sqrt_enorm', 'Shuffle1_PhILR_Silva_DADA2_blw.sqrt_enorm', \
+	'Shuffle2_PhILR_Silva_DADA2_blw.sqrt_enorm', 'Shuffle3_PhILR_Silva_DADA2_blw.sqrt_enorm', \
+	'Filtered_Silva_DADA2', 'Filtered_Silva_DADA2_blw.sqrt_enorm', \
+	'Shuffle1_PhILR_Filtered_Silva_DADA2_blw.sqrt_enorm', \
+	'Shuffle2_PhILR_Filtered_Silva_DADA2_blw.sqrt_enorm', \
+	'Shuffle3_PhILR_Filtered_Silva_DADA2_blw.sqrt_enorm', 'Filtered_UPGMA_DADA2', \
+	'Filtered_UPGMA_DADA2_blw.sqrt_enorm', 'Shuffle1_PhILR_Filtered_UPGMA_DADA2_blw.sqrt_enorm', \
+	'Shuffle2_PhILR_Filtered_UPGMA_DADA2_blw.sqrt_enorm', 'Shuffle3_PhILR_Filtered_UPGMA_DADA2_blw.sqrt_enorm', \
+	'Filtered_IQtree', 'Filtered_IQtree_blw.sqrt_enorm', \
+	'Shuffle1_PhILR_Filtered_IQtree_blw.sqrt_enorm',\
+	'Shuffle2_PhILR_Filtered_IQtree_blw.sqrt_enorm',\
+	'Shuffle3_PhILR_Filtered_IQtree_blw.sqrt_enorm']
+	my_colors = ['white', 'white', 'white', 'y', 'white', '#050598', '#f7d8a0', '#f7d8a0', \
+	'#f7d8a0', 'white', '#050598', '#f7d8a0', '#f7d8a0', '#f7d8a0', \
+	'white', '#050598', '#f7d8a0', '#f7d8a0', '#f7d8a0', \
+	'white', '#050598', '#f7d8a0', '#f7d8a0', '#f7d8a0']
 else:
 	comp_ds = []
 	for project in projects:
@@ -108,13 +112,9 @@ else:
 		print(f"shape: {my_table.shape}")
 	comp_ds = list(set(comp_ds))
 	print(comp_ds)
-
+	my_colors = "white"*len(comp_ds)
 # comp_ds = ['raw_DADA2', 'lognorm_DADA2', "lognorm_Silva_DADA2",'Silva_DADA2']
 
-my_colors = ['white', 'white', 'white', 'y', 'white', '#050598', '#f7d8a0', '#f7d8a0', \
-'#f7d8a0', 'white', '#050598', '#f7d8a0', '#f7d8a0', '#f7d8a0', \
-'white', '#050598', '#f7d8a0', '#f7d8a0', '#f7d8a0', \
-'white', '#050598', '#f7d8a0', '#f7d8a0', '#f7d8a0']
 my_markers = "o"*len(comp_ds)
 # my_markers = ["o", "s", "P", "v", "X", "x", "1", "*", "+", "_", "D", "|"]
 train_percent = 0.75
