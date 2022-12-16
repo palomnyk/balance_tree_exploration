@@ -175,7 +175,7 @@ fig.tight_layout()
 print("Saving figure to pdf", flush = True)
 pdf.savefig( fig )
 
-print("Saving pdf", flush = True)
+print(f"Saving pdf to {plot_pdf_fpath}", flush = True)
 pdf.close()
 
 plotdata.to_csv(os.path.join(home_dir,"metastudies","output",f"summary_pvalue_plot{options.output_tag}.csv"))
