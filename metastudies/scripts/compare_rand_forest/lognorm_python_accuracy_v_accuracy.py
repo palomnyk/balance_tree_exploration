@@ -2,6 +2,7 @@
 # Author: Aaron Yerke, aaronyerke@gmail.com
 # This is a script for comparing random forest output to pvalues
 # The solution for non-repeating colors: https://stackoverflow.com/questions/53199728/how-can-i-stop-matplotlib-from-repeating-colors
+# ds1_score data architecture: ds1_score[f"{project}_{feat}"] = [ave, project]
 
 print(f"""Running {__file__}.
 This is a script for comparing random forest output with pvalues.
@@ -12,6 +13,7 @@ print("Loading external libraries.",flush = True)
 import os
 from statistics import mean
 from random import sample, seed
+from collections import OrderedDict
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -59,7 +61,7 @@ pdf = matplotlib.backends.backend_pdf.PdfPages(plot_pdf_fpath)
 plt.rc('font', size=15) 
 plt.rc('xtick', labelsize=20) 
 plt.rc('ytick', labelsize=20) 
-plt.rc('axes', labelsize=20) 
+plt.rc('axes', labelsize=17) 
 plt.rc('axes', titlesize=25)
 # plt.rc('image', cmap='tab20c')
 # plt.set_cmap("tab20")
@@ -69,16 +71,23 @@ fig = plt.figure(figsize=(15,15))
 num_rows = 3
 num_cols = 3
 ax_count = 1
+my_markers = ["$A$","$B$","$C$","$D$","$E$","$F$","$G$","$H$","$I$","$J$","$K$","$L$",\
+	"$M$","$N$","$O$","$P$","$Q$","$R$","$S$","$T$","$U$","$V$","$W$","$X$","$Y$","$Z$"]
+my_colors = ["green", "blue", "orange", "red"]
 ds1 = "lognorm_DADA2"
 for d2 in range(len(comp_ds)):
 	ds2 = comp_ds[d2]
 	train_percent = 0.75
-	ds1_score = {}
-	ds2_score = {}
-	features = []
+	ds1_score = []
+	ds1_feature = []
+	ds1_project = []
+	ds1_proj_feat = []
+	ds2_score = []
+	ds2_feature = []
+	ds2_project = []
+	ds2_proj_feat = []
 	num_colors = list()
-	proj = []
-	print(f"{ds1} {ds2}")
+	print(f"Running datasets: {ds1} and {ds2}")
 	for project in projects:
 		print(f"Adding project {project}")
 		main_output_label = f"sklearn_random_forest_manual_{train_percent}train"
@@ -93,10 +102,13 @@ for d2 in range(len(comp_ds)):
 		num_colors.append(len(means))#stores the num features per proj -used to prevent repeat colors in plot
 		assert not means.empty, f"{ds1} is not in the table from {project}"
 		for feat, ave in zip(list(ds1_table["metadata"].values) ,list(means)):
+			ds1_feature.append(feat)
+			ds1_project.append(project)
+			ds1_proj_feat.append(f"{project}_{feat}")
 			if ave >= 0:
-				ds1_score[f"{project}_{feat}"] = [ave, project]
+				ds1_score.append(ave)
 			else:
-				ds1_score[f"{project}_{feat}"] = [0, project]
+				ds1_score.append(0)
 		#table 2
 		ds2_table = my_table.loc[my_table["dataset"] == ds2,]
 		splits = ds2_table.columns[ds2_table.columns.str.startswith('split')].tolist()
@@ -104,55 +116,39 @@ for d2 in range(len(comp_ds)):
 		assert not means.empty, f"{ds2} is not in the table from {project}"
 		# print(my_table)
 		for feat, ave in zip(list(ds2_table["metadata"].values) ,list(means)):
+			ds2_feature.append(feat)
+			ds2_project.append(project)
+			ds2_proj_feat.append(f"{project}_{feat}")
 			if ave >= 0:
-				ds2_score[f"{project}_{feat}"] = [ave, project]
+				ds2_score.append(ave)
 			else:
-				ds2_score[f"{project}_{feat}"] = [0, project]
-	my_dif = list( set(ds1_score.keys()) - set(ds2_score.keys()))
-	print(my_dif)
-	print("build graphic")
-	same_keys = set(ds2_score.keys()).intersection(set(ds1_score.keys()))
-	ds1_score = {key:ds1_score[key] for key in same_keys}
-	ds2_score = {key:ds2_score[key] for key in same_keys}
-	# ds1_score = sorted(ds1_score)
-	# ds2_score = sorted(ds2_score)
-	ds1_lst = np.array(list(map(lambda x: x[0], list(ds1_score.values()))))
-	ds2_lst = np.array(list(map(lambda x: x[0], list(ds2_score.values()))))
-	slope, intercept, r_value, p_value, std_err = linregress(ds1_lst, ds2_lst)
+				ds2_score.append(0)
+	assert ds1_proj_feat == ds2_proj_feat, f"{ds1} and {ds2} features are not the same"
+	assert ds1_feature == ds2_feature, f"{ds1} and {ds2} features are not the same"
+	slope, intercept, r_value, p_value, std_err = linregress(ds1_score, ds2_score)
 	r_sq.append(r_value**2)
-	a, b = np.polyfit(ds1_lst, ds2_lst, 1)
-	# print(a, b)
+	a, b = np.polyfit(ds1_score, ds2_score, 1)
 	# fig.suptitle(f"Metastudy {train_percent}training {ds1} vs {ds2} by accuracy, Python only")
 	plt.subplots_adjust(bottom=0.8)
 	ax = fig.add_subplot(num_rows,num_cols, ax_count)
-	my_projects = list(set(list(map(lambda x: x[1], list(ds2_score.values())))))#pulling second element from each dict.value
-	my_markers = ["o", "s", "P", "v", "x"]
-	print(num_colors)
-	max_color_len = max(num_colors) #take the largest value for total colors
-	print(f"{num_colors}  num_colors")
-	cm = plt.get_cmap("turbo")
-	my_colors = [cm(1.*i/max_color_len) for i in range(max_color_len)]
-	seed(77)
-	total_colors = [sample(my_colors, x) for x in num_colors]
-	total_colors = [item for sublist in total_colors for item in sublist]
-	print(total_colors)
-	print(len(total_colors))
-	# ax.set_prop_cycle(color=[cm(1.*i/num_colors) for i in range(num_colors)])
-	# cm = plt.get_cmap('rainbow')
-	# ax.set_prop_cycle(color=[cm(1.*i/num_colors) for i in range(num_colors)])
-	assert( list(ds2_score.keys()) == set(list(ds2_score.keys())), "Keys are not a set.")
-	print(f"number of metata cats {len(ds2_score.keys())}")
-	for i, labl in enumerate(list(sorted(ds2_score.keys()))):
-		my_proj = ds2_score[labl][1]
-		print(f"{my_proj} {ds1_lst[i]} {ds2_lst[i]}, {list(sorted(ds2_score.keys()))[i]}")
-		my_marker = my_markers[my_projects.index(my_proj)]
-		ax.scatter(ds1_lst[i], ds2_lst[i], s=100, color=total_colors[i], label=list(sorted(ds2_score.keys()))[i], marker=my_marker)
-		ax.text(ds1_lst[i], ds2_lst[i], list(sorted(ds2_score.keys()))[i], fontsize=5)
-		# ax.annotate(list(sorted(ds2_score.keys()))[i], ds1_lst[i], ds2_lst[i])
-	# plt.annotate(list(sorted(ds2_score.keys())), (ds1_lst, ds2_lst))
+	my_projects = list(set(ds1_project))
+	flag_old_label = ds1_project[0]
+	feature_counter = 0
+	print("building graphic")
+	for i in range(len(ds1_score)):
+		my_proj = ds1_project[i]
+		if flag_old_label != my_proj:
+			flag_old_label = my_proj
+			feature_counter = 0
+		print(f"{my_proj} {ds1_score[i]} {ds2_score[i]}, {ds1_proj_feat[i]}, {ds2_proj_feat[i]}, featcount: {feature_counter}")
+		my_color = my_colors[my_projects.index(my_proj)]
+		ax.scatter(ds1_score[i], ds2_score[i], s=100, color=my_color, label=ds1_feature[i], marker=my_markers[feature_counter])
+		# ax.text(ds1_score[i], ds2_score[i], ds1_proj_feat[i], color=my_color, fontsize=5)
+		feature_counter += 1
+	ax.locator_params(axis='both', nbins=10)
 	ax.plot([0,1], [0,1], color = "r", label = "expected")
-	ax.plot(ds1_lst, a*ds1_lst+b, color = "green", label = "accuracy polyfit")
-	ax.text(0.1, 0.8, f"r squared: {round(r_value**2, 4)}", fontsize=20)
+	ax.plot(np.array(ds1_score), a*np.array(ds1_score)+b, color = "green", label = "accuracy polyfit")
+	ax.text(0.1, 0.9, f"r squared: {round(r_value**2, 4)}", fontsize=20)
 	ax.set_xlabel(f"{ds1}")
 	ax.set_ylabel(f"{ds2}")
 	ax.set_title("Scores")
@@ -174,27 +170,28 @@ fig.tight_layout(pad = 1, h_pad=1, w_pad=2)
 plt.subplots_adjust(left=0.1)
 print("Saving figure to pdf", flush = True)
 pdf.savefig( fig )
+
+
+
 print("Making seperate legend.")
 fig = plt.figure(figsize=(11,25))
 ax = fig.add_subplot(1,1,1)
-# plt.subplots_adjust(bottom=0.8)
-# fig.tight_layout()
-my_markers = ["o", "s", "P", "v", "x"]
-# my_colors = 
-# cm = plt.get_cmap('tab20')
-# cm = plt.get_cmap('rainbow')
-# ax.set_prop_cycle(color=[cm(1.*i/num_colors) for i in range(num_colors)])
-for i, label in enumerate(list(sorted(ds2_score.keys()))):
-	my_proj = ds2_score[label][1]
-	print(f"{my_proj} {ds1_lst[i]} {ds2_lst[i]}, {list(sorted(ds2_score.keys()))[i]}")
-	my_marker = my_markers[my_projects.index(my_proj)]
-	ax.scatter(ds1_lst[i], ds2_lst[i], s=100,color=total_colors[i], label=list(sorted(ds2_score.keys()))[i], marker=my_marker)
-	# ax.annotate(list(sorted(ds2_score.keys()))[i], ds1_lst[i], ds2_lst[i])
+flag_old_label = ds1_project[0]
+feature_counter = 0
+print("building graphic")
+for i in range(len(ds1_score)):
+	my_proj = ds1_project[i]
+	if flag_old_label != my_proj:
+		flag_old_label = my_proj
+		feature_counter = 0
+	# print(f"{my_proj} {ds1_score[i]} {ds2_score[i]}, {ds1_proj_feat[i]}, {ds2_proj_feat[i]}, featcount: {feature_counter}")
+	my_color = my_colors[my_projects.index(my_proj)]
+	ax.scatter(ds1_score[i], ds2_score[i], s=100, color=my_color, label=ds1_feature[i], marker=my_markers[feature_counter])
+	ax.text(ds1_score[i], ds2_score[i], ds1_feature[i], color=my_color, fontsize=5)
 	ax.legend(title="",  loc="center", framealpha=1, mode = "expand", markerscale=2)
-	# plt.set_cmap("tab20")
+	feature_counter += 1
 print("Saving figure to pdf", flush = True)
 pdf.savefig( fig )
-
 print(f"Saving pdf to {plot_pdf_fpath}", flush = True)
 pdf.close()
 
