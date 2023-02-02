@@ -74,6 +74,7 @@ ax_count = 1
 my_markers = ["$A$","$B$","$C$","$D$","$E$","$F$","$G$","$H$","$I$","$J$","$K$","$L$",\
 	"$M$","$N$","$O$","$P$","$Q$","$R$","$S$","$T$","$U$","$V$","$W$","$X$","$Y$","$Z$"]
 my_colors = ["green", "blue", "orange", "red"]
+ln_folder = os.path.join(output_dir, "lognormVs")#place for tables of ds2s vs lognorm
 ds1 = "lognorm_DADA2"
 for d2 in range(len(comp_ds)):
 	ds2 = comp_ds[d2]
@@ -125,6 +126,13 @@ for d2 in range(len(comp_ds)):
 				ds2_score.append(0)
 	assert ds1_proj_feat == ds2_proj_feat, f"{ds1} and {ds2} features are not the same"
 	assert ds1_feature == ds2_feature, f"{ds1} and {ds2} features are not the same"
+	print(f"Saving table to 'output_dir/lognormVs'.")
+	pre_df_zip = list(zip(ds1_proj_feat, ds1_feature,ds1_score, ds1_project, ds2_feature, ds2_score, ds2_project))
+	my_df = pd.DataFrame(pre_df_zip, columns=["proj_feat", "ln_feature","ln_score","ln_project",f"{ds2}_feature", f"{ds2}_score", f"{ds2}_project"])
+	if not os.path.exists(ln_folder):
+		os.makedirs(ln_folder)
+	my_df.to_csv(os.path.join(ln_folder, f"lnVs_{ds2}.csv"), index=False)
+	print("Building graphic.")
 	slope, intercept, r_value, p_value, std_err = linregress(ds1_score, ds2_score)
 	r_sq.append(r_value**2)
 	a, b = np.polyfit(ds1_score, ds2_score, 1)
@@ -134,7 +142,6 @@ for d2 in range(len(comp_ds)):
 	my_projects = list(set(ds1_project))
 	flag_old_label = ds1_project[0]
 	feature_counter = 0
-	print("building graphic")
 	for i in range(len(ds1_score)):
 		my_proj = ds1_project[i]
 		if flag_old_label != my_proj:
@@ -171,8 +178,6 @@ plt.subplots_adjust(left=0.1)
 print("Saving figure to pdf", flush = True)
 pdf.savefig( fig )
 
-
-
 print("Making seperate legend.")
 fig = plt.figure(figsize=(11,25))
 ax = fig.add_subplot(1,1,1)
@@ -207,5 +212,31 @@ pdf.savefig( fig, bbox_inches='tight')
 
 print(f"Saving pdf to {r_sq_boxplot_pdf_fpath}", flush = True)
 pdf.close()
+
+first_df = "placeholder"
+print(f"Joining tables from {ln_folder}.")
+for d2 in range(len(comp_ds)):
+	print(f"counter = {d2}")
+	ds2 = comp_ds[d2]
+	print(f"DS2: {ds2}")
+	file_pth = os.path.join(ln_folder, f"lnVs_{ds2}.csv")
+	if d2 == 0:
+		first_df = pd.read_csv(file_pth)
+		# print(first_df)
+	else:
+		my_df = pd.read_csv(file_pth)
+		my_cols = [s for s in my_df.columns if "ln_" in s]
+		my_df = my_df.drop(my_cols, axis=1)
+		print(my_df)
+		first_df = pd.merge(first_df, my_df, on="proj_feat")
+
+first_df.to_csv(os.path.join(ln_folder, f"final_ln.csv"), index=False)
+# print(first_df)
+my_cols = [s for s in first_df.columns if "_score" in s]
+my_cols.insert(0, "proj_feat")
+print(my_cols)
+first_df = first_df.filter(my_cols)
+print(first_df)
+first_df.to_csv(os.path.join(ln_folder, f"final_ln_scoreOnly.csv"), index=False)
 
 print(f"{__file__} complete!")
